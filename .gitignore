@@ -8,6 +8,10 @@ yarn-error.log*
 .env
 .env.local
 .env.*.local
+.sf/
+.sfdx/
+*.sf*
+*.sfdx*
 
 # IDE
 .vscode/
@@ -15,6 +19,7 @@ yarn-error.log*
 *.swp
 *.swo
 *~
+.codex
 .DS_Store
 
 # Build outputs
@@ -33,6 +38,7 @@ logs/
 # Temp files
 tmp/
 temp/
+.salesforce/
 
 # OS
 .DS_Store

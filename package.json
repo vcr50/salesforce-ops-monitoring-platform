@@ -1,7 +1,7 @@
 {
-  "name": "salesforce-ecosystem-poc",
+  "name": "seomp",
   "version": "1.0.0",
-  "description": "Salesforce Ecosystem POC - REST/SOAP/Bulk API Integration with Data Sync, OAuth, and Analytics",
+  "description": "Salesforce Enterprise Operations Monitoring Platform (SEOMP) - Phase 1 foundation for a Salesforce Developer Org",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
@@ -9,18 +9,19 @@
     "test": "jest --coverage",
     "lint": "eslint src/**/*.js",
     "build": "echo 'Build completed'",
-    "seed": "node scripts/seed.js"
+    "seed": "node scripts/seed.js",
+    "sync:github": "bash scripts/sync-github.sh"
   },
   "keywords": [
     "salesforce",
-    "ecosystem",
-    "rest-api",
-    "soap-api",
-    "bulk-api",
-    "oauth",
-    "data-sync"
+    "seomp",
+    "developer-org",
+    "monitoring",
+    "incident-management",
+    "platform-events",
+    "nodejs"
   ],
-  "author": "",
+  "author": "VJ (Tomcodex)",
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",

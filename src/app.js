@@ -11,9 +11,11 @@ const authRoutes = require('./routes/auth');
 const recordsRoutes = require('./routes/records');
 const syncRoutes = require('./routes/sync');
 const analyticsRoutes = require('./routes/analytics');
+const systemRoutes = require('./routes/system');
 
 const errorHandler = require('./middleware/errorHandler');
 const { logger } = require('./middleware/logger');
+const { seompConfig, getFoundationStatus } = require('./config/seomp');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -58,11 +60,15 @@ app.use('/auth', authRoutes);
 app.use('/api/records', recordsRoutes);
 app.use('/api/sync', syncRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/system', systemRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
+    platform: seompConfig.platform.shortName,
+    phase: seompConfig.platform.phase,
+    readiness: getFoundationStatus(),
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
   });
@@ -80,27 +86,39 @@ app.use((req, res) => {
 // Error handling middleware
 app.use(errorHandler);
 
-// Start server
-const server = app.listen(PORT, () => {
-  logger.info(`Salesforce Ecosystem POC Server running on port ${PORT}`);
-  logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
-});
-
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM received, shutting down gracefully');
-  server.close(() => {
-    logger.info('Server closed');
-    process.exit(0);
+const startServer = () => {
+  const server = app.listen(PORT, () => {
+    logger.info(`${seompConfig.platform.shortName} server running on port ${PORT}`);
+    logger.info({
+      environment: process.env.NODE_ENV || 'development',
+      phase: seompConfig.platform.phase
+    }, 'Application context');
   });
-});
 
-process.on('SIGINT', () => {
-  logger.info('SIGINT received, shutting down gracefully');
-  server.close(() => {
-    logger.info('Server closed');
-    process.exit(0);
+  process.on('SIGTERM', () => {
+    logger.info('SIGTERM received, shutting down gracefully');
+    server.close(() => {
+      logger.info('Server closed');
+      process.exit(0);
+    });
   });
-});
 
-module.exports = app;
+  process.on('SIGINT', () => {
+    logger.info('SIGINT received, shutting down gracefully');
+    server.close(() => {
+      logger.info('Server closed');
+      process.exit(0);
+    });
+  });
+
+  return server;
+};
+
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = {
+  app,
+  startServer
+};
