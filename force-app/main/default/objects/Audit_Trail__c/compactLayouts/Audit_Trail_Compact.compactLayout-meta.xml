@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Audit_Trail_Compact</fullName>
+    <fields>Name</fields>
+    <fields>User__c</fields>
+    <fields>Action__c</fields>
+    <fields>Object_Name__c</fields>
+    <fields>Timestamp__c</fields>
+    <label>Audit Trail Compact</label>
+</CompactLayout>

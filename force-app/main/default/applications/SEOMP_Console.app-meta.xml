@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Lightning app shell for the Salesforce Enterprise Operations Monitoring Platform.</description>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <label>SEOMP Console</label>
+    <navType>Standard</navType>
+    <tabs>standard-home</tabs>
+    <tabs>Incident__c</tabs>
+    <tabs>Integration_Log__c</tabs>
+    <tabs>SLA_Policy__c</tabs>
+    <tabs>Environment__c</tabs>
+    <tabs>Deployment_Record__c</tabs>
+    <tabs>Audit_Trail__c</tabs>
+    <uiType>Lightning</uiType>
+</CustomApplication>

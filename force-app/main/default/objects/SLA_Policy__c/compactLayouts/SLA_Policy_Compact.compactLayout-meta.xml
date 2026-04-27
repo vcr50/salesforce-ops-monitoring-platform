@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SLA_Policy_Compact</fullName>
+    <fields>Name</fields>
+    <fields>Severity__c</fields>
+    <fields>Response_Time_Min__c</fields>
+    <fields>Resolution_Time_Min__c</fields>
+    <label>SLA Policy Compact</label>
+</CompactLayout>

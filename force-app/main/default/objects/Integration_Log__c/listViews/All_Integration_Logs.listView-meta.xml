@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All_Integration_Logs</fullName>
+    <columns>NAME</columns>
+    <columns>API_Name__c</columns>
+    <columns>Status__c</columns>
+    <columns>Response_Time__c</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>NAME</field>
+        <operation>notEqual</operation>
+        <value></value>
+    </filters>
+    <label>All Integration Logs</label>
+</ListView>

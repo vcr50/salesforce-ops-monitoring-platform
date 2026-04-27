@@ -22,5 +22,18 @@
         <members>SEOMP_Admin</members>
         <name>PermissionSet</name>
     </types>
+    <types>
+        <members>Incident__c-Incident Layout</members>
+        <members>Integration_Log__c-Integration Log Layout</members>
+        <members>SLA_Policy__c-SLA Policy Layout</members>
+        <members>Environment__c-Environment Layout</members>
+        <members>Deployment_Record__c-Deployment Record Layout</members>
+        <members>Audit_Trail__c-Audit Trail Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>SEOMP_Console</members>
+        <name>CustomApplication</name>
+    </types>
     <version>62.0</version>
 </Package>
