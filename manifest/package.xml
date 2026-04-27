@@ -9,5 +9,18 @@
         <members>Audit_Trail__c</members>
         <name>CustomObject</name>
     </types>
+    <types>
+        <members>Incident__c</members>
+        <members>Integration_Log__c</members>
+        <members>SLA_Policy__c</members>
+        <members>Environment__c</members>
+        <members>Deployment_Record__c</members>
+        <members>Audit_Trail__c</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>SEOMP_Admin</members>
+        <name>PermissionSet</name>
+    </types>
     <version>62.0</version>
 </Package>
