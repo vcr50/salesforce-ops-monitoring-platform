@@ -31,8 +31,21 @@ Use the values in `.env.example` as the baseline:
 
 1. Start with one Developer Org as the system of record.
 2. Use custom objects like `Incident__c` and `Integration_Log__c` in that org.
-3. Run the Node.js app locally for middleware and API testing.
-4. Add local PostgreSQL and Redis only when you begin Phase 2 event persistence work.
+3. Store Salesforce metadata in `force-app/main/default/` using Salesforce DX source format.
+4. Use `manifest/package.xml` when retrieving or deploying the SEOMP metadata set.
+5. Run the Node.js app locally for middleware and API testing.
+6. Add local PostgreSQL and Redis only when you begin Phase 2 event persistence work.
+
+## Standard Salesforce Folders In This Repo
+
+- `force-app/main/default/objects/`: custom objects and fields
+- `force-app/main/default/classes/`: Apex classes and tests
+- `force-app/main/default/triggers/`: Apex triggers
+- `force-app/main/default/lwc/`: Lightning Web Components
+- `force-app/main/default/permissionsets/`: permission sets
+- `force-app/main/default/layouts/`: page layouts
+- `force-app/main/default/tabs/`: custom tabs
+- `force-app/main/default/flexipages/`: Lightning pages
 
 ## Notes
 

@@ -9,7 +9,6 @@
     "test": "jest --coverage",
     "lint": "eslint src/**/*.js",
     "build": "echo 'Build completed'",
-    "seed": "node scripts/seed.js",
     "sync:github": "bash scripts/sync-github.sh"
   },
   "keywords": [

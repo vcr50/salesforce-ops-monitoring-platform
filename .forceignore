@@ -1,0 +1,16 @@
+# Dependencies and generated output
+node_modules/
+coverage/
+
+# Local environment files
+.env
+.env.local
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Salesforce local state
+.sf/
+.sfdx/

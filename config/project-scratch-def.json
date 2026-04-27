@@ -1,0 +1,14 @@
+{
+  "orgName": "SEOMP Dev Hub",
+  "edition": "Developer",
+  "features": [
+    "API"
+  ],
+  "settings": {
+    "orgPreferenceSettings": {
+      "s1DesktopEnabled": true,
+      "networksEnabled": false,
+      "pathAssistantEnabled": true
+    }
+  }
+}

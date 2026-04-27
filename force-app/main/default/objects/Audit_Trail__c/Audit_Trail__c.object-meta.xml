@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Preserves auditable administrator and automation changes across SEOMP workflows.</description>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <label>Audit Trail</label>
+    <nameField>
+        <displayFormat>AUD-{0000}</displayFormat>
+        <label>Audit Trail Number</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Audit Trails</pluralLabel>
+    <sharingModel>ReadWrite</sharingModel>
+    <visibility>Public</visibility>
+</CustomObject>
