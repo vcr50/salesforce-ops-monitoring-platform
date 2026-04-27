@@ -51,3 +51,64 @@ Real-time, event-driven monitoring and administration system designed for enterp
 ---
 
 ## Project Structure
+
+---
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|------------|
+| POST | /api/incidents | Create incident |
+| GET | /api/incidents | Fetch incidents |
+| POST | /api/logs | Log integration data |
+| GET | /api/metrics | Fetch system metrics |
+
+---
+
+## Setup Instructions
+
+### 1. Clone Repository
+
+---
+
+### 2. Configure Environment Variables
+
+Create a `.env` file:
+
+---
+
+### CI/CD
+
+- GitHub Actions pipeline runs Apex tests
+- Deploys Salesforce metadata using CLI
+
+---
+
+## Key Metrics Tracked
+
+- MTTR (Mean Time to Resolve)
+- API success rate
+- Incident volume
+- Deployment frequency
+- System health score
+
+---
+
+## Future Enhancements
+
+- AI-based anomaly detection
+- Multi-org aggregation dashboard
+- Advanced role-based access control
+- Predictive incident analytics
+
+---
+
+## Author
+
+VJ (Tomcodex)
+
+---
+
+## License
+
+This project is for educational and demonstration purposes.
