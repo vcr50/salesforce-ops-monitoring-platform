@@ -48,14 +48,38 @@
         <name>FlexiPage</name>
     </types>
     <types>
+        <members>AccountRecord</members>
+        <members>Block2</members>
+        <members>ConditionalStmtDemo</members>
+        <members>LegacyOrgCoverageTest</members>
+        <members>LoopDemo</members>
+        <members>OpportunityQuery</members>
+        <members>Rectangle</members>
         <members>SEOMPAutomationService</members>
         <members>SEOMPAutomationServiceTest</members>
+        <members>Square</members>
+        <members>nameController</members>
+        <members>stringCheckController</members>
         <name>ApexClass</name>
     </types>
     <types>
         <members>IncidentTrigger</members>
         <members>IntegrationLogTrigger</members>
         <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>SEOMP_Analytics</members>
+        <name>ReportFolder</name>
+    </types>
+    <types>
+        <members>SEOMP_Analytics/Open_Incidents</members>
+        <members>SEOMP_Analytics/Critical_Open_Incidents</members>
+        <members>SEOMP_Analytics/Failed_Integration_Logs</members>
+        <name>Report</name>
+    </types>
+    <types>
+        <members>SEOMP_Dashboards</members>
+        <name>DashboardFolder</name>
     </types>
     <version>62.0</version>
 </Package>

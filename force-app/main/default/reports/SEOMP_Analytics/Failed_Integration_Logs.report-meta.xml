@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Shows failed integration executions that need attention.</description>
+    <filter>
+        <criteriaItems>
+            <column>Integration_Log__c.Status__c</column>
+            <operator>equals</operator>
+            <value>Failed</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Failed Integration Logs</name>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>Integration_Log__c.API_Name__c</field>
+    </columns>
+    <columns>
+        <field>Integration_Log__c.Status__c</field>
+    </columns>
+    <columns>
+        <field>Integration_Log__c.Response_Time__c</field>
+    </columns>
+    <columns>
+        <field>Integration_Log__c.Error_Message__c</field>
+    </columns>
+    <columns>
+        <field>CUST_CREATED_DATE</field>
+    </columns>
+    <reportType>CustomEntity$Integration_Log__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+</Report>

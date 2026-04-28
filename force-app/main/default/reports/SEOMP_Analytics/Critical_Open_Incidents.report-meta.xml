@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Highlights critical incidents that are still active.</description>
+    <filter>
+        <booleanFilter>1 AND 2 AND 3</booleanFilter>
+        <criteriaItems>
+            <column>Incident__c.Severity__c</column>
+            <operator>equals</operator>
+            <value>Critical</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Incident__c.Status__c</column>
+            <operator>notEqual</operator>
+            <value>Resolved</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Incident__c.Status__c</column>
+            <operator>notEqual</operator>
+            <value>Closed</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Critical Open Incidents</name>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>Incident__c.Status__c</field>
+    </columns>
+    <columns>
+        <field>Incident__c.Description__c</field>
+    </columns>
+    <columns>
+        <field>CUST_CREATED_DATE</field>
+    </columns>
+    <reportType>CustomEntity$Incident__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+</Report>

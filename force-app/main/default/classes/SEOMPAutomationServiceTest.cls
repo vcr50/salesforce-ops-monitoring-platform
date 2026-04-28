@@ -107,4 +107,40 @@ private class SEOMPAutomationServiceTest {
 
         System.assertEquals(1, incidentCount);
     }
+
+    @IsTest
+    static void recoveredIntegrationLogClosesOpenIncident() {
+        Integration_Log__c logRecord = new Integration_Log__c(
+            API_Name__c = 'Warehouse API',
+            Status__c = 'Failed',
+            Response_Time__c = 900,
+            Error_Message__c = 'Service unavailable'
+        );
+        insert logRecord;
+
+        Incident__c incidentRecord = [
+            SELECT Id, Status__c
+            FROM Incident__c
+            WHERE Integration_Log__c = :logRecord.Id
+            LIMIT 1
+        ];
+
+        incidentRecord.Status__c = 'In Progress';
+        update incidentRecord;
+
+        Test.startTest();
+        logRecord.Status__c = 'Success';
+        logRecord.Error_Message__c = null;
+        update logRecord;
+        Test.stopTest();
+
+        Incident__c closedIncident = [
+            SELECT Status__c, Resolved_Time__c
+            FROM Incident__c
+            WHERE Id = :incidentRecord.Id
+        ];
+
+        System.assertEquals('Closed', closedIncident.Status__c);
+        System.assertNotEquals(null, closedIncident.Resolved_Time__c);
+    }
 }

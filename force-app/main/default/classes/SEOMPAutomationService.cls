@@ -1,5 +1,7 @@
 public with sharing class SEOMPAutomationService {
     private static final Set<String> RESOLVED_STATUSES = new Set<String>{ 'Resolved', 'Closed' };
+    private static final String FAILED_LOG_STATUS = 'Failed';
+    private static final String RECOVERED_LOG_STATUS = 'Success';
 
     public static void applyIncidentResolutionState(
         List<Incident__c> newRecords,
@@ -30,12 +32,12 @@ public with sharing class SEOMPAutomationService {
         Map<Id, Integration_Log__c> failedLogsById = new Map<Id, Integration_Log__c>();
 
         for (Integration_Log__c logRecord : newRecords) {
-            if (logRecord.Id == null || logRecord.Status__c != 'Failed') {
+            if (logRecord.Id == null || logRecord.Status__c != FAILED_LOG_STATUS) {
                 continue;
             }
 
             Integration_Log__c oldRecord = oldMap == null ? null : oldMap.get(logRecord.Id);
-            Boolean becameFailed = oldRecord == null || oldRecord.Status__c != 'Failed';
+            Boolean becameFailed = oldRecord == null || oldRecord.Status__c != FAILED_LOG_STATUS;
 
             if (becameFailed) {
                 failedLogIds.add(logRecord.Id);
@@ -112,6 +114,45 @@ public with sharing class SEOMPAutomationService {
 
         if (!incidentsToInsert.isEmpty()) {
             insert incidentsToInsert;
+        }
+    }
+
+    public static void closeIncidentsForRecoveredLogs(
+        List<Integration_Log__c> newRecords,
+        Map<Id, Integration_Log__c> oldMap
+    ) {
+        Set<Id> recoveredLogIds = new Set<Id>();
+
+        for (Integration_Log__c logRecord : newRecords) {
+            if (logRecord.Id == null || logRecord.Status__c != RECOVERED_LOG_STATUS) {
+                continue;
+            }
+
+            Integration_Log__c oldRecord = oldMap == null ? null : oldMap.get(logRecord.Id);
+            Boolean recoveredFromFailure = oldRecord != null && oldRecord.Status__c == FAILED_LOG_STATUS;
+
+            if (recoveredFromFailure) {
+                recoveredLogIds.add(logRecord.Id);
+            }
+        }
+
+        if (recoveredLogIds.isEmpty()) {
+            return;
+        }
+
+        List<Incident__c> incidentsToClose = new List<Incident__c>();
+        for (Incident__c incidentRecord : [
+            SELECT Id, Status__c
+            FROM Incident__c
+            WHERE Integration_Log__c IN :recoveredLogIds
+            AND Status__c NOT IN ('Resolved', 'Closed')
+        ]) {
+            incidentRecord.Status__c = 'Closed';
+            incidentsToClose.add(incidentRecord);
+        }
+
+        if (!incidentsToClose.isEmpty()) {
+            update incidentsToClose;
         }
     }
 
