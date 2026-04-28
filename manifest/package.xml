@@ -20,6 +20,7 @@
     </types>
     <types>
         <members>SEOMP_Admin</members>
+        <members>SEOMP_Runtime_Admin</members>
         <name>PermissionSet</name>
     </types>
     <types>
@@ -45,6 +46,16 @@
         <members>Audit_Trail_Record_Page</members>
         <members>SEOMP_Console_UtilityBar</members>
         <name>FlexiPage</name>
+    </types>
+    <types>
+        <members>SEOMPAutomationService</members>
+        <members>SEOMPAutomationServiceTest</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>IncidentTrigger</members>
+        <members>IntegrationLogTrigger</members>
+        <name>ApexTrigger</name>
     </types>
     <version>62.0</version>
 </Package>
