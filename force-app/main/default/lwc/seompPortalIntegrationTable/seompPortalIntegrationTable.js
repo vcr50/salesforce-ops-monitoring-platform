@@ -2,24 +2,8 @@ import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import getActiveIntegrations from '@salesforce/apex/SEOMPPortalController.getActiveIntegrations';
 
-const COLUMNS = [
-    { label: 'API', fieldName: 'apiName', sortable: true },
-    { label: 'Status', fieldName: 'status', sortable: true },
-    { label: 'Response Time', fieldName: 'responseTime', sortable: true },
-    {
-        type: 'button',
-        fixedWidth: 140,
-        typeAttributes: {
-            label: 'View detail',
-            name: 'view_detail',
-            variant: 'base'
-        }
-    }
-];
-
 export default class SeompPortalIntegrationTable extends NavigationMixin(LightningElement) {
     @api detailPagePath = 'integration-detail';
-    columns = COLUMNS;
     rows = [];
     error;
     sortedBy = 'status';
@@ -44,14 +28,20 @@ export default class SeompPortalIntegrationTable extends NavigationMixin(Lightni
         return this.rows.length;
     }
 
-    handleSort(event) {
-        this.sortedBy = event.detail.fieldName;
-        this.sortDirection = event.detail.sortDirection;
+    handleHeaderSort(event) {
+        const fieldName = event.currentTarget.dataset.field;
+        this.sortDirection =
+            this.sortedBy === fieldName && this.sortDirection === 'asc' ? 'desc' : 'asc';
+        this.sortedBy = fieldName;
         this.rows = this.sortData(this.rows, this.sortedBy, this.sortDirection);
     }
 
-    handleRowAction(event) {
-        const row = event.detail.row;
+    handleViewDetail(event) {
+        const row = this.rows.find((item) => item.id === event.currentTarget.dataset.id);
+        if (!row) {
+            return;
+        }
+
         const basePath = this.getCommunityBasePath();
         this[NavigationMixin.Navigate]({
             type: 'standard__webPage',
@@ -63,11 +53,17 @@ export default class SeompPortalIntegrationTable extends NavigationMixin(Lightni
 
     sortData(data, fieldName, sortDirection) {
         const direction = sortDirection === 'asc' ? 1 : -1;
-        return [...data].sort((left, right) => {
+        return [...data]
+            .sort((left, right) => {
             const leftValue = left[fieldName] ?? '';
             const rightValue = right[fieldName] ?? '';
             return leftValue > rightValue ? direction : leftValue < rightValue ? -direction : 0;
-        });
+        })
+            .map((row) => ({
+                ...row,
+                statusClass: this.getStatusClass(row.status),
+                responseTimeLabel: this.formatResponseTime(row.responseTime)
+            }));
     }
 
     getCommunityBasePath() {
@@ -77,5 +73,26 @@ export default class SeompPortalIntegrationTable extends NavigationMixin(Lightni
         return markerIndex >= 0
             ? currentPath.substring(0, markerIndex + marker.length)
             : '/';
+    }
+
+    getStatusClass(status) {
+        const normalized = (status || '').toLowerCase();
+        if (normalized === 'failed') {
+            return 'pill status-failed';
+        }
+
+        if (normalized === 'warning') {
+            return 'pill status-warning';
+        }
+
+        if (normalized === 'success') {
+            return 'pill status-success';
+        }
+
+        return 'pill status-default';
+    }
+
+    formatResponseTime(value) {
+        return value ? `${value} ms` : 'N/A';
     }
 }

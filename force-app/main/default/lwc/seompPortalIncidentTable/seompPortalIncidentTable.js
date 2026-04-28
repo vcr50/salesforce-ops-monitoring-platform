@@ -2,24 +2,8 @@ import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import getOpenIncidents from '@salesforce/apex/SEOMPPortalController.getOpenIncidents';
 
-const COLUMNS = [
-    { label: 'Incident', fieldName: 'name', sortable: true },
-    { label: 'Severity', fieldName: 'severity', sortable: true },
-    { label: 'Status', fieldName: 'status', sortable: true },
-    {
-        type: 'button',
-        fixedWidth: 140,
-        typeAttributes: {
-            label: 'View detail',
-            name: 'view_detail',
-            variant: 'base'
-        }
-    }
-];
-
 export default class SeompPortalIncidentTable extends NavigationMixin(LightningElement) {
     @api detailPagePath = 'incident-detail';
-    columns = COLUMNS;
     rows = [];
     error;
     sortedBy = 'severity';
@@ -44,14 +28,20 @@ export default class SeompPortalIncidentTable extends NavigationMixin(LightningE
         return this.rows.length;
     }
 
-    handleSort(event) {
-        this.sortedBy = event.detail.fieldName;
-        this.sortDirection = event.detail.sortDirection;
+    handleHeaderSort(event) {
+        const fieldName = event.currentTarget.dataset.field;
+        this.sortDirection =
+            this.sortedBy === fieldName && this.sortDirection === 'asc' ? 'desc' : 'asc';
+        this.sortedBy = fieldName;
         this.rows = this.sortData(this.rows, this.sortedBy, this.sortDirection);
     }
 
-    handleRowAction(event) {
-        const row = event.detail.row;
+    handleViewDetail(event) {
+        const row = this.rows.find((item) => item.id === event.currentTarget.dataset.id);
+        if (!row) {
+            return;
+        }
+
         const basePath = this.getCommunityBasePath();
         this[NavigationMixin.Navigate]({
             type: 'standard__webPage',
@@ -63,11 +53,17 @@ export default class SeompPortalIncidentTable extends NavigationMixin(LightningE
 
     sortData(data, fieldName, sortDirection) {
         const direction = sortDirection === 'asc' ? 1 : -1;
-        return [...data].sort((left, right) => {
+        return [...data]
+            .sort((left, right) => {
             const leftValue = left[fieldName] ?? '';
             const rightValue = right[fieldName] ?? '';
             return leftValue > rightValue ? direction : leftValue < rightValue ? -direction : 0;
-        });
+        })
+            .map((row) => ({
+                ...row,
+                severityClass: this.getSeverityClass(row.severity),
+                statusClass: this.getStatusClass(row.status)
+            }));
     }
 
     getCommunityBasePath() {
@@ -77,5 +73,31 @@ export default class SeompPortalIncidentTable extends NavigationMixin(LightningE
         return markerIndex >= 0
             ? currentPath.substring(0, markerIndex + marker.length)
             : '/';
+    }
+
+    getSeverityClass(severity) {
+        const normalized = (severity || '').toLowerCase();
+        if (normalized === 'critical') {
+            return 'pill severity-critical';
+        }
+
+        if (normalized === 'high') {
+            return 'pill severity-high';
+        }
+
+        return 'pill severity-default';
+    }
+
+    getStatusClass(status) {
+        const normalized = (status || '').toLowerCase();
+        if (normalized === 'new' || normalized === 'open') {
+            return 'pill status-open';
+        }
+
+        if (normalized === 'escalated') {
+            return 'pill status-escalated';
+        }
+
+        return 'pill status-default';
     }
 }

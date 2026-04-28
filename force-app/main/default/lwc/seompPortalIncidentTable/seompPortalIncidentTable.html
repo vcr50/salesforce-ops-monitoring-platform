@@ -1,44 +1,62 @@
 <template>
-    <lightning-card icon-name="utility:warning">
-        <div class="table-shell">
-            <div class="table-header">
-                <div>
-                    <p class="table-eyebrow">Active queue</p>
-                    <h2 class="table-title">SEOMP Incidents</h2>
-                    <p class="table-copy">
-                        Current unresolved incidents ordered by urgency and recency.
-                    </p>
-                </div>
-                <div class="table-meta">
-                    <span class="table-count">{rowCount}</span>
-                    <span class="table-meta-label">active records</span>
-                </div>
+    <section class="table-shell">
+        <div class="table-header">
+            <div class="headline-block">
+                <p class="table-eyebrow">Active queue</p>
+                <h2 class="table-title">SEOMP Incidents</h2>
+                <p class="table-copy">
+                    Current unresolved incidents ordered by urgency and recency.
+                </p>
             </div>
-            <template if:true={error}>
-                <div class="table-state error-state">{error}</div>
-            </template>
-            <template if:false={error}>
-                <template if:true={hasRows}>
-                    <div class="table-body">
-                        <lightning-datatable
-                            key-field="id"
-                            data={rows}
-                            columns={columns}
-                            hide-checkbox-column
-                            onrowaction={handleRowAction}
-                            onsort={handleSort}
-                            show-row-number-column
-                            sorted-by={sortedBy}
-                            sorted-direction={sortDirection}>
-                        </lightning-datatable>
-                    </div>
-                </template>
-                <template if:false={hasRows}>
-                    <div class="table-state empty-state">
-                        No open incidents right now.
-                    </div>
-                </template>
-            </template>
+            <div class="table-meta">
+                <span class="table-count">{rowCount}</span>
+                <span class="table-meta-label">active records</span>
+            </div>
         </div>
-    </lightning-card>
+        <template if:true={error}>
+            <div class="table-state error-state">{error}</div>
+        </template>
+        <template if:false={error}>
+            <template if:true={hasRows}>
+                <div class="table-board">
+                    <div class="table-toolbar">
+                        <button class="sort-chip" data-field="name" onclick={handleHeaderSort} type="button">
+                            Incident
+                        </button>
+                        <button class="sort-chip" data-field="severity" onclick={handleHeaderSort} type="button">
+                            Severity
+                        </button>
+                        <button class="sort-chip" data-field="status" onclick={handleHeaderSort} type="button">
+                            Status
+                        </button>
+                    </div>
+                    <div class="table-list">
+                        <template for:each={rows} for:item="row">
+                            <div class="table-row" key={row.id}>
+                                <div class="row-primary">
+                                    <span class="row-name">{row.name}</span>
+                                </div>
+                                <div class="row-pill-cell">
+                                    <span class={row.severityClass}>{row.severity}</span>
+                                </div>
+                                <div class="row-pill-cell">
+                                    <span class={row.statusClass}>{row.status}</span>
+                                </div>
+                                <div class="row-action-cell">
+                                    <button class="row-action" data-id={row.id} onclick={handleViewDetail} type="button">
+                                        View detail
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+            <template if:false={hasRows}>
+                <div class="table-state empty-state">
+                    No open incidents right now.
+                </div>
+            </template>
+        </template>
+    </section>
 </template>

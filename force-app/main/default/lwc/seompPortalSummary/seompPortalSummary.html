@@ -1,46 +1,53 @@
 <template>
-    <lightning-card icon-name="utility:dashboard">
-        <div class="summary-shell">
-            <div class="summary-hero">
-                <div>
-                    <p class="eyebrow">Operations overview</p>
-                    <h2 class="hero-title">SEOMP Portal Summary</h2>
-                    <p class="hero-copy">
-                        Live operational status for incidents and integration health.
-                    </p>
-                </div>
-                <div class="hero-meta">
-                    <span class="hero-meta-label">Last refreshed</span>
-                    <span class="hero-meta-value">{lastRefreshedLabel}</span>
-                </div>
+    <section class="summary-shell">
+        <div class="ambient ambient-left"></div>
+        <div class="ambient ambient-right"></div>
+        <div class="summary-hero">
+            <div class="hero-copy-wrap">
+                <p class="eyebrow">Operations overview</p>
+                <h2 class="hero-title">A live operations surface designed for decision velocity.</h2>
+                <p class="hero-copy">
+                    Realtime service posture across incidents and integrations, presented in a
+                    cleaner executive format for rapid triage.
+                </p>
             </div>
-            <div class="summary-grid">
-                <div class="summary-tile critical">
-                    <span class="summary-label">Critical incidents</span>
-                    <span class="summary-value">{criticalIncidents}</span>
-                    <span class="summary-context">Need immediate attention</span>
-                </div>
-                <div class="summary-tile open">
-                    <span class="summary-label">Open incidents</span>
-                    <span class="summary-value">{openIncidents}</span>
-                    <span class="summary-context">Currently unresolved</span>
-                </div>
-                <div class="summary-tile failed">
-                    <span class="summary-label">Failed integrations</span>
-                    <span class="summary-value">{failedIntegrations}</span>
-                    <span class="summary-context">Latest failed executions</span>
-                </div>
-                <div class="summary-tile warning">
-                    <span class="summary-label">Warnings</span>
-                    <span class="summary-value">{warningIntegrations}</span>
-                    <span class="summary-context">Watch before escalation</span>
-                </div>
+            <div class="hero-meta">
+                <span class="hero-meta-label">Last refreshed</span>
+                <span class="hero-meta-value">{lastRefreshedLabel}</span>
             </div>
-            <template if:true={error}>
-                <div class="summary-note">
-                    {error}
-                </div>
-            </template>
         </div>
-    </lightning-card>
+
+        <div class="summary-grid">
+            <article class="summary-tile critical">
+                <span class="summary-eyebrow">Urgent queue</span>
+                <span class="summary-label">Critical incidents</span>
+                <span class="summary-value">{criticalIncidents}</span>
+                <span class="summary-context">Need immediate attention</span>
+            </article>
+            <article class="summary-tile open">
+                <span class="summary-eyebrow">Operational load</span>
+                <span class="summary-label">Open incidents</span>
+                <span class="summary-value">{openIncidents}</span>
+                <span class="summary-context">Currently unresolved</span>
+            </article>
+            <article class="summary-tile failed">
+                <span class="summary-eyebrow">Execution risk</span>
+                <span class="summary-label">Failed integrations</span>
+                <span class="summary-value">{failedIntegrations}</span>
+                <span class="summary-context">Latest failed executions</span>
+            </article>
+            <article class="summary-tile warning">
+                <span class="summary-eyebrow">Watchlist</span>
+                <span class="summary-label">Warnings</span>
+                <span class="summary-value">{warningIntegrations}</span>
+                <span class="summary-context">Watch before escalation</span>
+            </article>
+        </div>
+
+        <template if:true={error}>
+            <div class="summary-note">
+                {error}
+            </div>
+        </template>
+    </section>
 </template>
