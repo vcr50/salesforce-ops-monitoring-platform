@@ -105,15 +105,36 @@ Operator Action, Analytics, and Executive Visibility
 - Drill-down detail views for incidents and integrations
 
 ## Screenshots
-Add product screenshots here as the experience evolves.
+Add product screenshots here as the experience evolves. The repository is now prepared for real portal screenshots under [docs/screenshots](docs/screenshots/README.md).
 
-| View | Placeholder |
+### Recommended Screenshot Set
+| View | File |
 | --- | --- |
+| Experience Cloud landing page | `docs/screenshots/landing-page.png` |
 | Home module overview | `docs/screenshots/home-overview.png` |
 | Incidents live queue | `docs/screenshots/incidents-module.png` |
 | Integrations monitoring | `docs/screenshots/integrations-module.png` |
 | Analytics trends | `docs/screenshots/analytics-module.png` |
-| Experience Cloud landing page | `docs/screenshots/landing-page.png` |
+
+### Screenshot Markdown
+Use these image paths once the screenshots are added:
+
+```md
+### Landing Page
+![Tomcodex landing page](docs/screenshots/landing-page.png)
+
+### Home Overview
+![Tomcodex home overview](docs/screenshots/home-overview.png)
+
+### Incidents Module
+![Tomcodex incidents module](docs/screenshots/incidents-module.png)
+
+### Integrations Module
+![Tomcodex integrations module](docs/screenshots/integrations-module.png)
+
+### Analytics Module
+![Tomcodex analytics module](docs/screenshots/analytics-module.png)
+```
 
 ## Repository Structure
 ```text
