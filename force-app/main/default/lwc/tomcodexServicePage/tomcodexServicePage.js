@@ -7,6 +7,8 @@ export default class TomcodexServicePage extends LightningElement {
     @api primaryActionUrl = '#';
     @api secondaryActionUrl = '#';
     theme = 'dark';
+    observer;
+    hasSetupObserver = false;
 
     connectedCallback() {
         try {
@@ -16,6 +18,46 @@ export default class TomcodexServicePage extends LightningElement {
             }
         } catch (error) {
             // Ignore storage restrictions in preview contexts.
+        }
+    }
+
+    renderedCallback() {
+        if (this.hasSetupObserver) {
+            return;
+        }
+
+        this.hasSetupObserver = true;
+
+        if (typeof IntersectionObserver === 'undefined') {
+            this.template.querySelectorAll('[data-reveal]').forEach((element) => {
+                element.classList.add('is-visible');
+            });
+            return;
+        }
+
+        this.observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        this.observer.unobserve(entry.target);
+                    }
+                });
+            },
+            {
+                threshold: 0.18
+            }
+        );
+
+        this.template.querySelectorAll('[data-reveal]').forEach((element) => {
+            this.observer.observe(element);
+        });
+    }
+
+    disconnectedCallback() {
+        if (this.observer) {
+            this.observer.disconnect();
+            this.observer = undefined;
         }
     }
 
