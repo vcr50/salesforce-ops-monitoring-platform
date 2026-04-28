@@ -13,4 +13,5 @@
     <tabs>Deployment_Record__c</tabs>
     <tabs>Audit_Trail__c</tabs>
     <uiType>Lightning</uiType>
+    <utilityBar>SEOMP_Console_UtilityBar</utilityBar>
 </CustomApplication>

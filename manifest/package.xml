@@ -35,5 +35,16 @@
         <members>SEOMP_Console</members>
         <name>CustomApplication</name>
     </types>
+    <types>
+        <members>SEOMP_Home</members>
+        <members>Incident_Record_Page</members>
+        <members>Integration_Log_Record_Page</members>
+        <members>SLA_Policy_Record_Page</members>
+        <members>Environment_Record_Page</members>
+        <members>Deployment_Record_Page</members>
+        <members>Audit_Trail_Record_Page</members>
+        <members>SEOMP_Console_UtilityBar</members>
+        <name>FlexiPage</name>
+    </types>
     <version>62.0</version>
 </Package>
