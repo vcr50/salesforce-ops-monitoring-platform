@@ -1,15 +1,43 @@
 <template>
-    <lightning-card title="SEOMP Incidents" icon-name="utility:warning">
-        <div class="slds-p-horizontal_medium slds-p-top_small table-note">
-            <template if:true={error}>{error}</template>
-        </div>
-        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
-            <lightning-datatable
-                key-field="id"
-                data={rows}
-                columns={columns}
-                hide-checkbox-column>
-            </lightning-datatable>
+    <lightning-card icon-name="utility:warning">
+        <div class="table-shell">
+            <div class="table-header">
+                <div>
+                    <p class="table-eyebrow">Active queue</p>
+                    <h2 class="table-title">SEOMP Incidents</h2>
+                    <p class="table-copy">
+                        Current unresolved incidents ordered by urgency and recency.
+                    </p>
+                </div>
+                <div class="table-meta">
+                    <span class="table-count">{rowCount}</span>
+                    <span class="table-meta-label">active records</span>
+                </div>
+            </div>
+            <template if:true={error}>
+                <div class="table-state error-state">{error}</div>
+            </template>
+            <template if:false={error}>
+                <template if:true={hasRows}>
+                    <div class="table-body">
+                        <lightning-datatable
+                            key-field="id"
+                            data={rows}
+                            columns={columns}
+                            hide-checkbox-column
+                            onsort={handleSort}
+                            show-row-number-column
+                            sorted-by={sortedBy}
+                            sorted-direction={sortDirection}>
+                        </lightning-datatable>
+                    </div>
+                </template>
+                <template if:false={hasRows}>
+                    <div class="table-state empty-state">
+                        No open incidents right now.
+                    </div>
+                </template>
+            </template>
         </div>
     </lightning-card>
 </template>

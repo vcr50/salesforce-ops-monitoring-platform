@@ -1,25 +1,46 @@
 <template>
-    <lightning-card title="SEOMP Portal Summary" icon-name="utility:dashboard">
-        <div class="summary-grid slds-p-around_medium">
-            <div class="summary-tile">
-                <span class="summary-label">Critical incidents</span>
-                <span class="summary-value">{criticalIncidents}</span>
+    <lightning-card icon-name="utility:dashboard">
+        <div class="summary-shell">
+            <div class="summary-hero">
+                <div>
+                    <p class="eyebrow">Operations overview</p>
+                    <h2 class="hero-title">SEOMP Portal Summary</h2>
+                    <p class="hero-copy">
+                        Live operational status for incidents and integration health.
+                    </p>
+                </div>
+                <div class="hero-meta">
+                    <span class="hero-meta-label">Last refreshed</span>
+                    <span class="hero-meta-value">{lastRefreshedLabel}</span>
+                </div>
             </div>
-            <div class="summary-tile">
-                <span class="summary-label">Open incidents</span>
-                <span class="summary-value">{openIncidents}</span>
+            <div class="summary-grid">
+                <div class="summary-tile critical">
+                    <span class="summary-label">Critical incidents</span>
+                    <span class="summary-value">{criticalIncidents}</span>
+                    <span class="summary-context">Need immediate attention</span>
+                </div>
+                <div class="summary-tile open">
+                    <span class="summary-label">Open incidents</span>
+                    <span class="summary-value">{openIncidents}</span>
+                    <span class="summary-context">Currently unresolved</span>
+                </div>
+                <div class="summary-tile failed">
+                    <span class="summary-label">Failed integrations</span>
+                    <span class="summary-value">{failedIntegrations}</span>
+                    <span class="summary-context">Latest failed executions</span>
+                </div>
+                <div class="summary-tile warning">
+                    <span class="summary-label">Warnings</span>
+                    <span class="summary-value">{warningIntegrations}</span>
+                    <span class="summary-context">Watch before escalation</span>
+                </div>
             </div>
-            <div class="summary-tile">
-                <span class="summary-label">Failed integrations</span>
-                <span class="summary-value">{failedIntegrations}</span>
-            </div>
-            <div class="summary-tile">
-                <span class="summary-label">Warnings</span>
-                <span class="summary-value">{warningIntegrations}</span>
-            </div>
-        </div>
-        <div class="slds-p-horizontal_medium slds-p-bottom_medium summary-note">
-            <template if:true={error}>{error}</template>
+            <template if:true={error}>
+                <div class="summary-note">
+                    {error}
+                </div>
+            </template>
         </div>
     </lightning-card>
 </template>

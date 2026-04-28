@@ -1,4 +1,95 @@
-.table-note {
+.table-shell {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    border-radius: 0.75rem;
+    padding: 1rem;
+}
+
+.table-header {
+    align-items: flex-start;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.table-eyebrow {
+    color: #7b8794;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin: 0 0 0.3rem;
+    text-transform: uppercase;
+}
+
+.table-title {
+    color: #102a43;
+    font-size: 1.45rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.table-copy {
     color: #52606d;
-    font-size: 0.875rem;
+    font-size: 0.93rem;
+    margin: 0.35rem 0 0;
+}
+
+.table-meta {
+    align-items: flex-end;
+    background: #eef6ff;
+    border: 1px solid #d8e6f2;
+    border-radius: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    min-width: 8.5rem;
+    padding: 0.75rem 0.9rem;
+}
+
+.table-count {
+    color: #0b5cab;
+    font-size: 1.65rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.table-meta-label {
+    color: #52606d;
+    font-size: 0.78rem;
+    margin-top: 0.25rem;
+    text-transform: uppercase;
+}
+
+.table-body {
+    border: 1px solid #d8e6f2;
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.table-state {
+    border-radius: 0.75rem;
+    font-size: 0.92rem;
+    padding: 1rem;
+}
+
+.error-state {
+    background: #fff3f3;
+    border: 1px solid #f8c7c7;
+    color: #9b1c1c;
+}
+
+.empty-state {
+    background: #f8fbff;
+    border: 1px dashed #bfd3e6;
+    color: #52606d;
+}
+
+@media (max-width: 640px) {
+    .table-header {
+        flex-direction: column;
+    }
+
+    .table-meta {
+        align-items: flex-start;
+        width: 100%;
+    }
 }

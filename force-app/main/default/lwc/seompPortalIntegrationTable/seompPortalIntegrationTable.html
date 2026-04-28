@@ -1,15 +1,43 @@
 <template>
-    <lightning-card title="SEOMP Integrations" icon-name="utility:connected_apps">
-        <div class="slds-p-horizontal_medium slds-p-top_small table-note">
-            <template if:true={error}>{error}</template>
-        </div>
-        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
-            <lightning-datatable
-                key-field="id"
-                data={rows}
-                columns={columns}
-                hide-checkbox-column>
-            </lightning-datatable>
+    <lightning-card icon-name="utility:connected_apps">
+        <div class="table-shell">
+            <div class="table-header">
+                <div>
+                    <p class="table-eyebrow">Integration watchlist</p>
+                    <h2 class="table-title">SEOMP Integrations</h2>
+                    <p class="table-copy">
+                        Failed and warning integrations surfaced for rapid investigation.
+                    </p>
+                </div>
+                <div class="table-meta">
+                    <span class="table-count">{rowCount}</span>
+                    <span class="table-meta-label">flagged records</span>
+                </div>
+            </div>
+            <template if:true={error}>
+                <div class="table-state error-state">{error}</div>
+            </template>
+            <template if:false={error}>
+                <template if:true={hasRows}>
+                    <div class="table-body">
+                        <lightning-datatable
+                            key-field="id"
+                            data={rows}
+                            columns={columns}
+                            hide-checkbox-column
+                            onsort={handleSort}
+                            show-row-number-column
+                            sorted-by={sortedBy}
+                            sorted-direction={sortDirection}>
+                        </lightning-datatable>
+                    </div>
+                </template>
+                <template if:false={hasRows}>
+                    <div class="table-state empty-state">
+                        No failed or warning integrations at the moment.
+                    </div>
+                </template>
+            </template>
         </div>
     </lightning-card>
 </template>

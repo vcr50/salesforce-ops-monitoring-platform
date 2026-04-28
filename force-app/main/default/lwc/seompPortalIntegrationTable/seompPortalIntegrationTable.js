@@ -2,24 +2,49 @@ import { LightningElement, wire } from 'lwc';
 import getActiveIntegrations from '@salesforce/apex/SEOMPPortalController.getActiveIntegrations';
 
 const COLUMNS = [
-    { label: 'API', fieldName: 'apiName' },
-    { label: 'Status', fieldName: 'status' },
-    { label: 'Response Time', fieldName: 'responseTime' }
+    { label: 'API', fieldName: 'apiName', sortable: true },
+    { label: 'Status', fieldName: 'status', sortable: true },
+    { label: 'Response Time', fieldName: 'responseTime', sortable: true }
 ];
 
 export default class SeompPortalIntegrationTable extends LightningElement {
     columns = COLUMNS;
     rows = [];
     error;
+    sortedBy = 'status';
+    sortDirection = 'desc';
 
     @wire(getActiveIntegrations)
     wiredIntegrations({ error, data }) {
         if (data) {
-            this.rows = data;
+            this.rows = this.sortData(data, this.sortedBy, this.sortDirection);
             this.error = undefined;
         } else if (error) {
             this.rows = [];
             this.error = 'Unable to load live integration data.';
         }
+    }
+
+    get hasRows() {
+        return this.rows.length > 0;
+    }
+
+    get rowCount() {
+        return this.rows.length;
+    }
+
+    handleSort(event) {
+        this.sortedBy = event.detail.fieldName;
+        this.sortDirection = event.detail.sortDirection;
+        this.rows = this.sortData(this.rows, this.sortedBy, this.sortDirection);
+    }
+
+    sortData(data, fieldName, sortDirection) {
+        const direction = sortDirection === 'asc' ? 1 : -1;
+        return [...data].sort((left, right) => {
+            const leftValue = left[fieldName] ?? '';
+            const rightValue = right[fieldName] ?? '';
+            return leftValue > rightValue ? direction : leftValue < rightValue ? -direction : 0;
+        });
     }
 }
