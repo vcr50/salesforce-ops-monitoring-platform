@@ -2,114 +2,160 @@
     <section class={shellClass}>
         <div class="backdrop"></div>
         <div class="service-page">
-            <header class="hero">
-                <div class="hero-copy">
-                    <p class="eyebrow">Tomcodex managed services</p>
-                    <h1 class="hero-title">Professional Salesforce operations and IT service delivery.</h1>
-                    <p class="hero-text">
-                        Tomcodex helps teams run Salesforce with confidence through monitoring,
-                        integration visibility, incident response, release oversight, and polished
-                        service experiences for internal and external users.
-                    </p>
-                    <div class="hero-actions">
-                        <a class="primary-action" href={primaryActionUrl}>Book a strategy call</a>
-                        <a class="secondary-action" href={secondaryActionUrl}>Explore service scope</a>
-                    </div>
+            <header class="masthead">
+                <div class="brand-lockup">
+                    <span class="brand-mark"></span>
+                    <span class="brand-name">{companyName}</span>
                 </div>
-                <div class="hero-panel">
-                    <div class="theme-toggle">
-                        <span class="toggle-label">Theme</span>
-                        <button class="toggle-button" onclick={toggleTheme} type="button">
-                            <span>{themeButtonLabel}</span>
-                        </button>
-                    </div>
-                    <div class="hero-metrics">
-                        <div class="metric-card">
-                            <span class="metric-value">24/7</span>
-                            <span class="metric-label">Operational response design</span>
-                        </div>
-                        <div class="metric-card">
-                            <span class="metric-value">ITSM</span>
-                            <span class="metric-label">Service-led delivery model</span>
-                        </div>
-                        <div class="metric-card">
-                            <span class="metric-value">CX + Ops</span>
-                            <span class="metric-label">Experience Cloud and platform UX</span>
-                        </div>
-                    </div>
+                <div class="masthead-actions">
+                    <span class="masthead-pill">Enterprise service engineering</span>
+                    <button class="theme-button" onclick={toggleTheme} type="button">
+                        {themeButtonLabel}
+                    </button>
                 </div>
             </header>
 
-            <section class="section">
-                <div class="section-heading">
-                    <p class="section-eyebrow">What we deliver</p>
-                    <h2 class="section-title">Core service lines</h2>
-                </div>
-                <div class="service-grid">
-                    <article class="service-card">
-                        <span class="service-kicker">Monitoring</span>
-                        <h3>Salesforce operations monitoring</h3>
-                        <p>
-                            Build visibility across incidents, integration failures, deployment risk,
-                            and platform health with actionable dashboards and service workflows.
-                        </p>
-                    </article>
-                    <article class="service-card">
-                        <span class="service-kicker">Automation</span>
-                        <h3>Incident and integration automation</h3>
-                        <p>
-                            Reduce manual triage with trigger-based lifecycle automation, escalation
-                            routing, and clean service ownership patterns.
-                        </p>
-                    </article>
-                    <article class="service-card">
-                        <span class="service-kicker">Experience</span>
-                        <h3>Experience Cloud portal design</h3>
-                        <p>
-                            Turn internal admin-heavy layouts into clean service experiences with
-                            role-based access, focused journeys, and stronger UX.
-                        </p>
-                    </article>
-                </div>
-            </section>
-
-            <section class="section split-layout">
-                <div class="story-card">
-                    <p class="section-eyebrow">Why Tomcodex</p>
-                    <h2 class="section-title">Built for teams that need reliability and clarity.</h2>
-                    <p class="story-copy">
-                        We blend Salesforce platform engineering, service design, and operational
-                        thinking. The result is not just working metadata, but a service surface that
-                        feels professional to the people who rely on it every day.
+            <section class="hero-grid">
+                <article class="hero-stage">
+                    <p class="eyebrow">Realtime service operations</p>
+                    <h1 class="hero-title">A premium operations front door for Salesforce, integration, and service reliability teams.</h1>
+                    <p class="hero-text">
+                        {companyName} designs operational experiences that feel like modern product
+                        companies, not admin screens. Monitor incidents, integration failures,
+                        release posture, and service health from one sharply designed digital surface.
                     </p>
-                    <ul class="story-points">
-                        <li>Operational dashboards and portal experiences that actually guide action</li>
-                        <li>Reusable deployment-ready metadata and GitHub-backed delivery flow</li>
-                        <li>Internal admin tooling plus external-facing service experiences</li>
-                    </ul>
-                </div>
-                <div class="stack-card">
-                    <p class="section-eyebrow">Delivery stack</p>
-                    <div class="stack-grid">
-                        <span>Salesforce DX</span>
-                        <span>Experience Cloud</span>
-                        <span>Apex Automation</span>
-                        <span>Lightning Web Components</span>
-                        <span>GitHub Delivery</span>
-                        <span>Service UX</span>
+                    <div class="hero-actions">
+                        <a class="primary-action" href={primaryActionUrl}>Start a transformation brief</a>
+                        <a class="secondary-action" href={secondaryActionUrl}>Review platform capabilities</a>
                     </div>
+                    <div class="signal-row">
+                        <span>Realtime triage workflows</span>
+                        <span>Command-center dashboards</span>
+                        <span>Dark and day modes</span>
+                    </div>
+                </article>
+
+                <aside class="hero-console">
+                    <div class="console-topbar">
+                        <span class="console-status">Live service fabric</span>
+                        <span class="console-time">Updated every interaction</span>
+                    </div>
+                    <div class="console-metrics">
+                        <div class="metric-card metric-feature">
+                            <span class="metric-label">Operational posture</span>
+                            <span class="metric-value">Stable</span>
+                            <p>Unified view for incidents, failed integrations, and change activity.</p>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Coverage</span>
+                            <span class="metric-value">24/7</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Portal mode</span>
+                            <span class="metric-value">B2E + B2B</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Delivery model</span>
+                            <span class="metric-value">DX Native</span>
+                        </div>
+                    </div>
+                    <div class="console-feed">
+                        <div class="feed-row">
+                            <span class="feed-tag tag-green">Synced</span>
+                            <span class="feed-copy">Experience Cloud UI aligned with service telemetry.</span>
+                        </div>
+                        <div class="feed-row">
+                            <span class="feed-tag tag-blue">Active</span>
+                            <span class="feed-copy">Portal components wired to live incident and integration data.</span>
+                        </div>
+                        <div class="feed-row">
+                            <span class="feed-tag tag-amber">Ready</span>
+                            <span class="feed-copy">Architecture prepared for drill-down, alerts, and client-facing service views.</span>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+
+            <section class="capability-band">
+                <div class="band-label">Built for modern IT service teams</div>
+                <div class="band-items">
+                    <span>Operational Monitoring</span>
+                    <span>Incident Automation</span>
+                    <span>Integration Visibility</span>
+                    <span>Experience Cloud UX</span>
+                    <span>GitHub Delivery</span>
+                    <span>Salesforce DX</span>
                 </div>
             </section>
 
-            <section class="section callout">
-                <div>
-                    <p class="section-eyebrow">Ready to launch</p>
-                    <h2 class="section-title">Use this page as the professional front door for your portal.</h2>
+            <section class="section section-tight">
+                <div class="section-heading">
+                    <p class="section-eyebrow">Service architecture</p>
+                    <h2 class="section-title">Designed like a serious software company, not a utility portal.</h2>
                 </div>
-                <p class="callout-copy">
-                    Place this component on the site home page, then keep the SEOMP operational pages
-                    behind it for incidents, integrations, and analytics.
-                </p>
+                <div class="feature-grid">
+                    <article class="feature-card feature-large">
+                        <span class="card-kicker">01 Command layer</span>
+                        <h3>Executive-grade command center experiences</h3>
+                        <p>
+                            We transform raw Salesforce operations into high-confidence surfaces for
+                            leadership, support engineers, and service owners with crisp hierarchy,
+                            real metrics, and drill-down navigation.
+                        </p>
+                    </article>
+                    <article class="feature-card">
+                        <span class="card-kicker">02 Automation</span>
+                        <h3>Signals that trigger action</h3>
+                        <p>
+                            Failed integrations, open incidents, and recovery events can flow through
+                            automation instead of manual queue watching.
+                        </p>
+                    </article>
+                    <article class="feature-card">
+                        <span class="card-kicker">03 Experience</span>
+                        <h3>Dark mode, day mode, product-grade rhythm</h3>
+                        <p>
+                            The interface is designed for long operational sessions, faster scanning,
+                            and a more premium first impression for clients and internal teams.
+                        </p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section insight-grid">
+                <article class="insight-panel">
+                    <p class="section-eyebrow">What teams gain</p>
+                    <h2 class="section-title">Faster decisions with less visual noise.</h2>
+                    <ul class="insight-list">
+                        <li>One portal surface for service health, incident context, and integration exceptions</li>
+                        <li>Cleaner path from monitoring to action through page-level drill-down views</li>
+                        <li>Branded enterprise UX that feels credible in front of customers and executives</li>
+                    </ul>
+                </article>
+                <article class="ops-board">
+                    <div class="board-header">
+                        <span class="board-title">Realtime experience blueprint</span>
+                        <span class="board-state">Production style</span>
+                    </div>
+                    <div class="board-rows">
+                        <div class="board-row">
+                            <span class="board-key">Home</span>
+                            <span class="board-value">Hero, service posture, live summary cards</span>
+                        </div>
+                        <div class="board-row">
+                            <span class="board-key">Incidents</span>
+                            <span class="board-value">Open queue, severity, detail navigation</span>
+                        </div>
+                        <div class="board-row">
+                            <span class="board-key">Integrations</span>
+                            <span class="board-value">Failure tracking, warnings, response times</span>
+                        </div>
+                        <div class="board-row">
+                            <span class="board-key">Analytics</span>
+                            <span class="board-value">Operational insights and service trend reporting</span>
+                        </div>
+                    </div>
+                </article>
             </section>
         </div>
     </section>

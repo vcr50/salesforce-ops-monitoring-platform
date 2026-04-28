@@ -6,7 +6,7 @@ export default class TomcodexServicePage extends LightningElement {
     @api companyName = 'Tomcodex';
     @api primaryActionUrl = '#';
     @api secondaryActionUrl = '#';
-    theme = 'light';
+    theme = 'dark';
 
     connectedCallback() {
         try {
@@ -24,7 +24,7 @@ export default class TomcodexServicePage extends LightningElement {
     }
 
     get themeButtonLabel() {
-        return this.theme === 'dark' ? 'Switch to day mode' : 'Switch to dark mode';
+        return this.theme === 'dark' ? 'Day mode' : 'Dark mode';
     }
 
     toggleTheme() {
