@@ -1,18 +1,25 @@
-name: CI
+name: Tomcodex CI
 
 on:
   push:
     branches:
-      - master
       - main
   pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: tomcodex-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  validate:
+  node-quality:
+    name: Node Quality Checks
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Node.js
@@ -24,5 +31,62 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
+      - name: Run ESLint
         run: npm run lint
+
+      - name: Run Jest
+        run: npx jest --coverage --passWithNoTests
+
+  salesforce-source-validation:
+    name: Salesforce Source Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Salesforce CLI
+        run: npm install --global @salesforce/cli
+
+      - name: Show Salesforce CLI version
+        run: sf --version
+
+      - name: Validate Salesforce project config
+        run: sf project list --json
+
+      - name: Convert source to Metadata API format
+        run: sf project convert source --root-dir force-app --output-dir mdapi_output
+
+      - name: Verify package manifest exists
+        run: test -f manifest/package.xml
+
+      - name: Upload converted metadata artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mdapi-output
+          path: mdapi_output
+
+  salesforce-org-validation:
+    name: Salesforce Org Validation
+    runs-on: ubuntu-latest
+    needs:
+      - node-quality
+      - salesforce-source-validation
+    if: ${{ secrets.SF_AUTH_URL != '' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Salesforce CLI
+        run: npm install --global @salesforce/cli
+
+      - name: Authenticate to Salesforce
+        shell: bash
+        run: |
+          echo "${{ secrets.SF_AUTH_URL }}" > ./SF_AUTH_URL.txt
+          sf org login sfdx-url --sfdx-url-file ./SF_AUTH_URL.txt --alias ci-org --set-default
+
+      - name: Validate deployment against org
+        run: sf project deploy start --dry-run --test-level RunLocalTests --target-org ci-org --ignore-conflicts
+

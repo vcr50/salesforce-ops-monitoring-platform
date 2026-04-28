@@ -205,6 +205,15 @@ These steps are example setup instructions and can be adapted for your org and d
 - Apex classes and LWCs support the portal's live operational modules
 - Platform Events are part of the real-time direction for this product and can be expanded further for event-driven processing
 
+## CI/CD
+GitHub Actions is configured to run:
+- Node quality checks with ESLint and Jest
+- Salesforce DX source validation through metadata conversion
+- Optional org-level deployment validation when the `SF_AUTH_URL` GitHub secret is configured
+
+To enable org validation in GitHub Actions, add an authenticated Salesforce SFDX auth URL as:
+- `SF_AUTH_URL`
+
 ## Why This README Exists
 This repository is meant to serve both as a working Salesforce implementation and as a showcase of how modern service operations can be presented with a cleaner, more product-grade experience inside Salesforce.
 
