@@ -48,6 +48,7 @@ Create these pages in Experience Builder:
 
 ### Home
 
+- `tomcodexServicePage`
 - `seompPortalSummary`
 - rich text intro / status guidance
 - optional report chart or report table

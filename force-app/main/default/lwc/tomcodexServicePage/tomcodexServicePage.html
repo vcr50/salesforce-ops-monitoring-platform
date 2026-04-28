@@ -1,0 +1,116 @@
+<template>
+    <section class={shellClass}>
+        <div class="backdrop"></div>
+        <div class="service-page">
+            <header class="hero">
+                <div class="hero-copy">
+                    <p class="eyebrow">Tomcodex managed services</p>
+                    <h1 class="hero-title">Professional Salesforce operations and IT service delivery.</h1>
+                    <p class="hero-text">
+                        Tomcodex helps teams run Salesforce with confidence through monitoring,
+                        integration visibility, incident response, release oversight, and polished
+                        service experiences for internal and external users.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="primary-action" href={primaryActionUrl}>Book a strategy call</a>
+                        <a class="secondary-action" href={secondaryActionUrl}>Explore service scope</a>
+                    </div>
+                </div>
+                <div class="hero-panel">
+                    <div class="theme-toggle">
+                        <span class="toggle-label">Theme</span>
+                        <button class="toggle-button" onclick={toggleTheme} type="button">
+                            <span>{themeButtonLabel}</span>
+                        </button>
+                    </div>
+                    <div class="hero-metrics">
+                        <div class="metric-card">
+                            <span class="metric-value">24/7</span>
+                            <span class="metric-label">Operational response design</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-value">ITSM</span>
+                            <span class="metric-label">Service-led delivery model</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-value">CX + Ops</span>
+                            <span class="metric-label">Experience Cloud and platform UX</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <section class="section">
+                <div class="section-heading">
+                    <p class="section-eyebrow">What we deliver</p>
+                    <h2 class="section-title">Core service lines</h2>
+                </div>
+                <div class="service-grid">
+                    <article class="service-card">
+                        <span class="service-kicker">Monitoring</span>
+                        <h3>Salesforce operations monitoring</h3>
+                        <p>
+                            Build visibility across incidents, integration failures, deployment risk,
+                            and platform health with actionable dashboards and service workflows.
+                        </p>
+                    </article>
+                    <article class="service-card">
+                        <span class="service-kicker">Automation</span>
+                        <h3>Incident and integration automation</h3>
+                        <p>
+                            Reduce manual triage with trigger-based lifecycle automation, escalation
+                            routing, and clean service ownership patterns.
+                        </p>
+                    </article>
+                    <article class="service-card">
+                        <span class="service-kicker">Experience</span>
+                        <h3>Experience Cloud portal design</h3>
+                        <p>
+                            Turn internal admin-heavy layouts into clean service experiences with
+                            role-based access, focused journeys, and stronger UX.
+                        </p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section split-layout">
+                <div class="story-card">
+                    <p class="section-eyebrow">Why Tomcodex</p>
+                    <h2 class="section-title">Built for teams that need reliability and clarity.</h2>
+                    <p class="story-copy">
+                        We blend Salesforce platform engineering, service design, and operational
+                        thinking. The result is not just working metadata, but a service surface that
+                        feels professional to the people who rely on it every day.
+                    </p>
+                    <ul class="story-points">
+                        <li>Operational dashboards and portal experiences that actually guide action</li>
+                        <li>Reusable deployment-ready metadata and GitHub-backed delivery flow</li>
+                        <li>Internal admin tooling plus external-facing service experiences</li>
+                    </ul>
+                </div>
+                <div class="stack-card">
+                    <p class="section-eyebrow">Delivery stack</p>
+                    <div class="stack-grid">
+                        <span>Salesforce DX</span>
+                        <span>Experience Cloud</span>
+                        <span>Apex Automation</span>
+                        <span>Lightning Web Components</span>
+                        <span>GitHub Delivery</span>
+                        <span>Service UX</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section callout">
+                <div>
+                    <p class="section-eyebrow">Ready to launch</p>
+                    <h2 class="section-title">Use this page as the professional front door for your portal.</h2>
+                </div>
+                <p class="callout-copy">
+                    Place this component on the site home page, then keep the SEOMP operational pages
+                    behind it for incidents, integrations, and analytics.
+                </p>
+            </section>
+        </div>
+    </section>
+</template>

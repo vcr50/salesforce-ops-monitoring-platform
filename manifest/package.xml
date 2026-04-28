@@ -91,6 +91,7 @@
         <members>seompPortalIntegrationTable</members>
         <members>seompPortalIncidentDetail</members>
         <members>seompPortalIntegrationDetail</members>
+        <members>tomcodexServicePage</members>
         <name>LightningComponentBundle</name>
     </types>
     <version>62.0</version>
