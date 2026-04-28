@@ -2,6 +2,17 @@
 
 Premium service operations workspace built on Salesforce for real-time monitoring of incidents, integrations, and platform health.
 
+![Platform](https://img.shields.io/badge/Platform-Salesforce-00A1E0?style=for-the-badge&logo=salesforce&logoColor=white)
+![Experience](https://img.shields.io/badge/UI-Experience%20Cloud-0B5CAB?style=for-the-badge)
+![Frontend](https://img.shields.io/badge/Frontend-LWC-1B96FF?style=for-the-badge)
+![Automation](https://img.shields.io/badge/Automation-Flows%20%2B%20Apex-16325C?style=for-the-badge)
+
+## At a Glance
+- Real-time monitoring for incidents, integrations, and service posture
+- Premium Experience Cloud UX designed like a SaaS operations product
+- Event-ready architecture using Apex, Flows, and Platform Events
+- Modular portal experience across Home, Incidents, Integrations, and Analytics
+
 ## Overview
 Tomcodex - Real-Time Service Operations Portal is a Salesforce-first operations platform designed to give service teams a clean, product-like interface for observing system health, investigating issues, and acting on service events.
 
@@ -17,17 +28,12 @@ This project is designed to feel more like a SaaS product than a traditional int
 - Creates a scalable foundation for event-driven real-time service operations
 
 ## Core Modules
-### Home
-Service health overview with a premium landing experience, operational posture, and summary metrics.
-
-### Incidents
-Issue tracking workspace for open incidents, severity-based prioritization, and record drill-down.
-
-### Integrations
-API monitoring surface for failed and warning integrations, execution visibility, and response tracking.
-
-### Analytics
-Insights and operational trends across incidents, failures, and service performance.
+| Module | Purpose | Experience |
+| --- | --- | --- |
+| `Home` | Service health overview | Premium landing experience, operational posture, summary metrics |
+| `Incidents` | Issue tracking | Open incident queue, severity prioritization, detail drill-down |
+| `Integrations` | API monitoring | Failed and warning integration visibility, response tracking |
+| `Analytics` | Insights and trends | Operational reporting, service patterns, executive visibility |
 
 ## Architecture
 The solution follows a layered Salesforce architecture where Experience Cloud acts as the presentation layer, LWCs deliver the application experience, Apex powers data orchestration and domain logic, and Flows automate service operations.
@@ -64,6 +70,21 @@ Apex Controllers + Apex Automation
 - Platform Events enable real-time operational messaging and future event-driven scaling
 - External APIs connect third-party service signals and integration telemetry into Salesforce
 
+## Product Flow
+```text
+Signal Detected
+    ->
+Platform Event / API Input
+    ->
+Apex + Flow Automation
+    ->
+Salesforce Operational Objects
+    ->
+Experience Cloud + LWC Portal
+    ->
+Operator Action, Analytics, and Executive Visibility
+```
+
 ## Tech Stack
 - Salesforce Experience Cloud
 - Apex
@@ -86,20 +107,13 @@ Apex Controllers + Apex Automation
 ## Screenshots
 Add product screenshots here as the experience evolves.
 
-### Suggested Screenshots
-- `Home` module overview
-- `Incidents` live queue
-- `Integrations` monitoring view
-- `Analytics` trends and dashboards
-- Experience Cloud landing page
-
-```text
-docs/screenshots/home-overview.png
-docs/screenshots/incidents-module.png
-docs/screenshots/integrations-module.png
-docs/screenshots/analytics-module.png
-docs/screenshots/landing-page.png
-```
+| View | Placeholder |
+| --- | --- |
+| Home module overview | `docs/screenshots/home-overview.png` |
+| Incidents live queue | `docs/screenshots/incidents-module.png` |
+| Integrations monitoring | `docs/screenshots/integrations-module.png` |
+| Analytics trends | `docs/screenshots/analytics-module.png` |
+| Experience Cloud landing page | `docs/screenshots/landing-page.png` |
 
 ## Repository Structure
 ```text
@@ -167,8 +181,11 @@ These steps are example setup instructions and can be adapted for your org and d
 ## Deployment Notes
 - The project uses Salesforce DX source format
 - Experience Cloud components are intended to be placed through Experience Builder
-- Apex classes and LWCs support the portal’s live operational modules
+- Apex classes and LWCs support the portal's live operational modules
 - Platform Events are part of the real-time direction for this product and can be expanded further for event-driven processing
+
+## Why This README Exists
+This repository is meant to serve both as a working Salesforce implementation and as a showcase of how modern service operations can be presented with a cleaner, more product-grade experience inside Salesforce.
 
 ## Future Enhancements
 - Full Platform Event-driven live refresh across portal modules
