@@ -117,6 +117,9 @@ Use `src/` for the Express-based SEOMP middleware and `force-app/` for Salesforc
 - [Data Model](docs/data-model.md)
 - [Phase 1 Summary](docs/phase-1-foundation.md)
 - [Developer Org Setup](docs/developer-org-setup.md)
+- [Dashboard Handoff](docs/dashboard-handoff.md)
+- [Experience Cloud Plan](docs/experience-cloud-plan.md)
+- [Experience Cloud Build Checklist](docs/experience-cloud-build-checklist.md)
 
 ## GitHub Sync
 

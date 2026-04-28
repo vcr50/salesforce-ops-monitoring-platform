@@ -1,0 +1,25 @@
+<template>
+    <lightning-card title="SEOMP Portal Summary" icon-name="utility:dashboard">
+        <div class="summary-grid slds-p-around_medium">
+            <div class="summary-tile">
+                <span class="summary-label">Critical incidents</span>
+                <span class="summary-value">{criticalIncidents}</span>
+            </div>
+            <div class="summary-tile">
+                <span class="summary-label">Open incidents</span>
+                <span class="summary-value">{openIncidents}</span>
+            </div>
+            <div class="summary-tile">
+                <span class="summary-label">Failed integrations</span>
+                <span class="summary-value">{failedIntegrations}</span>
+            </div>
+            <div class="summary-tile">
+                <span class="summary-label">Warnings</span>
+                <span class="summary-value">{warningIntegrations}</span>
+            </div>
+        </div>
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium summary-note">
+            Starter Experience Cloud summary component. Wire this to Apex or UI API in the next slice.
+        </div>
+    </lightning-card>
+</template>

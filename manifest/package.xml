@@ -20,6 +20,8 @@
     </types>
     <types>
         <members>SEOMP_Admin</members>
+        <members>SEOMP_Portal_Support</members>
+        <members>SEOMP_Portal_Viewer</members>
         <members>SEOMP_Runtime_Admin</members>
         <name>PermissionSet</name>
     </types>
@@ -80,6 +82,12 @@
     <types>
         <members>SEOMP_Dashboards</members>
         <name>DashboardFolder</name>
+    </types>
+    <types>
+        <members>seompPortalSummary</members>
+        <members>seompPortalIncidentTable</members>
+        <members>seompPortalIntegrationTable</members>
+        <name>LightningComponentBundle</name>
     </types>
     <version>62.0</version>
 </Package>
