@@ -39,6 +39,8 @@ Create these pages in Experience Builder:
 - Home
 - Incidents
 - Integrations
+- Incident Detail
+- Integration Detail
 - Analytics
 - Escalation
 
@@ -59,6 +61,18 @@ Create these pages in Experience Builder:
 
 - `seompPortalIntegrationTable`
 - failed log and warning log views
+
+### Incident Detail
+
+- `seompPortalIncidentDetail`
+- route/page path:
+  - `incident-detail`
+
+### Integration Detail
+
+- `seompPortalIntegrationDetail`
+- route/page path:
+  - `integration-detail`
 
 ### Analytics
 
@@ -124,6 +138,7 @@ After the starter portal works:
 - replace standard report/list blocks with richer custom LWCs
 - add Apex-backed aggregate summary endpoints if needed
 - add incident drill-down and escalation actions
+  - this repo now includes starter incident and integration detail components
 
 ## 10. Deployment Reminder
 

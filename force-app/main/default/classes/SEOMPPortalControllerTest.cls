@@ -108,4 +108,44 @@ private class SEOMPPortalControllerTest {
         System.assert(statuses.contains('Warning'));
         System.assert(!statuses.contains('Success'));
     }
+
+    @IsTest
+    static void incidentDetailReturnsRelatedContext() {
+        Id incidentId = [
+            SELECT Id
+            FROM Incident__c
+            WHERE Severity__c = 'Critical'
+            AND Status__c = 'New'
+            AND Integration_Log__c != null
+            LIMIT 1
+        ].Id;
+
+        Test.startTest();
+        SEOMPPortalController.PortalIncidentDetail detail = SEOMPPortalController.getIncidentDetail(incidentId);
+        Test.stopTest();
+
+        System.assertEquals('Critical', detail.severity);
+        System.assertEquals('New', detail.status);
+        System.assertEquals('Portal Test Environment', detail.environmentName);
+        System.assertEquals('Portal Test Critical Policy', detail.slaPolicyName);
+        System.assertEquals('LOG-0000', detail.integrationLogName);
+    }
+
+    @IsTest
+    static void integrationDetailReturnsLinkedIncidentCount() {
+        Id logId = [
+            SELECT Id
+            FROM Integration_Log__c
+            WHERE API_Name__c = 'Orders API'
+            LIMIT 1
+        ].Id;
+
+        Test.startTest();
+        SEOMPPortalController.PortalIntegrationDetail detail = SEOMPPortalController.getIntegrationDetail(logId);
+        Test.stopTest();
+
+        System.assertEquals('Orders API', detail.apiName);
+        System.assertEquals('Failed', detail.status);
+        System.assertEquals(2, detail.linkedOpenIncidents);
+    }
 }

@@ -1,0 +1,55 @@
+<template>
+    <lightning-card icon-name="utility:connected_apps">
+        <div class="detail-shell">
+            <div class="detail-header">
+                <div>
+                    <p class="detail-eyebrow">Integration drill-down</p>
+                    <h2 class="detail-title">Integration Detail</h2>
+                    <p class="detail-copy">
+                        Review API health, latest failure context, and related incident load.
+                    </p>
+                </div>
+            </div>
+            <template if:true={error}>
+                <div class="detail-state error-state">{error}</div>
+            </template>
+            <template if:false={error}>
+                <template if:true={hasDetail}>
+                    <div class="detail-banner">
+                        <div>
+                            <span class="detail-label">Integration log</span>
+                            <span class="detail-value hero">{detail.name}</span>
+                        </div>
+                        <div class="pill-row">
+                            <span class="status-pill api">{detail.apiName}</span>
+                            <span class="status-pill status">{detail.status}</span>
+                        </div>
+                    </div>
+                    <div class="detail-grid">
+                        <div class="detail-card">
+                            <span class="detail-label">API name</span>
+                            <span class="detail-value">{detail.apiName}</span>
+                        </div>
+                        <div class="detail-card">
+                            <span class="detail-label">Response time</span>
+                            <span class="detail-value">{responseTimeLabel}</span>
+                        </div>
+                        <div class="detail-card">
+                            <span class="detail-label">Linked open incidents</span>
+                            <span class="detail-value">{detail.linkedOpenIncidents}</span>
+                        </div>
+                    </div>
+                    <div class="detail-panel">
+                        <span class="detail-label">Latest error message</span>
+                        <p class="detail-description">{errorMessageLabel}</p>
+                    </div>
+                </template>
+                <template if:false={hasDetail}>
+                    <div class="detail-state empty-state">
+                        Select an integration from the portal integrations table to view its detail here.
+                    </div>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>

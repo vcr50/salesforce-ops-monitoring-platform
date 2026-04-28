@@ -89,6 +89,8 @@
         <members>seompPortalSummary</members>
         <members>seompPortalIncidentTable</members>
         <members>seompPortalIntegrationTable</members>
+        <members>seompPortalIncidentDetail</members>
+        <members>seompPortalIntegrationDetail</members>
         <name>LightningComponentBundle</name>
     </types>
     <version>62.0</version>

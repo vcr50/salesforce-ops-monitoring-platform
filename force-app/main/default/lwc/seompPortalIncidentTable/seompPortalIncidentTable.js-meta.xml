@@ -8,4 +8,13 @@
         <target>lightningCommunity__Default</target>
         <target>lightning__AppPage</target>
     </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property
+                name="detailPagePath"
+                type="String"
+                label="Incident Detail Page Path"
+                default="incident-detail"/>
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>
