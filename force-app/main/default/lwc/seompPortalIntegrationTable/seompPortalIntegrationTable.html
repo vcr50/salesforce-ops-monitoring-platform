@@ -1,7 +1,7 @@
 <template>
     <lightning-card title="SEOMP Integrations" icon-name="utility:connected_apps">
         <div class="slds-p-horizontal_medium slds-p-top_small table-note">
-            This starter component is a placeholder for failed and warning integration views in Experience Cloud.
+            <template if:true={error}>{error}</template>
         </div>
         <div class="slds-p-horizontal_medium slds-p-bottom_medium">
             <lightning-datatable

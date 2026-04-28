@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="slds-p-horizontal_medium slds-p-bottom_medium summary-note">
-            Starter Experience Cloud summary component. Wire this to Apex or UI API in the next slice.
+            <template if:true={error}>{error}</template>
         </div>
     </lightning-card>
 </template>

@@ -1,4 +1,5 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, wire } from 'lwc';
+import getActiveIntegrations from '@salesforce/apex/SEOMPPortalController.getActiveIntegrations';
 
 const COLUMNS = [
     { label: 'API', fieldName: 'apiName' },
@@ -8,9 +9,17 @@ const COLUMNS = [
 
 export default class SeompPortalIntegrationTable extends LightningElement {
     columns = COLUMNS;
+    rows = [];
+    error;
 
-    rows = [
-        { id: '1', apiName: 'Orders API', status: 'Failed', responseTime: '2400 ms' },
-        { id: '2', apiName: 'Inventory API', status: 'Warning', responseTime: '950 ms' }
-    ];
+    @wire(getActiveIntegrations)
+    wiredIntegrations({ error, data }) {
+        if (data) {
+            this.rows = data;
+            this.error = undefined;
+        } else if (error) {
+            this.rows = [];
+            this.error = 'Unable to load live integration data.';
+        }
+    }
 }

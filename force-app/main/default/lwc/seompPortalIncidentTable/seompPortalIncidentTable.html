@@ -1,7 +1,7 @@
 <template>
     <lightning-card title="SEOMP Incidents" icon-name="utility:warning">
         <div class="slds-p-horizontal_medium slds-p-top_small table-note">
-            This starter component is a placeholder for an Experience Cloud incident work queue.
+            <template if:true={error}>{error}</template>
         </div>
         <div class="slds-p-horizontal_medium slds-p-bottom_medium">
             <lightning-datatable

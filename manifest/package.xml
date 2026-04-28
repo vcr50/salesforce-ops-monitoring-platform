@@ -59,6 +59,8 @@
         <members>Rectangle</members>
         <members>SEOMPAutomationService</members>
         <members>SEOMPAutomationServiceTest</members>
+        <members>SEOMPPortalController</members>
+        <members>SEOMPPortalControllerTest</members>
         <members>Square</members>
         <members>nameController</members>
         <members>stringCheckController</members>

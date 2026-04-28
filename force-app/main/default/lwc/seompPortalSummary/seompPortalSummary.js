@@ -1,8 +1,23 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, wire } from 'lwc';
+import getSummary from '@salesforce/apex/SEOMPPortalController.getSummary';
 
 export default class SeompPortalSummary extends LightningElement {
-    @api criticalIncidents = 0;
-    @api openIncidents = 0;
-    @api failedIntegrations = 0;
-    @api warningIntegrations = 0;
+    criticalIncidents = 0;
+    openIncidents = 0;
+    failedIntegrations = 0;
+    warningIntegrations = 0;
+    error;
+
+    @wire(getSummary)
+    wiredSummary({ error, data }) {
+        if (data) {
+            this.criticalIncidents = data.criticalIncidents;
+            this.openIncidents = data.openIncidents;
+            this.failedIntegrations = data.failedIntegrations;
+            this.warningIntegrations = data.warningIntegrations;
+            this.error = undefined;
+        } else if (error) {
+            this.error = 'Unable to load live summary data.';
+        }
+    }
 }

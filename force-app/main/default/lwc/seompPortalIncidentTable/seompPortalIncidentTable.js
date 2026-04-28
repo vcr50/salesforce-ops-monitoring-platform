@@ -1,4 +1,5 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, wire } from 'lwc';
+import getOpenIncidents from '@salesforce/apex/SEOMPPortalController.getOpenIncidents';
 
 const COLUMNS = [
     { label: 'Incident', fieldName: 'name' },
@@ -8,9 +9,17 @@ const COLUMNS = [
 
 export default class SeompPortalIncidentTable extends LightningElement {
     columns = COLUMNS;
+    rows = [];
+    error;
 
-    rows = [
-        { id: '1', name: 'INC-0000', severity: 'Critical', status: 'New' },
-        { id: '2', name: 'INC-0001', severity: 'High', status: 'New' }
-    ];
+    @wire(getOpenIncidents)
+    wiredIncidents({ error, data }) {
+        if (data) {
+            this.rows = data;
+            this.error = undefined;
+        } else if (error) {
+            this.rows = [];
+            this.error = 'Unable to load live incident data.';
+        }
+    }
 }
