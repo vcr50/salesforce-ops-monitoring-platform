@@ -62,10 +62,14 @@ app.use('/api/sync', syncRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/system', systemRoutes);
 
-// ── Serve local dashboard (SentinelFlow UI) ──────────────────────────────────
+// ── Serve Static Sites ──────────────────────────────────────────────
 const path = require('path');
+
+// Serve the Marketing Website at the root (/)
+app.use(express.static(path.join(__dirname, '../website')));
+
+// Serve the SentinelFlow Dashboard at (/dashboard)
 app.use('/dashboard', express.static(path.join(__dirname, 'dashboard')));
-app.get('/', (req, res) => res.redirect('/dashboard/index.html'));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
