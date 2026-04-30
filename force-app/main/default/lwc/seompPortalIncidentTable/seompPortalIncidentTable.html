@@ -1,62 +1,127 @@
 <template>
-    <section class="table-shell">
-        <div class="table-header">
-            <div class="headline-block">
-                <p class="table-eyebrow">Active queue</p>
-                <h2 class="table-title">SEOMP Incidents</h2>
-                <p class="table-copy">
-                    Current unresolved incidents ordered by urgency and recency.
-                </p>
+    <div class="panel">
+        <div class="panel-header">
+            <div class="panel-title">
+                <lightning-icon icon-name="utility:warning" size="small" class="title-icon"></lightning-icon>
+                <span>Live Incidents</span>
             </div>
-            <div class="table-meta">
-                <span class="table-count">{rowCount}</span>
-                <span class="table-meta-label">active records</span>
+            <div class="panel-actions">
+                <select class="filter-select" onchange={handleSeverityFilter}>
+                    <option value="all">All Severity</option>
+                    <option value="Critical">Critical</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+                <input type="text" class="search-input" placeholder="Search incidents…" oninput={handleSearch} />
             </div>
         </div>
+
+        <!-- Error state -->
         <template if:true={error}>
-            <div class="table-state error-state">{error}</div>
+            <div class="sf-error-banner">
+                <lightning-icon icon-name="utility:error" size="x-small"></lightning-icon>
+                {error}
+            </div>
         </template>
-        <template if:false={error}>
-            <template if:true={hasRows}>
-                <div class="table-board">
-                    <div class="table-toolbar">
-                        <button class="sort-chip" data-field="name" onclick={handleHeaderSort} type="button">
-                            Incident
-                        </button>
-                        <button class="sort-chip" data-field="severity" onclick={handleHeaderSort} type="button">
-                            Severity
-                        </button>
-                        <button class="sort-chip" data-field="status" onclick={handleHeaderSort} type="button">
-                            Status
-                        </button>
-                    </div>
-                    <div class="table-list">
-                        <template for:each={rows} for:item="row">
-                            <div class="table-row" key={row.id}>
-                                <div class="row-primary">
-                                    <span class="row-name">{row.name}</span>
-                                </div>
-                                <div class="row-pill-cell">
-                                    <span class={row.severityClass}>{row.severity}</span>
-                                </div>
-                                <div class="row-pill-cell">
-                                    <span class={row.statusClass}>{row.status}</span>
-                                </div>
-                                <div class="row-action-cell">
-                                    <button class="row-action" data-id={row.id} onclick={handleViewDetail} type="button">
-                                        View detail
-                                    </button>
-                                </div>
-                            </div>
+
+        <!-- Data table -->
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th onclick={handleHeaderSort} data-field="id" class="sortable">ID</th>
+                        <th onclick={handleHeaderSort} data-field="name" class="sortable">Description</th>
+                        <th onclick={handleHeaderSort} data-field="severity" class="sortable">Severity</th>
+                        <th onclick={handleHeaderSort} data-field="status" class="sortable">Status</th>
+                        <th onclick={handleHeaderSort} data-field="revenueAtRisk" class="sortable">Rev. Risk</th>
+                        <th onclick={handleHeaderSort} data-field="usersAffected" class="sortable">Affected</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template if:true={hasRows}>
+                        <template for:each={filteredRows} for:item="row">
+                            <tr key={row.id}>
+                                <td class="mono">{row.name}</td>
+                                <td class="desc-cell">{row.rootCause}</td>
+                                <td><span class={row.severityClass}>{row.severity}</span></td>
+                                <td><span class={row.statusClass}>{row.status}</span></td>
+                                <td class="mono-light">{row.revenueFormatted}</td>
+                                <td>{row.usersAffected}</td>
+                                <td>
+                                    <button class="btn-ghost-sm" data-id={row.id} onclick={handleViewDetail}>Analyze →</button>
+                                </td>
+                            </tr>
                         </template>
+                    </template>
+                    <template if:false={hasRows}>
+                        <tr>
+                            <td colspan="7" class="empty-state">No open incidents found.</td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Detail Drawer Overlay -->
+    <template if:true={drawerOpen}>
+        <div class="drawer-backdrop" onclick={handleCloseDrawer}></div>
+        <div class="detail-drawer open">
+            <div class="drawer-header">
+                <span class="drawer-title">{drawerRow.name} Detail</span>
+                <button class="drawer-close" onclick={handleCloseDrawer}>✕</button>
+            </div>
+            <div class="drawer-body">
+                <div class="drawer-field">
+                    <label>Description</label>
+                    <p>{drawerRow.rootCause}</p>
+                </div>
+                <div class="drawer-field">
+                    <label>Severity</label>
+                    <p><span class={drawerRow.severityClass}>{drawerRow.severity}</span></p>
+                </div>
+                <div class="drawer-field">
+                    <label>Status</label>
+                    <p><span class={drawerRow.statusClass}>{drawerRow.status}</span></p>
+                </div>
+                <div class="drawer-field">
+                    <label>Revenue at Risk</label>
+                    <p class="mono-light">{drawerRow.revenueFormatted}</p>
+                </div>
+
+                <div class="drawer-ai-box">
+                    <div class="drawer-ai-title">✦ Agentforce AI Analysis</div>
+                    <div class="drawer-field">
+                        <label>Root Cause</label>
+                        <p>{drawerRow.rootCause}</p>
+                    </div>
+                    <div class="drawer-field">
+                        <label>Recommended Action</label>
+                        <p><span class={drawerRow.actionClass}>{drawerRow.recommendedAction}</span></p>
+                    </div>
+                    <div class="drawer-field">
+                        <label>Confidence</label>
+                        <p>{drawerRow.confidenceFormatted}</p>
+                    </div>
+                    <div class="drawer-field">
+                        <label>Impact Level</label>
+                        <p>{drawerRow.aiImpactLevel}</p>
                     </div>
                 </div>
-            </template>
-            <template if:false={hasRows}>
-                <div class="table-state empty-state">
-                    No open incidents right now.
+
+                <div class="drawer-actions">
+                    <button class="btn-primary" data-id={drawerRow.id} onclick={handleHeal} disabled={isHealing}>
+                        <template if:true={isHealing}>Healing...</template>
+                        <template if:false={isHealing}>⚡ Auto-Heal</template>
+                    </button>
+                    <button class="btn-ghost" data-id={drawerRow.id} onclick={handleAnalyse} disabled={isAnalysing}>
+                        <template if:true={isAnalysing}>Analysing...</template>
+                        <template if:false={isAnalysing}>Re-Analyse</template>
+                    </button>
                 </div>
-            </template>
-        </template>
-    </section>
+            </div>
+        </div>
+    </template>
 </template>

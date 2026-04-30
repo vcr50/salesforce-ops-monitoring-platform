@@ -62,6 +62,11 @@ app.use('/api/sync', syncRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/system', systemRoutes);
 
+// ── Serve local dashboard (SentinelFlow UI) ──────────────────────────────────
+const path = require('path');
+app.use('/dashboard', express.static(path.join(__dirname, 'dashboard')));
+app.get('/', (req, res) => res.redirect('/dashboard/index.html'));
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({

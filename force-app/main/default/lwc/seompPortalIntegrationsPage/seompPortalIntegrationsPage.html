@@ -1,0 +1,89 @@
+<template>
+    <div class="page-container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Integrations</h1>
+                <p class="page-sub">API and service health monitoring across all connected systems</p>
+            </div>
+            <button class="btn-primary" onclick={refreshData}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.92-10.26l3.08 2.69"></path>
+                </svg>
+                Refresh
+            </button>
+        </div>
+
+        <div class="integrations-grid">
+            <template for:each={integrationStats} for:item="stat">
+                <div key={stat.apiName} class="health-card">
+                    <div class="card-top">
+                        <span class="api-name">{stat.apiName}</span>
+                        <span class={stat.statusClass}>{stat.status}</span>
+                    </div>
+                    <div class="metrics">
+                        <div class="metric">
+                            <span class="m-label">Resp Time</span>
+                            <span class="m-val">{stat.avgResponseTime}ms</span>
+                        </div>
+                        <div class="metric">
+                            <span class="m-label">Errors</span>
+                            <span class="m-val">{stat.errorCount}</span>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span class="panel-icon">📋</span> Integration Logs
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>API Name</th>
+                            <th>Status</th>
+                            <th>Response Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={logs} for:item="log">
+                            <tr key={log.id}>
+                                <td class="mono">{log.apiName}</td>
+                                <td><span class={log.statusClass}>{log.status}</span></td>
+                                <td>{log.responseTime}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Terminal UI -->
+        <div class="terminal-container">
+            <div class="terminal-header">
+                <div class="term-dots">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                </div>
+                <div class="term-title">Live API Stream (Tail -f)</div>
+                <button class="term-action" onclick={toggleStream}>
+                    {streamBtnLabel}
+                </button>
+            </div>
+            <div class="terminal-body" lwc:ref="terminalBody">
+                <template for:each={terminalLogs} for:item="line">
+                    <div key={line.id} class="term-line">
+                        <span class="term-time">[{line.timestamp}]</span> 
+                        <span class={line.typeClass}>{line.type}</span> 
+                        <span class="term-msg">{line.message}</span>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SentinelFlow — AI Operations Platform by Tomcodex</title>
+  <meta name="description" content="SentinelFlow: Enterprise-grade AI operations platform. Real-time incident monitoring, autonomous self-healing, and business impact analysis powered by Salesforce Agentforce." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: { brand: { 400: '#8b5cf6', 500: '#6366f1' }, dark: { 900: '#0a0a0f', 800: '#13131a', 700: '#1c1c27', 600: '#2a2a3a' } },
+          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ── TOP COMMAND BAR ── -->
+<header class="command-bar" id="commandBar">
+  <div class="brand">
+    <div class="brand-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z" fill="url(#brandGrad)"/>
+        <path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="brandGrad" x1="3" y1="2" x2="21" y2="23" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#6366f1"/>
+            <stop offset="1" stop-color="#8b5cf6"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <span class="brand-name">SentinelFlow</span>
+    <span class="brand-by">by Tomcodex</span>
+  </div>
+
+  <nav class="top-nav" id="topNav">
+    <a href="#" class="nav-item active" data-page="home" onclick="switchPage('home',this)">Home</a>
+    <a href="#" class="nav-item" data-page="incidents" onclick="switchPage('incidents',this)">Incidents</a>
+    <a href="#" class="nav-item" data-page="integrations" onclick="switchPage('integrations',this)">Integrations</a>
+    <a href="#" class="nav-item" data-page="impact" onclick="switchPage('impact',this)">Impact</a>
+    <a href="#" class="nav-item" data-page="copilot" onclick="switchPage('copilot',this)">AI Copilot</a>
+    <a href="#" class="nav-item" data-page="value" onclick="switchPage('value',this)">Value</a>
+    <a href="#" class="nav-item" data-page="pricing" onclick="switchPage('pricing',this)">Pricing</a>
+  </nav>
+
+  <div class="bar-right">
+    <div class="system-status" id="systemStatus">
+      <span class="status-dot critical pulse" id="statusDot"></span>
+      <span class="status-label" id="statusLabel">2 Critical</span>
+    </div>
+    <div class="live-badge">LIVE</div>
+    <div class="bar-time" id="barTime">--:--:--</div>
+    <button class="avatar-btn" title="Operator">OP</button>
+  </div>
+</header>
+
+<!-- ── MAIN LAYOUT ── -->
+<div class="app-shell">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <p class="sidebar-label">PLATFORM</p>
+      <button class="sidebar-item active" onclick="switchPage('home',null)" id="sb-home">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Command Center
+      </button>
+      <button class="sidebar-item" onclick="switchPage('incidents',null)" id="sb-incidents">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Incidents
+        <span class="badge-count critical">4</span>
+      </button>
+      <button class="sidebar-item" onclick="switchPage('integrations',null)" id="sb-integrations">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+        Integrations
+        <span class="badge-count warning">3</span>
+      </button>
+      <button class="sidebar-item" onclick="switchPage('impact',null)" id="sb-impact">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Impact Panel
+      </button>
+      <button class="sidebar-item" onclick="switchPage('copilot',null)" id="sb-copilot">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        AI Copilot
+        <span class="badge-ai">AI</span>
+      </button>
+      <button class="sidebar-item" onclick="switchPage('value',null)" id="sb-value">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        Business Value
+      </button>
+      <button class="sidebar-item" onclick="switchPage('pricing',null)" id="sb-pricing">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Pricing
+      </button>
+    </div>
+    <div class="sidebar-section">
+      <p class="sidebar-label">HEALTH</p>
+      <div class="health-mini">
+        <div class="health-row"><span>Apex Jobs</span><span class="dot green"></span></div>
+        <div class="health-row"><span>Platform Events</span><span class="dot green"></span></div>
+        <div class="health-row"><span>Agentforce</span><span class="dot green"></span></div>
+        <div class="health-row"><span>Flows</span><span class="dot warning"></span></div>
+        <div class="health-row"><span>API Gateway</span><span class="dot critical"></span></div>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sf-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="#00A1E0"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
+        Salesforce Agentforce
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN CONTENT ── -->
+  <main class="main-content" id="mainContent">
+
+    <!-- ===== HOME PAGE ===== -->
+    <div class="page active" id="page-home">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Command Center</h1>
+          <p class="page-sub">Live operational overview — <span id="lastRefreshed">Refreshed just now</span></p>
+        </div>
+        <button class="btn-primary" onclick="runAIAnalysis()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Run AI Analysis
+        </button>
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="kpi-grid" id="kpiGrid">
+        <div class="kpi-card critical-card" id="kpi-critical">
+          <div class="kpi-top">
+            <span class="kpi-label">Critical Incidents</span>
+            <span class="kpi-icon">🔴</span>
+          </div>
+          <div class="kpi-value" id="kpiCritical">4</div>
+          <div class="kpi-delta up">↑ 2 since last hour</div>
+          <div class="kpi-bar"><div class="kpi-fill critical-fill" style="width:80%"></div></div>
+        </div>
+        <div class="kpi-card warning-card" id="kpi-warnings">
+          <div class="kpi-top">
+            <span class="kpi-label">Warnings</span>
+            <span class="kpi-icon">🟡</span>
+          </div>
+          <div class="kpi-value" id="kpiWarnings">7</div>
+          <div class="kpi-delta neutral">→ Stable</div>
+          <div class="kpi-bar"><div class="kpi-fill warning-fill" style="width:55%"></div></div>
+        </div>
+        <div class="kpi-card healthy-card" id="kpi-integrations">
+          <div class="kpi-top">
+            <span class="kpi-label">Integrations Active</span>
+            <span class="kpi-icon">🟢</span>
+          </div>
+          <div class="kpi-value" id="kpiIntegrations">14<span style="font-size:1rem;color:var(--muted)">/17</span></div>
+          <div class="kpi-delta down">↓ 3 failed</div>
+          <div class="kpi-bar"><div class="kpi-fill healthy-fill" style="width:82%"></div></div>
+        </div>
+        <div class="kpi-card revenue-card" id="kpi-revenue">
+          <div class="kpi-top">
+            <span class="kpi-label">Est. Revenue Risk</span>
+            <span class="kpi-icon">💰</span>
+          </div>
+          <div class="kpi-value" id="kpiRevenue">$84K</div>
+          <div class="kpi-delta up">↑ High risk window</div>
+          <div class="kpi-bar"><div class="kpi-fill revenue-fill" style="width:65%"></div></div>
+        </div>
+        <div class="kpi-card users-card" id="kpi-users">
+          <div class="kpi-top">
+            <span class="kpi-label">Users Affected</span>
+            <span class="kpi-icon">👥</span>
+          </div>
+          <div class="kpi-value" id="kpiUsers">2,341</div>
+          <div class="kpi-delta up">↑ Growing impact</div>
+          <div class="kpi-bar"><div class="kpi-fill users-fill" style="width:70%"></div></div>
+        </div>
+        <div class="kpi-card healed-card" id="kpi-healed">
+          <div class="kpi-top">
+            <span class="kpi-label">Auto-Healed Today</span>
+            <span class="kpi-icon">⚡</span>
+          </div>
+          <div class="kpi-value" id="kpiHealed">12</div>
+          <div class="kpi-delta good">↑ AI resolved</div>
+          <div class="kpi-bar"><div class="kpi-fill healed-fill" style="width:90%"></div></div>
+        </div>
+      </div>
+
+      <!-- INCIDENT TABLE + AI PANEL -->
+      <div class="content-grid">
+        <div class="panel incidents-panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span class="panel-icon">⚠</span> Live Incidents
+            </div>
+            <div class="panel-actions">
+              <select class="filter-select" id="severityFilter" onchange="filterIncidents()">
+                <option value="all">All Severity</option>
+                <option value="Critical">Critical</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+              <button class="btn-ghost" onclick="switchPage('incidents',null)">View All →</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="incidentTable">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Description</th>
+                  <th>Severity</th>
+                  <th>Status</th>
+                  <th>Affected</th>
+                  <th>Time</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="incidentTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel ai-panel" id="aiInsightsPanel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span class="ai-spark">✦</span> AI Insights
+            </div>
+            <span class="agentforce-tag">Agentforce</span>
+          </div>
+          <div class="ai-insights-list" id="aiInsightsList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== INCIDENTS PAGE ===== -->
+    <div class="page" id="page-incidents">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Incidents</h1>
+          <p class="page-sub">Full incident queue with AI-driven root cause analysis</p>
+        </div>
+        <button class="btn-primary" onclick="createIncident()">+ New Incident</button>
+      </div>
+      <div class="filter-bar">
+        <button class="filter-chip active" onclick="filterChip(this,'all')">All</button>
+        <button class="filter-chip" onclick="filterChip(this,'Critical')">🔴 Critical</button>
+        <button class="filter-chip" onclick="filterChip(this,'High')">🟠 High</button>
+        <button class="filter-chip" onclick="filterChip(this,'Medium')">🟡 Medium</button>
+        <button class="filter-chip" onclick="filterChip(this,'Low')">🟢 Low</button>
+        <button class="filter-chip" onclick="filterChip(this,'Open')">Open</button>
+        <button class="filter-chip" onclick="filterChip(this,'Resolved')">Resolved</button>
+        <input class="search-input" type="text" placeholder="Search incidents…" id="incidentSearch" oninput="searchIncidents()" />
+      </div>
+      <div class="panel" style="margin-top:0">
+        <div class="table-wrap">
+          <table class="data-table" id="incidentsFullTable">
+            <thead>
+              <tr>
+                <th>ID</th><th>Description</th><th>Severity</th><th>Status</th><th>Integration</th><th>Environment</th><th>Affected</th><th>SLA</th><th>Time</th><th>AI Action</th>
+              </tr>
+            </thead>
+            <tbody id="incidentsFullBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Detail Drawer -->
+      <div class="detail-drawer" id="detailDrawer">
+        <div class="drawer-header">
+          <span class="drawer-title" id="drawerTitle">Incident Detail</span>
+          <button class="drawer-close" onclick="closeDrawer()">✕</button>
+        </div>
+        <div class="drawer-body" id="drawerBody"></div>
+      </div>
+    </div>
+
+    <!-- ===== INTEGRATIONS PAGE ===== -->
+    <div class="page" id="page-integrations">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Integrations</h1>
+          <p class="page-sub">API and service health monitoring across all connected systems</p>
+        </div>
+        <button class="btn-primary" onclick="refreshIntegrations()">↺ Refresh</button>
+      </div>
+      <div class="integrations-grid" id="integrationsGrid"></div>
+      <div class="panel" style="margin-top:24px">
+        <div class="panel-header">
+          <div class="panel-title"><span class="panel-icon">📋</span> Integration Logs</div>
+          <select class="filter-select" onchange="filterLogs(this.value)">
+            <option value="all">All Status</option>
+            <option value="Failed">Failed</option>
+            <option value="Warning">Warning</option>
+            <option value="Success">Success</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table" id="integrationLogTable">
+            <thead>
+              <tr><th>API Name</th><th>Status</th><th>Response Time</th><th>Error</th><th>Timestamp</th><th>AI Action</th></tr>
+            </thead>
+            <tbody id="integrationLogBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== IMPACT PAGE ===== -->
+    <div class="page" id="page-impact">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Business Impact</h1>
+          <p class="page-sub">Revenue risk analysis and user impact quantification</p>
+        </div>
+        <span class="impact-badge">AI Engine Active</span>
+      </div>
+      <div class="impact-hero" id="impactHero"></div>
+      <div class="impact-details-grid" id="impactDetailsGrid"></div>
+    </div>
+
+    <!-- ===== COPILOT PAGE ===== -->
+    <div class="page" id="page-copilot">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">AI Copilot</h1>
+          <p class="page-sub">Conversational operations powered by Salesforce Agentforce</p>
+        </div>
+        <span class="agentforce-tag large">Agentforce</span>
+      </div>
+      <div class="copilot-shell">
+        <div class="copilot-sidebar">
+          <p class="sidebar-label">SUGGESTED QUERIES</p>
+          <button class="suggestion-btn" onclick="askSuggestion(this)">What caused the API Gateway failure?</button>
+          <button class="suggestion-btn" onclick="askSuggestion(this)">How many users are affected right now?</button>
+          <button class="suggestion-btn" onclick="askSuggestion(this)">Estimate revenue loss from critical incidents</button>
+          <button class="suggestion-btn" onclick="askSuggestion(this)">Auto-heal the Payment Service integration</button>
+          <button class="suggestion-btn" onclick="askSuggestion(this)">Show SLA breach risk for next hour</button>
+          <button class="suggestion-btn" onclick="askSuggestion(this)">Generate incident summary report</button>
+          <p class="sidebar-label" style="margin-top:20px">AGENT STATUS</p>
+          <div class="agent-status-card">
+            <div class="agent-dot pulse green-dot"></div>
+            <div>
+              <div class="agent-name">SentinelFlow Agent</div>
+              <div class="agent-sub">Ready · Agentforce v2</div>
+            </div>
+          </div>
+        </div>
+        <div class="chat-area">
+          <div class="chat-messages" id="chatMessages"></div>
+          <div class="chat-input-bar">
+            <input class="chat-input" id="chatInput" type="text" placeholder="Ask SentinelFlow anything about your operations…" onkeydown="if(event.key==='Enter')sendChat()" />
+            <button class="chat-send" id="chatSendBtn" onclick="sendChat()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== BUSINESS VALUE PAGE ===== -->
+    <div class="page" id="page-value">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Business Value</h1>
+          <p class="page-sub">Measurable outcomes SentinelFlow delivers</p>
+        </div>
+      </div>
+
+      <!-- ROI Headline Banner -->
+      <div style="background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(139,92,246,0.08));border:1px solid rgba(99,102,241,0.2);border-radius:14px;padding:28px 32px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;">
+        <div>
+          <div style="font-size:0.72rem;font-weight:700;color:#8b5cf6;letter-spacing:0.1em;margin-bottom:8px;">PLATFORM ROI — THIS MONTH</div>
+          <div style="font-size:2.4rem;font-weight:800;color:#f3f4f6;letter-spacing:-0.03em;">$1.2M <span style="font-size:1rem;color:#10b981;font-weight:600;">Revenue Protected</span></div>
+          <div style="font-size:0.82rem;color:#6b7280;margin-top:6px;">Based on 12 auto-healed incidents · avg $100K revenue risk each</div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <div style="background:#0f0f1a;border:1px solid #2a2a3a;border-radius:10px;padding:16px 24px;text-align:center;">
+            <div style="font-size:1.6rem;font-weight:700;color:#10b981;">73%</div>
+            <div style="font-size:0.72rem;color:#6b7280;margin-top:4px;">Faster Resolution</div>
+          </div>
+          <div style="background:#0f0f1a;border:1px solid #2a2a3a;border-radius:10px;padding:16px 24px;text-align:center;">
+            <div style="font-size:1.6rem;font-weight:700;color:#6366f1;">4.2 min</div>
+            <div style="font-size:0.72rem;color:#6b7280;margin-top:4px;">Avg MTTR (was 16 min)</div>
+          </div>
+          <div style="background:#0f0f1a;border:1px solid #2a2a3a;border-radius:10px;padding:16px 24px;text-align:center;">
+            <div style="font-size:1.6rem;font-weight:700;color:#f59e0b;">85%</div>
+            <div style="font-size:0.72rem;color:#6b7280;margin-top:4px;">Manual Effort Reduced</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Value Cards Grid -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;">
+
+        <div style="background:#13131a;border:1px solid #2a2a3a;border-radius:12px;padding:24px;">
+          <div style="font-size:1.5rem;margin-bottom:12px;">⚡</div>
+          <div style="font-size:1rem;font-weight:700;color:#e2e8f0;margin-bottom:8px;">Faster Incident Resolution</div>
+          <div style="font-size:2rem;font-weight:800;color:#10b981;margin-bottom:6px;">73%</div>
+          <div style="font-size:0.78rem;color:#6b7280;line-height:1.5;">Average resolution time dropped from 16 minutes to 4.2 minutes. AI root cause analysis eliminates manual log digging.</div>
+          <div style="margin-top:14px;height:4px;background:#1e1e2f;border-radius:4px;"><div style="height:100%;width:73%;background:linear-gradient(90deg,#10b981,#6366f1);border-radius:4px;"></div></div>
+        </div>
+
+        <div style="background:#13131a;border:1px solid #2a2a3a;border-radius:12px;padding:24px;">
+          <div style="font-size:1.5rem;margin-bottom:12px;">💰</div>
+          <div style="font-size:1rem;font-weight:700;color:#e2e8f0;margin-bottom:8px;">Revenue Risk Visibility</div>
+          <div style="font-size:2rem;font-weight:800;color:#ef4444;margin-bottom:6px;">$84K</div>
+          <div style="font-size:0.78rem;color:#6b7280;line-height:1.5;">Real-time revenue impact tracking per incident. Teams now know exactly what's at stake before prioritizing — not after.</div>
+          <div style="margin-top:14px;height:4px;background:#1e1e2f;border-radius:4px;"><div style="height:100%;width:65%;background:linear-gradient(90deg,#ef4444,#f59e0b);border-radius:4px;"></div></div>
+        </div>
+
+        <div style="background:#13131a;border:1px solid #2a2a3a;border-radius:12px;padding:24px;">
+          <div style="font-size:1.5rem;margin-bottom:12px;">🤖</div>
+          <div style="font-size:1rem;font-weight:700;color:#e2e8f0;margin-bottom:8px;">Manual Effort Eliminated</div>
+          <div style="font-size:2rem;font-weight:800;color:#8b5cf6;margin-bottom:6px;">85%</div>
+          <div style="font-size:0.78rem;color:#6b7280;line-height:1.5;">Agentforce auto-heals recurring failures. Engineers focus on architecture, not firefighting. 12 incidents resolved autonomously today.</div>
+          <div style="margin-top:14px;height:4px;background:#1e1e2f;border-radius:4px;"><div style="height:100%;width:85%;background:linear-gradient(90deg,#8b5cf6,#6366f1);border-radius:4px;"></div></div>
+        </div>
+
+        <div style="background:#13131a;border:1px solid #2a2a3a;border-radius:12px;padding:24px;">
+          <div style="font-size:1.5rem;margin-bottom:12px;">📋</div>
+          <div style="font-size:1rem;font-weight:700;color:#e2e8f0;margin-bottom:8px;">SLA Compliance</div>
+          <div style="font-size:2rem;font-weight:800;color:#10b981;margin-bottom:6px;">99.2%</div>
+          <div style="font-size:0.78rem;color:#6b7280;line-height:1.5;">SLA breach prevention through proactive alerts. Teams are notified before deadlines are missed, not after customers complain.</div>
+          <div style="margin-top:14px;height:4px;background:#1e1e2f;border-radius:4px;"><div style="height:100%;width:99%;background:linear-gradient(90deg,#10b981,#6366f1);border-radius:4px;"></div></div>
+        </div>
+
+        <div style="background:#13131a;border:1px solid #2a2a3a;border-radius:12px;padding:24px;">
+          <div style="font-size:1.5rem;margin-bottom:12px;">👥</div>
+          <div style="font-size:1rem;font-weight:700;color:#e2e8f0;margin-bottom:8px;">User Impact Awareness</div>
+          <div style="font-size:2rem;font-weight:800;color:#f59e0b;margin-bottom:6px;">2,341</div>
+          <div style="font-size:0.78rem;color:#6b7280;line-height:1.5;">Exact count of affected users visible instantly. Product and support teams can prepare communications while engineers resolve the issue.</div>
+          <div style="margin-top:14px;height:4px;background:#1e1e2f;border-radius:4px;"><div style="height:100%;width:70%;background:linear-gradient(90deg,#f59e0b,#ef4444);border-radius:4px;"></div></div>
+        </div>
+
+        <div style="background:#13131a;border:1px solid rgba(99,102,241,0.3);border-radius:12px;padding:24px;">
+          <div style="font-size:1.5rem;margin-bottom:12px;">✦</div>
+          <div style="font-size:1rem;font-weight:700;color:#e2e8f0;margin-bottom:8px;">AI Confidence Score</div>
+          <div style="font-size:2rem;font-weight:800;color:#6366f1;margin-bottom:6px;">91%</div>
+          <div style="font-size:0.78rem;color:#6b7280;line-height:1.5;">Agentforce delivers structured root cause analysis with confidence scores. Engineers act on data — not guesswork.</div>
+          <div style="margin-top:14px;height:4px;background:#1e1e2f;border-radius:4px;"><div style="height:100%;width:91%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:4px;"></div></div>
+        </div>
+      </div>
+
+      <!-- Pitch Answers -->
+      <div style="background:#13131a;border:1px solid #2a2a3a;border-radius:12px;padding:28px;margin-bottom:16px;">
+        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;letter-spacing:0.1em;margin-bottom:16px;">PRODUCT PITCH · Q&A</div>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div>
+            <div style="font-size:0.82rem;font-weight:700;color:#a5b4fc;margin-bottom:6px;">Q: What did you build?</div>
+            <div style="font-size:0.85rem;color:#e2e8f0;line-height:1.6;">SentinelFlow is an incident intelligence platform that helps operations teams detect, analyze, and resolve system failures — with full business impact visibility. Built natively on Salesforce, it combines real-time monitoring, AI-driven root cause analysis, and autonomous self-healing.</div>
+          </div>
+          <div>
+            <div style="font-size:0.82rem;font-weight:700;color:#a5b4fc;margin-bottom:6px;">Q: Why is it different?</div>
+            <div style="font-size:0.85rem;color:#e2e8f0;line-height:1.6;">Traditional monitoring tools alert you that something broke. SentinelFlow tells you <em>why</em> it broke, <em>what to do</em>, and <em>how much revenue is at risk</em> — all in one unified view. The AI Copilot turns passive alerts into actionable, confident decisions.</div>
+          </div>
+          <div>
+            <div style="font-size:0.82rem;font-weight:700;color:#a5b4fc;margin-bottom:6px;">Q: Why Salesforce?</div>
+            <div style="font-size:0.85rem;color:#e2e8f0;line-height:1.6;">Salesforce provides enterprise-grade infrastructure for data, automation (Flows, Apex), and real-time events (Platform Events). Agentforce unlocks native AI without third-party LLM dependencies. This lets us focus on product behavior rather than infrastructure plumbing.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PRICING PAGE ===== -->
+    <div class="page" id="page-pricing">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Pricing</h1>
+          <p class="page-sub">Simple, transparent pricing for every team size</p>
+        </div>
+      </div>
+
+      <!-- Pricing Header -->
+      <div style="text-align:center;margin-bottom:36px;">
+        <div style="font-size:0.8rem;font-weight:600;color:#8b5cf6;letter-spacing:0.08em;margin-bottom:10px;">PLANS & PRICING</div>
+        <div style="font-size:1.8rem;font-weight:800;color:#f3f4f6;letter-spacing:-0.02em;">Start free. Scale as you grow.</div>
+        <div style="font-size:0.9rem;color:#6b7280;margin-top:8px;">All plans include a 14-day free trial. No credit card required.</div>
+      </div>
+
+      <!-- Pricing Cards -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:32px;">
+
+        <!-- Starter -->
+        <div style="background:#13131a;border:1px solid #2a2a3a;border-radius:14px;padding:28px;display:flex;flex-direction:column;">
+          <div style="font-size:0.72rem;font-weight:700;color:#6b7280;letter-spacing:0.1em;margin-bottom:12px;">STARTER</div>
+          <div style="font-size:2.4rem;font-weight:800;color:#f3f4f6;margin-bottom:4px;">$0</div>
+          <div style="font-size:0.8rem;color:#6b7280;margin-bottom:24px;">per month · forever free</div>
+          <div style="font-size:0.78rem;color:#94a3b8;font-weight:600;margin-bottom:14px;">INCLUDES</div>
+          <div style="display:flex;flex-direction:column;gap:10px;flex:1;">
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#e2e8f0;"><span style="color:#10b981;flex-shrink:0;">✓</span> Up to 5 integrations</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#e2e8f0;"><span style="color:#10b981;flex-shrink:0;">✓</span> Basic incident table</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#e2e8f0;"><span style="color:#10b981;flex-shrink:0;">✓</span> Email alerts</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#e2e8f0;"><span style="color:#10b981;flex-shrink:0;">✓</span> 7-day incident history</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#6b7280;"><span style="color:#4b5563;flex-shrink:0;">✗</span> AI analysis</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#6b7280;"><span style="color:#4b5563;flex-shrink:0;">✗</span> Auto-heal</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#6b7280;"><span style="color:#4b5563;flex-shrink:0;">✗</span> Business impact panel</div>
+          </div>
+          <button style="margin-top:24px;width:100%;background:transparent;border:1px solid #2a2a3a;color:#e2e8f0;padding:11px;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:0.2s;" onmouseover="this.style.borderColor='#6366f1';this.style.color='#a5b4fc'" onmouseout="this.style.borderColor='#2a2a3a';this.style.color='#e2e8f0'">Get Started Free</button>
+        </div>
+
+        <!-- Growth — Featured -->
+        <div style="background:linear-gradient(160deg,rgba(99,102,241,0.1),rgba(139,92,246,0.06));border:1px solid #6366f1;border-radius:14px;padding:28px;display:flex;flex-direction:column;position:relative;transform:scale(1.03);">
+          <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-size:0.65rem;font-weight:700;letter-spacing:0.1em;padding:4px 14px;border-radius:20px;">MOST POPULAR</div>
+          <div style="font-size:0.72rem;font-weight:700;color:#8b5cf6;letter-spacing:0.1em;margin-bottom:12px;">GROWTH</div>
+          <div style="font-size:2.4rem;font-weight:800;color:#f3f4f6;margin-bottom:4px;">$49</div>
+          <div style="font-size:0.8rem;color:#6b7280;margin-bottom:24px;">per month · billed annually</div>
+          <div style="font-size:0.78rem;color:#a5b4fc;font-weight:600;margin-bottom:14px;">EVERYTHING IN STARTER, PLUS</div>
+          <div style="display:flex;flex-direction:column;gap:10px;flex:1;">
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#e2e8f0;"><span style="color:#10b981;flex-shrink:0;">✓</span> Up to 25 integrations</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#e2e8f0;"><span style="color:#10b981;flex-shrink:0;">✓</span> ✦ Agentforce AI Analysis</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#e2e8f0;"><span style="color:#10b981;flex-shrink:0;">✓</span> Business impact panel</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#e2e8f0;"><span style="color:#10b981;flex-shrink:0;">✓</span> Slack + PagerDuty alerts</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#e2e8f0;"><span style="color:#10b981;flex-shrink:0;">✓</span> 30-day incident history</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#e2e8f0;"><span style="color:#10b981;flex-shrink:0;">✓</span> CSV export & reports</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#6b7280;"><span style="color:#4b5563;flex-shrink:0;">✗</span> Auto-heal automation</div>
+          </div>
+          <button style="margin-top:24px;width:100%;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;color:#fff;padding:12px;border-radius:8px;font-size:0.85rem;font-weight:700;cursor:pointer;transition:0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Start 14-Day Trial</button>
+        </div>
+
+        <!-- Pro -->
+        <div style="background:#13131a;border:1px solid #2a2a3a;border-radius:14px;padding:28px;display:flex;flex-direction:column;">
+          <div style="font-size:0.72rem;font-weight:700;color:#f59e0b;letter-spacing:0.1em;margin-bottom:12px;">PRO</div>
+          <div style="font-size:2.4rem;font-weight:800;color:#f3f4f6;margin-bottom:4px;">$149</div>
+          <div style="font-size:0.8rem;color:#6b7280;margin-bottom:24px;">per month · billed annually</div>
+          <div style="font-size:0.78rem;color:#f59e0b;font-weight:600;margin-bottom:14px;">EVERYTHING IN GROWTH, PLUS</div>
+          <div style="display:flex;flex-direction:column;gap:10px;flex:1;">
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#e2e8f0;"><span style="color:#10b981;flex-shrink:0;">✓</span> Unlimited integrations</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#e2e8f0;"><span style="color:#10b981;flex-shrink:0;">✓</span> ⚡ Auto-heal automation</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#e2e8f0;"><span style="color:#10b981;flex-shrink:0;">✓</span> Custom runbooks</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#e2e8f0;"><span style="color:#10b981;flex-shrink:0;">✓</span> Webhooks & API access</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#e2e8f0;"><span style="color:#10b981;flex-shrink:0;">✓</span> 1-year incident history</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#e2e8f0;"><span style="color:#10b981;flex-shrink:0;">✓</span> SSO + SAML</div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:#e2e8f0;"><span style="color:#10b981;flex-shrink:0;">✓</span> Dedicated success manager</div>
+          </div>
+          <button style="margin-top:24px;width:100%;background:transparent;border:1px solid rgba(245,158,11,0.4);color:#f59e0b;padding:11px;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:0.2s;" onmouseover="this.style.background='rgba(245,158,11,0.1)'" onmouseout="this.style.background='transparent'">Contact Sales</button>
+        </div>
+      </div>
+
+      <!-- Enterprise Note -->
+      <div style="background:#13131a;border:1px solid #2a2a3a;border-radius:12px;padding:20px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+        <div>
+          <div style="font-size:0.88rem;font-weight:700;color:#e2e8f0;margin-bottom:4px;">🏢 Enterprise Plan Available</div>
+          <div style="font-size:0.78rem;color:#6b7280;">Custom pricing for large orgs. On-premise deployment, custom SLA, and dedicated support.</div>
+        </div>
+        <button style="background:transparent;border:1px solid #2a2a3a;color:#94a3b8;padding:10px 20px;border-radius:8px;font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap;" onmouseover="this.style.borderColor='#6366f1';this.style.color='#a5b4fc'" onmouseout="this.style.borderColor='#2a2a3a';this.style.color='#94a3b8'">Talk to Sales →</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- AI Analysis Overlay -->
+<div class="overlay" id="aiOverlay">
+  <div class="overlay-card">
+    <div class="overlay-icon pulse-icon">✦</div>
+    <div class="overlay-title">Agentforce Analyzing…</div>
+    <div class="overlay-sub" id="overlayStep">Collecting telemetry signals</div>
+    <div class="overlay-progress"><div class="overlay-bar" id="overlayBar"></div></div>
+  </div>
+</div>
+
+<!-- Tailwind Toast Notification Container -->
+<div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

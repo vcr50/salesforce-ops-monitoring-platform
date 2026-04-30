@@ -1,0 +1,67 @@
+<template>
+    <div class="monitor-container">
+        <!-- Header -->
+        <div class="slds-page-header">
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-title">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <lightning-icon icon-name="standard:dashboard" size="medium"></lightning-icon>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate">SentinelFlow Observability</h1>
+                            <p class="slds-text-body_small slds-line-height_reset">System Health & Error Tracking</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Health & KPIs -->
+        <div class="slds-grid slds-gutters slds-m-top_medium">
+            <div class="slds-col slds-size_1-of-4">
+                <div class="kpi-card">
+                    <div class="kpi-label">System Health</div>
+                    <div class={healthClass}>{healthStatus}</div>
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-4">
+                <div class="kpi-card">
+                    <div class="kpi-label">Errors (Last 1H)</div>
+                    <div class="kpi-value">{errorCount1H}</div>
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-4">
+                <div class="kpi-card">
+                    <div class="kpi-label">Failed Queueables</div>
+                    <div class="kpi-value">{failedJobs}</div>
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-4">
+                <div class="kpi-card">
+                    <div class="kpi-label">Active Critical Incidents</div>
+                    <div class="kpi-value">{activeIncidents}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Logs Table -->
+        <div class="slds-m-top_large">
+            <lightning-card title="Recent System Logs" icon-name="standard:logging">
+                <template if:true={logs}>
+                    <lightning-datatable
+                        key-field="Id"
+                        data={logs}
+                        columns={columns}
+                        hide-checkbox-column="true">
+                    </lightning-datatable>
+                </template>
+                <template if:false={logs}>
+                    <div class="slds-p-around_medium slds-text-align_center">
+                        No recent system errors found.
+                    </div>
+                </template>
+            </lightning-card>
+        </div>
+    </div>
+</template>

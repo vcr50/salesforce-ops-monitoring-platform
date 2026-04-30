@@ -1,0 +1,47 @@
+<template>
+    <div class="copilot-panel">
+        <div class="copilot-header">
+            <div class="copilot-title">
+                <lightning-icon icon-name="utility:einstein" size="small" class="copilot-icon"></lightning-icon>
+                <span>AI Copilot</span>
+            </div>
+            <span class="agentforce-badge">Agentforce</span>
+        </div>
+
+        <div class="copilot-chat">
+            <template for:each={messages} for:item="msg">
+                <div key={msg.id} class={msg.msgClass}>
+                    <div class="msg-bubble">{msg.content}</div>
+                </div>
+            </template>
+            
+            <template if:true={isTyping}>
+                <div class="msg-row ai">
+                    <div class="msg-bubble typing">
+                        <span>.</span><span>.</span><span>.</span>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <div class="copilot-quick-actions">
+            <template for:each={quickActions} for:item="action">
+                <button key={action} class="quick-action-btn" onclick={handleQuickAction}>{action}</button>
+            </template>
+        </div>
+
+        <div class="copilot-input-area">
+            <input 
+                type="text" 
+                class="copilot-input" 
+                placeholder="Ask Copilot..." 
+                value={currentInput}
+                oninput={handleInputChange}
+                onkeypress={handleKeyPress}
+            />
+            <button class="copilot-send" onclick={sendMessage}>
+                <lightning-icon icon-name="utility:send" size="x-small"></lightning-icon>
+            </button>
+        </div>
+    </div>
+</template>

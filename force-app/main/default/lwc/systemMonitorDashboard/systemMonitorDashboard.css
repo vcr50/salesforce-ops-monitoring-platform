@@ -1,0 +1,30 @@
+.monitor-container {
+    padding: 1rem;
+    background-color: #f3f3f3;
+}
+
+.kpi-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.kpi-label {
+    font-size: 0.85rem;
+    color: #666;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.text-green { color: #028045; }
+.text-yellow { color: #d4a017; }
+.text-red { color: #c23934; }

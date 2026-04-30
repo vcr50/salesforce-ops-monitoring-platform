@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Tenant__c</fullName>
+    <externalId>false</externalId>
+    <label>Tenant</label>
+    <referenceTo>Tenant__c</referenceTo>
+    <relationshipLabel>System Logs</relationshipLabel>
+    <relationshipName>System_Logs</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,288 @@
+<template>
+    <div class="incidents-module">
+
+        <!-- ─── Critical Alert Banner ─────────────────────────────────── -->
+        <template if:true={showAlert}>
+            <div class="alert-banner" onclick={handleAlertClick}>
+                <div class="alert-left">
+                    <span class="alert-icon">🚨</span>
+                    <div>
+                        <span class="alert-title">New Critical Incident Detected</span>
+                        <span class="alert-sub">{alertMessage}</span>
+                    </div>
+                </div>
+                <div class="alert-right">
+                    <button class="alert-action" onclick={handleAlertClick}>View →</button>
+                    <button class="alert-dismiss" onclick={dismissAlert}>✕</button>
+                </div>
+            </div>
+        </template>
+
+        <!-- ─── Header ───────────────────────────────────────────────── -->
+        <div class="page-header">
+            <div class="header-left">
+                <div class="header-eyebrow">
+                    <span class="live-pulse"></span>
+                    <span class="live-label">LIVE</span>
+                </div>
+                <h1 class="page-title">Incidents</h1>
+                <p class="page-sub">AI-powered incident queue · Auto-refreshes every 10s</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-simulate" onclick={simulateFailure} disabled={isSimulating}>
+                    <template if:true={isSimulating}>
+                        <span class="spinner-red"></span> Injecting…
+                    </template>
+                    <template if:false={isSimulating}>
+                        🚨 Simulate Failure
+                    </template>
+                </button>
+                <button class="btn-ghost" onclick={exportToCSV}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Export CSV
+                </button>
+                <button class="btn-primary" onclick={refreshData}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                    Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- ─── Filter Bar ────────────────────────────────────────────── -->
+        <div class="filter-bar">
+            <div class="filter-chips">
+                <template for:each={filters} for:item="filter">
+                    <button key={filter.label} class={filter.cssClass} data-val={filter.value} onclick={handleFilterClick}>
+                        {filter.label}
+                    </button>
+                </template>
+            </div>
+            <div class="search-wrap">
+                <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input class="search-input" type="text" placeholder="Search incidents, integrations…" oninput={handleSearch} />
+            </div>
+        </div>
+
+        <!-- ─── Split Pane ────────────────────────────────────────────── -->
+        <div class={splitClass}>
+
+            <!-- LEFT: Incident Table -->
+            <div class="table-pane">
+                <div class="table-card">
+                    <div class="table-meta">
+                        <span class="count-badge">{filteredIncidents.length} Incidents</span>
+                        <template if:true={hasNewSimulated}>
+                            <span class="new-badge">● NEW</span>
+                        </template>
+                    </div>
+                    <div class="table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Incident ID</th>
+                                    <th>Description</th>
+                                    <th>Severity</th>
+                                    <th>Status</th>
+                                    <th>Integration</th>
+                                    <th>Affected</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template if:true={hasIncidents}>
+                                    <template for:each={filteredIncidents} for:item="inc">
+                                        <tr key={inc.id} class={inc.rowClass} data-id={inc.id} onclick={handleRowClick}>
+                                            <td class="mono">
+                                                <div class="id-cell">
+                                                    <span class={inc.criticalDot}></span>
+                                                    {inc.name}
+                                                </div>
+                                            </td>
+                                            <td class="desc-cell">
+                                                <div class="desc-title">{inc.description}</div>
+                                                <div class="desc-sub">{inc.integrationLogName}</div>
+                                            </td>
+                                            <td><span class={inc.sevClass}>{inc.severity}</span></td>
+                                            <td><span class={inc.statusClass}>{inc.status}</span></td>
+                                            <td class="sys-cell">{inc.integrationLogName}</td>
+                                            <td class="users-cell">{inc.usersAffected}</td>
+                                            <td class="actions-cell" onclick={handleActionCell}>
+                                                <button class="action-btn" data-id={inc.id} onclick={openDrawer}>Analyze →</button>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </template>
+                                <template if:false={hasIncidents}>
+                                    <tr>
+                                        <td colspan="7" class="empty-state">
+                                            <div class="empty-icon">✓</div>
+                                            <div>No incidents match the current filter</div>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Detail Panel -->
+            <template if:true={selectedIncident}>
+                <div class="detail-pane">
+                    <div class="detail-card">
+
+                        <!-- Detail Header -->
+                        <div class="detail-header">
+                            <div class="detail-header-left">
+                                <span class="detail-mono">{selectedIncident.name}</span>
+                                <div class="detail-badges">
+                                    <span class={selectedIncident.sevClass}>{selectedIncident.severity}</span>
+                                    <span class={selectedIncident.statusClass}>{selectedIncident.status}</span>
+                                </div>
+                            </div>
+                            <button class="close-btn" onclick={closeDetail}>✕</button>
+                        </div>
+
+                        <!-- Scrollable Body -->
+                        <div class="detail-body">
+
+                            <!-- Description -->
+                            <div class="detail-section">
+                                <h3 class="section-label">INCIDENT</h3>
+                                <p class="detail-desc">{selectedIncident.description}</p>
+                                <div class="integration-tag">{selectedIncident.integrationLogName}</div>
+                            </div>
+
+                            <!-- Business Impact -->
+                            <div class="impact-block">
+                                <h3 class="section-label">BUSINESS IMPACT</h3>
+                                <div class="impact-grid">
+                                    <div class="impact-card">
+                                        <span class="impact-num">{selectedIncident.usersAffected}</span>
+                                        <span class="impact-label">Users Affected</span>
+                                    </div>
+                                    <div class="impact-card danger">
+                                        <span class="impact-num">{selectedIncident.revenueFormatted}</span>
+                                        <span class="impact-label">Revenue at Risk</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Lifecycle Tracker -->
+                            <div class="detail-section">
+                                <h3 class="section-label">LIFECYCLE</h3>
+                                <div class="lifecycle">
+                                    <div class={lcNewClass}>
+                                        <span class="lc-dot"></span>
+                                        <span>New</span>
+                                    </div>
+                                    <div class="lc-line"></div>
+                                    <div class={lcInvestClass}>
+                                        <span class="lc-dot"></span>
+                                        <span>Investigating</span>
+                                    </div>
+                                    <div class="lc-line"></div>
+                                    <div class={lcHealClass}>
+                                        <span class="lc-dot"></span>
+                                        <span>Healing</span>
+                                    </div>
+                                    <div class="lc-line"></div>
+                                    <div class={lcResolvedClass}>
+                                        <span class="lc-dot"></span>
+                                        <span>Resolved</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- AI Analysis Block -->
+                            <div class="ai-block">
+                                <div class="ai-block-header">
+                                    <span class="ai-label">✦ Agentforce AI Analysis</span>
+                                    <template if:true={aiReady}>
+                                        <span class="ai-confidence-badge">Confidence: {selectedIncident.confidenceFormatted}</span>
+                                    </template>
+                                </div>
+                                <template if:true={isAnalysing}>
+                                    <div class="ai-loading">
+                                        <div class="loading-bar"><div class="loading-fill"></div></div>
+                                        <span class="ai-loading-text">Agentforce is analysing root cause…</span>
+                                    </div>
+                                </template>
+                                <template if:true={aiReady}>
+                                    <div class="ai-results">
+                                        <div class="ai-field">
+                                            <label>Root Cause</label>
+                                            <p>{selectedIncident.rootCause}</p>
+                                        </div>
+                                        <div class="ai-field">
+                                            <label>Recommended Action</label>
+                                            <p class="ai-rec">{selectedIncident.recommendedAction}</p>
+                                        </div>
+                                        <div class="confidence-bar-wrap">
+                                            <div class="conf-label">
+                                                <span>AI Confidence</span>
+                                                <span>{selectedIncident.confidenceFormatted}</span>
+                                            </div>
+                                            <div class="confidence-bar">
+                                                <div class="confidence-fill" style={confidenceBarStyle}></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template if:false={aiReady}>
+                                    <template if:false={isAnalysing}>
+                                        <p class="ai-idle">Click "Run AI Analysis" to get root cause, recommended action, and confidence score.</p>
+                                    </template>
+                                </template>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="detail-actions">
+                                <button class="btn-ai" onclick={handleAnalyse} disabled={isAnalysing}>
+                                    <template if:true={isAnalysing}>
+                                        <span class="spinner"></span> Analysing…
+                                    </template>
+                                    <template if:false={isAnalysing}>
+                                        ✦ Run AI Analysis
+                                    </template>
+                                </button>
+                                <template if:true={aiReady}>
+                                    <div class="action-row">
+                                        <button class="btn-heal" data-id={selectedIncident.id} onclick={handleExecuteRec} disabled={isHealing}>
+                                            <template if:true={isHealing}>⚙ Executing…</template>
+                                            <template if:false={isHealing}>⚡ Execute: {selectedIncident.recommendedAction}</template>
+                                        </button>
+                                        <button class="btn-escalate" onclick={handleEscalate}>↑ Escalate</button>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- ─── Incident Timeline ──────────────────── -->
+                            <template if:true={hasTimeline}>
+                                <div class="timeline-section">
+                                    <h3 class="section-label">ACTIVITY TIMELINE</h3>
+                                    <div class="timeline">
+                                        <template for:each={incidentTimeline} for:item="entry">
+                                            <div key={entry.id} class={entry.rowClass}>
+                                                <div class="tl-marker">
+                                                    <span class={entry.dotClass}></span>
+                                                    <span class="tl-line"></span>
+                                                </div>
+                                                <div class="tl-content">
+                                                    <span class="tl-event">{entry.event}</span>
+                                                    <span class="tl-time">{entry.time}</span>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+
+                        </div><!-- end detail-body -->
+                    </div><!-- end detail-card -->
+                </div><!-- end detail-pane -->
+            </template>
+
+        </div><!-- end split-pane -->
+    </div><!-- end incidents-module -->
+</template>

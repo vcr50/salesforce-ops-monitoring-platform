@@ -1,0 +1,111 @@
+.sidebar {
+  width: 240px;
+  background: var(--bg-dark, #09090b);
+  border-right: 1px solid var(--border, #27272a);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+
+.sidebar-section {
+  padding: 24px 16px 0;
+}
+
+.sidebar-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--muted, #a1a1aa);
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+  padding-left: 8px;
+}
+
+.sidebar-item {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--muted, #a1a1aa);
+  padding: 10px 12px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  margin-bottom: 4px;
+}
+
+.sidebar-item:hover {
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+}
+
+.sidebar-item.active {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--accent, #6366f1);
+}
+
+.badge-count {
+  margin-left: auto;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 12px;
+  color: #fff;
+}
+
+.badge-count.critical { background: var(--critical, #ef4444); }
+.badge-count.warning { background: var(--warning, #f59e0b); color: #000; }
+
+.badge-ai {
+  margin-left: auto;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+}
+
+.health-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px;
+}
+
+.health-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--muted, #a1a1aa);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.dot.green { background: var(--success, #10b981); box-shadow: 0 0 6px var(--success); }
+.dot.warning { background: var(--warning, #f59e0b); box-shadow: 0 0 6px var(--warning); }
+.dot.critical { background: var(--critical, #ef4444); box-shadow: 0 0 6px var(--critical); }
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px;
+  border-top: 1px solid var(--border, #27272a);
+}
+
+.sf-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--muted, #a1a1aa);
+}

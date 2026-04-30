@@ -1,53 +1,84 @@
 <template>
-    <section class="summary-shell">
-        <div class="ambient ambient-left"></div>
-        <div class="ambient ambient-right"></div>
-        <div class="summary-hero">
-            <div class="hero-copy-wrap">
-                <p class="eyebrow">Operations overview</p>
-                <h2 class="hero-title">A live operations surface designed for decision velocity.</h2>
-                <p class="hero-copy">
-                    Realtime service posture across incidents and integrations, presented in a
-                    cleaner executive format for rapid triage.
-                </p>
+    <!-- Error state -->
+    <template if:true={hasError}>
+        <div class="sf-error-banner">
+            <lightning-icon icon-name="utility:error" size="x-small"></lightning-icon>
+            {error}
+        </div>
+    </template>
+
+    <!-- System status bar -->
+    <div class="status-bar">
+        <div class={systemStatusClass}>
+            <span class="status-dot"></span>
+            <span class="status-text">{systemStatusLabel}</span>
+        </div>
+        <span class="refresh-label">Last refreshed: {lastRefreshedLabel}</span>
+        <lightning-button-icon
+            icon-name="utility:refresh"
+            variant="bare"
+            title="Refresh"
+            class={isRefreshing}
+            onclick={handleRefresh}>
+        </lightning-button-icon>
+    </div>
+
+    <!-- KPI grid -->
+    <div class="kpi-grid">
+
+        <div class="kpi-card kpi-critical">
+            <div class="kpi-header">
+                <span class="kpi-label">Critical Incidents</span>
+                <lightning-icon icon-name="utility:error" size="x-small" class="icon-critical"></lightning-icon>
             </div>
-            <div class="hero-meta">
-                <span class="hero-meta-label">Last refreshed</span>
-                <span class="hero-meta-value">{lastRefreshedLabel}</span>
-            </div>
+            <div class="kpi-value">{criticalIncidents}</div>
+            <div class="kpi-bar"><div class="kpi-fill fill-critical"></div></div>
         </div>
 
-        <div class="summary-grid">
-            <article class="summary-tile critical">
-                <span class="summary-eyebrow">Urgent queue</span>
-                <span class="summary-label">Critical incidents</span>
-                <span class="summary-value">{criticalIncidents}</span>
-                <span class="summary-context">Need immediate attention</span>
-            </article>
-            <article class="summary-tile open">
-                <span class="summary-eyebrow">Operational load</span>
-                <span class="summary-label">Open incidents</span>
-                <span class="summary-value">{openIncidents}</span>
-                <span class="summary-context">Currently unresolved</span>
-            </article>
-            <article class="summary-tile failed">
-                <span class="summary-eyebrow">Execution risk</span>
-                <span class="summary-label">Failed integrations</span>
-                <span class="summary-value">{failedIntegrations}</span>
-                <span class="summary-context">Latest failed executions</span>
-            </article>
-            <article class="summary-tile warning">
-                <span class="summary-eyebrow">Watchlist</span>
-                <span class="summary-label">Warnings</span>
-                <span class="summary-value">{warningIntegrations}</span>
-                <span class="summary-context">Watch before escalation</span>
-            </article>
+        <div class="kpi-card kpi-warning">
+            <div class="kpi-header">
+                <span class="kpi-label">Warnings</span>
+                <lightning-icon icon-name="utility:warning" size="x-small" class="icon-warning"></lightning-icon>
+            </div>
+            <div class="kpi-value">{warningIntegrations}</div>
+            <div class="kpi-bar"><div class="kpi-fill fill-warning"></div></div>
         </div>
 
-        <template if:true={error}>
-            <div class="summary-note">
-                {error}
+        <div class="kpi-card kpi-integrations">
+            <div class="kpi-header">
+                <span class="kpi-label">Failed Integrations</span>
+                <lightning-icon icon-name="utility:integration" size="x-small" class="icon-integration"></lightning-icon>
             </div>
-        </template>
-    </section>
+            <div class="kpi-value">{failedIntegrations}</div>
+            <div class="kpi-bar"><div class="kpi-fill fill-integration"></div></div>
+        </div>
+
+        <div class="kpi-card kpi-revenue">
+            <div class="kpi-header">
+                <span class="kpi-label">Revenue at Risk</span>
+                <lightning-icon icon-name="utility:moneybag" size="x-small" class="icon-revenue"></lightning-icon>
+            </div>
+            <div class="kpi-value">{revenueFormatted}</div>
+            <div class="kpi-bar"><div class="kpi-fill fill-revenue"></div></div>
+        </div>
+
+        <div class="kpi-card kpi-users">
+            <div class="kpi-header">
+                <span class="kpi-label">Users Affected</span>
+                <lightning-icon icon-name="utility:groups" size="x-small" class="icon-users"></lightning-icon>
+            </div>
+            <div class="kpi-value">{usersFormatted}</div>
+            <div class="kpi-bar"><div class="kpi-fill fill-users"></div></div>
+        </div>
+
+        <div class="kpi-card kpi-healed">
+            <div class="kpi-header">
+                <span class="kpi-label">Auto-Healed Today</span>
+                <lightning-icon icon-name="utility:einstein" size="x-small" class="icon-healed"></lightning-icon>
+            </div>
+            <div class="kpi-value">{autoHealedToday}</div>
+            <div class="kpi-bar"><div class="kpi-fill fill-healed"></div></div>
+        </div>
+
+    </div>
 </template>

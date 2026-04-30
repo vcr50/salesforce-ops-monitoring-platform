@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SentinelFlow — AI-Powered Incident Intelligence Platform</title>
+    <meta name="description" content="SentinelFlow is an enterprise-grade AI incident intelligence platform. Detect, analyze, and auto-heal production incidents in real-time.">
+    <link rel="icon" href="assets/logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ═══════════════════ NAVBAR ═══════════════════ -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand">
+                <img src="assets/logo.png" alt="SentinelFlow Logo" class="nav-logo">
+                <span class="nav-brand-text">SentinelFlow</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#architecture">Architecture</a>
+                <a href="#pricing">Pricing</a>
+            </div>
+            <div class="nav-actions">
+                <a href="#pricing" class="btn btn-ghost">Start Free Trial</a>
+                <a href="#demo" class="btn btn-primary">Book a Demo</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════ HERO ═══════════════════ -->
+    <section class="hero" id="hero">
+        <div class="hero-bg-effects">
+            <div class="hero-orb hero-orb-1"></div>
+            <div class="hero-orb hero-orb-2"></div>
+            <div class="hero-orb hero-orb-3"></div>
+            <div class="hero-grid"></div>
+        </div>
+        <div class="container hero-content">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                Enterprise-Grade Incident Intelligence
+            </div>
+            <h1 class="hero-title">
+                Detect. Analyze.<br>
+                <span class="gradient-text">Auto-Heal.</span>
+            </h1>
+            <p class="hero-subtitle">
+                SentinelFlow is an AI-powered platform that monitors your integrations, 
+                classifies incidents in real-time, and automatically resolves production 
+                issues before they impact your revenue.
+            </p>
+            <div class="hero-cta">
+                <a href="#pricing" class="btn btn-primary btn-lg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    Start Free Trial
+                </a>
+                <a href="#demo" class="btn btn-outline btn-lg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    Watch Demo
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-value" data-count="99.9">0</span><span class="hero-stat-suffix">%</span>
+                    <span class="hero-stat-label">Uptime SLA</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value" data-count="85">0</span><span class="hero-stat-suffix">%</span>
+                    <span class="hero-stat-label">Faster Resolution</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value" data-count="10">0</span><span class="hero-stat-suffix">+</span>
+                    <span class="hero-stat-label">Early Adopters</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-dashboard-preview">
+            <div class="dashboard-glow"></div>
+            <img src="assets/dashboard-preview.png" alt="SentinelFlow Dashboard" class="dashboard-img">
+        </div>
+    </section>
+
+    <!-- ═══════════════════ INTEGRATIONS ═══════════════════ -->
+    <section class="integrations-section" id="integrations">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">INTEGRATES WITH</span>
+                <h2 class="section-title">Powered by <span class="gradient-text">Enterprise-Grade Integrations</span></h2>
+                <p class="section-subtitle">Seamlessly integrates with the tools and platforms you already use.</p>
+            </div>
+            <div class="integrations-grid">
+                <!-- Salesforce -->
+                <div class="integration-card">
+                    <div class="integration-logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" alt="Salesforce" style="width: 72px; height: auto;">
+                    </div>
+                    <h4 class="integration-name">Salesforce</h4>
+                    <p class="integration-desc">CRM Platform</p>
+                </div>
+                <!-- Stripe -->
+                <div class="integration-card">
+                    <div class="integration-logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" style="width: 76px; height: auto; filter: brightness(0) invert(1) opacity(0.8) drop-shadow(0 0 8px rgba(99, 91, 255, 0.4));" />
+                    </div>
+                    <h4 class="integration-name">Stripe</h4>
+                    <p class="integration-desc">Payment Processing</p>
+                </div>
+                <!-- SAP -->
+                <div class="integration-card">
+                    <div class="integration-logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" alt="SAP" style="width: 64px; height: auto;">
+                    </div>
+                    <h4 class="integration-name">SAP</h4>
+                    <p class="integration-desc">Enterprise Systems</p>
+                </div>
+                <!-- Auth0 -->
+                <div class="integration-card">
+                    <div class="integration-logo">
+                        <svg viewBox="0 0 160 40" width="110" height="28" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Orange Shield -->
+                            <path d="M 16 0 L 48 0 L 56 24 L 32 40 L 8 24 Z" fill="#eb5424" />
+                            <!-- Cutout Star (using the background color to fake the cutout) -->
+                            <polygon points="32,8 36,20 48,20 38,26 42,36 32,28 22,36 26,26 16,20 28,20" fill="var(--bg-card)"/>
+                            <!-- Text -->
+                            <text x="64" y="28" font-family="Arial, sans-serif" font-weight="800" font-size="28" fill="white" letter-spacing="-0.5">Auth0</text>
+                        </svg>
+                    </div>
+                    <h4 class="integration-name">Auth0</h4>
+                    <p class="integration-desc">Authentication</p>
+                </div>
+                <!-- REST API -->
+                <div class="integration-card">
+                    <div class="integration-logo">
+                        <svg viewBox="0 0 100 100" width="70" height="70" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Cloud path -->
+                            <path d="M 30 65 A 15 15 0 0 1 30 35 A 20 20 0 0 1 65 25 A 22 22 0 0 1 85 55 A 12 12 0 0 1 75 65 Z" fill="none" stroke="#24d48a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <!-- Braces -->
+                            <text x="52" y="56" text-anchor="middle" font-family="monospace" font-weight="800" font-size="28" fill="#24d48a">{}</text>
+                        </svg>
+                    </div>
+                    <h4 class="integration-name">REST API</h4>
+                    <p class="integration-desc">API Integration</p>
+                </div>
+                <!-- Webhooks -->
+                <div class="integration-card">
+                    <div class="integration-logo">
+                        <svg viewBox="0 0 100 100" width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Lines connecting the circles -->
+                            <line x1="50" y1="20" x2="25" y2="65" stroke="#a855f7" stroke-width="6"/>
+                            <line x1="25" y1="65" x2="75" y2="65" stroke="#a855f7" stroke-width="6"/>
+                            <line x1="75" y1="65" x2="50" y2="20" stroke="#a855f7" stroke-width="6"/>
+                            
+                            <!-- Circles with background fill to cover lines -->
+                            <circle cx="50" cy="20" r="12" fill="var(--bg-card)" stroke="#a855f7" stroke-width="6" />
+                            <circle cx="25" cy="65" r="12" fill="var(--bg-card)" stroke="#a855f7" stroke-width="6" />
+                            <circle cx="75" cy="65" r="12" fill="var(--bg-card)" stroke="#a855f7" stroke-width="6" />
+                            
+                            <!-- Inner dots -->
+                            <circle cx="50" cy="20" r="4" fill="#a855f7" />
+                            <circle cx="25" cy="65" r="4" fill="#a855f7" />
+                            <circle cx="75" cy="65" r="4" fill="#a855f7" />
+                        </svg>
+                    </div>
+                    <h4 class="integration-name">Webhooks</h4>
+                    <p class="integration-desc">Event Notifications</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════ FEATURES ═══════════════════ -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">PLATFORM CAPABILITIES</span>
+                <h2 class="section-title">Everything You Need for<br><span class="gradient-text">Incident Intelligence</span></h2>
+                <p class="section-subtitle">From detection to resolution, SentinelFlow handles the complete incident lifecycle with AI-powered automation.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card" data-aos="fade-up">
+                    <div class="feature-icon feature-icon-purple">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 14a1 1 0 1 1 1-1 1 1 0 0 1-1 1zm1-5a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0z"/></svg>
+                    </div>
+                    <h3>Real-Time Detection</h3>
+                    <p>Platform Events and triggers detect integration failures the instant they occur. Zero delay, zero blind spots.</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon feature-icon-blue">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    </div>
+                    <h3>AI Classification</h3>
+                    <p>Rule-based AI engine analyzes incidents, determines root cause, assigns severity, and calculates business impact automatically.</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon feature-icon-green">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <h3>Self-Healing Engine</h3>
+                    <p>Automated remediation that retries transient failures, resets credentials, and restarts stalled integrations without human intervention.</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon feature-icon-orange">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    </div>
+                    <h3>Smart Alerting</h3>
+                    <p>Configurable notification rules that escalate to the right team via email, Slack, or webhook based on severity and business impact.</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-icon feature-icon-pink">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                    </div>
+                    <h3>Observability Dashboard</h3>
+                    <p>Real-time system health monitoring with error tracking, retry counts, and a global health indicator (Healthy / Degraded / Critical).</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="feature-icon feature-icon-cyan">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h3>Enterprise Security</h3>
+                    <p>Multi-tenant data isolation, CRUD/FLS enforcement, API rate limiting, and feature flags for controlled rollouts across your org.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════ HOW IT WORKS ═══════════════════ -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">WORKFLOW</span>
+                <h2 class="section-title">How SentinelFlow <span class="gradient-text">Protects You</span></h2>
+                <p class="section-subtitle">From the moment an integration fails to full resolution — in seconds, not hours.</p>
+            </div>
+            <div class="steps-timeline">
+                <div class="step">
+                    <div class="step-number">01</div>
+                    <div class="step-content">
+                        <h3>Detect</h3>
+                        <p>Integration logs are monitored in real-time via Apex triggers. Failed transactions are instantly captured and queued for analysis.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">02</div>
+                    <div class="step-content">
+                        <h3>Classify</h3>
+                        <p>The AI engine matches failure patterns against configurable rules (Custom Metadata), assigns severity, root cause, and business impact score.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">03</div>
+                    <div class="step-content">
+                        <h3>Heal</h3>
+                        <p>Transient failures are automatically retried. Credential resets, queue restarts, and integration resyncs execute without human intervention.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">04</div>
+                    <div class="step-content">
+                        <h3>Alert & Report</h3>
+                        <p>Unresolvable incidents escalate to the right team. Full audit trails, dead-letter logs, and the observability dashboard provide complete visibility.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════ ARCHITECTURE ═══════════════════ -->
+    <section class="architecture" id="architecture">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">BUILT FOR SCALE</span>
+                <h2 class="section-title">Enterprise-Grade <span class="gradient-text">Architecture</span></h2>
+                <p class="section-subtitle">Built natively on Salesforce Platform with zero external dependencies.</p>
+            </div>
+            <div class="arch-grid">
+                <div class="arch-card">
+                    <div class="arch-icon">🔒</div>
+                    <h4>Multi-Tenant Isolation</h4>
+                    <p>Each tenant's data is fully isolated via Tenant__c lookups and WITH USER_MODE enforcement.</p>
+                </div>
+                <div class="arch-card">
+                    <div class="arch-icon">⚡</div>
+                    <h4>Async Processing</h4>
+                    <p>Bulkified Queueables handle 200+ incidents per transaction without hitting governor limits.</p>
+                </div>
+                <div class="arch-card">
+                    <div class="arch-icon">🛡️</div>
+                    <h4>API Rate Limiting</h4>
+                    <p>Platform Cache-backed fixed-window rate limiter protects endpoints with HTTP 429 responses.</p>
+                </div>
+                <div class="arch-card">
+                    <div class="arch-icon">🔄</div>
+                    <h4>Intelligent Retries</h4>
+                    <p>Transient vs. permanent failure classification prevents wasted retries on unrecoverable errors.</p>
+                </div>
+                <div class="arch-card">
+                    <div class="arch-icon">🎛️</div>
+                    <h4>Feature Flags</h4>
+                    <p>Custom Metadata-driven toggles let admins enable/disable AI, Auto-Heal, or Alerting per tenant.</p>
+                </div>
+                <div class="arch-card">
+                    <div class="arch-icon">📊</div>
+                    <h4>Dead-Letter Logging</h4>
+                    <p>Every failed operation is captured in System_Log__c with full stack traces for post-mortem analysis.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════ PRICING ═══════════════════ -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">PRICING</span>
+                <h2 class="section-title">Simple, Transparent <span class="gradient-text">Pricing</span></h2>
+                <p class="section-subtitle">Start free. Scale as you grow. No hidden fees.</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-tier">Starter</div>
+                    <div class="pricing-price">
+                        <span class="price-currency">$</span>
+                        <span class="price-amount">0</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                    <p class="pricing-desc">Perfect for small teams getting started with incident management.</p>
+                    <ul class="pricing-features">
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Up to 100 incidents/month</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Real-time detection</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Basic alerting</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Community support</li>
+                    </ul>
+                    <a href="javascript:void(0)" class="btn btn-outline btn-block" data-modal="trial" data-plan="Starter">Get Started Free</a>
+                </div>
+                <div class="pricing-card pricing-card-featured">
+                    <div class="pricing-badge">MOST POPULAR</div>
+                    <div class="pricing-tier">Professional</div>
+                    <div class="pricing-price">
+                        <span class="price-currency">$</span>
+                        <span class="price-amount">149</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                    <p class="pricing-desc">For growing teams that need AI-powered automation and self-healing.</p>
+                    <ul class="pricing-features">
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Unlimited incidents</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> AI classification engine</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Self-healing automation</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Observability dashboard</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Priority support</li>
+                    </ul>
+                    <a href="javascript:void(0)" class="btn btn-primary btn-block" data-modal="trial" data-plan="Professional">Start 14-Day Trial</a>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-tier">Enterprise</div>
+                    <div class="pricing-price">
+                        <span class="price-currency"></span>
+                        <span class="price-amount">Custom</span>
+                        <span class="price-period"></span>
+                    </div>
+                    <p class="pricing-desc">For large organizations needing full multi-tenant control and compliance.</p>
+                    <ul class="pricing-features">
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Everything in Professional</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Multi-tenant isolation</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Feature flags per tenant</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> API rate limiting</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Dedicated account manager</li>
+                    </ul>
+                    <a href="javascript:void(0)" class="btn btn-outline btn-block" data-modal="demo" data-plan="Enterprise">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════ CTA ═══════════════════ -->
+    <section class="cta" id="demo">
+        <div class="cta-glow"></div>
+        <div class="container">
+            <h2 class="cta-title">Ready to Eliminate Downtime?</h2>
+            <p class="cta-subtitle">Be among the first teams to experience AI-powered incident resolution on Salesforce.</p>
+            <div class="cta-actions">
+                <a href="javascript:void(0)" class="btn btn-primary btn-lg" data-modal="trial" data-plan="Professional">Start Your Free Trial</a>
+                <a href="javascript:void(0)" class="btn btn-ghost btn-lg" data-modal="demo">Schedule a Demo →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════ FOOTER ═══════════════════ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <img src="assets/logo.png" alt="SentinelFlow" class="nav-logo">
+                        <span class="nav-brand-text">SentinelFlow</span>
+                    </div>
+                    <p class="footer-tagline">AI-powered incident intelligence for the modern enterprise.</p>
+                    <p class="footer-copyright">© 2026 TomCodeX Inc. All rights reserved.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <a href="#features">Features</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#architecture">Architecture</a>
+                    <a href="#">Changelog</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <a href="#">About</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Security</a>
+                    <a href="#">GDPR</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ═══════════════════ MODAL ═══════════════════ -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modal">
+            <button class="modal-close" id="modalClose" aria-label="Close modal">&times;</button>
+            <div class="modal-icon" id="modalIcon">⚡</div>
+            <h2 class="modal-title" id="modalTitle">Start Your Free Trial</h2>
+            <p class="modal-desc" id="modalDesc">Enter your details and we'll get you set up in under 2 minutes.</p>
+            <form class="modal-form" id="modalForm" action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8" method="POST" target="w2l_iframe">
+                <input type="hidden" name="oid" value="00DdL0000053505">
+                <input type="hidden" name="retURL" value="http://localhost:3500">
+                <input type="hidden" id="selectedPlan" name="description" value="">
+                
+                <div class="form-row" style="display:flex; gap:16px;">
+                    <div class="form-group" style="flex:1;">
+                        <label for="first_name">First Name</label>
+                        <input type="text" id="first_name" name="first_name" placeholder="John" required>
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label for="last_name">Last Name</label>
+                        <input type="text" id="last_name" name="last_name" placeholder="Doe" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Work Email</label>
+                    <input type="email" id="email" name="email" placeholder="john@company.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" name="company" placeholder="Acme Inc." required>
+                </div>
+                <div class="form-group" id="messageGroup" style="display:none;">
+                    <label for="message">Message</label>
+                    <!-- Append to description via JS or map to a custom field. For now using title -->
+                    <textarea id="message" name="title" rows="3" placeholder="Tell us about your requirements..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" id="modalSubmitBtn">Get Started</button>
+            </form>
+            <iframe name="w2l_iframe" id="w2l_iframe" style="display:none;"></iframe>
+            <div class="modal-success" id="modalSuccess" style="display:none;">
+                <div class="success-icon">✓</div>
+                <h3>You're All Set!</h3>
+                <p>We've received your request. Our team will reach out within 24 hours.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

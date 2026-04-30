@@ -1,0 +1,58 @@
+<template>
+    <div class="page-container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Platform Settings</h1>
+                <p class="page-sub">Configure AI thresholds, notifications, and app preferences</p>
+            </div>
+            <button class="btn-primary" onclick={saveSettings}>Save Changes</button>
+        </div>
+
+        <div class="settings-grid">
+            <div class="settings-card">
+                <h3 class="card-title">Agentforce Configuration</h3>
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Autonomous Self-Healing</span>
+                        <span class="setting-desc">Allow Agentforce to automatically resolve known issues without approval.</span>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Auto-Escalate Critical Incidents</span>
+                        <span class="setting-desc">Instantly page on-call engineers when Revenue at Risk > $50k.</span>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <h3 class="card-title">Notifications</h3>
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Email Alerts</span>
+                        <span class="setting-desc">Receive a daily digest of resolved integration incidents.</span>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Slack / Teams Webhook</span>
+                        <span class="setting-desc">Send live incident updates directly to your ops channel.</span>
+                    </div>
+                    <button class="btn-ghost-sm">Configure URL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

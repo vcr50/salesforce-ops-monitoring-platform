@@ -1,0 +1,38 @@
+<template>
+    <header class="command-bar" id="commandBar">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z" fill="url(#brandGrad)"/>
+              <path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <defs>
+                <linearGradient id="brandGrad" x1="3" y1="2" x2="21" y2="23" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#6366f1"/>
+                  <stop offset="1" stop-color="#8b5cf6"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <span class="brand-name">SentinelFlow</span>
+          <span class="brand-by">by Tomcodex</span>
+        </div>
+      
+        <nav class="top-nav">
+          <a href="#" class="nav-item active">Home</a>
+          <a href="#" class="nav-item">Incidents</a>
+          <a href="#" class="nav-item">Integrations</a>
+          <a href="#" class="nav-item">Impact</a>
+          <a href="#" class="nav-item">AI Copilot</a>
+        </nav>
+      
+        <div class="bar-right">
+          <div class="system-status">
+            <span class="status-dot critical pulse"></span>
+            <span class="status-label">2 Critical</span>
+          </div>
+          <div class="live-badge">LIVE</div>
+          <div class="bar-time">{currentTime}</div>
+          <button class="avatar-btn" title="Operator">OP</button>
+        </div>
+    </header>
+</template>

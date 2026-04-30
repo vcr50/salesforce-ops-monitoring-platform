@@ -1,0 +1,93 @@
+<template>
+    <div class="panel">
+        <div class="panel-header">
+            <div>
+                <h1 class="page-title">Business Impact</h1>
+                <p class="page-sub">Revenue risk analysis and user impact quantification</p>
+            </div>
+            <div class="header-actions">
+                <span class="impact-badge">AI Engine Active</span>
+                <button class="btn-ghost-sm" onclick={handleRefresh} disabled={isCalculating}>
+                    <lightning-icon icon-name="utility:refresh" size="xx-small"></lightning-icon>
+                </button>
+            </div>
+        </div>
+
+        <template if:true={error}>
+            <div class="sf-error-banner">{error}</div>
+        </template>
+
+        <div class="impact-hero">
+            <div class="impact-stat-card">
+                <div class="impact-stat-val val-critical">{totalRevenueRisk}</div>
+                <div class="impact-stat-label">Estimated Revenue at Risk</div>
+                <span class="impact-stat-risk risk-critical">Critical</span>
+            </div>
+            <div class="impact-stat-card">
+                <div class="impact-stat-val val-warning">{totalUsersAffected}</div>
+                <div class="impact-stat-label">Total Users Affected</div>
+                <span class="impact-stat-risk risk-high">High</span>
+            </div>
+            <div class="impact-stat-card">
+                <div class="impact-stat-val val-accent">{activeImpactEvents}</div>
+                <div class="impact-stat-label">Active Impact Events</div>
+                <span class="impact-stat-risk risk-medium">Monitor</span>
+            </div>
+        </div>
+
+        <template if:true={hasData}>
+            <div class="chart-container">
+                <h3 class="chart-title">Revenue Risk Distribution</h3>
+                <div class="chart-wrapper">
+                    <template for:each={chartBars} for:item="bar">
+                        <div key={bar.label} class={bar.cssClass} style={bar.styleStr}>
+                            <div class="chart-tooltip">
+                                <span class="tt-label">{bar.label}</span>
+                                <span class="tt-val">{bar.fmt}</span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div class="chart-legend">
+                    <template for:each={chartBars} for:item="bar">
+                        <div key={bar.label} class="legend-item">
+                            <span class={bar.legendClass}></span>
+                            <span>{bar.label} ({bar.pct}%)</span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <div class="impact-details-grid">
+            <template if:true={hasData}>
+                <template for:each={impactData} for:item="item">
+                    <div class="impact-incident-card" key={item.summary}>
+                        <div class="impact-row">
+                            <span>Users Affected</span>
+                            <span>{item.usersFormatted}</span>
+                        </div>
+                        <div class="impact-row">
+                            <span>Avg Revenue/User</span>
+                            <span>${item.arpu}</span>
+                        </div>
+                        <div class="impact-row">
+                            <span>Est. Revenue Loss</span>
+                            <span class="val-critical bold">{item.revenueFormatted}</span>
+                        </div>
+                        <div class="impact-row">
+                            <span>Risk Level</span>
+                            <span class={item.riskClass}>{item.riskLevel}</span>
+                        </div>
+                        <div class="ai-summary">
+                            ✦ AI Summary: {item.summary}
+                        </div>
+                    </div>
+                </template>
+            </template>
+            <template if:false={hasData}>
+                <div class="empty-state">No impact events active.</div>
+            </template>
+        </div>
+    </div>
+</template>
