@@ -1,0 +1,156 @@
+<template>
+    <div class="login-wrapper">
+        <div class="login-content">
+            <!-- Left Side: Login Form -->
+            <div class="login-box">
+                <div class="logo-area">
+                    <img src={logoUrl} alt="SentinelFlow Logo" class="brand-logo"/>
+                    <h1 class="brand-name">SentinelFlow</h1>
+                </div>
+
+                <!-- ═══════ Forgot Password View ═══════ -->
+                <template if:true={showForgotPassword}>
+                    <p class="login-sub">Reset your password</p>
+
+                    <!-- Error message -->
+                    <template if:true={errorMessage}>
+                        <div class="alert alert-error">{errorMessage}</div>
+                    </template>
+                    <!-- Success message -->
+                    <template if:true={successMessage}>
+                        <div class="alert alert-success">{successMessage}</div>
+                    </template>
+
+                    <div class="form-group">
+                        <label for="forgotEmail">Email Address</label>
+                        <input
+                            id="forgotEmail"
+                            type="email"
+                            placeholder="you@company.com"
+                            value={forgotEmail}
+                            onchange={handleForgotEmailChange}
+                            onkeydown={handleKeyDown}
+                        />
+                    </div>
+
+                    <p class="helper-text">
+                        Enter the email associated with your account and we'll send a link to reset your password.
+                    </p>
+
+                    <button class="btn-primary" onclick={handleForgotPassword} disabled={isLoginDisabled}>
+                        {resetBtnLabel}
+                    </button>
+
+                    <div class="back-link">
+                        <a href="#" onclick={handleBackToLogin}>&#8592; Back to Sign In</a>
+                    </div>
+                </template>
+
+                <!-- ═══════ Normal Login View ═══════ -->
+                <template if:false={showForgotPassword}>
+                    <p class="login-sub">Sign in to your AI Operations Platform</p>
+
+                    <!-- Error message -->
+                    <template if:true={errorMessage}>
+                        <div class="alert alert-error">{errorMessage}</div>
+                    </template>
+
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input
+                            id="loginEmail"
+                            type="email"
+                            placeholder="you@company.com"
+                            value={username}
+                            onchange={handleUsernameChange}
+                            onkeydown={handleKeyDown}
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input
+                            id="loginPassword"
+                            type="password"
+                            placeholder="••••••••"
+                            value={password}
+                            onchange={handlePasswordChange}
+                            onkeydown={handleKeyDown}
+                        />
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember">
+                            <input type="checkbox" checked={rememberMe} onchange={handleRememberChange} /> Remember me
+                        </label>
+                        <a href="#" class="forgot" onclick={handleShowForgot}>Forgot password?</a>
+                    </div>
+
+                    <button class="btn-primary" onclick={handleLogin} disabled={isLoginDisabled}>
+                        {loginBtnLabel}
+                    </button>
+
+                    <!-- SSO Login Options -->
+                    <template if:true={salesforceSsoUrl}>
+                        <div class="sso-divider">
+                            <span>or continue with</span>
+                        </div>
+
+                        <div class="sso-buttons">
+                            <template if:true={salesforceSsoUrl}>
+                                <button class="btn-sso btn-salesforce" onclick={handleSalesforceLogin}>
+                                    <svg class="sso-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 11.5c-.86-2.02-2.9-3.44-5.3-3.44-1.92 0-3.6.97-4.6 2.45C6.46 10.42 6.24 10.4 6 10.4c-2.21 0-4 1.79-4 4s1.79 4 4 4h10.5c2.49 0 4.5-2.01 4.5-4.5s-2.01-4.5-4.41-4.4zm0 0" fill="#00A1E0"/></svg>
+                                    Salesforce
+                                </button>
+                            </template>
+                            <template if:true={googleSsoUrl}>
+                                <button class="btn-sso btn-google" onclick={handleGoogleLogin}>
+                                    <svg class="sso-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                                    Google
+                                </button>
+                            </template>
+                        </div>
+                    </template>
+                </template>
+            </div>
+
+            <!-- Right Side: Info Panel -->
+            <div class="info-panel">
+                <h2>The New Era of AI Operations</h2>
+                <p>Welcome to SentinelFlow. The intelligent operations platform built natively on Salesforce.</p>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <span class="icon">&#129302;</span>
+                        <div>
+                            <strong>Agentforce Copilot</strong>
+                            <p>Self-healing automated runbooks.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="icon">&#128200;</span>
+                        <div>
+                            <strong>Real-time Impact Analysis</strong>
+                            <p>Instantly track revenue at risk.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="icon">&#9889;</span>
+                        <div>
+                            <strong>Unified Integrations</strong>
+                            <p>Monitor your entire API ecosystem.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="login-footer">
+            <p>&copy; 2026 TomCodeX Inc. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <span class="divider">|</span>
+                <a href="#">Terms &amp; Conditions</a>
+            </div>
+        </div>
+    </div>
+</template>
