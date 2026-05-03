@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy — TomCodeX</title>
+    <meta name="description" content="Privacy Policy of TomCodeX Inc — governing data collection, use, and protection under Indian digital laws.">
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .legal-page { padding-top: 120px; padding-bottom: 140px; min-height: 100vh; }
+
+        .legal-hero {
+            max-width: 760px;
+            margin: 0 auto 64px;
+        }
+        .legal-eyebrow {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+        .legal-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            line-height: 1.15;
+        }
+        .legal-meta {
+            font-size: 0.83rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .legal-meta span { display: flex; align-items: center; gap: 6px; }
+
+        /* Doc layout */
+        .legal-layout {
+            max-width: 760px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 64px;
+            align-items: start;
+        }
+
+        /* TOC */
+        .legal-toc {
+            position: sticky;
+            top: 100px;
+        }
+        .legal-toc-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+        .legal-toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .legal-toc-list a {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+            line-height: 1.5;
+        }
+        .legal-toc-list a:hover { color: var(--purple-light); }
+
+        /* Content */
+        .legal-content section {
+            margin-bottom: 52px;
+            padding-bottom: 52px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .legal-content section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .legal-content h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            letter-spacing: -0.2px;
+        }
+        .legal-content h3 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 20px 0 8px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .legal-content p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.85;
+            margin-bottom: 12px;
+        }
+        .legal-content ul {
+            padding-left: 0;
+            margin: 10px 0 14px;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .legal-content ul li {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+        .legal-content ul li::before {
+            content: '—';
+            font-size: 0.72rem;
+            opacity: 0.3;
+            flex-shrink: 0;
+        }
+        .legal-act-ref {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(123,82,255,0.1);
+            border: 1px solid rgba(123,82,255,0.2);
+            color: var(--purple-light);
+            margin-left: 4px;
+            white-space: nowrap;
+        }
+        .legal-highlight {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--purple);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+        }
+        .legal-highlight p {
+            margin: 0;
+            font-size: 0.87rem;
+        }
+        .legal-contact-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-top: 16px;
+        }
+        .legal-contact-card p { margin: 0; font-size: 0.88rem; }
+        .legal-contact-card a {
+            color: var(--purple-light);
+            text-decoration: none;
+        }
+        .legal-contact-card a:hover { text-decoration: underline; }
+
+        .fade-in { opacity: 0; transform: translateY(12px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .fade-in.visible { opacity: 1; transform: none; }
+
+        @media (max-width: 700px) {
+            .legal-layout { grid-template-columns: 1fr; }
+            .legal-toc { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <img src="assets/logo.svg" alt="SentinelFlow Logo" class="nav-logo">
+                <span class="nav-brand-text">SentinelFlow</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="products.html">Products</a>
+                <a href="index.html#features">Features</a>
+                <a href="index.html#how-it-works">How It Works</a>
+                <a href="index.html#architecture">Architecture</a>
+                <a href="index.html#pricing">Pricing</a>
+            </div>
+            <div class="nav-actions">
+                <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000YSWXQA4" target="_blank" class="btn btn-ghost">Install Package</a>
+                <a href="index.html#pricing" class="btn btn-ghost">Start Free Trial</a>
+                <a href="index.html#demo" class="btn btn-primary">Book a Demo</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="legal-page">
+        <div class="container">
+
+            <div class="legal-hero fade-in">
+                <span class="legal-eyebrow">Legal</span>
+                <h1 class="legal-title">Privacy Policy</h1>
+                <div class="legal-meta">
+                    <span>Effective Date: 1 May 2026</span>
+                    <span>Last Updated: 3 May 2026</span>
+                    <span>Version: 1.0</span>
+                </div>
+            </div>
+
+            <div class="legal-layout">
+
+                <!-- TOC -->
+                <aside class="legal-toc fade-in">
+                    <p class="legal-toc-title">Contents</p>
+                    <ul class="legal-toc-list">
+                        <li><a href="#overview">1. Overview</a></li>
+                        <li><a href="#data-collected">2. Data We Collect</a></li>
+                        <li><a href="#spdi">3. Sensitive Personal Data</a></li>
+                        <li><a href="#purpose">4. Purpose of Collection</a></li>
+                        <li><a href="#sharing">5. Sharing of Data</a></li>
+                        <li><a href="#retention">6. Data Retention</a></li>
+                        <li><a href="#security">7. Security Practices</a></li>
+                        <li><a href="#rights">8. Your Rights (DPDP Act)</a></li>
+                        <li><a href="#cookies">9. Cookies</a></li>
+                        <li><a href="#third-party">10. Third-Party Services</a></li>
+                        <li><a href="#children">11. Children's Privacy</a></li>
+                        <li><a href="#grievance">12. Grievance Officer</a></li>
+                        <li><a href="#changes">13. Policy Changes</a></li>
+                    </ul>
+                </aside>
+
+                <!-- Content -->
+                <div class="legal-content fade-in">
+
+                    <section id="overview">
+                        <h2>1. Overview</h2>
+                        <p>This Privacy Policy governs the collection, storage, use, and sharing of personal information by <strong>TomCodeX Inc</strong> ("Company", "we", "us", "our") through its website <strong>tomcodex.com</strong> and products including <strong>SentinelFlow</strong> and <strong>VertexDB</strong>.</p>
+                        <p>This policy is published in compliance with:</p>
+                        <ul>
+                            <li>Information Technology Act, 2000 <span class="legal-act-ref">IT Act 2000</span></li>
+                            <li>IT (Reasonable Security Practices and Procedures and SPDI) Rules, 2011 <span class="legal-act-ref">SPDI Rules 2011</span></li>
+                            <li>Digital Personal Data Protection Act, 2023 <span class="legal-act-ref">DPDP Act 2023</span></li>
+                            <li>IT (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021 <span class="legal-act-ref">IT Rules 2021</span></li>
+                        </ul>
+                        <div class="legal-highlight">
+                            <p>By using our website or services, you consent to the collection and use of your information as described in this policy. If you do not agree, please discontinue use of our services.</p>
+                        </div>
+                    </section>
+
+                    <section id="data-collected">
+                        <h2>2. Data We Collect</h2>
+                        <h3>2.1 Information You Provide Directly</h3>
+                        <ul>
+                            <li>Full name and email address (via contact or demo forms)</li>
+                            <li>Company name and job title</li>
+                            <li>Phone number (if provided voluntarily)</li>
+                            <li>Messages and communications you send us</li>
+                        </ul>
+                        <h3>2.2 Automatically Collected Information</h3>
+                        <ul>
+                            <li>IP address and approximate geographic location</li>
+                            <li>Browser type, operating system, and device information</li>
+                            <li>Pages visited, time spent, and referral URLs</li>
+                            <li>Cookies and similar tracking technologies</li>
+                        </ul>
+                        <h3>2.3 Salesforce Integration Data</h3>
+                        <p>When using SentinelFlow within a Salesforce environment, we may process metadata related to integration logs, incident records, and system telemetry. This data is processed solely within the customer's Salesforce org and is governed by the customer's own data policies and the applicable Salesforce agreements.</p>
+                    </section>
+
+                    <section id="spdi">
+                        <h2>3. Sensitive Personal Data or Information (SPDI)</h2>
+                        <p>As defined under Rule 3 of the SPDI Rules 2011 <span class="legal-act-ref">SPDI Rules 2011</span>, we do <strong>not</strong> intentionally collect the following categories of sensitive personal data:</p>
+                        <ul>
+                            <li>Passwords (stored only in hashed/encrypted form)</li>
+                            <li>Financial information (bank account, credit/debit card numbers)</li>
+                            <li>Physical, physiological, or mental health condition data</li>
+                            <li>Sexual orientation</li>
+                            <li>Medical records or history</li>
+                            <li>Biometric information</li>
+                        </ul>
+                        <p>If any such information is inadvertently provided, it will be deleted promptly and not processed.</p>
+                    </section>
+
+                    <section id="purpose">
+                        <h2>4. Purpose of Collection</h2>
+                        <p>We collect personal data only for the following lawful purposes <span class="legal-act-ref">DPDP Act 2023 §4</span>:</p>
+                        <ul>
+                            <li>To respond to inquiries, demo requests, and support tickets</li>
+                            <li>To provide, maintain, and improve our products and services</li>
+                            <li>To send product updates, security notices, and service communications</li>
+                            <li>To comply with legal obligations under Indian law</li>
+                            <li>To detect and prevent fraud, abuse, or security threats</li>
+                            <li>To analyze usage patterns and improve user experience</li>
+                        </ul>
+                        <p>We do not use your personal data for automated profiling that produces legal or significant effects without your explicit consent.</p>
+                    </section>
+
+                    <section id="sharing">
+                        <h2>5. Sharing of Data</h2>
+                        <p>We do not sell, rent, or trade your personal information. We may share data in the following limited circumstances:</p>
+                        <h3>5.1 Service Providers</h3>
+                        <p>Trusted third-party processors (e.g., hosting, email delivery, analytics) who process data on our behalf under contractual data processing agreements.</p>
+                        <h3>5.2 Legal Requirements</h3>
+                        <p>When required by law, court order, or governmental authority in India under the IT Act 2000 or any applicable legislation <span class="legal-act-ref">IT Act §69, §69B</span>.</p>
+                        <h3>5.3 Business Transfers</h3>
+                        <p>In the event of a merger, acquisition, or sale of assets, personal data may be transferred to the acquiring entity, subject to equivalent privacy protections.</p>
+                        <div class="legal-highlight">
+                            <p>We do not disclose personal data to any third party without your consent except as described above or where required by applicable Indian law.</p>
+                        </div>
+                    </section>
+
+                    <section id="retention">
+                        <h2>6. Data Retention</h2>
+                        <p>We retain personal data only for as long as necessary to fulfil the purpose for which it was collected <span class="legal-act-ref">DPDP Act 2023 §8(7)</span>:</p>
+                        <ul>
+                            <li>Contact form submissions: 24 months from submission date</li>
+                            <li>Trial and demo inquiry data: 12 months from last interaction</li>
+                            <li>Transaction records: 7 years (as required under applicable Indian tax laws)</li>
+                            <li>Support tickets: 36 months from resolution</li>
+                        </ul>
+                        <p>Upon expiry of the retention period, data is securely erased or anonymised.</p>
+                    </section>
+
+                    <section id="security">
+                        <h2>7. Security Practices</h2>
+                        <p>We implement reasonable security practices and procedures as mandated under Rule 8 of the SPDI Rules 2011 <span class="legal-act-ref">SPDI Rules 2011 §8</span>, including:</p>
+                        <ul>
+                            <li>Encryption of data in transit using TLS 1.2+</li>
+                            <li>Access control and role-based permissions for internal systems</li>
+                            <li>Regular security assessments and vulnerability reviews</li>
+                            <li>Secure credential storage using industry-standard hashing</li>
+                        </ul>
+                        <p>While we take all reasonable precautions, no method of electronic transmission or storage is 100% secure. In the event of a personal data breach, we will notify affected users as required under applicable law.</p>
+                    </section>
+
+                    <section id="rights">
+                        <h2>8. Your Rights Under the DPDP Act 2023</h2>
+                        <p>As a Data Principal under the Digital Personal Data Protection Act, 2023 <span class="legal-act-ref">DPDP Act 2023</span>, you have the following rights:</p>
+                        <ul>
+                            <li><strong style="color: var(--text-primary);">Right to Access</strong> — Obtain confirmation of whether your personal data is being processed and a summary of such data (§11)</li>
+                            <li><strong style="color: var(--text-primary);">Right to Correction</strong> — Request correction of inaccurate or misleading personal data (§12)</li>
+                            <li><strong style="color: var(--text-primary);">Right to Erasure</strong> — Request erasure of personal data that is no longer necessary (§12)</li>
+                            <li><strong style="color: var(--text-primary);">Right to Grievance Redressal</strong> — Lodge a complaint with our Grievance Officer (§13)</li>
+                            <li><strong style="color: var(--text-primary);">Right to Nominate</strong> — Nominate another individual to exercise your rights in the event of death or incapacity (§14)</li>
+                        </ul>
+                        <p>To exercise any of these rights, contact our Grievance Officer at the details provided in Section 12.</p>
+                    </section>
+
+                    <section id="cookies">
+                        <h2>9. Cookies and Tracking</h2>
+                        <p>Our website uses cookies to enhance your browsing experience. Types of cookies used:</p>
+                        <ul>
+                            <li><strong style="color: var(--text-primary);">Strictly Necessary</strong> — Essential for basic website functionality (cannot be disabled)</li>
+                            <li><strong style="color: var(--text-primary);">Analytics</strong> — Help us understand how visitors interact with the site (e.g., page views, session duration)</li>
+                            <li><strong style="color: var(--text-primary);">Preference</strong> — Store your settings and preferences</li>
+                        </ul>
+                        <p>You may disable non-essential cookies through your browser settings. Doing so may affect certain website features.</p>
+                    </section>
+
+                    <section id="third-party">
+                        <h2>10. Third-Party Services</h2>
+                        <p>Our website may contain links to third-party websites or integrate with services such as Salesforce, Google, and others. This Privacy Policy does not govern third-party data practices. We encourage you to review the privacy policies of any third-party services you interact with.</p>
+                        <p>Our Salesforce integration is subject to Salesforce's own Privacy Policy and Data Processing Addendum as executed between Salesforce and the customer entity.</p>
+                    </section>
+
+                    <section id="children">
+                        <h2>11. Children's Privacy</h2>
+                        <p>Our services are not directed at individuals under the age of 18. We do not knowingly collect personal data from children. If you believe a minor has provided us with personal information, please contact our Grievance Officer immediately and we will take steps to delete such information <span class="legal-act-ref">DPDP Act 2023 §9</span>.</p>
+                    </section>
+
+                    <section id="grievance">
+                        <h2>12. Grievance Officer</h2>
+                        <p>In accordance with Rule 5(9) of the SPDI Rules 2011 and Section 13 of the DPDP Act 2023, we have designated the following Grievance Officer:</p>
+                        <div class="legal-contact-card">
+                            <p><strong style="color: var(--text-primary);">Grievance Officer — TomCodeX Inc</strong><br><br>
+                            Name: Founder, TomCodeX Inc<br>
+                            Email: <a href="mailto:legal@tomcodex.com">legal@tomcodex.com</a><br>
+                            Response Time: Within 30 days of receipt of complaint<br><br>
+                            You may also reach out to the Data Protection Board of India if your grievance remains unresolved, as provided under the DPDP Act 2023.</p>
+                        </div>
+                    </section>
+
+                    <section id="changes">
+                        <h2>13. Changes to This Policy</h2>
+                        <p>We may update this Privacy Policy from time to time. Material changes will be communicated via email (where we hold your contact information) or via a prominent notice on our website. The "Last Updated" date at the top reflects the most recent revision.</p>
+                        <p>Continued use of our website or services after the effective date of any changes constitutes your acceptance of the updated policy.</p>
+                        <div class="legal-highlight">
+                            <p>For questions about this Privacy Policy, contact us at <a href="mailto:legal@tomcodex.com" style="color: var(--purple-light);">legal@tomcodex.com</a></p>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer style="border-top: 1px solid var(--border-color); padding: 24px 0; background: var(--bg-primary);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; font-size: 0.8rem; color: var(--text-secondary);">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <img src="assets/tomcodex-logo.svg" alt="TomCodeX Logo" style="height: 28px; width: auto;">
+                <span>Copyright © 2026 TomCodeX Inc. All rights reserved.</span>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px; flex-wrap: wrap;">
+                <a href="about.html" style="color: var(--text-secondary); text-decoration: none;">About Us</a><span>|</span>
+                <a href="careers.html" style="color: var(--text-secondary); text-decoration: none;">Careers</a><span>|</span>
+                <a href="blog.html" style="color: var(--text-secondary); text-decoration: none;">Blog</a><span>|</span>
+                <a href="contact.html" style="color: var(--text-secondary); text-decoration: none;">Contact</a><span>|</span>
+                <a href="privacy-policy.html" style="color: var(--text-secondary); text-decoration: none;">Privacy Policy</a><span>|</span>
+                <a href="terms.html" style="color: var(--text-secondary); text-decoration: none;">Terms of Use</a>
+            </div>
+            <div style="margin-bottom: 8px;">Chennai, Tamil Nadu, India</div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+        });
+        const io = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.05 });
+        document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+    </script>
+</body>
+</html>

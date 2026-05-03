@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service — TomCodeX</title>
+    <meta name="description" content="Terms of Service of TomCodeX Inc — governing use of SentinelFlow and VertexDB under Indian law.">
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .legal-page { padding-top: 120px; padding-bottom: 140px; min-height: 100vh; }
+        .legal-hero { max-width: 760px; margin: 0 auto 64px; }
+        .legal-eyebrow { display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+        .legal-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; letter-spacing: -1px; color: var(--text-primary); margin-bottom: 16px; line-height: 1.15; }
+        .legal-meta { font-size: 0.83rem; color: var(--text-muted); display: flex; gap: 24px; flex-wrap: wrap; }
+        .legal-layout { max-width: 760px; margin: 0 auto; display: grid; grid-template-columns: 200px 1fr; gap: 64px; align-items: start; }
+        .legal-toc { position: sticky; top: 100px; }
+        .legal-toc-title { font-size: 0.7rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+        .legal-toc-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+        .legal-toc-list a { font-size: 0.8rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; line-height: 1.5; }
+        .legal-toc-list a:hover { color: var(--purple-light); }
+        .legal-content section { margin-bottom: 52px; padding-bottom: 52px; border-bottom: 1px solid var(--border-color); }
+        .legal-content section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .legal-content h2 { font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; letter-spacing: -0.2px; }
+        .legal-content h3 { font-size: 0.9rem; font-weight: 700; margin: 20px 0 8px; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .legal-content p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.85; margin-bottom: 12px; }
+        .legal-content ul { padding-left: 0; margin: 10px 0 14px; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        .legal-content ul li { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7; display: flex; align-items: baseline; gap: 8px; }
+        .legal-content ul li::before { content: '—'; font-size: 0.72rem; opacity: 0.3; flex-shrink: 0; }
+        .legal-act-ref { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 2px 8px; border-radius: 4px; background: rgba(123,82,255,0.1); border: 1px solid rgba(123,82,255,0.2); color: var(--purple-light); margin-left: 4px; white-space: nowrap; }
+        .legal-highlight { background: var(--bg-card); border: 1px solid var(--border-color); border-left: 3px solid var(--purple); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 16px 20px; margin: 16px 0; }
+        .legal-highlight p { margin: 0; font-size: 0.87rem; }
+        .legal-contact-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 24px; margin-top: 16px; }
+        .legal-contact-card p { margin: 0; font-size: 0.88rem; }
+        .legal-contact-card a { color: var(--purple-light); text-decoration: none; }
+        .fade-in { opacity: 0; transform: translateY(12px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .fade-in.visible { opacity: 1; transform: none; }
+        @media (max-width: 700px) { .legal-layout { grid-template-columns: 1fr; } .legal-toc { display: none; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <img src="assets/logo.svg" alt="SentinelFlow Logo" class="nav-logo">
+                <span class="nav-brand-text">SentinelFlow</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="products.html">Products</a>
+                <a href="index.html#features">Features</a>
+                <a href="index.html#how-it-works">How It Works</a>
+                <a href="index.html#architecture">Architecture</a>
+                <a href="index.html#pricing">Pricing</a>
+            </div>
+            <div class="nav-actions">
+                <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000YSWXQA4" target="_blank" class="btn btn-ghost">Install Package</a>
+                <a href="index.html#pricing" class="btn btn-ghost">Start Free Trial</a>
+                <a href="index.html#demo" class="btn btn-primary">Book a Demo</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="legal-page">
+        <div class="container">
+
+            <div class="legal-hero fade-in">
+                <span class="legal-eyebrow">Legal</span>
+                <h1 class="legal-title">Terms of Service</h1>
+                <div class="legal-meta">
+                    <span>Effective Date: 1 May 2026</span>
+                    <span>Last Updated: 3 May 2026</span>
+                    <span>Version: 1.0</span>
+                </div>
+            </div>
+
+            <div class="legal-layout">
+
+                <!-- TOC -->
+                <aside class="legal-toc fade-in">
+                    <p class="legal-toc-title">Contents</p>
+                    <ul class="legal-toc-list">
+                        <li><a href="#acceptance">1. Acceptance</a></li>
+                        <li><a href="#eligibility">2. Eligibility</a></li>
+                        <li><a href="#services">3. Services</a></li>
+                        <li><a href="#account">4. Account & Access</a></li>
+                        <li><a href="#ip">5. Intellectual Property</a></li>
+                        <li><a href="#prohibited">6. Prohibited Conduct</a></li>
+                        <li><a href="#payment">7. Payment & Billing</a></li>
+                        <li><a href="#disclaimer">8. Disclaimer of Warranties</a></li>
+                        <li><a href="#liability">9. Limitation of Liability</a></li>
+                        <li><a href="#indemnity">10. Indemnification</a></li>
+                        <li><a href="#termination">11. Termination</a></li>
+                        <li><a href="#governing">12. Governing Law</a></li>
+                        <li><a href="#dispute">13. Dispute Resolution</a></li>
+                        <li><a href="#contact-legal">14. Contact</a></li>
+                    </ul>
+                </aside>
+
+                <!-- Content -->
+                <div class="legal-content fade-in">
+
+                    <section id="acceptance">
+                        <h2>1. Acceptance of Terms</h2>
+                        <p>These Terms of Service ("Terms") constitute a legally binding agreement between you ("User", "you") and <strong>TomCodeX Inc</strong> ("Company", "we"), a company operating under the laws of India.</p>
+                        <p>By accessing or using our website (<strong>tomcodex.com</strong>) or any of our products including SentinelFlow and VertexDB, you agree to be bound by these Terms and our Privacy Policy.</p>
+                        <div class="legal-highlight">
+                            <p>If you do not agree to these Terms, you must not access or use our services. These Terms are enforceable under the Information Technology Act, 2000 <span class="legal-act-ref">IT Act 2000</span> and the Indian Contract Act, 1872.</p>
+                        </div>
+                    </section>
+
+                    <section id="eligibility">
+                        <h2>2. Eligibility</h2>
+                        <p>You must meet the following requirements to use our services:</p>
+                        <ul>
+                            <li>Be at least 18 years of age</li>
+                            <li>Have the legal capacity to enter into a binding contract under Indian law</li>
+                            <li>Not be barred from receiving services under applicable Indian or international law</li>
+                            <li>If acting on behalf of an organisation, have authority to bind that entity to these Terms</li>
+                        </ul>
+                        <p>Use by minors is strictly prohibited in accordance with Section 9 of the Digital Personal Data Protection Act, 2023 <span class="legal-act-ref">DPDP Act 2023</span>.</p>
+                    </section>
+
+                    <section id="services">
+                        <h2>3. Description of Services</h2>
+                        <p>TomCodeX Inc provides the following software products and services:</p>
+                        <h3>3.1 SentinelFlow</h3>
+                        <p>An autonomous reliability platform for Salesforce integrations, providing real-time incident detection, self-healing capabilities, circuit breaker management, and AI-driven impact analysis. Delivered as a Salesforce managed package.</p>
+                        <h3>3.2 VertexDB</h3>
+                        <p>An execution and intelligence workspace for planning, tracking, and system-level control. Provided as a cloud-based application.</p>
+                        <h3>3.3 General Terms</h3>
+                        <p>We reserve the right to modify, suspend, or discontinue any service (or feature thereof) at any time, with reasonable prior notice where feasible. We shall not be liable to you or any third party for such changes.</p>
+                    </section>
+
+                    <section id="account">
+                        <h2>4. Account Registration and Security</h2>
+                        <p>Certain services may require account registration. You agree to:</p>
+                        <ul>
+                            <li>Provide accurate, current, and complete registration information</li>
+                            <li>Maintain the confidentiality of your credentials</li>
+                            <li>Notify us immediately of any unauthorised use of your account</li>
+                            <li>Be responsible for all activity conducted through your account</li>
+                        </ul>
+                        <p>We reserve the right to suspend or terminate accounts that violate these Terms or provide false information, without liability, as permitted under the IT Act 2000 <span class="legal-act-ref">IT Act 2000 §43A</span>.</p>
+                    </section>
+
+                    <section id="ip">
+                        <h2>5. Intellectual Property</h2>
+                        <h3>5.1 Our Property</h3>
+                        <p>All intellectual property rights in our website, products, software, content, trademarks, logos, and documentation are owned by or licensed to TomCodeX Inc and are protected under:</p>
+                        <ul>
+                            <li>The Copyright Act, 1957</li>
+                            <li>The Trade Marks Act, 1999</li>
+                            <li>The Information Technology Act, 2000</li>
+                            <li>Other applicable Indian intellectual property laws</li>
+                        </ul>
+                        <h3>5.2 Limited Licence</h3>
+                        <p>We grant you a limited, non-exclusive, non-transferable, revocable licence to use our services solely for their intended purpose. This licence does not include any right to sublicense, resell, copy, modify, or create derivative works.</p>
+                        <h3>5.3 Feedback</h3>
+                        <p>Any feedback, suggestions, or ideas you provide to us become our property and may be used without compensation or attribution to you.</p>
+                    </section>
+
+                    <section id="prohibited">
+                        <h2>6. Prohibited Conduct</h2>
+                        <p>You agree not to engage in any of the following, which may constitute offences under the IT Act 2000 <span class="legal-act-ref">IT Act §43, §66, §66C, §66D</span>:</p>
+                        <ul>
+                            <li>Unauthorised access to any computer system, server, or network</li>
+                            <li>Introducing malware, viruses, or harmful code into our systems</li>
+                            <li>Attempting to reverse-engineer, decompile, or disassemble any software</li>
+                            <li>Using our services to send unsolicited communications (spam)</li>
+                            <li>Impersonating any person or entity</li>
+                            <li>Engaging in identity theft or fraud</li>
+                            <li>Circumventing any security, access control, or authentication measure</li>
+                            <li>Using automated bots or scrapers to extract data from our platform</li>
+                            <li>Using our services in violation of any applicable Indian law or regulation</li>
+                        </ul>
+                        <p>Violations may result in immediate termination of access and referral to law enforcement authorities.</p>
+                    </section>
+
+                    <section id="payment">
+                        <h2>7. Payment and Billing</h2>
+                        <p>For paid plans and subscriptions:</p>
+                        <ul>
+                            <li>All fees are quoted in Indian Rupees (INR) unless otherwise stated</li>
+                            <li>Payments are processed securely through PCI-DSS compliant third-party gateways</li>
+                            <li>Applicable Goods and Services Tax (GST) will be added to all invoices as required by Indian tax law</li>
+                            <li>Subscription fees are billed in advance on a monthly or annual basis</li>
+                            <li>Refunds are governed by our Refund Policy available at <a href="mailto:legal@tomcodex.com" style="color: var(--purple-light);">legal@tomcodex.com</a></li>
+                        </ul>
+                        <p>In the event of non-payment, we reserve the right to suspend or terminate access without further notice.</p>
+                    </section>
+
+                    <section id="disclaimer">
+                        <h2>8. Disclaimer of Warranties</h2>
+                        <p>Our services are provided on an <strong style="color: var(--text-primary);">"as is"</strong> and <strong style="color: var(--text-primary);">"as available"</strong> basis, without any warranties of any kind, express or implied, including but not limited to:</p>
+                        <ul>
+                            <li>Warranties of merchantability or fitness for a particular purpose</li>
+                            <li>Warranties of uninterrupted, error-free, or secure operation</li>
+                            <li>Warranties as to the accuracy or completeness of any content</li>
+                        </ul>
+                        <p>To the extent permitted by Indian law, we expressly disclaim all such warranties.</p>
+                    </section>
+
+                    <section id="liability">
+                        <h2>9. Limitation of Liability</h2>
+                        <p>To the maximum extent permitted by applicable Indian law, TomCodeX Inc and its founders, employees, or agents shall not be liable for:</p>
+                        <ul>
+                            <li>Any indirect, incidental, special, consequential, or punitive damages</li>
+                            <li>Loss of profits, data, goodwill, or business opportunities</li>
+                            <li>Unauthorised access to or alteration of your data by third parties</li>
+                            <li>Any matter beyond our reasonable control (force majeure)</li>
+                        </ul>
+                        <p>Our total aggregate liability for any claim arising under these Terms shall not exceed the amount paid by you to us in the 3 months preceding the event giving rise to the claim, or ₹5,000, whichever is greater.</p>
+                    </section>
+
+                    <section id="indemnity">
+                        <h2>10. Indemnification</h2>
+                        <p>You agree to indemnify, defend, and hold harmless TomCodeX Inc and its founders from any claims, losses, liabilities, damages, costs, and expenses (including legal fees) arising from:</p>
+                        <ul>
+                            <li>Your use or misuse of our services</li>
+                            <li>Your violation of these Terms</li>
+                            <li>Your violation of any third-party rights</li>
+                            <li>Any content you submit through our services</li>
+                        </ul>
+                    </section>
+
+                    <section id="termination">
+                        <h2>11. Termination</h2>
+                        <p>Either party may terminate this agreement at any time:</p>
+                        <ul>
+                            <li>You may stop using our services at any time</li>
+                            <li>We may suspend or terminate your access with 30 days' notice for convenience</li>
+                            <li>We may suspend or terminate your access immediately for cause (breach of Terms, illegal activity, non-payment)</li>
+                        </ul>
+                        <p>Upon termination, your licence to use our services ceases immediately. Provisions that by their nature should survive termination (including Sections 5, 9, 10, and 12) shall do so.</p>
+                    </section>
+
+                    <section id="governing">
+                        <h2>12. Governing Law and Jurisdiction</h2>
+                        <p>These Terms are governed by and construed in accordance with the laws of India, including the:</p>
+                        <ul>
+                            <li>Information Technology Act, 2000 and its amendments <span class="legal-act-ref">IT Act 2000</span></li>
+                            <li>Indian Contract Act, 1872</li>
+                            <li>Consumer Protection Act, 2019 <span class="legal-act-ref">CPA 2019</span></li>
+                            <li>Consumer Protection (E-Commerce) Rules, 2020 <span class="legal-act-ref">E-Commerce Rules 2020</span></li>
+                            <li>Digital Personal Data Protection Act, 2023 <span class="legal-act-ref">DPDP Act 2023</span></li>
+                        </ul>
+                        <p>Any disputes arising from or related to these Terms shall be subject to the exclusive jurisdiction of the courts at <strong style="color: var(--text-primary);">Chennai, Tamil Nadu, India</strong>, unless otherwise resolved through arbitration as described in Section 13.</p>
+                    </section>
+
+                    <section id="dispute">
+                        <h2>13. Dispute Resolution</h2>
+                        <h3>13.1 Informal Resolution</h3>
+                        <p>Before initiating any formal proceedings, you agree to attempt to resolve disputes informally by contacting us at <a href="mailto:legal@tomcodex.com" style="color: var(--purple-light);">legal@tomcodex.com</a>. We will attempt to resolve the dispute within 30 days.</p>
+                        <h3>13.2 Consumer Disputes</h3>
+                        <p>Consumer disputes may also be raised before the appropriate Consumer Disputes Redressal Commission under the Consumer Protection Act, 2019 <span class="legal-act-ref">CPA 2019</span>.</p>
+                        <h3>13.3 Arbitration</h3>
+                        <p>For commercial disputes exceeding ₹1,00,000, parties may mutually agree to binding arbitration under the Arbitration and Conciliation Act, 1996, with the seat of arbitration in Chennai, Tamil Nadu.</p>
+                    </section>
+
+                    <section id="contact-legal">
+                        <h2>14. Contact Information</h2>
+                        <p>For any legal queries, notices, or concerns related to these Terms, please contact:</p>
+                        <div class="legal-contact-card">
+                            <p><strong style="color: var(--text-primary);">Legal & Compliance — TomCodeX Inc</strong><br><br>
+                            Email: <a href="mailto:legal@tomcodex.com">legal@tomcodex.com</a><br>
+                            Jurisdiction: Chennai, Tamil Nadu, India<br><br>
+                            For consumer grievances: <a href="mailto:support@tomcodex.com">support@tomcodex.com</a><br>
+                            Response Time: Within 30 days (legal matters) / 48 hours (general support)</p>
+                        </div>
+                        <div class="legal-highlight" style="margin-top: 24px;">
+                            <p>These Terms were last updated on 3 May 2026. By continuing to use our services after any update, you accept the revised Terms.</p>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer style="border-top: 1px solid var(--border-color); padding: 24px 0; background: var(--bg-primary);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; font-size: 0.8rem; color: var(--text-secondary);">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <img src="assets/tomcodex-logo.svg" alt="TomCodeX Logo" style="height: 28px; width: auto;">
+                <span>Copyright © 2026 TomCodeX Inc. All rights reserved.</span>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px; flex-wrap: wrap;">
+                <a href="about.html" style="color: var(--text-secondary); text-decoration: none;">About Us</a><span>|</span>
+                <a href="careers.html" style="color: var(--text-secondary); text-decoration: none;">Careers</a><span>|</span>
+                <a href="blog.html" style="color: var(--text-secondary); text-decoration: none;">Blog</a><span>|</span>
+                <a href="contact.html" style="color: var(--text-secondary); text-decoration: none;">Contact</a><span>|</span>
+                <a href="privacy-policy.html" style="color: var(--text-secondary); text-decoration: none;">Privacy Policy</a><span>|</span>
+                <a href="terms.html" style="color: var(--text-secondary); text-decoration: none;">Terms of Use</a>
+            </div>
+            <div style="margin-bottom: 8px;">Chennai, Tamil Nadu, India</div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+        });
+        const io = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.05 });
+        document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+    </script>
+</body>
+</html>

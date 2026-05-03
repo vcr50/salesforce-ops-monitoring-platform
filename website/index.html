@@ -19,6 +19,7 @@
                 <span class="nav-brand-text">SentinelFlow</span>
             </a>
             <div class="nav-links" id="navLinks">
+                <a href="products.html">Products</a>
                 <a href="#features">Features</a>
                 <a href="#how-it-works">How It Works</a>
                 <a href="#architecture">Architecture</a>
@@ -495,38 +496,29 @@
     </section>
 
     <!-- ═══════════════════ FOOTER ═══════════════════ -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <div class="footer-logo">
-                        <img src="assets/logo.svg" alt="SentinelFlow" class="nav-logo">
-                        <span class="nav-brand-text">SentinelFlow</span>
-                    </div>
-                    <p class="footer-tagline">AI-powered incident intelligence for the modern enterprise.</p>
-                    <p class="footer-copyright">© 2026 TomCodeX Inc. All rights reserved.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Product</h4>
-                    <a href="#features">Features</a>
-                    <a href="#pricing">Pricing</a>
-                    <a href="#architecture">Architecture</a>
-                    <a href="#">Changelog</a>
-                </div>
-                <div class="footer-links">
-                    <h4>Company</h4>
-                    <a href="#">About</a>
-                    <a href="#">Careers</a>
-                    <a href="#">Blog</a>
-                    <a href="#">Contact</a>
-                </div>
-                <div class="footer-links">
-                    <h4>Legal</h4>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Security</a>
-                    <a href="#">GDPR</a>
-                </div>
+    <footer class="footer" style="border-top: 1px solid var(--border-color); padding: 24px 0; background: var(--bg-primary); margin-top: auto;">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; font-size: 0.8rem; color: var(--text-secondary);">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <img src="assets/logo.svg" alt="SentinelFlow Logo" style="width: 20px; height: 20px;">
+                <span>Copyright © 2026 TomCodeX Inc. All rights reserved.</span>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px; flex-wrap: wrap;">
+                <a href="about.html" style="color: var(--text-secondary); text-decoration: none;">About Us</a>
+                <span>|</span>
+                <a href="careers.html" style="color: var(--text-secondary); text-decoration: none;">Careers</a>
+                <span>|</span>
+                <a href="blog.html" style="color: var(--text-secondary); text-decoration: none;">Blog</a>
+                <span>|</span>
+                <a href="contact.html" style="color: var(--text-secondary); text-decoration: none;">Contact</a>
+                <span>|</span>
+                <a href="privacy-policy.html" style="color: var(--text-secondary); text-decoration: none;">Privacy Policy</a>
+                <span>|</span>
+                <a href="terms.html" style="color: var(--text-secondary); text-decoration: none;">Terms of Use</a>
+                <span>|</span>
+                <a href="#" onclick="openInfoModal(event)" style="color: #00d2ff; text-decoration: none; font-weight: 600;">All Topics <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+            </div>
+            <div style="margin-bottom: 8px;">
+                United States
             </div>
         </div>
     </footer>
@@ -577,6 +569,72 @@
         </div>
     </div>
 
+    <!-- ═══════════════════ INFO TOPICS MODAL ═══════════════════ -->
+    <div class="modal-overlay" id="infoModalOverlay" style="display:none; align-items:center; justify-content:center; z-index: 2000;">
+        <div class="modal" id="infoModal" style="max-width: 800px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; position: relative; max-height: 90vh; overflow-y: auto;">
+            <button class="modal-close" onclick="closeInfoModal()" aria-label="Close modal" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:28px; color:var(--text-secondary); cursor:pointer;">&times;</button>
+            <h2 class="modal-title" style="margin-bottom: 32px; font-size: 1.8rem; text-align:center; background: linear-gradient(90deg, #fff, #a8a8a8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Information & Topics</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px;">
+                <!-- Product Column -->
+                <div>
+                    <h4 style="color: var(--text-primary); margin-bottom: 16px; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">Product</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0; display:flex; flex-direction:column; gap:12px;">
+                        <li><a href="#features" onclick="closeInfoModal()" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Features</a></li>
+                        <li><a href="#pricing" onclick="closeInfoModal()" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Pricing</a></li>
+                        <li><a href="#architecture" onclick="closeInfoModal()" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Architecture</a></li>
+                        <li><a href="#" onclick="closeInfoModal()" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Changelog</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Company Column -->
+                <div>
+                    <h4 style="color: var(--text-primary); margin-bottom: 16px; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">Company</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0; display:flex; flex-direction:column; gap:12px;">
+                        <li><a href="about.html" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">About Us</a></li>
+                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Our Mission</a></li>
+                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Leadership</a></li>
+                        <li><a href="careers.html" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Careers</a></li>
+                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Customers</a></li>
+                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Partners</a></li>
+                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Newsroom</a></li>
+                        <li><a href="blog.html" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Blog</a></li>
+                        <li><a href="contact.html" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal Column -->
+                <div>
+                    <h4 style="color: var(--text-primary); margin-bottom: 16px; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">Legal</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0; display:flex; flex-direction:column; gap:12px;">
+                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Privacy Policy</a></li>
+                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Terms of Service</a></li>
+                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Security</a></li>
+                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">GDPR</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
+    <script>
+        function openInfoModal(event) {
+            if(event) event.preventDefault();
+            const modal = document.getElementById('infoModalOverlay');
+            if(modal) modal.style.display = 'flex';
+        }
+        function closeInfoModal() {
+            const modal = document.getElementById('infoModalOverlay');
+            if(modal) modal.style.display = 'none';
+        }
+        // Close if clicked outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('infoModalOverlay');
+            if (event.target == modal) {
+                closeInfoModal();
+            }
+        });
+    </script>
 </body>
 </html>

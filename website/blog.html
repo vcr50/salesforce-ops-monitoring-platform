@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog — TomCodeX</title>
+    <meta name="description" content="Insights on reliability engineering, system intelligence, and autonomous software from the Tomcodex team.">
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .blog-page {
+            padding-top: 120px;
+            padding-bottom: 140px;
+            min-height: 100vh;
+        }
+
+        /* ── Hero ── */
+        .blog-hero {
+            max-width: 640px;
+            margin: 0 auto 72px;
+            text-align: center;
+        }
+        .blog-hero-eyebrow {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+        .blog-hero-title {
+            font-size: clamp(2.4rem, 4vw, 3.2rem);
+            font-weight: 800;
+            letter-spacing: -1.2px;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            line-height: 1.15;
+        }
+        .blog-hero-sub {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+        }
+
+        /* ── Featured post ── */
+        .blog-featured {
+            max-width: 960px;
+            margin: 0 auto 64px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        .blog-featured:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-card);
+        }
+        .blog-featured-img {
+            background: linear-gradient(135deg, rgba(123,82,255,0.2) 0%, rgba(0,210,255,0.12) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 280px;
+            position: relative;
+            overflow: hidden;
+        }
+        .blog-featured-img::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 40% 60%, rgba(123,82,255,0.15), transparent 70%);
+        }
+        .blog-featured-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: rgba(123,82,255,0.15);
+            border: 1px solid rgba(123,82,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--purple-light);
+            position: relative;
+            z-index: 2;
+        }
+        .blog-featured-body {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px;
+        }
+        .blog-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .blog-featured-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.35;
+            letter-spacing: -0.3px;
+        }
+        .blog-featured-excerpt {
+            font-size: 0.93rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+        }
+        .blog-featured-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+        .blog-featured-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* ── Grid ── */
+        .blog-grid-wrap {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        .blog-grid-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+        }
+        .blog-grid-heading {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.2px;
+        }
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .blog-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        .blog-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-card);
+            background: var(--bg-card-hover);
+        }
+        .blog-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .blog-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .blog-card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.4;
+            letter-spacing: -0.2px;
+        }
+        .blog-card-excerpt {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            flex: 1;
+        }
+        .blog-card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+        .blog-card-read {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ── Newsletter ── */
+        .blog-newsletter {
+            max-width: 960px;
+            margin: 64px auto 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 40px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+        .blog-newsletter-text h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+        .blog-newsletter-text p {
+            font-size: 0.87rem;
+            color: var(--text-secondary);
+        }
+        .blog-newsletter-form {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .blog-newsletter-form input {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+            font-size: 0.87rem;
+            color: var(--text-primary);
+            font-family: var(--font-family);
+            outline: none;
+            width: 240px;
+            transition: var(--transition);
+        }
+        .blog-newsletter-form input::placeholder { color: var(--text-muted); }
+        .blog-newsletter-form input:focus { border-color: var(--purple); }
+
+        /* ── Fade-in ── */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .fade-in.visible { opacity: 1; transform: none; }
+
+        @media (max-width: 768px) {
+            .blog-featured { grid-template-columns: 1fr; }
+            .blog-featured-img { min-height: 180px; }
+            .blog-grid { grid-template-columns: 1fr; }
+            .blog-newsletter { flex-direction: column; align-items: flex-start; }
+            .blog-newsletter-form { width: 100%; }
+            .blog-newsletter-form input { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══════════════════ NAVBAR ═══════════════════ -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <img src="assets/logo.svg" alt="SentinelFlow Logo" class="nav-logo">
+                <span class="nav-brand-text">SentinelFlow</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="products.html">Products</a>
+                <a href="index.html#features">Features</a>
+                <a href="index.html#how-it-works">How It Works</a>
+                <a href="index.html#architecture">Architecture</a>
+                <a href="index.html#pricing">Pricing</a>
+            </div>
+            <div class="nav-actions">
+                <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000YSWXQA4" target="_blank" class="btn btn-ghost">Install Package</a>
+                <a href="index.html#pricing" class="btn btn-ghost">Start Free Trial</a>
+                <a href="index.html#demo" class="btn btn-primary">Book a Demo</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════ BLOG ═══════════════════ -->
+    <main class="blog-page">
+        <div class="container">
+
+            <!-- Hero -->
+            <div class="blog-hero fade-in">
+                <span class="blog-hero-eyebrow">From the team</span>
+                <h1 class="blog-hero-title">The Tomcodex Blog</h1>
+                <p class="blog-hero-sub">Insights on reliability engineering, system intelligence,<br>and autonomous software for modern teams.</p>
+            </div>
+
+            <!-- Featured -->
+            <a href="#" class="blog-featured fade-in">
+                <div class="blog-featured-img">
+                    <div class="blog-featured-icon">
+                        <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+                    </div>
+                </div>
+                <div class="blog-featured-body">
+                    <span class="blog-tag">Reliability Engineering</span>
+                    <div class="blog-featured-title">How Self-Healing Systems Reduce Incident Response Time by 80%</div>
+                    <p class="blog-featured-excerpt">Modern reliability isn't about faster humans — it's about systems that resolve themselves. We break down the architecture behind SentinelFlow's autonomous recovery engine.</p>
+                    <div class="blog-featured-meta">
+                        <span>
+                            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                            8 min read
+                        </span>
+                        <span>May 1, 2026</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Grid -->
+            <div class="blog-grid-wrap">
+                <div class="blog-grid-header fade-in">
+                    <span class="blog-grid-heading">Latest Posts</span>
+                </div>
+
+                <div class="blog-grid">
+
+                    <a href="#" class="blog-card fade-in">
+                        <div class="blog-card-top">
+                            <div class="blog-card-icon feature-icon-purple">
+                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+                            </div>
+                            <span class="blog-tag">Platform</span>
+                        </div>
+                        <div class="blog-card-title">Circuit Breakers in Salesforce Integrations: A Practical Guide</div>
+                        <p class="blog-card-excerpt">What circuit breakers are, why they matter for enterprise integrations, and how to implement them without custom code using SentinelFlow.</p>
+                        <div class="blog-card-meta">
+                            <span>Apr 24, 2026</span>
+                            <span class="blog-card-read">5 min →</span>
+                        </div>
+                    </a>
+
+                    <a href="#" class="blog-card fade-in">
+                        <div class="blog-card-top">
+                            <div class="blog-card-icon feature-icon-blue">
+                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14H11v-6h2zm0-8H11V6h2z"/></svg>
+                            </div>
+                            <span class="blog-tag">Intelligence</span>
+                        </div>
+                        <div class="blog-card-title">AI Impact Analysis: Predicting Business Risk Before It Hits Production</div>
+                        <p class="blog-card-excerpt">How SentinelFlow's AI engine calculates business impact scores in real-time and routes incidents based on severity, not noise.</p>
+                        <div class="blog-card-meta">
+                            <span>Apr 17, 2026</span>
+                            <span class="blog-card-read">6 min →</span>
+                        </div>
+                    </a>
+
+                    <a href="#" class="blog-card fade-in">
+                        <div class="blog-card-top">
+                            <div class="blog-card-icon feature-icon-green">
+                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="m9 9 3 3 3-3"/></svg>
+                            </div>
+                            <span class="blog-tag">Operations</span>
+                        </div>
+                        <div class="blog-card-title">From Reactive to Autonomous: Rethinking Your On-Call Playbook</div>
+                        <p class="blog-card-excerpt">On-call shouldn't mean sleepless nights. Learn how teams using autonomous monitoring cut alert noise by 70% in their first month.</p>
+                        <div class="blog-card-meta">
+                            <span>Apr 10, 2026</span>
+                            <span class="blog-card-read">7 min →</span>
+                        </div>
+                    </a>
+
+                    <a href="#" class="blog-card fade-in">
+                        <div class="blog-card-top">
+                            <div class="blog-card-icon feature-icon-orange">
+                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                            </div>
+                            <span class="blog-tag">Architecture</span>
+                        </div>
+                        <div class="blog-card-title">Designing Multi-Tenant Reliability at Scale</div>
+                        <p class="blog-card-excerpt">The data isolation, quota management, and per-tenant healing logic behind SentinelFlow's enterprise architecture.</p>
+                        <div class="blog-card-meta">
+                            <span>Apr 3, 2026</span>
+                            <span class="blog-card-read">9 min →</span>
+                        </div>
+                    </a>
+
+                    <a href="#" class="blog-card fade-in">
+                        <div class="blog-card-top">
+                            <div class="blog-card-icon feature-icon-pink">
+                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M4.93 4.93l14.14 14.14M19.07 4.93 4.93 19.07"/></svg>
+                            </div>
+                            <span class="blog-tag">Product</span>
+                        </div>
+                        <div class="blog-card-title">SentinelFlow 2.0: What's New in the Autonomous Core</div>
+                        <p class="blog-card-excerpt">A full walkthrough of the v2 release — new healing strategies, expanded connector support, and the new Copilot interface.</p>
+                        <div class="blog-card-meta">
+                            <span>Mar 28, 2026</span>
+                            <span class="blog-card-read">4 min →</span>
+                        </div>
+                    </a>
+
+                    <a href="#" class="blog-card fade-in">
+                        <div class="blog-card-top">
+                            <div class="blog-card-icon feature-icon-cyan">
+                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                            </div>
+                            <span class="blog-tag">Engineering</span>
+                        </div>
+                        <div class="blog-card-title">Why We Built VertexDB: The Execution Workspace Problem</div>
+                        <p class="blog-card-excerpt">Planning, tracking, and system-level control — why existing tools fell short and what we designed differently for VertexDB.</p>
+                        <div class="blog-card-meta">
+                            <span>Mar 20, 2026</span>
+                            <span class="blog-card-read">6 min →</span>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="blog-newsletter fade-in">
+                <div class="blog-newsletter-text">
+                    <h3>Stay in the loop</h3>
+                    <p>New articles on reliability, intelligence, and autonomous systems — straight to your inbox.</p>
+                </div>
+                <form class="blog-newsletter-form" onsubmit="handleSubscribe(event)">
+                    <input type="email" id="nl-email" placeholder="you@company.com" required>
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ═══════════════════ FOOTER ═══════════════════ -->
+    <footer style="border-top: 1px solid var(--border-color); padding: 24px 0; background: var(--bg-primary);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; font-size: 0.8rem; color: var(--text-secondary);">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <img src="assets/tomcodex-logo.svg" alt="TomCodeX Logo" style="height: 28px; width: auto;">
+                <span>Copyright © 2026 TomCodeX Inc. All rights reserved.</span>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px; flex-wrap: wrap;">
+                <a href="about.html" style="color: var(--text-secondary); text-decoration: none;">About Us</a><span>|</span>
+                <a href="careers.html" style="color: var(--text-secondary); text-decoration: none;">Careers</a><span>|</span>
+                <a href="blog.html" style="color: var(--text-secondary); text-decoration: none;">Blog</a><span>|</span>
+                <a href="contact.html" style="color: var(--text-secondary); text-decoration: none;">Contact</a><span>|</span>
+                <a href="privacy-policy.html" style="color: var(--text-secondary); text-decoration: none;">Privacy Policy</a><span>|</span>
+                <a href="terms.html" style="color: var(--text-secondary); text-decoration: none;">Terms of Use</a><span>|</span>
+                <a href="#" onclick="openInfoModal(event)" style="color: #00d2ff; text-decoration: none; font-weight: 600;">All Topics ↗</a>
+            </div>
+            <div style="margin-bottom: 8px;">United States</div>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="infoModalOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; z-index:2000; backdrop-filter:blur(4px);">
+        <div style="max-width:800px; width:90%; background:var(--bg-card); border:1px solid var(--border-color); border-radius:12px; padding:32px; position:relative; max-height:90vh; overflow-y:auto;" onclick="event.stopPropagation()">
+            <button onclick="closeInfoModal()" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:28px; color:var(--text-secondary); cursor:pointer;">&times;</button>
+            <h2 style="margin-bottom:32px; font-size:1.6rem; text-align:center; color:var(--text-primary);">Information & Topics</h2>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:32px;">
+                <div>
+                    <h4 style="color:var(--text-primary); margin-bottom:16px; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid var(--border-color); padding-bottom:8px;">Product</h4>
+                    <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:12px;">
+                        <li><a href="index.html#features" onclick="closeInfoModal()" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Features</a></li>
+                        <li><a href="index.html#pricing" onclick="closeInfoModal()" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Pricing</a></li>
+                        <li><a href="index.html#architecture" onclick="closeInfoModal()" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Architecture</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color:var(--text-primary); margin-bottom:16px; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid var(--border-color); padding-bottom:8px;">Company</h4>
+                    <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:12px;">
+                        <li><a href="about.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">About Us</a></li>
+                        <li><a href="careers.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Careers</a></li>
+                        <li><a href="blog.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Blog</a></li>
+                        <li><a href="contact.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color:var(--text-primary); margin-bottom:16px; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid var(--border-color); padding-bottom:8px;">Legal</h4>
+                    <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:12px;">
+                        <li><a href="#" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Privacy Policy</a></li>
+                        <li><a href="#" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Terms of Service</a></li>
+                        <li><a href="#" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+        });
+        const io = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.07 });
+        document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+
+        function handleSubscribe(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.textContent = 'Subscribed ✓';
+            btn.style.background = 'linear-gradient(135deg, #10b981, #06b6d4)';
+            e.target.querySelector('input').value = '';
+        }
+        function openInfoModal(e) { if(e) e.preventDefault(); document.getElementById('infoModalOverlay').style.display='flex'; }
+        function closeInfoModal() { document.getElementById('infoModalOverlay').style.display='none'; }
+        window.addEventListener('click', e => { if(e.target===document.getElementById('infoModalOverlay')) closeInfoModal(); });
+    </script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About — TomCodeX</title>
+    <meta name="description" content="Tomcodex builds intelligent systems for modern software teams.">
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ── Page shell ── */
+        .about-page {
+            padding-top: 120px;
+            padding-bottom: 140px;
+            min-height: 100vh;
+        }
+
+        /* ── Hero block ── */
+        .about-hero {
+            max-width: 680px;
+            margin: 0 auto 96px;
+            text-align: center;
+        }
+        .about-hero-eyebrow {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+        .about-hero-title {
+            font-size: clamp(2.8rem, 5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+        }
+        .about-hero-lead {
+            font-size: 1.15rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            line-height: 1.75;
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        /* ── Divider ── */
+        .about-rule {
+            height: 1px;
+            background: var(--border-color);
+            max-width: 960px;
+            margin: 0 auto 80px;
+        }
+
+        /* ── Two-col sections ── */
+        .about-rows {
+            max-width: 960px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .about-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 48px;
+            padding: 48px 0;
+            border-bottom: 1px solid var(--border-color);
+            align-items: start;
+        }
+        .about-row:last-child {
+            border-bottom: none;
+        }
+        .about-row-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            padding-top: 4px;
+        }
+        .about-row-content h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.4;
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
+        .about-row-content p {
+            font-size: 0.97rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-weight: 400;
+            margin: 0;
+        }
+        .about-row-content p + p {
+            margin-top: 12px;
+        }
+        .about-list {
+            list-style: none;
+            padding: 0;
+            margin: 14px 0 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .about-list li {
+            font-size: 0.97rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+        .about-list li::before {
+            content: '—';
+            font-size: 0.75rem;
+            opacity: 0.4;
+            flex-shrink: 0;
+        }
+
+        /* ── Signature ── */
+        .about-sig {
+            max-width: 960px;
+            margin: 80px auto 0;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 28px 36px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+        }
+        .about-sig img {
+            width: 36px;
+            height: 36px;
+            opacity: 0.9;
+        }
+        .about-sig-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .about-sig-sub {
+            font-size: 0.83rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* ── Fade-in ── */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 700px) {
+            .about-row {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ═══════════════════ NAVBAR ═══════════════════ -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <img src="assets/logo.svg" alt="SentinelFlow Logo" class="nav-logo">
+                <span class="nav-brand-text">SentinelFlow</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="products.html">Products</a>
+                <a href="index.html#features">Features</a>
+                <a href="index.html#how-it-works">How It Works</a>
+                <a href="index.html#architecture">Architecture</a>
+                <a href="index.html#pricing">Pricing</a>
+            </div>
+            <div class="nav-actions">
+                <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000YSWXQA4" target="_blank" class="btn btn-ghost">Install Package</a>
+                <a href="index.html#pricing" class="btn btn-ghost">Start Free Trial</a>
+                <a href="index.html#demo" class="btn btn-primary">Book a Demo</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════ ABOUT ═══════════════════ -->
+    <main class="about-page">
+        <div class="container">
+
+            <!-- Hero -->
+            <div class="about-hero fade-in">
+                <span class="about-hero-eyebrow">Company</span>
+                <h1 class="about-hero-title">About Tomcodex</h1>
+                <p class="about-hero-lead">
+                    Tomcodex builds intelligent systems for modern software — products that move beyond traditional tools into autonomous, self-healing, and execution-driven environments.
+                </p>
+            </div>
+
+            <div class="about-rule fade-in"></div>
+
+            <!-- Rows -->
+            <div class="about-rows">
+
+                <div class="about-row fade-in">
+                    <div class="about-row-label">Our Focus</div>
+                    <div class="about-row-content">
+                        <h2>Reliability. Intelligence. Execution.</h2>
+                        <p>We create systems that don't just detect problems — they resolve them, adapt, and improve over time.</p>
+                    </div>
+                </div>
+
+                <div class="about-row fade-in">
+                    <div class="about-row-label">What We Build</div>
+                    <div class="about-row-content">
+                        <h2>Software for teams that demand more.</h2>
+                        <ul class="about-list">
+                            <li>Control over complex systems</li>
+                            <li>Speed in execution</li>
+                            <li>Stability at scale</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="about-row fade-in">
+                    <div class="about-row-label">Scope</div>
+                    <div class="about-row-content">
+                        <h2>Across modern cloud ecosystems.</h2>
+                        <p>Our work spans integrations, system reliability, data intelligence, and execution platforms — built for the cloud-native era.</p>
+                    </div>
+                </div>
+
+                <div class="about-row fade-in">
+                    <div class="about-row-label">Philosophy</div>
+                    <div class="about-row-content">
+                        <h2>Simple systems. Clear outcomes.</h2>
+                        <p>No unnecessary complexity. We believe the best software disappears — it just works.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Signature -->
+            <div class="about-sig fade-in">
+                <img src="assets/logo.svg" alt="Tomcodex logo">
+                <div>
+                    <div class="about-sig-name">Built by Tomcodex</div>
+                    <div class="about-sig-sub">Designing autonomous systems for modern software.</div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ═══════════════════ FOOTER ═══════════════════ -->
+    <footer style="border-top: 1px solid var(--border-color); padding: 24px 0; background: var(--bg-primary);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; font-size: 0.8rem; color: var(--text-secondary);">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <img src="assets/tomcodex-logo.svg" alt="TomCodeX Logo" style="height: 28px; width: auto;">
+                <span>Copyright © 2026 TomCodeX Inc. All rights reserved.</span>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px; flex-wrap: wrap;">
+                <a href="about.html" style="color: var(--text-secondary); text-decoration: none;">About Us</a><span>|</span>
+                <a href="careers.html" style="color: var(--text-secondary); text-decoration: none;">Careers</a><span>|</span>
+                <a href="blog.html" style="color: var(--text-secondary); text-decoration: none;">Blog</a><span>|</span>
+                <a href="contact.html" style="color: var(--text-secondary); text-decoration: none;">Contact</a><span>|</span>
+                <a href="privacy-policy.html" style="color: var(--text-secondary); text-decoration: none;">Privacy Policy</a><span>|</span>
+                <a href="terms.html" style="color: var(--text-secondary); text-decoration: none;">Terms of Use</a><span>|</span>
+                <a href="#" onclick="openInfoModal(event)" style="color: #00d2ff; text-decoration: none; font-weight: 600;">All Topics ↗</a>
+            </div>
+            <div style="margin-bottom: 8px;">United States</div>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="infoModalOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; z-index:2000; backdrop-filter:blur(4px);">
+        <div style="max-width:800px; width:90%; background:var(--bg-card); border:1px solid var(--border-color); border-radius:12px; padding:32px; position:relative; max-height:90vh; overflow-y:auto;" onclick="event.stopPropagation()">
+            <button onclick="closeInfoModal()" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:28px; color:var(--text-secondary); cursor:pointer;">&times;</button>
+            <h2 style="margin-bottom:32px; font-size:1.6rem; text-align:center; color:var(--text-primary);">Information & Topics</h2>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:32px;">
+                <div>
+                    <h4 style="color:var(--text-primary); margin-bottom:16px; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid var(--border-color); padding-bottom:8px;">Product</h4>
+                    <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:12px;">
+                        <li><a href="index.html#features" onclick="closeInfoModal()" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Features</a></li>
+                        <li><a href="index.html#pricing" onclick="closeInfoModal()" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Pricing</a></li>
+                        <li><a href="index.html#architecture" onclick="closeInfoModal()" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Architecture</a></li>
+                        <li><a href="#" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Changelog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color:var(--text-primary); margin-bottom:16px; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid var(--border-color); padding-bottom:8px;">Company</h4>
+                    <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:12px;">
+                        <li><a href="about.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">About Us</a></li>
+                        <li><a href="careers.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Careers</a></li>
+                        <li><a href="blog.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Blog</a></li>
+                        <li><a href="contact.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color:var(--text-primary); margin-bottom:16px; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid var(--border-color); padding-bottom:8px;">Legal</h4>
+                    <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:12px;">
+                        <li><a href="#" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Privacy Policy</a></li>
+                        <li><a href="#" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Terms of Service</a></li>
+                        <li><a href="#" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Security</a></li>
+                        <li><a href="#" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">GDPR</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+        });
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.08 });
+        document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+
+        function openInfoModal(e) { if(e) e.preventDefault(); document.getElementById('infoModalOverlay').style.display='flex'; }
+        function closeInfoModal() { document.getElementById('infoModalOverlay').style.display='none'; }
+        window.addEventListener('click', e => { if(e.target===document.getElementById('infoModalOverlay')) closeInfoModal(); });
+    </script>
+</body>
+</html>
