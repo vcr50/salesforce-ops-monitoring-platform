@@ -34,7 +34,8 @@
         .legal-contact-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 24px; margin-top: 16px; }
         .legal-contact-card p { margin: 0; font-size: 0.88rem; }
         .legal-contact-card a { color: var(--purple-light); text-decoration: none; }
-        .fade-in { opacity: 0; transform: translateY(12px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .fade-in { animation: fadeInPage 0.6s ease forwards; }
+        @keyframes fadeInPage { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
         .fade-in.visible { opacity: 1; transform: none; }
         @media (max-width: 700px) { .legal-layout { grid-template-columns: 1fr; } .legal-toc { display: none; } }
     </style>
@@ -314,10 +315,7 @@
         window.addEventListener('scroll', () => {
             document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
         });
-        const io = new IntersectionObserver(entries => {
-            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-        }, { threshold: 0.05 });
-        document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+        
     </script>
 </body>
 </html>
