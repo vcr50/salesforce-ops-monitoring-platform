@@ -152,6 +152,36 @@ private class IncidentRestApiTest {
     }
 
     @IsTest
+    static void testPostBlockedByExpiredSubscription() {
+        Tenant__c tenant = [SELECT Id, API_Key__c FROM Tenant__c LIMIT 1];
+        insert new Subscription__c(
+            Org_Id__c = UserInfo.getOrganizationId(),
+            Plan__c = 'Starter',
+            Status__c = 'Expired',
+            Expiry_Date__c = Date.today().addDays(-1)
+        );
+
+        RestRequest req = new RestRequest();
+        req.requestURI = '/services/apexrest/sentinelflow/incidents';
+        req.httpMethod = 'POST';
+        req.requestBody = Blob.valueOf(JSON.serialize(new Map<String, Object>{
+            'apiKey' => tenant.API_Key__c,
+            'system' => 'Stripe',
+            'error'  => 'timeout'
+        }));
+
+        RestResponse res = new RestResponse();
+        RestContext.request = req;
+        RestContext.response = res;
+
+        Test.startTest();
+        IncidentRestApi.doPost();
+        Test.stopTest();
+
+        System.assertEquals(402, res.statusCode, 'Expired subscriptions should be blocked');
+    }
+
+    @IsTest
     static void testGetIncidents() {
         Tenant__c tenant = [SELECT Id, API_Key__c FROM Tenant__c LIMIT 1];
 

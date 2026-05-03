@@ -76,6 +76,16 @@ global with sharing class IncidentRestApi {
                 return;
             }
 
+            try {
+                SubscriptionService.requireIncidentCapacity();
+            } catch (SubscriptionService.EntitlementException entitlementError) {
+                res.statusCode = 402;
+                res.responseBody = Blob.valueOf(JSON.serialize(
+                    new ApiResponse(false, null, new List<String>{ entitlementError.getMessage() }, 'Subscription upgrade required.')
+                ));
+                return;
+            }
+
             // Parse the request body (supports single object or array)
             Object parsedBody = JSON.deserializeUntyped(req.requestBody.toString());
             List<Map<String, Object>> requests = new List<Map<String, Object>>();

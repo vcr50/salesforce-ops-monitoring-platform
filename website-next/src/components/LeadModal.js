@@ -4,12 +4,25 @@ import { useState, useRef } from 'react';
 export default function LeadModal({ isOpen, onClose, plan }) {
   const [submitted, setSubmitted] = useState(false);
   const formRef = useRef(null);
+  const isProfessional = plan === 'Professional';
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = () => {
+    const formData = new FormData(formRef.current);
+    const email = formData.get('email')?.toString().trim();
+
     // We let the form naturally submit to the hidden iframe
     setTimeout(() => {
+      if (isProfessional && email) {
+        const checkoutUrl = new URL('/upgrade.html', window.location.origin);
+        checkoutUrl.searchParams.set('plan', 'Professional');
+        checkoutUrl.searchParams.set('email', email);
+        checkoutUrl.searchParams.set('orgId', `web-lead:${email}`);
+        window.location.assign(checkoutUrl.toString());
+        return;
+      }
+
       setSubmitted(true);
       if (formRef.current) formRef.current.reset();
     }, 500);
@@ -41,7 +54,12 @@ export default function LeadModal({ isOpen, onClose, plan }) {
             >
               <input type="hidden" name="oid" value="00DdL0000053505" />
               <input type="hidden" name="retURL" value="http://localhost:3500" />
-              <input type="hidden" name="description" value={plan} />
+              <input type="hidden" name="lead_source" value="Website" />
+              <input
+                type="hidden"
+                name="description"
+                value={isProfessional ? 'Plan: Professional; Checkout: Pending' : `Plan: ${plan || 'Unknown'}`}
+              />
               
               <div className="form-row" style={{ display: 'flex', gap: '16px' }}>
                 <div className="form-group" style={{ flex: 1 }}>

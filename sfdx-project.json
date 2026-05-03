@@ -6,6 +6,7 @@
       "path": "force-app",
       "default": true,
       "package": "SentinelFlow",
+      "postInstallScript": "SentinelFlowPostInstallHandler",
       "versionDescription": "SentinelFlow v1.0 — AI-Powered Incident Intelligence Platform"
     }
   ],

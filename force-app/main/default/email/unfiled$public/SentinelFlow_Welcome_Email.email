@@ -1,35 +1,43 @@
 <html>
 <head>
     <style>
-        body { font-family: 'Arial', sans-serif; background-color: #0B132B; color: #FFFFFF; line-height: 1.6; padding: 40px; margin: 0; }
-        .container { max-width: 600px; margin: 0 auto; background: #1A2235; border-radius: 12px; padding: 40px; border: 1px solid #2e3a59; }
+        body { font-family: Arial, sans-serif; background-color: #0B132B; color: #FFFFFF; line-height: 1.6; padding: 40px; margin: 0; }
+        .container { max-width: 640px; margin: 0 auto; background: #1A2235; border-radius: 12px; padding: 40px; border: 1px solid #2e3a59; }
         h1 { color: #0A6BFF; margin-top: 0; }
+        h2 { color: #FFFFFF; font-size: 18px; margin-top: 0; }
         p { color: #cbd5e1; }
+        a { color: #7dd3fc; }
         .btn { display: inline-block; background-color: #0A6BFF; color: #FFFFFF !important; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; margin-top: 20px; }
-        .plans { margin-top: 30px; background: rgba(10, 107, 255, 0.05); border: 1px solid rgba(10, 107, 255, 0.2); padding: 20px; border-radius: 8px; }
+        .panel { margin-top: 24px; background: rgba(10, 107, 255, 0.06); border: 1px solid rgba(10, 107, 255, 0.22); padding: 20px; border-radius: 8px; }
         .footer { text-align: center; margin-top: 40px; font-size: 12px; color: #64748b; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to SentinelFlow! 🚀</h1>
+        <h1>Welcome to SentinelFlow</h1>
         <p>Hi {!Lead.FirstName},</p>
-        <p>Thank you for reaching out and showing interest in SentinelFlow — the premier AI-powered incident intelligence platform built natively on Salesforce.</p>
-        <p>We see that you are looking to eliminate downtime and automate your incident resolution. A member of our team will be reaching out to you shortly at {!Lead.Company} to get you set up.</p>
-        
-        <div class="plans">
-            <h2 style="color: #fff; font-size: 1.2rem; margin-top:0;">Available Plans Overview</h2>
-            <p><strong>Starter:</strong> Perfect for small teams. Monitor up to 5 integrations and 100 incidents/month. ($499/mo)</p>
-            <p><strong>Professional:</strong> Unlocks AI Auto-Healing, Custom Feature Flags, and up to 20 integrations. ($1,299/mo)</p>
-            <p><strong>Enterprise:</strong> Unlimited scale, Multi-Tenant Isolation, Dedicated Support, and 99.9% Uptime SLA. (Custom Pricing)</p>
+        <p>Thank you for reaching out about SentinelFlow for {!Lead.Company}. SentinelFlow helps Salesforce teams detect incidents, understand business impact, and automate recovery workflows.</p>
+
+        <div class="panel">
+            <h2>Plans</h2>
+            <p><strong>Starter:</strong> Free trial for small teams, basic monitoring, and community support.</p>
+            <p><strong>Professional:</strong> $29/month early access pricing with unlimited incidents, AI classification, self-healing automation, observability dashboard, and priority support.</p>
+            <p><strong>Enterprise:</strong> Custom pricing for multi-tenant isolation, advanced controls, dedicated support, and enterprise rollout.</p>
         </div>
 
-        <p>If you have any immediate questions, simply reply to this email.</p>
-        
-        <a href="https://sentinelflow.com/docs" class="btn">Explore the Documentation</a>
-        
+        <div class="panel">
+            <h2>Payment, Contact, and Terms</h2>
+            <p><strong>Payment methods:</strong> Professional plan payments are collected through secure Stripe-hosted card checkout. SentinelFlow never stores card numbers or security codes.</p>
+            <p><strong>Terms and conditions:</strong> Review the latest terms before payment at <a href="https://sentinelflow.onrender.com/terms.html">https://sentinelflow.onrender.com/terms.html</a>.</p>
+            <p><strong>Contact:</strong> For billing, product, or installation questions, contact <a href="mailto:support@tomcodex.com">support@tomcodex.com</a> or visit <a href="https://sentinelflow.onrender.com/contact.html">Contact</a>.</p>
+        </div>
+
+        <p>After a paid Professional subscription is confirmed, we will send the Salesforce package installation link and setup instructions to this email address.</p>
+
+        <a href="https://sentinelflow.onrender.com/#pricing" class="btn">View Plans</a>
+
         <div class="footer">
-            &copy; 2026 TomCodeX Inc. All rights reserved.<br>
+            &copy; 2026 TomCodeX Inc. All rights reserved.<br />
             Salesforce AgentExchange Partner
         </div>
     </div>

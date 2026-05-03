@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configure your plan - SentinelFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --page: #191919;
+      --panel: #2c2c2c;
+      --field: #2d2d2d;
+      --field-strong: #343434;
+      --line: #555;
+      --line-bright: #d8d8d8;
+      --text: #f8f8f8;
+      --muted: #a9a9a9;
+      --accent: #9d8cff;
+      --success: #34d399;
+      --danger: #f87171;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--page);
+      color: var(--text);
+    }
+
+    .topbar {
+      height: 46px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 56px;
+      border-top: 1px solid #21456d;
+    }
+
+    .back {
+      width: 40px;
+      height: 40px;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+    }
+
+    .back:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .back svg {
+      width: 30px;
+      height: 30px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .shell {
+      width: min(1240px, calc(100vw - 48px));
+      margin: 62px auto 0;
+      display: grid;
+      grid-template-columns: minmax(440px, 1fr) 588px;
+      gap: 96px;
+      align-items: start;
+    }
+
+    .payment h2 {
+      margin: 0 0 22px 12px;
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .method-grid {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .method {
+      min-height: 86px;
+      border: 1px solid transparent;
+      background: var(--field);
+      color: var(--text);
+      border-radius: 22px;
+      padding: 22px;
+      text-align: left;
+      font: inherit;
+      font-weight: 800;
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .upi-mark {
+      width: 58px;
+      height: 28px;
+      border-radius: 4px;
+      background: #f4f4f4;
+      color: #444;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .hosted-payment {
+      display: grid;
+      gap: 16px;
+    }
+
+    .field {
+      width: 100%;
+      min-height: 78px;
+      border: 0;
+      border-radius: 22px;
+      background: var(--field);
+      color: var(--text);
+      padding: 0 22px;
+      font: inherit;
+      font-size: 22px;
+      font-weight: 800;
+      outline: none;
+    }
+
+    .field::placeholder {
+      color: var(--muted);
+    }
+
+    .secure-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .summary-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 40px;
+      padding: 46px 44px 44px;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);
+    }
+
+    .summary-card h2 {
+      margin: 0 0 28px;
+      font-size: 38px;
+      line-height: 1.1;
+      font-weight: 800;
+    }
+
+    .summary-card h3 {
+      margin: 0 0 20px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .features {
+      display: grid;
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .feature {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 22px;
+      align-items: center;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .feature svg {
+      width: 24px;
+      height: 24px;
+      color: var(--accent);
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 0 0 34px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+
+    .row.total {
+      margin-top: 24px;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .subscribe {
+      width: 100%;
+      min-height: 78px;
+      border: 0;
+      border-radius: 999px;
+      background: #f7f7f7;
+      color: #050505;
+      font: inherit;
+      font-size: 22px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 14px;
+    }
+
+    .subscribe:hover {
+      background: #ffffff;
+    }
+
+    .subscribe:disabled {
+      cursor: wait;
+      opacity: 0.7;
+    }
+
+    .fine-print {
+      width: min(1240px, calc(100vw - 48px));
+      margin: 34px auto 0;
+      text-align: right;
+      font-size: 15px;
+    }
+
+    .fine-print a {
+      color: #fff;
+    }
+
+    .status {
+      width: min(1240px, calc(100vw - 48px));
+      margin: 16px auto 0;
+      padding: 14px 18px;
+      border-radius: 12px;
+      background: rgba(52, 211, 153, 0.12);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      color: #d1fae5;
+      display: none;
+    }
+
+    .status.error {
+      background: rgba(248, 113, 113, 0.12);
+      border-color: rgba(248, 113, 113, 0.3);
+      color: #fee2e2;
+    }
+
+    .status.visible {
+      display: block;
+    }
+
+    .org-line {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 980px) {
+      .topbar {
+        padding: 0 18px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      .shell {
+        margin-top: 32px;
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .summary-card {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .shell,
+      .fine-print,
+      .status {
+        width: calc(100vw - 28px);
+      }
+
+      .method-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-card {
+        border-radius: 24px;
+        padding: 28px 22px;
+      }
+
+      .summary-card h2 {
+        font-size: 30px;
+      }
+
+      .feature {
+        font-size: 16px;
+      }
+
+      .field {
+        min-height: 76px;
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <button class="back" type="button" aria-label="Back" id="backButton">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <h1>Configure your plan</h1>
+  </header>
+
+  <div class="status" id="statusBox"></div>
+
+  <main class="shell">
+    <section class="payment" aria-labelledby="payment-title">
+      <h2 id="payment-title">Payment method</h2>
+      <div class="hosted-payment">
+        <div class="method">
+          <span class="upi-mark">VISA</span>
+          Secure card checkout
+        </div>
+        <input class="field" id="billingEmail" type="email" autocomplete="email" placeholder="Billing email" />
+        <p class="secure-note">
+          Visa and other card payments are authorized securely on Stripe Checkout. SentinelFlow never stores card numbers or security codes.
+        </p>
+      </div>
+    </section>
+
+    <aside class="summary-card" aria-labelledby="plan-title">
+      <h2 id="plan-title">Professional plan</h2>
+      <h3>Top features</h3>
+      <div class="features">
+        <div class="feature">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m13 2-9 12h7l-1 8 10-13h-7l0-7Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          <span>AI incident analysis and faster triage</span>
+        </div>
+        <div class="feature">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20a6 6 0 0 0 6-6V8a4 4 0 0 0-8 0v7a2 2 0 1 0 4 0V8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span>Unlimited incidents, messages, and uploads</span>
+        </div>
+        <div class="feature">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 15V7a2 2 0 0 1 2-2h8l6 6v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" stroke="currentColor" stroke-width="2"/><path d="m9 14 2-2 2 2 3-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Self-healing automation for production issues</span>
+        </div>
+        <div class="feature">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h10l4 4v12H5V4Z" stroke="currentColor" stroke-width="2"/><path d="M15 4v5h4" stroke="currentColor" stroke-width="2"/><path d="M9 14h6M9 17h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span>Plan-based installation access in Salesforce</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <span>Monthly subscription</span>
+        <strong id="monthlyPrice">$29.00</strong>
+      </div>
+      <div class="row">
+        <span>Estimated tax</span>
+        <strong id="taxPrice">$0.00</strong>
+      </div>
+      <div class="row total">
+        <span>Due today</span>
+        <strong id="dueToday">$29.00</strong>
+      </div>
+
+      <button class="subscribe" type="button" id="subscribeButton">Subscribe</button>
+      <p class="org-line" id="orgLine"></p>
+    </aside>
+  </main>
+
+  <p class="fine-print">
+    Renews monthly until canceled. <span id="renewalText">$29.00/month will be charged.</span>
+    <a href="pricing.html">Cancel</a>
+  </p>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const orgId = params.get('orgId') || '';
+    const billingEmail = params.get('email') || '';
+    const selectedPlan = params.get('plan') || 'Professional';
+    const statusBox = document.getElementById('statusBox');
+    const subscribeButton = document.getElementById('subscribeButton');
+    const orgLine = document.getElementById('orgLine');
+
+    const plan = selectedPlan === 'Enterprise' ? 'Enterprise' : 'Professional';
+    const prices = {
+      Professional: { label: 'Professional plan', monthly: '$29.00', tax: 'Calculated at checkout', due: '$29.00' },
+      Enterprise: { label: 'Enterprise plan', monthly: 'Custom', tax: '$0.00', due: 'Contact sales' }
+    };
+
+    function showStatus(message, isError = false) {
+      statusBox.textContent = message;
+      statusBox.classList.toggle('error', isError);
+      statusBox.classList.add('visible');
+    }
+
+    function applyPlan() {
+      const current = prices[plan];
+      document.getElementById('plan-title').textContent = current.label;
+      document.getElementById('monthlyPrice').textContent = current.monthly;
+      document.getElementById('taxPrice').textContent = current.tax;
+      document.getElementById('dueToday').textContent = current.due;
+      document.getElementById('renewalText').textContent = plan === 'Enterprise'
+        ? 'Our team will confirm your contract and installation access.'
+        : `${current.monthly}/month will be charged.`;
+      subscribeButton.textContent = plan === 'Enterprise' ? 'Contact Sales' : 'Subscribe';
+      orgLine.textContent = orgId ? `Salesforce Org: ${orgId}` : 'Open this page from the installed Salesforce package to attach access to an org.';
+      document.getElementById('billingEmail').value = billingEmail;
+    }
+
+    document.getElementById('backButton').addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.assign('pricing.html');
+      }
+    });
+
+    subscribeButton.addEventListener('click', async () => {
+      if (plan === 'Enterprise') {
+        window.location.assign(`contact.html?plan=Enterprise&orgId=${encodeURIComponent(orgId)}`);
+        return;
+      }
+
+      if (!orgId) {
+        showStatus('Missing Salesforce org id. Click Subscription from inside the installed package first.', true);
+        return;
+      }
+
+      const email = document.getElementById('billingEmail').value.trim();
+      if (!email) {
+        showStatus('Enter a billing email to continue to card checkout.', true);
+        return;
+      }
+
+      subscribeButton.disabled = true;
+      subscribeButton.textContent = 'Opening card checkout...';
+
+      try {
+        const response = await fetch('/api/billing/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orgId, email, plan })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || 'Unable to create checkout session.');
+        }
+        window.location.assign(data.url);
+      } catch (error) {
+        showStatus(error.message, true);
+        subscribeButton.disabled = false;
+        subscribeButton.textContent = 'Subscribe';
+      }
+    });
+
+    if (params.get('checkout') === 'success') {
+      showStatus('Payment received. Salesforce installation access will unlock after the Stripe webhook updates your subscription.');
+    }
+
+    if (params.get('checkout') === 'cancelled') {
+      showStatus('Checkout was canceled. Your current Salesforce plan was not changed.', true);
+    }
+
+    applyPlan();
+  </script>
+</body>
+</html>

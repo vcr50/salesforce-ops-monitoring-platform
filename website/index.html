@@ -621,6 +621,10 @@
                 <span>|</span>
                 <a href="terms.html" style="color: var(--text-secondary); text-decoration: none;">Terms of Use</a>
                 <span>|</span>
+                <a href="shipping-policy.html" style="color: var(--text-secondary); text-decoration: none;">Shipping Policy</a>
+                <span>|</span>
+                <a href="cancellation-refund-policy.html" style="color: var(--text-secondary); text-decoration: none;">Cancellation & Refunds</a>
+                <span>|</span>
                 <a href="#" onclick="openInfoModal(event)" style="color: #00d2ff; text-decoration: none; font-weight: 600;">All Topics <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg></a>
             </div>
             <div style="margin-bottom: 8px;">
@@ -639,6 +643,7 @@
             <form class="modal-form" id="modalForm" action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8" method="POST" target="w2l_iframe">
                 <input type="hidden" name="oid" value="00DdL0000053505">
                 <input type="hidden" name="retURL" value="http://localhost:3500">
+                <input type="hidden" name="lead_source" value="Website">
                 <input type="hidden" id="selectedPlan" name="description" value="">
                 
                 <div class="form-row" style="display:flex; gap:16px;">
@@ -713,8 +718,10 @@
                 <div>
                     <h4 style="color: var(--text-primary); margin-bottom: 16px; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">Legal</h4>
                     <ul style="list-style: none; padding: 0; margin: 0; display:flex; flex-direction:column; gap:12px;">
-                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Privacy Policy</a></li>
-                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Terms of Service</a></li>
+                        <li><a href="privacy-policy.html" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Privacy Policy</a></li>
+                        <li><a href="terms.html" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Terms of Service</a></li>
+                        <li><a href="shipping-policy.html" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Shipping Policy</a></li>
+                        <li><a href="cancellation-refund-policy.html" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Cancellation & Refunds</a></li>
                         <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Security</a></li>
                         <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">GDPR</a></li>
                     </ul>

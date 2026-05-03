@@ -36,6 +36,7 @@
     "passport-oauth2": "^1.7.0",
     "pino": "^8.17.2",
     "pino-http": "^8.5.0",
+    "stripe": "^14.25.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

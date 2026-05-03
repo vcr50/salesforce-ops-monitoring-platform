@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Gateway - Vanilla JS Example</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>Subscription Management</h1>
+      <p>Choose a plan or manage your existing subscription</p>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="plans">Pricing Plans</button>
+      <button class="tab" data-tab="subscription">My Subscription</button>
+    </nav>
+
+    <div id="plans-tab" class="tab-content active">
+      <div id="plans-container" class="plans-container">
+        <div class="loading">Loading plans...</div>
+      </div>
+    </div>
+
+    <div id="subscription-tab" class="tab-content">
+      <div id="subscription-container" class="subscription-container">
+        <div class="loading">Loading subscription...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Plan Selection Dialog -->
+  <div id="plan-dialog" class="dialog hidden">
+    <div class="dialog-content">
+      <h3>Change Your Plan</h3>
+      <div id="plan-options" class="plan-options"></div>
+      <div class="dialog-actions">
+        <button id="cancel-plan-change" class="btn btn-secondary">Cancel</button>
+        <button id="confirm-plan-change" class="btn btn-primary" disabled>Change Plan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cancel Dialog -->
+  <div id="cancel-dialog" class="dialog hidden">
+    <div class="dialog-content">
+      <h3>Cancel Subscription</h3>
+      <p>Are you sure you want to cancel your subscription?</p>
+      <div class="dialog-actions">
+        <button id="keep-subscription" class="btn btn-secondary">Keep Subscription</button>
+        <button id="cancel-at-end" class="btn btn-danger">Cancel at Period End</button>
+        <button id="cancel-immediate" class="btn btn-danger">Cancel Immediately</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="billing-api.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

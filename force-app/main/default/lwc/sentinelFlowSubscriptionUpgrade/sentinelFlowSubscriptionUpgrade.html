@@ -1,0 +1,83 @@
+<template>
+  <section class="subscription-shell">
+    <template if:true={loading}>
+      <div class="loading-row">
+        <lightning-spinner alternative-text="Loading subscription" size="small"></lightning-spinner>
+      </div>
+    </template>
+
+    <template if:false={loading}>
+      <div class="subscription-header">
+        <div>
+          <p class="eyebrow">Subscription</p>
+          <h2>SentinelFlow {plan}</h2>
+          <p class="subtext">{statusText}</p>
+        </div>
+        <span class={statusClass}>{status}</span>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric">
+          <span class="metric-label">Org Id</span>
+          <span class="metric-value org">{orgId}</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Expiry</span>
+          <span class="metric-value">{expiryText}</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Incidents</span>
+          <span class="metric-value">{incidentUsage}</span>
+        </div>
+      </div>
+
+      <div class="plan-grid">
+        <article class="plan-card">
+          <div class="plan-title-row">
+            <h3>Starter</h3>
+            <span>Trial</span>
+          </div>
+          <p>Core monitoring with monthly incident limits.</p>
+          <ul>
+            <li>100 incidents per month</li>
+            <li>Manual triage workflow</li>
+            <li>Basic dashboards</li>
+          </ul>
+        </article>
+
+        <article class="plan-card featured">
+          <div class="plan-title-row">
+            <h3>Professional</h3>
+            <span>$29/mo</span>
+          </div>
+          <p>Unlimited operational control for production teams.</p>
+          <ul>
+            <li>Unlimited incidents</li>
+            <li>AI analysis and impact scoring</li>
+            <li>Autonomous self-healing</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="actions">
+        <lightning-button
+          variant="brand"
+          label={upgradeLabel}
+          title={upgradeLabel}
+          onclick={handleUpgrade}
+          disabled={upgradeDisabled}>
+        </lightning-button>
+        <lightning-button
+          variant="neutral"
+          label="Refresh"
+          title="Refresh"
+          onclick={refresh}>
+        </lightning-button>
+      </div>
+
+      <template if:true={error}>
+        <p class="error">{error}</p>
+      </template>
+    </template>
+  </section>
+</template>

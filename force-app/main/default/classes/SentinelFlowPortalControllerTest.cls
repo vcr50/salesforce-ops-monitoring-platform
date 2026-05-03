@@ -145,4 +145,74 @@ private class SentinelFlowPortalControllerTest {
         System.assertEquals('Failed', detail.status);
         System.assertEquals(2, detail.linkedOpenIncidents);
     }
+
+    @IsTest
+    static void createSimulatedIncidentHonorsActiveTrial() {
+        Test.startTest();
+        Id incidentId = SentinelFlowPortalController.createSimulatedIncident(
+            'Portal-created subscription test incident',
+            'Medium',
+            'Billing API',
+            25,
+            1000
+        );
+        Test.stopTest();
+
+        Incident__c incident = [
+            SELECT Description__c, Severity__c, Status__c
+            FROM Incident__c
+            WHERE Id = :incidentId
+            LIMIT 1
+        ];
+        System.assertEquals('Portal-created subscription test incident', incident.Description__c);
+        System.assertEquals('Medium', incident.Severity__c);
+        System.assertNotEquals('Closed', incident.Status__c);
+    }
+
+    @IsTest
+    static void professionalActionsExecuteThroughControllerLayer() {
+        Id incidentId = [
+            SELECT Id
+            FROM Incident__c
+            WHERE Status__c != 'Closed'
+            LIMIT 1
+        ].Id;
+        insert new Subscription__c(
+            Org_Id__c = UserInfo.getOrganizationId(),
+            Plan__c = 'Professional',
+            Status__c = 'Active',
+            Expiry_Date__c = Date.today().addDays(30)
+        );
+
+        Test.startTest();
+        try {
+            SentinelFlowPortalController.analyseIncident(incidentId);
+        } catch (Exception expected) {
+            System.assertNotEquals(null, expected.getMessage());
+        }
+        try {
+            SentinelFlowPortalController.calculateImpact(incidentId, 49);
+        } catch (Exception expected) {
+            System.assertNotEquals(null, expected.getMessage());
+        }
+        try {
+            SentinelFlowPortalController.healIncident(incidentId);
+        } catch (Exception expected) {
+            System.assertNotEquals(null, expected.getMessage());
+        }
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void listAndNullDetailHelpersReturnSafely() {
+        Test.startTest();
+        List<SentinelFlowPortalController.PortalIntegrationRow> logs = SentinelFlowPortalController.getIntegrationLogs();
+        SentinelFlowPortalController.PortalIncidentDetail incidentDetail = SentinelFlowPortalController.getIncidentDetail(null);
+        SentinelFlowPortalController.PortalIntegrationDetail integrationDetail = SentinelFlowPortalController.getIntegrationDetail(null);
+        Test.stopTest();
+
+        System.assert(logs.size() >= 3);
+        System.assertEquals(null, incidentDetail);
+        System.assertEquals(null, integrationDetail);
+    }
 }

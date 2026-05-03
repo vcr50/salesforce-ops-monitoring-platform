@@ -266,6 +266,7 @@ public with sharing class SentinelFlowPortalController {
     @AuraEnabled
     public static SelfHealingEngine.HealResult healIncident(Id incidentId) {
         try {
+            SubscriptionService.requireProfessional('Autonomous self-healing');
             return SelfHealingEngine.healIncident(incidentId);
         } catch(Exception e) {
             throw new AuraHandledException('Heal failed: ' + e.getMessage());
@@ -275,6 +276,7 @@ public with sharing class SentinelFlowPortalController {
     @AuraEnabled
     public static AIAnalysisService.AnalysisResult analyseIncident(Id incidentId) {
         try {
+            SubscriptionService.requireProfessional('AI incident analysis');
             return AIAnalysisService.analyseIncident(incidentId);
         } catch(Exception e) {
             throw new AuraHandledException('Analysis failed: ' + e.getMessage());
@@ -286,6 +288,7 @@ public with sharing class SentinelFlowPortalController {
         Id incidentId, Decimal arpu
     ) {
         try {
+            SubscriptionService.requireProfessional('Business impact calculation');
             return BusinessImpactCalculator.calculateForIncident(incidentId, arpu);
         } catch(Exception e) {
             throw new AuraHandledException('Impact calculation failed: ' + e.getMessage());
@@ -371,6 +374,12 @@ public with sharing class SentinelFlowPortalController {
         Integer usersAffected,
         Decimal revenueAtRisk
     ) {
+        try {
+            SubscriptionService.requireIncidentCapacity();
+        } catch (SubscriptionService.EntitlementException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+
         Id tenantId = TenantContext.getCurrentTenantId();
 
         Integration_Log__c log = new Integration_Log__c();

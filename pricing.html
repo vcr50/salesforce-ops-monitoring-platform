@@ -664,5 +664,29 @@
     </p>
 
   </section>
+  <script>
+    const pricingParams = new URLSearchParams(window.location.search);
+    const pricingOrgId = pricingParams.get('orgId') || '';
+
+    function openUpgrade(plan) {
+      const params = new URLSearchParams({ plan });
+      if (pricingOrgId) {
+        params.set('orgId', pricingOrgId);
+      }
+      window.location.assign(`upgrade.html?${params.toString()}`);
+    }
+
+    document.getElementById('btn-starter').addEventListener('click', () => {
+      openUpgrade('Professional');
+    });
+
+    document.getElementById('btn-professional').addEventListener('click', () => {
+      openUpgrade('Professional');
+    });
+
+    document.getElementById('btn-enterprise').addEventListener('click', () => {
+      openUpgrade('Enterprise');
+    });
+  </script>
 </body>
 </html>

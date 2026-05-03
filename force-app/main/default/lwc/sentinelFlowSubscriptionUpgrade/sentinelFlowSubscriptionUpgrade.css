@@ -1,0 +1,161 @@
+.subscription-shell {
+  background: #ffffff;
+  border: 1px solid #d8dde6;
+  border-radius: 8px;
+  padding: 1.25rem;
+  color: #1f2937;
+}
+
+.loading-row {
+  min-height: 8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.subscription-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.25rem;
+  color: #5f6b7a;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h2 {
+  margin-bottom: 0.25rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.subtext {
+  margin-bottom: 0;
+  color: #5f6b7a;
+}
+
+.status-pill {
+  border-radius: 999px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.status-pill.active {
+  background: #e7f6ec;
+  color: #116b35;
+}
+
+.status-pill.blocked {
+  background: #fdeeee;
+  color: #9f1c1c;
+}
+
+.metrics-grid,
+.plan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.metric,
+.plan-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.9rem;
+}
+
+.metric-label {
+  display: block;
+  color: #5f6b7a;
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.metric-value {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.metric-value.org {
+  font-family: monospace;
+  font-size: 0.85rem;
+}
+
+.plan-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 0.75rem;
+}
+
+.plan-card.featured {
+  border-color: #0176d3;
+  box-shadow: inset 0 0 0 1px #0176d3;
+}
+
+.plan-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.plan-title-row h3 {
+  margin-bottom: 0.35rem;
+  font-size: 1rem;
+}
+
+.plan-title-row span {
+  font-weight: 700;
+  color: #0176d3;
+}
+
+.plan-card p {
+  color: #5f6b7a;
+}
+
+ul {
+  margin: 0.75rem 0 0;
+  padding-left: 1.2rem;
+}
+
+li + li {
+  margin-top: 0.25rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.error {
+  color: #9f1c1c;
+  margin: 1rem 0 0;
+}
+
+@media (max-width: 700px) {
+  .subscription-header,
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .metrics-grid,
+  .plan-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -148,6 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalSubmitBtn = document.getElementById('modalSubmitBtn');
     const messageGroup = document.getElementById('messageGroup');
     const selectedPlan = document.getElementById('selectedPlan');
+    let submittedPlan = '';
+    let submittedEmail = '';
 
     const MODAL_CONFIG = {
         trial: {
@@ -174,7 +176,9 @@ document.addEventListener('DOMContentLoaded', () => {
         modalDesc.textContent = config.desc;
         modalSubmitBtn.textContent = config.submitText;
         messageGroup.style.display = config.showMessage ? 'flex' : 'none';
-        selectedPlan.value = plan || '';
+        selectedPlan.value = plan === 'Professional'
+            ? 'Plan: Professional; Checkout: Pending'
+            : `Plan: ${plan || 'Unknown'}`;
 
         // Reset to form view
         modalForm.style.display = 'flex';
@@ -220,6 +224,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         isSubmitting = true;
+        submittedPlan = selectedPlan.value;
+        submittedEmail = document.getElementById('email')?.value?.trim() || '';
         
         modalSubmitBtn.disabled = true;
         modalSubmitBtn.textContent = 'Submitting...';
@@ -242,6 +248,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Reset form state
                 isSubmitting = false;
                 modalSubmitBtn.disabled = false;
+
+                if (submittedPlan.includes('Professional') && submittedEmail) {
+                    const checkoutUrl = new URL('/upgrade.html', window.location.origin);
+                    checkoutUrl.searchParams.set('plan', 'Professional');
+                    checkoutUrl.searchParams.set('email', submittedEmail);
+                    checkoutUrl.searchParams.set('orgId', `web-lead:${submittedEmail}`);
+                    window.location.assign(checkoutUrl.toString());
+                    return;
+                }
 
                 // Auto-close after 3 seconds
                 setTimeout(closeModal, 3000);

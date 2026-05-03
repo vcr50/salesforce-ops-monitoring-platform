@@ -12,6 +12,8 @@ const recordsRoutes = require('./routes/records');
 const syncRoutes = require('./routes/sync');
 const analyticsRoutes = require('./routes/analytics');
 const systemRoutes = require('./routes/system');
+const billingRoutes = require('./routes/billing');
+const billingController = require('./controllers/billingController');
 
 const errorHandler = require('./middleware/errorHandler');
 const { logger } = require('./middleware/logger');
@@ -34,6 +36,9 @@ app.use(cors({
 
 // Logging
 app.use(pinoHttp({ logger }));
+
+// Billing webhooks require the original raw body for provider signature verification.
+app.post('/api/billing/webhook', express.raw({ type: 'application/json' }), billingController.handleWebhook);
 
 // Body parsing
 app.use(express.json({ limit: '50mb' }));
@@ -61,6 +66,7 @@ app.use('/api/records', recordsRoutes);
 app.use('/api/sync', syncRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/system', systemRoutes);
+app.use('/api/billing', billingRoutes);
 
 // ── Serve Static Sites ──────────────────────────────────────────────
 const path = require('path');

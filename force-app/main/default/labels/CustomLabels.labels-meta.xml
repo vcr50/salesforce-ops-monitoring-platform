@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>SentinelFlow_Billing_Upgrade_Url</fullName>
+        <categories>SentinelFlow</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SentinelFlow billing upgrade URL</shortDescription>
+        <value>https://yourdomain.com/upgrade.html</value>
+    </labels>
+    <labels>
+        <fullName>SentinelFlow_Contact_Url</fullName>
+        <categories>SentinelFlow</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SentinelFlow contact URL</shortDescription>
+        <value>https://sentinelflow.onrender.com/contact.html</value>
+    </labels>
+    <labels>
+        <fullName>SentinelFlow_Package_Install_Url</fullName>
+        <categories>SentinelFlow</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SentinelFlow package installation URL</shortDescription>
+        <value>https://login.salesforce.com/packaging/installPackage.apexp?p0=REPLACE_PACKAGE_ID</value>
+    </labels>
+    <labels>
+        <fullName>SentinelFlow_Pricing_Url</fullName>
+        <categories>SentinelFlow</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SentinelFlow pricing URL</shortDescription>
+        <value>https://sentinelflow.onrender.com/#pricing</value>
+    </labels>
+    <labels>
+        <fullName>SentinelFlow_Support_Email</fullName>
+        <categories>SentinelFlow</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SentinelFlow support email</shortDescription>
+        <value>support@tomcodex.com</value>
+    </labels>
+    <labels>
+        <fullName>SentinelFlow_Terms_Url</fullName>
+        <categories>SentinelFlow</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SentinelFlow terms URL</shortDescription>
+        <value>https://sentinelflow.onrender.com/terms.html</value>
+    </labels>
+</CustomLabels>

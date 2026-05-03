@@ -7,6 +7,7 @@
         <members>Environment__c</members>
         <members>Deployment_Record__c</members>
         <members>Audit_Trail__c</members>
+        <members>Subscription__c</members>
         <name>CustomObject</name>
     </types>
     <types>
@@ -16,6 +17,7 @@
         <members>Environment__c</members>
         <members>Deployment_Record__c</members>
         <members>Audit_Trail__c</members>
+        <members>Subscription__c</members>
         <name>CustomTab</name>
     </types>
     <types>
@@ -23,6 +25,7 @@
         <members>SentinelFlow_Portal_Support</members>
         <members>SentinelFlow_Portal_Viewer</members>
         <members>SentinelFlow_Runtime_Admin</members>
+        <members>SentinelFlow_Subscription_Admin</members>
         <name>PermissionSet</name>
     </types>
     <types>
@@ -67,6 +70,17 @@
         <members>SentinelFlowAutomationServiceTest</members>
         <members>SentinelFlowPortalController</members>
         <members>SentinelFlowPortalControllerTest</members>
+        <members>SentinelFlowPostInstallHandler</members>
+        <members>SentinelFlowPostInstallHandlerTest</members>
+        <members>SubscriptionRestApi</members>
+        <members>SubscriptionRestApiTest</members>
+        <members>SubscriptionEmailService</members>
+        <members>SubscriptionEmailServiceTest</members>
+        <members>SubscriptionService</members>
+        <members>SubscriptionServiceTest</members>
+        <members>SubscriptionTrialExpiryScheduler</members>
+        <members>WebsiteLeadConversionService</members>
+        <members>WebsiteLeadConversionServiceTest</members>
         <members>Square</members>
         <members>nameController</members>
         <members>stringCheckController</members>
@@ -75,7 +89,21 @@
     <types>
         <members>IncidentTrigger</members>
         <members>IntegrationLogTrigger</members>
+        <members>LeadTrigger</members>
         <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>SentinelFlow_Billing_Upgrade_Url</members>
+        <members>SentinelFlow_Contact_Url</members>
+        <members>SentinelFlow_Package_Install_Url</members>
+        <members>SentinelFlow_Pricing_Url</members>
+        <members>SentinelFlow_Support_Email</members>
+        <members>SentinelFlow_Terms_Url</members>
+        <name>CustomLabel</name>
+    </types>
+    <types>
+        <members>unfiled$public/SentinelFlow_Welcome_Email</members>
+        <name>EmailTemplate</name>
     </types>
     <types>
         <members>SentinelFlow_Analytics</members>
@@ -99,6 +127,7 @@
         <members>sentinelFlowPortalIntegrationDetail</members>
         <members>sentinelFlowPortalLogin</members>
         <members>tomcodexServicePage</members>
+        <members>sentinelFlowSubscriptionUpgrade</members>
         <name>LightningComponentBundle</name>
     </types>
     <version>62.0</version>
