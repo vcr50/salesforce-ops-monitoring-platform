@@ -1,0 +1,12 @@
+{
+  "activeViewId" : "ad1ae676-57a2-493e-81fa-68e3bfab9dbf",
+  "appPageId" : "fb6e5011-0cd8-4f43-bc2b-4b3eae56e8dc",
+  "configurationTags" : [ ],
+  "devName" : "Pet_Profile",
+  "id" : "0ddc3404-06a2-447d-bb0a-dc2b3aeab590",
+  "label" : "Pet Profile",
+  "pageAccess" : "UseParent",
+  "routeType" : "custom-pet-profile",
+  "type" : "route",
+  "urlPrefix" : "pet-profile"
+}

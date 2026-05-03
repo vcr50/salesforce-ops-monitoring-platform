@@ -1,0 +1,82 @@
+{
+  "appPageId" : "fb6e5011-0cd8-4f43-bc2b-4b3eae56e8dc",
+  "componentName" : "siteforce:sldsTwoCol84SidebarFeaturedLayout",
+  "dataProviders" : [ ],
+  "id" : "06d54842-4c27-438c-bd7e-67c60d3f41b3",
+  "label" : "Appointment Scheduling",
+  "regions" : [ {
+    "components" : [ {
+      "componentAttributes" : {
+        "bannerText" : "Appointment Scheduling",
+        "bannerTextWithKnowledge" : "Schedule and manage your pet's appointments",
+        "bannerTextWithoutKnowledge" : "Schedule and manage your pet's appointments",
+        "pageType" : "",
+        "showSubTopics" : false,
+        "title" : "Appointment Scheduling",
+        "uniqueNameOrId" : ""
+      },
+      "componentName" : "forceCommunity:headline",
+      "id" : "df80a7bc-1e88-433d-b1b7-86a8f386aff2",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "97510047-237d-4d74-9f53-518ec2429ef6",
+    "regionName" : "header",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : { },
+      "componentName" : "c:appointmentScheduler",
+      "id" : "d472d1bc-ea55-4d40-8de3-7972ef0f5136",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "f33c96df-3513-4f72-a24b-0c0e066fba16",
+    "regionName" : "featured",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : { },
+      "componentName" : "c:appointmentList",
+      "id" : "68e21a3a-cab3-4793-890b-22bc71f3c657",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "8255aa62-be41-455b-9ef0-7901486bf075",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : { },
+      "componentName" : "c:petSyncCalendar",
+      "id" : "76e1f9c7-0e27-4c3d-b821-e1d5a9c183e4",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "aefd8558-1e1f-4148-8068-893573e12099",
+    "regionName" : "sidebar",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "customHeadTags" : "",
+        "description" : "",
+        "title" : "Appointment Scheduling"
+      },
+      "componentName" : "forceCommunity:seoAssistant",
+      "id" : "855716f0-70f8-4146-a3da-378100d54521",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "81835ae2-d75b-4ec0-b298-2763182a1a18",
+    "regionName" : "sfdcHiddenRegion",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Inner",
+  "type" : "view",
+  "viewType" : "custom-appointment-scheduling"
+}

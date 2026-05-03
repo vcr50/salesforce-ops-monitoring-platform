@@ -1,0 +1,82 @@
+{
+  "appPageId" : "fb6e5011-0cd8-4f43-bc2b-4b3eae56e8dc",
+  "componentName" : "siteforce:sldsTwoCol84SidebarFeaturedLayout",
+  "dataProviders" : [ ],
+  "id" : "f052458f-2a6f-46ab-84cd-2b17124a65c1",
+  "label" : "Health Records",
+  "regions" : [ {
+    "components" : [ {
+      "componentAttributes" : {
+        "bannerText" : "Health Records",
+        "bannerTextWithKnowledge" : "View and manage your pet's health history",
+        "bannerTextWithoutKnowledge" : "View and manage your pet's health history",
+        "pageType" : "",
+        "showSubTopics" : false,
+        "title" : "Health Records",
+        "uniqueNameOrId" : ""
+      },
+      "componentName" : "forceCommunity:headline",
+      "id" : "68744ac4-7046-4eb5-a4ad-8ee5a0182dd7",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "2d51ba89-f127-4eb8-88f0-da31ef08ebd1",
+    "regionName" : "header",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : { },
+      "componentName" : "c:vaccinationList",
+      "id" : "7b4ccdd8-c98d-4729-b8bd-84ad4e7f6281",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "b8b30d44-f586-4529-bd8a-b75ca7100c6d",
+    "regionName" : "featured",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : { },
+      "componentName" : "c:vaccinationRecord",
+      "id" : "a30ccaf5-1035-4ce9-8e65-6aad52d7e9db",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "256deff2-c4fb-4fe8-bfdd-8dd5ef317eb4",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : { },
+      "componentName" : "c:appointmentList",
+      "id" : "5f5a36e1-b424-4b13-9c4b-a234231f149c",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "d2c98403-c693-43f7-bd46-b3dc4f11a487",
+    "regionName" : "sidebar",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "customHeadTags" : "",
+        "description" : "",
+        "title" : "Health Records"
+      },
+      "componentName" : "forceCommunity:seoAssistant",
+      "id" : "0e63689c-e69b-4b63-9906-21f678718c8c",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "3f0ba498-68a5-4b53-b149-73afe58c8e8a",
+    "regionName" : "sfdcHiddenRegion",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Inner",
+  "type" : "view",
+  "viewType" : "custom-health-records"
+}

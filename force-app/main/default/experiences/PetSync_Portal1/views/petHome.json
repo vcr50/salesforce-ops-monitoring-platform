@@ -1,0 +1,82 @@
+{
+  "appPageId" : "fb6e5011-0cd8-4f43-bc2b-4b3eae56e8dc",
+  "componentName" : "siteforce:sldsTwoCol84SidebarFeaturedLayout",
+  "dataProviders" : [ ],
+  "id" : "80bcafd3-89ff-4f49-a3bf-e292a8438a70",
+  "label" : "Pet Home",
+  "regions" : [ {
+    "components" : [ {
+      "componentAttributes" : {
+        "bannerText" : "Welcome to PetSync - Your Pet Care Portal",
+        "bannerTextWithKnowledge" : "Manage your pets, vaccinations, appointments, and health records in one place.",
+        "bannerTextWithoutKnowledge" : "Manage your pets, vaccinations, appointments, and health records in one place.",
+        "pageType" : "",
+        "showSubTopics" : false,
+        "title" : "PetSync Portal",
+        "uniqueNameOrId" : ""
+      },
+      "componentName" : "forceCommunity:headline",
+      "id" : "7f043b2c-4a85-4d5b-8399-e1f271b52be7",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "bca02a4c-9a6e-4503-9d0d-a6d03a595928",
+    "regionName" : "header",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : { },
+      "componentName" : "c:petDashboard",
+      "id" : "5769e419-8e6b-4f93-960c-73b0362e03a5",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "8f0bc944-f608-4d0b-bbc3-47feb3193a7f",
+    "regionName" : "featured",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : { },
+      "componentName" : "c:petSyncList",
+      "id" : "128aaa19-da63-4c4d-aa65-b192cd8fe4fb",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "264f682f-6529-400d-ab16-0558436c605d",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : { },
+      "componentName" : "c:appointmentList",
+      "id" : "ece1fe7c-df98-4239-b025-8aadbe7ca69a",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "83057289-2f08-4511-a368-f7d5d260e1b1",
+    "regionName" : "sidebar",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "customHeadTags" : "",
+        "description" : "",
+        "title" : "Pet Home"
+      },
+      "componentName" : "forceCommunity:seoAssistant",
+      "id" : "a5795a35-d15c-4d36-9263-e0f8b07983e7",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "f51819d3-7dac-4aaa-a894-4570c08bcce4",
+    "regionName" : "sfdcHiddenRegion",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Inner",
+  "type" : "view",
+  "viewType" : "custom-pet-home"
+}

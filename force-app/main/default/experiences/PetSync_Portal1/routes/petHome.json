@@ -1,0 +1,12 @@
+{
+  "activeViewId" : "80bcafd3-89ff-4f49-a3bf-e292a8438a70",
+  "appPageId" : "fb6e5011-0cd8-4f43-bc2b-4b3eae56e8dc",
+  "configurationTags" : [ ],
+  "devName" : "Pet_Home",
+  "id" : "a0d51d5f-47fa-4db4-9d90-e8033cd8781f",
+  "label" : "Pet Home",
+  "pageAccess" : "UseParent",
+  "routeType" : "custom-pet-home",
+  "type" : "route",
+  "urlPrefix" : "pet-home"
+}

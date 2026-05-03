@@ -1,0 +1,12 @@
+{
+  "activeViewId" : "f052458f-2a6f-46ab-84cd-2b17124a65c1",
+  "appPageId" : "fb6e5011-0cd8-4f43-bc2b-4b3eae56e8dc",
+  "configurationTags" : [ ],
+  "devName" : "Health_Records",
+  "id" : "348d04fe-dbc3-46fd-ad25-08e3f7533619",
+  "label" : "Health Records",
+  "pageAccess" : "UseParent",
+  "routeType" : "custom-health-records",
+  "type" : "route",
+  "urlPrefix" : "health-records"
+}

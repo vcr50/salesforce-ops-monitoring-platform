@@ -1,0 +1,70 @@
+{
+  "appPageId" : "fb6e5011-0cd8-4f43-bc2b-4b3eae56e8dc",
+  "componentName" : "siteforce:sldsOneColLayout",
+  "dataProviders" : [ ],
+  "id" : "ad1ae676-57a2-493e-81fa-68e3bfab9dbf",
+  "label" : "Pet Profile",
+  "regions" : [ {
+    "components" : [ {
+      "componentAttributes" : {
+        "bannerText" : "Pet Profile",
+        "bannerTextWithKnowledge" : "View and manage your pet's information",
+        "bannerTextWithoutKnowledge" : "View and manage your pet's information",
+        "pageType" : "",
+        "showSubTopics" : false,
+        "title" : "Pet Profile",
+        "uniqueNameOrId" : ""
+      },
+      "componentName" : "forceCommunity:headline",
+      "id" : "2386f413-4e51-4848-a830-bae35ec091a7",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "8223d1fc-f91a-41f0-9f98-cfd6853335b1",
+    "regionName" : "header",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : { },
+      "componentName" : "c:petProfile",
+      "id" : "a6419e9d-09d8-4802-84b4-7500f2757d0c",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "97d0079e-e8b2-42a4-a511-062ef2aa46de",
+    "regionName" : "main",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : { },
+      "componentName" : "c:vaccinationList",
+      "id" : "3fe5c85d-77ec-4eb7-ac88-d007619975de",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "190d54a4-42b5-47f2-9072-8b018123750d",
+    "regionName" : "footer",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "customHeadTags" : "",
+        "description" : "",
+        "title" : "Pet Profile"
+      },
+      "componentName" : "forceCommunity:seoAssistant",
+      "id" : "6eb5411e-6fd4-45e0-882b-d4f86255ca45",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "268189a2-96be-47c9-90e3-5bd8b57009bd",
+    "regionName" : "sfdcHiddenRegion",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Inner",
+  "type" : "view",
+  "viewType" : "custom-pet-profile"
+}
