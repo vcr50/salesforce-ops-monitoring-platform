@@ -2,8 +2,7 @@
   "type" : "sfdc_cms__site",
   "title" : "SentinelFlow",
   "contentBody" : {
-    "authenticationType" : "AUTHENTICATED",
-    "geoBotsAllowed" : false
+    "authenticationType" : "AUTHENTICATED"
   },
   "urlName" : "sentinelflow"
 }
