@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SentinelFlow pricing plans — Starter, Professional, and Enterprise. Choose the plan that fits your team's incident management needs." />
+  <title>Pricing — SentinelFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-primary: #05070f;
+      --bg-secondary: #0a0e1a;
+      --bg-card: rgba(12, 17, 32, 0.85);
+      --bg-card-highlight: rgba(14, 22, 48, 0.9);
+
+      --blue-100: #dbeafe;
+      --blue-300: #93c5fd;
+      --blue-400: #60a5fa;
+      --blue-500: #3b82f6;
+      --blue-600: #2563eb;
+      --blue-700: #1d4ed8;
+
+      --text-primary: #f0f4ff;
+      --text-secondary: #8b9cc8;
+      --text-muted: #4a5680;
+
+      --border-default: rgba(99, 120, 180, 0.12);
+      --border-highlight: rgba(59, 130, 246, 0.35);
+
+      --radius-card: 20px;
+      --radius-btn: 10px;
+      --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Subtle ambient gradient in background ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% -5%, rgba(37, 99, 235, 0.13) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 10% 80%, rgba(29, 78, 216, 0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 90% 70%, rgba(59, 130, 246, 0.06) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Section wrapper ── */
+    .pricing-section {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1140px;
+    }
+
+    /* ── Header ── */
+    .pricing-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .pricing-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--blue-400);
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 100px;
+      padding: 5px 14px;
+      margin-bottom: 22px;
+    }
+
+    .pricing-title {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    .pricing-title span {
+      background: linear-gradient(135deg, #93c5fd 0%, #3b82f6 50%, #6366f1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .pricing-subtitle {
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── Cards grid ── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    /* ── Card base ── */
+    .pricing-card {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-card);
+      padding: 36px 32px 40px;
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition:
+        transform var(--transition),
+        border-color var(--transition),
+        box-shadow var(--transition);
+      cursor: default;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-6px) scale(1.015);
+      border-color: rgba(99, 120, 200, 0.28);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 1px 0 rgba(255,255,255,0.04) inset;
+    }
+
+    /* ── Highlighted card ── */
+    .pricing-card--highlight {
+      background: var(--bg-card-highlight);
+      border-color: var(--border-highlight);
+      box-shadow:
+        0 0 0 1px rgba(59, 130, 246, 0.18),
+        0 20px 50px rgba(37, 99, 235, 0.14),
+        0 1px 0 rgba(255,255,255,0.06) inset;
+    }
+
+    .pricing-card--highlight:hover {
+      border-color: rgba(59, 130, 246, 0.55);
+      box-shadow:
+        0 0 0 1px rgba(59, 130, 246, 0.3),
+        0 28px 70px rgba(37, 99, 235, 0.22),
+        0 1px 0 rgba(255,255,255,0.06) inset;
+    }
+
+    /* Top glow line on highlighted card */
+    .pricing-card--highlight::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(99, 160, 255, 0.7), transparent);
+      border-radius: 100%;
+    }
+
+    /* ── Badge ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--blue-300);
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: 100px;
+      padding: 4px 11px;
+      margin-bottom: 20px;
+      width: fit-content;
+    }
+
+    .badge::before {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--blue-400);
+      box-shadow: 0 0 6px var(--blue-400);
+    }
+
+    /* ── Plan name ── */
+    .plan-name {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+
+    /* ── Price ── */
+    .plan-price-wrap {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+
+    .plan-price {
+      font-size: 46px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--text-primary);
+    }
+
+    .plan-price-period {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .plan-price-strike {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: line-through;
+      text-decoration-color: rgba(139, 156, 200, 0.45);
+      margin-bottom: 6px;
+    }
+
+    .plan-price-label {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--blue-400);
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.18);
+      border-radius: 6px;
+      padding: 3px 8px;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    /* ── Description ── */
+    .plan-desc {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    /* ── Divider ── */
+    .plan-divider {
+      height: 1px;
+      background: var(--border-default);
+      margin-bottom: 26px;
+    }
+
+    /* ── Feature list ── */
+    .feature-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      margin-bottom: 32px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    .feature-icon {
+      flex-shrink: 0;
+      margin-top: 1px;
+      width: 17px;
+      height: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .feature-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Default check — subtle */
+    .check-default .check-circle {
+      fill: none;
+      stroke: rgba(99, 120, 180, 0.55);
+      stroke-width: 1.5;
+    }
+    .check-default .check-mark {
+      stroke: rgba(99, 120, 180, 0.7);
+      stroke-width: 1.75;
+    }
+
+    /* Highlighted check — blue */
+    .check-blue .check-circle {
+      fill: rgba(59, 130, 246, 0.1);
+      stroke: rgba(59, 130, 246, 0.45);
+      stroke-width: 1.5;
+    }
+    .check-blue .check-mark {
+      stroke: #60a5fa;
+      stroke-width: 1.75;
+    }
+
+    /* ── CTA Button ── */
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 13px 20px;
+      border-radius: var(--radius-btn);
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      transition:
+        background var(--transition),
+        transform var(--transition),
+        box-shadow var(--transition),
+        opacity var(--transition);
+      text-decoration: none;
+    }
+
+    /* Outlined default button */
+    .btn--outline {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid rgba(99, 120, 180, 0.3);
+    }
+
+    .btn--outline:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(99, 120, 180, 0.5);
+      transform: translateY(-1px);
+    }
+
+    /* Primary blue button — glow only on this one */
+    .btn--primary {
+      background: linear-gradient(135deg, #2563eb 0%, #3b82f6 60%, #60a5fa 100%);
+      color: #ffffff;
+      border: 1px solid rgba(99, 160, 255, 0.3);
+      box-shadow:
+        0 0 20px rgba(37, 99, 235, 0.4),
+        0 4px 14px rgba(37, 99, 235, 0.3),
+        0 1px 0 rgba(255,255,255,0.15) inset;
+    }
+
+    .btn--primary:hover {
+      background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 60%, #3b82f6 100%);
+      box-shadow:
+        0 0 30px rgba(37, 99, 235, 0.55),
+        0 6px 20px rgba(37, 99, 235, 0.4),
+        0 1px 0 rgba(255,255,255,0.15) inset;
+      transform: translateY(-1px);
+    }
+
+    .btn--primary:active {
+      transform: translateY(0px);
+      box-shadow:
+        0 0 16px rgba(37, 99, 235, 0.4),
+        0 2px 8px rgba(37, 99, 235, 0.3);
+    }
+
+    /* Ghost button for enterprise */
+    .btn--ghost {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-primary);
+      border: 1px solid rgba(99, 120, 180, 0.2);
+    }
+
+    .btn--ghost:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(99, 120, 180, 0.4);
+      transform: translateY(-1px);
+    }
+
+    /* ── Footer note ── */
+    .pricing-footer-note {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .pricing-footer-note a {
+      color: var(--blue-400);
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid rgba(96, 165, 250, 0.3);
+      transition: border-color var(--transition), color var(--transition);
+    }
+
+    .pricing-footer-note a:hover {
+      color: var(--blue-300);
+      border-color: rgba(147, 197, 253, 0.5);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        max-width: 420px;
+        margin: 0 auto;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 60px 16px; }
+      .pricing-card { padding: 28px 22px 32px; }
+    }
+  </style>
+</head>
+<body>
+  <section class="pricing-section" aria-labelledby="pricing-title">
+
+    <!-- ── Header ── -->
+    <header class="pricing-header">
+      <span class="pricing-eyebrow">Pricing</span>
+      <h1 class="pricing-title" id="pricing-title">
+        Plans built for<br /><span>every stage of growth</span>
+      </h1>
+      <p class="pricing-subtitle">
+        Start free, scale when you're ready. No hidden fees, no lock-in.
+      </p>
+    </header>
+
+    <!-- ── Cards ── -->
+    <div class="pricing-grid" role="list">
+
+      <!-- ── Starter ── -->
+      <article class="pricing-card" role="listitem" aria-label="Starter plan">
+        <p class="plan-name">Starter</p>
+        <div class="plan-price-wrap">
+          <span class="plan-price">$0</span>
+          <span class="plan-price-period">/ month</span>
+        </div>
+        <p class="plan-desc">
+          Perfect for individuals and small teams getting started.
+        </p>
+        <div class="plan-divider" role="separator"></div>
+        <p class="feature-label">What's included</p>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">
+              <svg viewBox="0 0 18 18" fill="none" aria-hidden="true" class="check-default">
+                <circle cx="9" cy="9" r="8" class="check-circle"/>
+                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" fill="none" class="check-mark" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Up to 100 incidents / month
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">
+              <svg viewBox="0 0 18 18" fill="none" aria-hidden="true" class="check-default">
+                <circle cx="9" cy="9" r="8" class="check-circle"/>
+                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" fill="none" class="check-mark" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Real-time detection
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">
+              <svg viewBox="0 0 18 18" fill="none" aria-hidden="true" class="check-default">
+                <circle cx="9" cy="9" r="8" class="check-circle"/>
+                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" fill="none" class="check-mark" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Basic alerting
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">
+              <svg viewBox="0 0 18 18" fill="none" aria-hidden="true" class="check-default">
+                <circle cx="9" cy="9" r="8" class="check-circle"/>
+                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" fill="none" class="check-mark" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Community support
+          </li>
+        </ul>
+        <button id="btn-starter" class="btn btn--outline" type="button">
+          Get Started Free
+        </button>
+      </article>
+
+      <!-- ── Professional (highlighted) ── -->
+      <article class="pricing-card pricing-card--highlight" role="listitem" aria-label="Professional plan, most popular">
+        <span class="badge" role="note">Most Popular</span>
+        <p class="plan-name">Professional</p>
+        <div class="plan-price-wrap">
+          <span class="plan-price">$29</span>
+          <span class="plan-price-period">/ month</span>
+          <span class="plan-price-strike" aria-label="Regular price $149">$149</span>
+        </div>
+        <span class="plan-price-label">Early Access Pricing</span>
+        <p class="plan-desc">
+          For growing teams that need automation and self-healing.
+        </p>
+        <div class="plan-divider" role="separator"></div>
+        <p class="feature-label">Everything in Starter, plus</p>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">
+              <svg viewBox="0 0 18 18" fill="none" aria-hidden="true" class="check-blue">
+                <circle cx="9" cy="9" r="8" class="check-circle"/>
+                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" fill="none" class="check-mark" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Unlimited incidents
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">
+              <svg viewBox="0 0 18 18" fill="none" aria-hidden="true" class="check-blue">
+                <circle cx="9" cy="9" r="8" class="check-circle"/>
+                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" fill="none" class="check-mark" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            AI classification engine
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">
+              <svg viewBox="0 0 18 18" fill="none" aria-hidden="true" class="check-blue">
+                <circle cx="9" cy="9" r="8" class="check-circle"/>
+                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" fill="none" class="check-mark" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Self-healing automation
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">
+              <svg viewBox="0 0 18 18" fill="none" aria-hidden="true" class="check-blue">
+                <circle cx="9" cy="9" r="8" class="check-circle"/>
+                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" fill="none" class="check-mark" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Observability dashboard
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">
+              <svg viewBox="0 0 18 18" fill="none" aria-hidden="true" class="check-blue">
+                <circle cx="9" cy="9" r="8" class="check-circle"/>
+                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" fill="none" class="check-mark" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Priority support
+          </li>
+        </ul>
+        <button id="btn-professional" class="btn btn--primary" type="button">
+          Start 14-Day Trial
+        </button>
+      </article>
+
+      <!-- ── Enterprise ── -->
+      <article class="pricing-card" role="listitem" aria-label="Enterprise plan">
+        <p class="plan-name">Enterprise</p>
+        <div class="plan-price-wrap">
+          <span class="plan-price" style="font-size: 36px; margin-bottom: 6px;">Custom</span>
+        </div>
+        <p class="plan-desc">
+          For organizations needing full control and scalability.
+        </p>
+        <div class="plan-divider" role="separator"></div>
+        <p class="feature-label">Everything in Professional, plus</p>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">
+              <svg viewBox="0 0 18 18" fill="none" aria-hidden="true" class="check-default">
+                <circle cx="9" cy="9" r="8" class="check-circle"/>
+                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" fill="none" class="check-mark" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Multi-tenant isolation
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">
+              <svg viewBox="0 0 18 18" fill="none" aria-hidden="true" class="check-default">
+                <circle cx="9" cy="9" r="8" class="check-circle"/>
+                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" fill="none" class="check-mark" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Feature flags per tenant
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">
+              <svg viewBox="0 0 18 18" fill="none" aria-hidden="true" class="check-default">
+                <circle cx="9" cy="9" r="8" class="check-circle"/>
+                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" fill="none" class="check-mark" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            API rate limiting
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">
+              <svg viewBox="0 0 18 18" fill="none" aria-hidden="true" class="check-default">
+                <circle cx="9" cy="9" r="8" class="check-circle"/>
+                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" fill="none" class="check-mark" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Dedicated support
+          </li>
+        </ul>
+        <button id="btn-enterprise" class="btn btn--ghost" type="button">
+          Contact Sales
+        </button>
+      </article>
+
+    </div><!-- /pricing-grid -->
+
+    <!-- ── Footer note ── -->
+    <p class="pricing-footer-note">
+      All plans include SOC 2 compliant infrastructure and 99.9% uptime SLA. &nbsp;
+      <a href="#" id="link-compare-plans">Compare all plan features</a> &nbsp;&middot;&nbsp;
+      <a href="#" id="link-faq">Frequently asked questions</a>
+    </p>
+
+  </section>
+</body>
+</html>
