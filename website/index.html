@@ -419,66 +419,172 @@
     </section>
 
     <!-- ═══════════════════ PRICING ═══════════════════ -->
-    <section class="pricing" id="pricing">
+    <section class="sf-pricing" id="pricing">
         <div class="container">
-            <div class="section-header">
-                <span class="section-tag">PRICING</span>
-                <h2 class="section-title">Simple, Transparent <span class="gradient-text">Pricing</span></h2>
-                <p class="section-subtitle">Start free. Scale as you grow. No hidden fees.</p>
-            </div>
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <div class="pricing-tier">Starter</div>
-                    <div class="pricing-price">
-                        <span class="price-currency">$</span>
-                        <span class="price-amount">0</span>
-                        <span class="price-period">/month</span>
+            <!-- ── Header ── -->
+            <header class="sf-pricing__header">
+                <span class="sf-pricing__eyebrow">Pricing</span>
+                <h2 class="sf-pricing__title">
+                    Plans built for<br /><span>every stage of growth</span>
+                </h2>
+                <p class="sf-pricing__subtitle">
+                    Start free, scale when you're ready. No hidden fees, no lock-in.
+                </p>
+            </header>
+
+            <!-- ── Cards ── -->
+            <div class="sf-pricing__grid" role="list">
+                <!-- ── Starter ── -->
+                <article class="sf-card" role="listitem" aria-label="Starter plan">
+                    <p class="sf-card__tier">Starter</p>
+                    <div class="sf-card__price-row">
+                        <span class="sf-card__price">$0</span>
+                        <span class="sf-card__period">/ month</span>
                     </div>
-                    <p class="pricing-desc">Perfect for small teams getting started with incident management.</p>
-                    <ul class="pricing-features">
-                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Up to 100 incidents/month</li>
-                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Real-time detection</li>
-                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Basic alerting</li>
-                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Community support</li>
+                    <p class="sf-card__desc">
+                        Perfect for individuals and small teams getting started.
+                    </p>
+                    <div class="sf-card__divider" role="separator"></div>
+                    <p class="sf-card__feature-label">What's included</p>
+                    <ul class="sf-card__features">
+                        <li>
+                            <svg class="sf-check-icon sf-check-icon--default" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
+                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
+                            </svg>
+                            Up to 100 incidents / month
+                        </li>
+                        <li>
+                            <svg class="sf-check-icon sf-check-icon--default" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
+                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
+                            </svg>
+                            Real-time detection
+                        </li>
+                        <li>
+                            <svg class="sf-check-icon sf-check-icon--default" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
+                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
+                            </svg>
+                            Basic alerting
+                        </li>
+                        <li>
+                            <svg class="sf-check-icon sf-check-icon--default" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
+                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
+                            </svg>
+                            Community support
+                        </li>
                     </ul>
-                    <a href="javascript:void(0)" class="btn btn-outline btn-block" data-modal="trial" data-plan="Starter">Get Started Free</a>
-                </div>
-                <div class="pricing-card pricing-card-featured">
-                    <div class="pricing-badge">MOST POPULAR</div>
-                    <div class="pricing-tier">Professional</div>
-                    <div class="pricing-price">
-                        <span class="price-currency">$</span>
-                        <span class="price-amount">149</span>
-                        <span class="price-period">/month</span>
+                    <a href="javascript:void(0)" class="sf-btn sf-btn--outline" data-modal="trial" data-plan="Starter">Get Started Free</a>
+                </article>
+
+                <!-- ── Professional (highlighted) ── -->
+                <article class="sf-card sf-card--highlight" role="listitem" aria-label="Professional plan, most popular">
+                    <span class="sf-card__badge" role="note">
+                        <span class="sf-card__badge-dot" aria-hidden="true"></span>
+                        Most Popular
+                    </span>
+                    <p class="sf-card__tier">Professional</p>
+                    <div class="sf-card__price-row">
+                        <span class="sf-card__price">$29</span>
+                        <span class="sf-card__period">/ month</span>
+                        <span class="sf-card__strike" aria-label="Regular price $149">$149</span>
                     </div>
-                    <p class="pricing-desc">For growing teams that need AI-powered automation and self-healing.</p>
-                    <ul class="pricing-features">
-                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Unlimited incidents</li>
-                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> AI classification engine</li>
-                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Self-healing automation</li>
-                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Observability dashboard</li>
-                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Priority support</li>
+                    <span class="sf-card__price-label">Early Access Pricing</span>
+                    <p class="sf-card__desc">
+                        For growing teams that need automation and self-healing.
+                    </p>
+                    <div class="sf-card__divider" role="separator"></div>
+                    <p class="sf-card__feature-label">Everything in Starter, plus</p>
+                    <ul class="sf-card__features">
+                        <li>
+                            <svg class="sf-check-icon sf-check-icon--blue" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
+                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
+                            </svg>
+                            Unlimited incidents
+                        </li>
+                        <li>
+                            <svg class="sf-check-icon sf-check-icon--blue" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
+                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
+                            </svg>
+                            AI classification engine
+                        </li>
+                        <li>
+                            <svg class="sf-check-icon sf-check-icon--blue" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
+                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
+                            </svg>
+                            Self-healing automation
+                        </li>
+                        <li>
+                            <svg class="sf-check-icon sf-check-icon--blue" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
+                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
+                            </svg>
+                            Observability dashboard
+                        </li>
+                        <li>
+                            <svg class="sf-check-icon sf-check-icon--blue" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
+                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
+                            </svg>
+                            Priority support
+                        </li>
                     </ul>
-                    <a href="javascript:void(0)" class="btn btn-primary btn-block" data-modal="trial" data-plan="Professional">Start 14-Day Trial</a>
-                </div>
-                <div class="pricing-card">
-                    <div class="pricing-tier">Enterprise</div>
-                    <div class="pricing-price">
-                        <span class="price-currency"></span>
-                        <span class="price-amount">Custom</span>
-                        <span class="price-period"></span>
+                    <a href="javascript:void(0)" class="sf-btn sf-btn--primary" data-modal="trial" data-plan="Professional">Start 14-Day Trial</a>
+                </article>
+
+                <!-- ── Enterprise ── -->
+                <article class="sf-card" role="listitem" aria-label="Enterprise plan">
+                    <p class="sf-card__tier">Enterprise</p>
+                    <div class="sf-card__price-row">
+                        <span class="sf-card__price" style="font-size: 36px; margin-bottom: 6px;">Custom</span>
                     </div>
-                    <p class="pricing-desc">For large organizations needing full multi-tenant control and compliance.</p>
-                    <ul class="pricing-features">
-                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Everything in Professional</li>
-                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Multi-tenant isolation</li>
-                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Feature flags per tenant</li>
-                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> API rate limiting</li>
-                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Dedicated account manager</li>
+                    <p class="sf-card__desc">
+                        For organizations needing full control and scalability.
+                    </p>
+                    <div class="sf-card__divider" role="separator"></div>
+                    <p class="sf-card__feature-label">Everything in Professional, plus</p>
+                    <ul class="sf-card__features">
+                        <li>
+                            <svg class="sf-check-icon sf-check-icon--default" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
+                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
+                            </svg>
+                            Multi-tenant isolation
+                        </li>
+                        <li>
+                            <svg class="sf-check-icon sf-check-icon--default" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
+                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
+                            </svg>
+                            Feature flags per tenant
+                        </li>
+                        <li>
+                            <svg class="sf-check-icon sf-check-icon--default" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
+                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
+                            </svg>
+                            API rate limiting
+                        </li>
+                        <li>
+                            <svg class="sf-check-icon sf-check-icon--default" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
+                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
+                            </svg>
+                            Dedicated support
+                        </li>
                     </ul>
-                    <a href="javascript:void(0)" class="btn btn-outline btn-block" data-modal="demo" data-plan="Enterprise">Contact Sales</a>
-                </div>
-            </div>
+                    <a href="javascript:void(0)" class="sf-btn sf-btn--ghost" data-modal="demo" data-plan="Enterprise">Contact Sales</a>
+                </article>
+            </div><!-- /pricing-grid -->
+
+            <p class="sf-pricing__footnote">
+                All plans include SOC 2 compliant infrastructure and 99.9% uptime SLA.
+            </p>
         </div>
     </section>
 
