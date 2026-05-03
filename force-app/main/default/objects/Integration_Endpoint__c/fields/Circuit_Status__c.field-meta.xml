@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Circuit_Status__c</fullName>
+    <label>Circuit Status</label>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>Closed</fullName><default>true</default><label>Closed (Normal)</label></value>
+            <value><fullName>Open</fullName><default>false</default><label>Open (Tripped)</label></value>
+            <value><fullName>Half-Open</fullName><default>false</default><label>Half-Open (Testing)</label></value>
+        </valueSetDefinition>
+    </valueSet>
+    <description>Circuit breaker state. Open = endpoint is paused, Closed = normal, Half-Open = recovery test.</description>
+</CustomField>

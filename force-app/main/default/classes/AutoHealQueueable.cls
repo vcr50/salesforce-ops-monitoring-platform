@@ -48,7 +48,7 @@ public with sharing class AutoHealQueueable implements Queueable {
                     'Error: ' + ex.getMessage() + ' — escalating to on-call team.'
                 );
 
-                incidentsToUpdate.add(new Incident__c(Id = incidentId, Status__c = 'Investigating'));
+                // SelfHealingEngine handles status updates internally
             }
         }
 

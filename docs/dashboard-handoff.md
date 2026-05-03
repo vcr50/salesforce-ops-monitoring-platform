@@ -1,15 +1,15 @@
 # Dashboard Handoff
 
-The SEOMP reports are deployed in `astrosoft2-dev-ed`, but a deployable `Dashboard` metadata file is not yet in source control.
+The SentinelFlow reports are deployed in `astrosoft2-dev-ed`, but a deployable `Dashboard` metadata file is not yet in source control.
 
 ## Current state
 
-- `ReportFolder` deployed: `SEOMP_Analytics`
+- `ReportFolder` deployed: `SentinelFlow_Analytics`
 - Reports deployed:
-  - `SEOMP_Analytics/Open_Incidents`
-  - `SEOMP_Analytics/Critical_Open_Incidents`
-  - `SEOMP_Analytics/Failed_Integration_Logs`
-- `DashboardFolder` deployed: `SEOMP_Dashboards`
+  - `SentinelFlow_Analytics/Open_Incidents`
+  - `SentinelFlow_Analytics/Critical_Open_Incidents`
+  - `SentinelFlow_Analytics/Failed_Integration_Logs`
+- `DashboardFolder` deployed: `SentinelFlow_Dashboards`
 
 ## Why the dashboard file is not in source
 
@@ -21,7 +21,7 @@ Because of that, the exact metadata XML shape could not be retrieved from the or
 
 ## Recommended next step
 
-1. Create a dashboard manually in Salesforce UI under the `SEOMP_Dashboards` folder.
+1. Create a dashboard manually in Salesforce UI under the `SentinelFlow_Dashboards` folder.
 2. Add components that use:
    - `Open Incidents`
    - `Critical Open Incidents`
@@ -33,7 +33,7 @@ Because of that, the exact metadata XML shape could not be retrieved from the or
 Replace `<dashboard-developer-name>` with the dashboard API/developer name from the org:
 
 ```powershell
-sf project retrieve start --metadata "Dashboard:SEOMP_Dashboards/<dashboard-developer-name>" --target-org astrosoft2-dev-ed --ignore-conflicts
+sf project retrieve start --metadata "Dashboard:SentinelFlow_Dashboards/<dashboard-developer-name>" --target-org astrosoft2-dev-ed --ignore-conflicts
 ```
 
 ## Validate after retrieve

@@ -1,0 +1,114 @@
+<template>
+  <div class="timeline-container">
+    <div class="timeline-header">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+      </svg>
+      <h3 class="timeline-title">Incident Timeline</h3>
+    </div>
+
+    <template if:true={isLoading}>
+      <div class="tl-loading">
+        <div class="tl-spinner"></div>
+        <span>Loading timeline...</span>
+      </div>
+    </template>
+
+    <template if:false={isLoading}>
+      <div class="tl-track">
+
+        <!-- Event: Incident Created -->
+        <div class="tl-event">
+          <div class="tl-dot tl-dot-blue"></div>
+          <div class="tl-line"></div>
+          <div class="tl-card">
+            <div class="tl-event-header">
+              <span class="tl-label">Incident Created</span>
+              <span class={severityBadge}>{incident.severity}</span>
+            </div>
+            <p class="tl-desc">{incident.description}</p>
+            <span class="tl-time">{incident.createdTime}</span>
+          </div>
+        </div>
+
+        <!-- Event: AI Classification -->
+        <template if:true={incident.hasClassification}>
+          <div class="tl-event">
+            <div class="tl-dot tl-dot-purple"></div>
+            <div class="tl-line"></div>
+            <div class="tl-card">
+              <div class="tl-event-header">
+                <span class="tl-label">AI Classification</span>
+                <span class="tl-badge tl-badge-purple">Confidence: {incident.aiConfidence}%</span>
+              </div>
+              <p class="tl-desc">
+                <strong>Root Cause:</strong> {incident.rootCause}<br />
+                <strong>Action:</strong> {incident.recommendedAction}<br />
+                <strong>Impact:</strong> {incident.aiImpactLevel}
+              </p>
+            </div>
+          </div>
+        </template>
+
+        <!-- Retry Log Events -->
+        <template for:each={retryLogs} for:item="log">
+          <div key={log.Id} class="tl-event">
+            <div class={log.retryDotClass}></div>
+            <div class="tl-line"></div>
+            <div class="tl-card">
+              <div class="tl-event-header">
+                <span class="tl-label">
+                  {log.Action_Taken__c} #{log.Retry_Attempt__c}
+                </span>
+                <span class={log.retryBadgeClass}>{log.Result__c}</span>
+              </div>
+              <template if:true={log.Failure_Reason__c}>
+                <p class="tl-desc">{log.Failure_Reason__c}</p>
+              </template>
+              <span class="tl-time">{log.Timestamp__c}</span>
+            </div>
+          </div>
+        </template>
+
+        <!-- Event: Final Resolution -->
+        <template if:true={incident.isResolved}>
+          <div class="tl-event">
+            <div class="tl-dot tl-dot-green"></div>
+            <div class="tl-card">
+              <div class="tl-event-header">
+                <span class="tl-label">Incident Resolved</span>
+                <span class="tl-badge tl-badge-green">✓ Closed</span>
+              </div>
+              <p class="tl-desc">Auto-Heal Status: {incident.autoHealStatus}</p>
+              <template if:true={incident.resolvedTime}>
+                <span class="tl-time">{incident.resolvedTime}</span>
+              </template>
+            </div>
+          </div>
+        </template>
+
+        <!-- Event: Escalated -->
+        <template if:true={incident.isEscalated}>
+          <div class="tl-event">
+            <div class="tl-dot tl-dot-red"></div>
+            <div class="tl-card">
+              <div class="tl-event-header">
+                <span class="tl-label">Escalated to Operations</span>
+                <span class="tl-badge tl-badge-red">⚠ Case Created</span>
+              </div>
+              <p class="tl-desc">Incident exceeded retry limit or AI confidence threshold. A Salesforce Case has been created for manual review.</p>
+            </div>
+          </div>
+        </template>
+
+      </div>
+
+      <!-- Empty timeline -->
+      <template if:true={isEmpty}>
+        <div class="tl-empty">
+          <p>No timeline events yet. Timeline populates as the incident progresses.</p>
+        </div>
+      </template>
+    </template>
+  </div>
+</template>

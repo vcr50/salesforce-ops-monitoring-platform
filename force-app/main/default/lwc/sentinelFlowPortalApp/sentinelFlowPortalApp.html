@@ -1,0 +1,87 @@
+<template>
+    <div class="root-container">
+        
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="brand-container">
+                    <img src={logoUrl} alt="SentinelFlow Logo" class="brand-logo"/>
+                    <span class="brand-name">SentinelFlow</span>
+                </div>
+                <nav class="top-nav">
+                    <button class={getNavClassHome} data-page="home" onclick={navigate}>Home</button>
+                    <button class={getNavClassIncidents} data-page="incidents" onclick={navigate}>Incidents</button>
+                    <button class={getNavClassIntegrations} data-page="integrations" onclick={navigate}>Integrations</button>
+                </nav>
+            </div>
+            <div class="topbar-right">
+                <div class="status-indicator">
+                    <span class="live-dot"></span>
+                    <span class="live-text">2 Critical | LIVE</span>
+                </div>
+                <div class="time-display">{currentTime}</div>
+                <div class="profile-icon">OP</div>
+            </div>
+        </header>
+
+        <div class="main-wrapper">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="side-nav">
+                    <button class={getNavClassHome} data-page="home" onclick={navigate}>
+                        <span class="icon">🏠</span> Command Center
+                    </button>
+                    <button class={getNavClassIncidents} data-page="incidents" onclick={navigate}>
+                        <span class="icon">⚠</span> Incidents
+                    </button>
+                    <button class={getNavClassIntegrations} data-page="integrations" onclick={navigate}>
+                        <span class="icon">🔌</span> Integrations
+                    </button>
+                    <button class={getNavClassImpact} data-page="impact" onclick={navigate}>
+                        <span class="icon">📉</span> Impact
+                    </button>
+                    <button class={getNavClassCopilot} data-page="copilot" onclick={navigate}>
+                        <span class="icon">🤖</span> AI Copilot
+                    </button>
+                    <button class={getNavClassSettings} data-page="settings" onclick={navigate}>
+                        <span class="icon">⚙</span> Settings
+                    </button>
+                </div>
+
+                <div class="health-nav">
+                    <h3 class="health-title">Health</h3>
+                    <div class="health-item">
+                        <span class="h-dot green"></span> Apex Jobs
+                    </div>
+                    <div class="health-item">
+                        <span class="h-dot green"></span> Platform Events
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="content-area">
+                <div class="content-inner">
+                    <template if:true={isHome}>
+                        <c-sentinel-flow-portal-command-center></c-sentinel-flow-portal-command-center>
+                    </template>
+                    <template if:true={isIncidents}>
+                        <c-sentinel-flow-portal-incidents-page></c-sentinel-flow-portal-incidents-page>
+                    </template>
+                    <template if:true={isIntegrations}>
+                        <c-sentinel-flow-portal-integrations-page></c-sentinel-flow-portal-integrations-page>
+                    </template>
+                    <template if:true={isImpact}>
+                        <c-sentinel-flow-portal-impact-panel></c-sentinel-flow-portal-impact-panel>
+                    </template>
+                    <template if:true={isCopilot}>
+                        <c-sentinel-flow-portal-copilot></c-sentinel-flow-portal-copilot>
+                    </template>
+                    <template if:true={isSettings}>
+                        <c-sentinel-flow-portal-settings></c-sentinel-flow-portal-settings>
+                    </template>
+                </div>
+            </main>
+        </div>
+    </div>
+</template>

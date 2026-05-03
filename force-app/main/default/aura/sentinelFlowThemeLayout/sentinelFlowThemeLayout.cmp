@@ -1,0 +1,15 @@
+<aura:component implements="forceCommunity:themeLayout" access="global" description="SentinelFlow Custom Theme Layout">
+    <aura:attribute name="body" type="Aura.Component[]"/>
+    
+    <div class="sentinelflow-theme">
+        <div class="app-shell">
+            <c:sentinelFlowThemeHeader />
+            <div class="layout-body">
+                <c:sentinelFlowThemeSidebar />
+                <div class="main-content">
+                    {!v.body}
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

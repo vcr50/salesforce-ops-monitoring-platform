@@ -2,7 +2,7 @@
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <compactLayoutAssignment>Deployment_Record_Compact</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
-    <description>Tracks deployment execution history for SEOMP-related changes.</description>
+    <description>Tracks deployment execution history for SentinelFlow-related changes.</description>
     <enableActivities>true</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableReports>true</enableReports>

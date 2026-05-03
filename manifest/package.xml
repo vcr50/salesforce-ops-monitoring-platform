@@ -19,10 +19,10 @@
         <name>CustomTab</name>
     </types>
     <types>
-        <members>SEOMP_Admin</members>
-        <members>SEOMP_Portal_Support</members>
-        <members>SEOMP_Portal_Viewer</members>
-        <members>SEOMP_Runtime_Admin</members>
+        <members>SentinelFlow_Admin</members>
+        <members>SentinelFlow_Portal_Support</members>
+        <members>SentinelFlow_Portal_Viewer</members>
+        <members>SentinelFlow_Runtime_Admin</members>
         <name>PermissionSet</name>
     </types>
     <types>
@@ -35,18 +35,22 @@
         <name>Layout</name>
     </types>
     <types>
-        <members>SEOMP_Console</members>
+        <members>SentinelFlow_Console</members>
         <name>CustomApplication</name>
     </types>
     <types>
-        <members>SEOMP_Home</members>
+        <members>SentinelFlow</members>
+        <name>Network</name>
+    </types>
+    <types>
+        <members>SentinelFlow_Home</members>
         <members>Incident_Record_Page</members>
         <members>Integration_Log_Record_Page</members>
         <members>SLA_Policy_Record_Page</members>
         <members>Environment_Record_Page</members>
         <members>Deployment_Record_Page</members>
         <members>Audit_Trail_Record_Page</members>
-        <members>SEOMP_Console_UtilityBar</members>
+        <members>SentinelFlow_Console_UtilityBar</members>
         <name>FlexiPage</name>
     </types>
     <types>
@@ -57,10 +61,12 @@
         <members>LoopDemo</members>
         <members>OpportunityQuery</members>
         <members>Rectangle</members>
-        <members>SEOMPAutomationService</members>
-        <members>SEOMPAutomationServiceTest</members>
-        <members>SEOMPPortalController</members>
-        <members>SEOMPPortalControllerTest</members>
+        <members>SentinelFlowLoginController</members>
+        <members>SentinelFlowLoginControllerTest</members>
+        <members>SentinelFlowAutomationService</members>
+        <members>SentinelFlowAutomationServiceTest</members>
+        <members>SentinelFlowPortalController</members>
+        <members>SentinelFlowPortalControllerTest</members>
         <members>Square</members>
         <members>nameController</members>
         <members>stringCheckController</members>
@@ -72,25 +78,26 @@
         <name>ApexTrigger</name>
     </types>
     <types>
-        <members>SEOMP_Analytics</members>
+        <members>SentinelFlow_Analytics</members>
         <name>ReportFolder</name>
     </types>
     <types>
-        <members>SEOMP_Analytics/Open_Incidents</members>
-        <members>SEOMP_Analytics/Critical_Open_Incidents</members>
-        <members>SEOMP_Analytics/Failed_Integration_Logs</members>
+        <members>SentinelFlow_Analytics/Open_Incidents</members>
+        <members>SentinelFlow_Analytics/Critical_Open_Incidents</members>
+        <members>SentinelFlow_Analytics/Failed_Integration_Logs</members>
         <name>Report</name>
     </types>
     <types>
-        <members>SEOMP_Dashboards</members>
+        <members>SentinelFlow_Dashboards</members>
         <name>DashboardFolder</name>
     </types>
     <types>
-        <members>seompPortalSummary</members>
-        <members>seompPortalIncidentTable</members>
-        <members>seompPortalIntegrationTable</members>
-        <members>seompPortalIncidentDetail</members>
-        <members>seompPortalIntegrationDetail</members>
+        <members>sentinelFlowPortalSummary</members>
+        <members>sentinelFlowPortalIncidentTable</members>
+        <members>sentinelFlowPortalIntegrationTable</members>
+        <members>sentinelFlowPortalIncidentDetail</members>
+        <members>sentinelFlowPortalIntegrationDetail</members>
+        <members>sentinelFlowPortalLogin</members>
         <members>tomcodexServicePage</members>
         <name>LightningComponentBundle</name>
     </types>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Auth_Type__c</fullName>
+    <label>Auth Type</label>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>API Key</fullName><default>true</default><label>API Key</label></value>
+            <value><fullName>OAuth 2.0</fullName><default>false</default><label>OAuth 2.0</label></value>
+            <value><fullName>Basic Auth</fullName><default>false</default><label>Basic Auth</label></value>
+            <value><fullName>Named Credential</fullName><default>false</default><label>Named Credential</label></value>
+            <value><fullName>No Auth</fullName><default>false</default><label>No Auth</label></value>
+        </valueSetDefinition>
+    </valueSet>
+    <required>false</required>
+</CustomField>

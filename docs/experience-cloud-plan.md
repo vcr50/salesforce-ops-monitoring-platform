@@ -1,16 +1,16 @@
-# SEOMP Experience Cloud Plan
+# SentinelFlow Experience Cloud Plan
 
-This document describes how to evolve SEOMP from an internal Salesforce Lightning app into a more polished Experience Cloud portal with cleaner navigation, simpler task flows, and a more intentional UI/UX layer.
+This document describes how to evolve SentinelFlow from an internal Salesforce Lightning app into a more polished Experience Cloud portal with cleaner navigation, simpler task flows, and a more intentional UI/UX layer.
 
 ## Goal
 
-Use Experience Cloud as the presentation layer for SEOMP while keeping the current Salesforce data model, Apex automation, reports, and internal admin app intact.
+Use Experience Cloud as the presentation layer for SentinelFlow while keeping the current Salesforce data model, Apex automation, reports, and internal admin app intact.
 
 ## Recommended Model
 
-- Keep `SEOMP Console` as the internal operations/admin workspace.
+- Keep `SentinelFlow Console` as the internal operations/admin workspace.
 - Build an Experience Cloud site as the external or semi-external portal experience.
-- Reuse the existing SEOMP objects:
+- Reuse the existing SentinelFlow objects:
   - `Incident__c`
   - `Integration_Log__c`
   - `SLA_Policy__c`
@@ -46,7 +46,7 @@ Use case:
 
 Recommended surface:
 
-- `SEOMP Console`
+- `SentinelFlow Console`
 
 ### Business Stakeholders or Support Leads
 
@@ -133,7 +133,7 @@ Purpose:
 
 Recommended content:
 
-- embedded SEOMP reports
+- embedded SentinelFlow reports
 - dashboard components
 - links to detailed reports
 
@@ -220,10 +220,10 @@ Use a separate permission model for the portal.
 
 Recommended structure:
 
-- keep `SEOMP_Admin` and `SEOMP_Runtime_Admin` for internal users
+- keep `SentinelFlow_Admin` and `SentinelFlow_Runtime_Admin` for internal users
 - create portal-specific permission sets, such as:
-  - `SEOMP_Portal_Viewer`
-  - `SEOMP_Portal_Support`
+  - `SentinelFlow_Portal_Viewer`
+  - `SentinelFlow_Portal_Support`
 
 Portal users should usually have:
 
@@ -272,7 +272,7 @@ Portal users should usually have:
 
 Current repo strengths that support this move:
 
-- SEOMP objects are already modeled in `force-app/main/default/objects/`
+- SentinelFlow objects are already modeled in `force-app/main/default/objects/`
 - Apex automation already manages incident lifecycle from integration logs
 - reports already exist for incident and failed-log monitoring
 - sample data seed exists for demo workflows:

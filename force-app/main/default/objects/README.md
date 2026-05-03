@@ -1,8 +1,8 @@
-# SEOMP Custom Objects
+# SentinelFlow Custom Objects
 
 Create one folder per object in this directory using Salesforce DX source format.
 
-Planned objects for SEOMP:
+Planned objects for SentinelFlow:
 
 - `Incident__c`
 - `Integration_Log__c`

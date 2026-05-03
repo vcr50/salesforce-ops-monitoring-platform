@@ -3,7 +3,7 @@ private class LegacyOrgCoverageTest {
     @IsTest
     static void utilityAndTrainingClassesAreCovered() {
         Test.startTest();
-        AccountRecord.insertData('Coverage Account', 'Hot', 'yes', 'https://example.com');
+        AccountRecord.insertData('Coverage Account', 'Hot', 'https://example.com');
         AccountRecord.insertContact();
         Block2.sumValues();
         ConditionalStmtDemo.max(10, 25);

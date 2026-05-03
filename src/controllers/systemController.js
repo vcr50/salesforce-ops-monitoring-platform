@@ -1,15 +1,15 @@
 const {
-  seompConfig,
+  sentinelFlowConfig,
   getFoundationStatus
-} = require('../config/seomp');
+} = require('../config/sentinelFlow');
 
 const getSystemContext = (req, res) => {
   res.json({
-    platform: seompConfig.platform,
-    environment: seompConfig.environment,
-    services: seompConfig.services,
+    platform: sentinelFlowConfig.platform,
+    environment: sentinelFlowConfig.environment,
+    services: sentinelFlowConfig.services,
     salesforce: {
-      customObjects: Object.keys(seompConfig.salesforce.customObjects)
+      customObjects: Object.keys(sentinelFlowConfig.salesforce.customObjects)
     },
     timestamp: new Date().toISOString()
   });

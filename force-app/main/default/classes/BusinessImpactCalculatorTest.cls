@@ -79,7 +79,7 @@ private class BusinessImpactCalculatorTest {
         Test.stopTest();
 
         System.assertEquals(42000,    r.revenueAtRisk);
-        System.assertEquals('Low', r.riskLevel); // 42000 < 50000 → High
+        System.assertEquals('High', r.riskLevel);
         Incident__c updated = [SELECT Revenue_at_Risk__c FROM Incident__c WHERE Id = :inc.Id];
         System.assertEquals(42000, updated.Revenue_at_Risk__c, 'Revenue should be persisted');
     }

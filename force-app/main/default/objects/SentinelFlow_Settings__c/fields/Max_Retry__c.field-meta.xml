@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Max_Retry__c</fullName>
+    <defaultValue>3</defaultValue>
+    <description>Maximum number of times an incident will attempt self-healing before escalation.</description>
+    <externalId>false</externalId>
+    <label>Max Retry</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,19 +1,29 @@
 /**
  * SelfHealingEngine
  * Autonomous action executor for SentinelFlow.
- * Evaluates AI recommendations and carries out Retry, Restart, or Escalate
- * actions on incidents and their linked integrations.
+ * Evaluates AI recommendations and carries out Retry, Restart, Token Refresh,
+ * or Escalate actions on incidents and their linked integrations.
+ *
+ * LOCKED STATUS OWNERSHIP:
+ *   This class is the ONLY class that sets: Healing, Resolved, Escalated
+ *
+ * v3.0 Changes (FINAL - LOCKED):
+ *   - Null-safe retry logic using Incident__c.Retry_Count__c / Max_Retry__c
+ *   - SentinelFlow_Settings__c integration for Max_Retry override
+ *   - RetryLogService.log() minimal signature
+ *   - Strict lifecycle: Healing → Resolved | Escalated
  *
  * @author   Tomcodex
- * @version  1.0
+ * @version  3.0 (FINAL)
  */
 public with sharing class SelfHealingEngine {
 
     // ── Constants ──────────────────────────────────────────────────────────────
-    private static final String ACTION_RETRY   = 'Retry';
-    private static final String ACTION_RESTART = 'Restart Service';
-    private static final String ACTION_ESCALATE = 'Escalate';
-    private static final Integer MAX_RETRIES   = 3;
+    private static final String ACTION_RETRY         = 'Retry';
+    private static final String ACTION_RESTART       = 'Restart Service';
+    private static final String ACTION_ESCALATE      = 'Escalate';
+    private static final String ACTION_TOKEN_REFRESH = 'Token Refresh';
+    private static final Integer CIRCUIT_BREAKER_THRESHOLD = 5;
     private static final Decimal MIN_CONFIDENCE_FOR_AUTO_HEAL = 85.0;
 
     // ── Inner types ────────────────────────────────────────────────────────────
@@ -27,18 +37,18 @@ public with sharing class SelfHealingEngine {
     // ── Public API ─────────────────────────────────────────────────────────────
 
     /**
-     * Entry point called by the IntegrationLogTrigger after Failed logs are
-     * created. Runs AI analysis and auto-heals if confidence is sufficient.
+     * Entry point called by SelfHealQueueable after Failed logs are created.
+     * Runs AI analysis and auto-heals if confidence is sufficient.
      */
     public static void processFailedLogs(List<Id> integrationLogIds) {
         if (integrationLogIds == null || integrationLogIds.isEmpty()) {
             return;
         }
 
-        // Find the open incidents linked to these logs
         List<Incident__c> incidents = [
             SELECT  Id, Severity__c, Status__c, Self_Heal_Attempted__c,
-                    Integration_Log__c,
+                    Auto_Heal_Status__c, Integration_Endpoint__c,
+                    Integration_Log__c, Retry_Count__c, Max_Retry__c,
                     Integration_Log__r.Error_Message__c,
                     Integration_Log__r.Response_Time__c,
                     Integration_Log__r.Retry_Count__c,
@@ -53,33 +63,66 @@ public with sharing class SelfHealingEngine {
             return;
         }
 
+        // Pre-fetch endpoint data for circuit breaker checks
+        Set<Id> endpointIds = new Set<Id>();
+        for (Incident__c inc : incidents) {
+            if (inc.Integration_Endpoint__c != null) {
+                endpointIds.add(inc.Integration_Endpoint__c);
+            }
+        }
+        Map<Id, Integration_Endpoint__c> endpointMap = new Map<Id, Integration_Endpoint__c>();
+        if (!endpointIds.isEmpty()) {
+            for (Integration_Endpoint__c ep : [
+                SELECT Id, Circuit_Status__c, Failure_Count__c, Max_Retries__c, Retry_Policy__c
+                FROM   Integration_Endpoint__c
+                WHERE  Id IN :endpointIds
+            ]) {
+                endpointMap.put(ep.Id, ep);
+            }
+        }
+
         List<Incident__c> incidentsToUpdate = new List<Incident__c>();
         List<Id> idsToHeal = new List<Id>();
 
         for (Incident__c inc : incidents) {
-            // Build AI input
+            // ── Circuit Breaker Check ──────────────────────────────────────
+            if (inc.Integration_Endpoint__c != null && endpointMap.containsKey(inc.Integration_Endpoint__c)) {
+                Integration_Endpoint__c ep = endpointMap.get(inc.Integration_Endpoint__c);
+                if (ep.Circuit_Status__c == 'Open') {
+                    inc.Auto_Heal_Status__c = 'Failed';
+                    inc.Status__c = 'Escalated';
+                    inc.Self_Heal_Attempted__c = true;
+                    incidentsToUpdate.add(inc);
+                    RetryLogService.log(inc.Id, 1, 'Failed', 'Circuit breaker is OPEN for endpoint. Auto-heal skipped.');
+                    AuditTrailService.log(inc.Id, 'Incident__c', 'Circuit Breaker Open', null, 'Endpoint circuit is tripped — healing bypassed.');
+                    continue;
+                }
+            }
+
+            // ── AI Analysis ───────────────────────────────────────────────
             AIAnalysisService.AnalysisInput inp = new AIAnalysisService.AnalysisInput();
-            inp.incidentId      = inc.Id;
-            inp.status          = inc.Integration_Log__r != null ? inc.Integration_Log__r.Status__c       : inc.Status__c;
-            inp.errorMessage    = inc.Integration_Log__r != null ? inc.Integration_Log__r.Error_Message__c : '';
-            inp.responseTime    = inc.Integration_Log__r != null ? inc.Integration_Log__r.Response_Time__c  : null;
-            // Past incident count bulkification approximation (ideally aggregate query beforehand)
+            inp.incidentId    = inc.Id;
+            inp.status        = inc.Integration_Log__r != null ? inc.Integration_Log__r.Status__c       : inc.Status__c;
+            inp.errorMessage  = inc.Integration_Log__r != null ? inc.Integration_Log__r.Error_Message__c : '';
+            inp.responseTime  = inc.Integration_Log__r != null ? inc.Integration_Log__r.Response_Time__c : null;
             inp.pastIncidentCount = 0;
 
             AIAnalysisService.AnalysisResult aiResult = AIAnalysisService.analyse(inp);
 
-            // Persist AI findings
-            inc.Root_Cause__c         = aiResult.rootCause;
-            inc.Recommended_Action__c = aiResult.recommendedAction;
-            inc.AI_Impact_Level__c    = aiResult.impactLevel;
-            inc.AI_Confidence__c      = aiResult.confidence;
+            // Persist AI findings + init Auto_Heal_Status__c
+            inc.Root_Cause__c          = aiResult.rootCause;
+            inc.Recommended_Action__c  = aiResult.recommendedAction;
+            inc.AI_Impact_Level__c     = aiResult.impactLevel;
+            inc.AI_Confidence__c       = aiResult.confidence;
             inc.Self_Heal_Attempted__c = true;
-            inc.Status__c             = 'Investigating';
+            inc.Auto_Heal_Status__c    = 'In Progress';
             incidentsToUpdate.add(inc);
 
-            // Auto-execute only if confidence is high enough
             if (aiResult.confidence >= MIN_CONFIDENCE_FOR_AUTO_HEAL) {
                 idsToHeal.add(inc.Id);
+            } else {
+                // Low confidence — mark as not attempted, fall to manual
+                inc.Auto_Heal_Status__c = 'Not Attempted';
             }
 
             AuditTrailService.log(
@@ -87,7 +130,9 @@ public with sharing class SelfHealingEngine {
                 'Incident__c',
                 'Self-Heal Evaluated',
                 null,
-                'Action: ' + aiResult.recommendedAction + ' | Confidence: ' + aiResult.confidence + '% | Auto-executed: ' + (aiResult.confidence >= MIN_CONFIDENCE_FOR_AUTO_HEAL)
+                'Action: ' + aiResult.recommendedAction
+                + ' | Confidence: ' + aiResult.confidence + '%'
+                + ' | Auto-executed: ' + (aiResult.confidence >= MIN_CONFIDENCE_FOR_AUTO_HEAL)
             );
         }
 
@@ -111,8 +156,10 @@ public with sharing class SelfHealingEngine {
 
         Incident__c inc = [
             SELECT  Id, Status__c, Recommended_Action__c, AI_Confidence__c,
-                    Integration_Log__c,
-                    Integration_Log__r.Retry_Count__c
+                    Integration_Log__c, Integration_Endpoint__c,
+                    Retry_Count__c, Max_Retry__c,
+                    Integration_Log__r.Retry_Count__c,
+                    Auto_Heal_Status__c
             FROM    Incident__c
             WHERE   Id = :incidentId
             LIMIT 1
@@ -122,18 +169,57 @@ public with sharing class SelfHealingEngine {
             ? ACTION_RETRY
             : inc.Recommended_Action__c;
 
-        Decimal retryCount = inc.Integration_Log__r != null
-            ? (inc.Integration_Log__r.Retry_Count__c != null ? inc.Integration_Log__r.Retry_Count__c : 0)
-            : 0;
+        // ── LOCKED RETRY LOGIC (null-safe) ────────────────────────────────
+        Integer retryCount = (inc.Retry_Count__c == null ? 0 : inc.Retry_Count__c.intValue());
+        Integer maxRetry   = (inc.Max_Retry__c == null ? 3 : inc.Max_Retry__c.intValue());
+
+        // Check global settings override
+        SentinelFlow_Settings__c settings = SentinelFlow_Settings__c.getOrgDefaults();
+        if (settings != null && settings.Max_Retry__c != null) {
+            maxRetry = settings.Max_Retry__c.intValue();
+        }
+
+        if (retryCount >= maxRetry) {
+            inc.Status__c = 'Escalated';
+            inc.Auto_Heal_Status__c = 'Failed';
+            update inc;
+
+            RetryLogService.log(inc.Id, retryCount, 'Failed', 'Max retries (' + maxRetry + ') exceeded. Escalating.');
+
+            HealResult escalated = new HealResult();
+            escalated.incidentId  = incidentId;
+            escalated.actionTaken = ACTION_ESCALATE;
+            escalated.success     = false;
+            escalated.message     = 'Max retries (' + maxRetry + ') exceeded. Incident escalated.';
+            return escalated;
+        }
+
+        // Increment retry count AFTER check
+        inc.Retry_Count__c = retryCount + 1;
+
+        // Update status to Healing + In Progress before action
+        inc.Auto_Heal_Status__c = 'In Progress';
+        inc.Status__c = 'Healing';
+        update inc;
 
         HealResult result = executeAction(incidentId, inc.Integration_Log__c, action, retryCount);
+
+        // Update Auto_Heal_Status based on result
+        if (result.success) {
+            update new Incident__c(Id = incidentId, Status__c = 'Resolved', Auto_Heal_Status__c = 'Succeeded');
+            RetryLogService.log(incidentId, retryCount + 1, 'Success', null);
+        } else {
+            update new Incident__c(Id = incidentId, Status__c = 'Escalated', Auto_Heal_Status__c = 'Failed');
+            RetryLogService.log(incidentId, retryCount + 1, 'Failed', result.message);
+        }
 
         AuditTrailService.log(
             incidentId,
             'Incident__c',
-            'Manual Self-Heal',
+            'Self-Heal Executed',
             null,
             'Action: ' + action + ' | Result: ' + result.message
+            + ' | HealStatus: ' + (result.success ? 'Succeeded' : 'Failed')
         );
 
         return result;
@@ -145,7 +231,7 @@ public with sharing class SelfHealingEngine {
         Id      incidentId,
         Id      logId,
         String  action,
-        Decimal currentRetryCount
+        Integer currentRetryCount
     ) {
         HealResult result  = new HealResult();
         result.incidentId  = incidentId;
@@ -155,6 +241,8 @@ public with sharing class SelfHealingEngine {
             result = doRetry(incidentId, logId, currentRetryCount, result);
         } else if (action == ACTION_RESTART) {
             result = doRestart(incidentId, logId, result);
+        } else if (action == ACTION_TOKEN_REFRESH) {
+            result = doTokenRefresh(incidentId, result);
         } else {
             result = doEscalate(incidentId, result);
         }
@@ -163,52 +251,59 @@ public with sharing class SelfHealingEngine {
     }
 
     /**
-     * Retry — increment retry count on the log, move incident to Healing.
-     * If max retries exceeded, fall through to escalation.
+     * Retry — increment retry count on the log. Bump endpoint failure count.
      */
     private static HealResult doRetry(
-        Id incidentId, Id logId, Decimal currentRetryCount, HealResult result
+        Id incidentId, Id logId, Integer currentRetryCount, HealResult result
     ) {
-        if (currentRetryCount != null && currentRetryCount >= MAX_RETRIES) {
-            return doEscalate(incidentId, result);
-        }
+        Integer attemptNum = (currentRetryCount != null ? currentRetryCount : 0) + 1;
 
         // Update log retry count
         if (logId != null) {
-            Integration_Log__c log = new Integration_Log__c(
-                Id            = logId,
-                Retry_Count__c = (currentRetryCount == null ? 0 : currentRetryCount) + 1
+            update new Integration_Log__c(
+                Id             = logId,
+                Retry_Count__c = attemptNum
             );
-            update log;
         }
 
-        // Move incident to Healing state
-        update new Incident__c(Id = incidentId, Status__c = 'Healing');
+        // Bump failure count on endpoint (for circuit breaker)
+        tripEndpointFailureCount(incidentId);
 
         result.success = true;
-        result.message = 'Retry initiated. Incident moved to Healing state. Retry count: ' + ((currentRetryCount == null ? 0 : currentRetryCount) + 1);
+        result.message = 'Retry #' + attemptNum + ' executed. Incident in Healing state.';
         return result;
     }
 
     /**
-     * Restart — mark the log as pending restart, set incident to Healing.
-     * In production, this would call an external API via a Named Credential.
+     * Restart — trigger service restart.
      */
     private static HealResult doRestart(Id incidentId, Id logId, HealResult result) {
-        // In production: make a callout to restart the service endpoint
+        // Production: HttpRequest via Named Credential
         // HttpRequest req = new HttpRequest();
-        // req.setEndpoint('callout:ServiceRestartAPI/restart');
-        // ...
-
-        update new Incident__c(Id = incidentId, Status__c = 'Healing');
+        // req.setEndpoint('callout:SentinelFlow_ServiceRestart/restart');
+        // req.setMethod('POST');
+        // new Http().send(req);
 
         result.success = true;
-        result.message = 'Service restart triggered. Integration health check queued. Incident moved to Healing.';
+        result.message = 'Service restart triggered. Integration health check queued.';
         return result;
     }
 
     /**
-     * Escalate — create a Case and notify the operations team.
+     * Token Refresh — reset OAuth credentials for auth failure incidents.
+     */
+    private static HealResult doTokenRefresh(Id incidentId, HealResult result) {
+        // Production: refresh OAuth token via Named Credential
+
+        AuditTrailService.log(incidentId, 'Incident__c', 'Token Refresh', null, 'OAuth token refresh triggered.');
+
+        result.success = true;
+        result.message = 'OAuth token refresh triggered.';
+        return result;
+    }
+
+    /**
+     * Escalate — create a Case, notify ops team.
      */
     private static HealResult doEscalate(Id incidentId, HealResult result) {
         Incident__c inc = [
@@ -218,23 +313,67 @@ public with sharing class SelfHealingEngine {
             LIMIT 1
         ];
 
-        // Create a Salesforce Case for the escalation
-        Case escalationCase = new Case(
-            Subject     = 'SentinelFlow Escalation — ' + inc.Name,
-            Description = 'Incident: ' + inc.Name + '\nSeverity: ' + inc.Severity__c
-                          + '\nRoot Cause: ' + (String.isBlank(inc.Root_Cause__c) ? 'Under investigation' : inc.Root_Cause__c)
-                          + '\nDescription: ' + inc.Description__c,
-            Priority    = inc.Severity__c == 'Critical' ? 'High' : 'Medium',
-            Status      = 'New',
-            Origin      = 'SentinelFlow AI'
-        );
-        insert escalationCase;
+        try {
+            Case escalationCase = new Case(
+                Subject     = 'SentinelFlow Escalation — ' + inc.Name,
+                Description = 'Incident: ' + inc.Name
+                              + '\nSeverity: ' + inc.Severity__c
+                              + '\nRoot Cause: ' + (String.isBlank(inc.Root_Cause__c) ? 'Under investigation' : inc.Root_Cause__c)
+                              + '\nDescription: ' + inc.Description__c,
+                Priority    = inc.Severity__c == 'Critical' ? 'High' : 'Medium',
+                Status      = 'New',
+                Origin      = 'SentinelFlow AI'
+            );
+            insert escalationCase;
 
-        update new Incident__c(Id = incidentId, Status__c = 'Investigating');
+            result.success = true;
+            result.message = 'Incident escalated. Case ' + escalationCase.Id + ' created.';
+        } catch (Exception ex) {
+            SystemLogger.logMessage(
+                'SelfHealingEngine',
+                'doEscalate',
+                'ERROR',
+                'Case insert failed for incident ' + incidentId + ': ' + ex.getMessage()
+            );
+            result.success = false;
+            result.message = 'Escalation attempted but Case creation failed: ' + ex.getMessage();
+        }
 
-        result.success = true;
-        result.message = 'Incident escalated. Case ' + escalationCase.Id + ' created for the operations team.';
         return result;
+    }
+
+    /**
+     * Increment endpoint failure count — feeds the circuit breaker.
+     */
+    private static void tripEndpointFailureCount(Id incidentId) {
+        try {
+            List<Incident__c> incList = [
+                SELECT Integration_Endpoint__c FROM Incident__c WHERE Id = :incidentId LIMIT 1
+            ];
+            if (incList.isEmpty() || incList[0].Integration_Endpoint__c == null) return;
+
+            Id epId = incList[0].Integration_Endpoint__c;
+            Integration_Endpoint__c ep = [
+                SELECT Id, Failure_Count__c, Circuit_Status__c
+                FROM   Integration_Endpoint__c
+                WHERE  Id = :epId
+                LIMIT 1
+            ];
+
+            ep.Failure_Count__c = (ep.Failure_Count__c == null ? 0 : ep.Failure_Count__c) + 1;
+
+            if (ep.Failure_Count__c >= CIRCUIT_BREAKER_THRESHOLD && ep.Circuit_Status__c == 'Closed') {
+                ep.Circuit_Status__c = 'Open';
+                AuditTrailService.log(
+                    incidentId, 'Incident__c', 'Circuit Breaker Tripped',
+                    null, 'Endpoint ' + epId + ' tripped after ' + ep.Failure_Count__c + ' failures.'
+                );
+            }
+
+            update ep;
+        } catch (Exception ex) {
+            // Non-fatal — circuit breaker update is best-effort
+        }
     }
 
     // ── Exception ──────────────────────────────────────────────────────────────

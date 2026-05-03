@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>seompPortalApp</members>
+        <members>seompPortalCommandCenter</members>
+        <members>seompPortalCopilot</members>
+        <members>seompPortalImpactPanel</members>
+        <members>seompPortalIncidentDetail</members>
+        <members>seompPortalIncidentsPage</members>
+        <members>seompPortalIncidentTable</members>
+        <members>seompPortalIntegrationDetail</members>
+        <members>seompPortalIntegrationsPage</members>
+        <members>seompPortalIntegrationTable</members>
+        <members>seompPortalLogin</members>
+        <members>seompPortalSettings</members>
+        <members>seompPortalSummary</members>
+        <members>seompPortalTimeline</members>
+        <members>seompThemeHeader</members>
+        <members>seompThemeSidebar</members>
+        <name>LightningComponentBundle</name>
+    </types>
+    <types>
+        <members>SEOMPAutomationService</members>
+        <members>SEOMPAutomationServiceTest</members>
+        <members>SeompLoginController</members>
+        <members>SeompLoginControllerTest</members>
+        <members>SEOMPPortalController</members>
+        <members>SEOMPPortalControllerTest</members>
+        <name>ApexClass</name>
+    </types>
+    <version>62.0</version>
+</Package>

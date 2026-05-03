@@ -292,7 +292,7 @@ OUTPUT:
 | Layer | Control |
 |---|---|
 | Authentication | Salesforce SSO + MFA enforced |
-| Authorization | Permission Sets: `SEOMP_Runtime_Admin`, `SEOMP_Portal_Support`, `SEOMP_Portal_Viewer` |
+| Authorization | Permission Sets: `SentinelFlow_Runtime_Admin`, `SentinelFlow_Portal_Support`, `SentinelFlow_Portal_Viewer` |
 | Data visibility | Sharing Rules on `Incident__c` by Environment__c |
 | API security | Named Credentials for all external callouts (no hardcoded secrets) |
 | Audit | `Audit_Trail__c` records every action with user, timestamp, old/new value |

@@ -37,6 +37,13 @@ public with sharing class AIAnalysisQueueable implements Queueable, Database.All
         List<Id> autoHealIds = new List<Id>();
 
         try {
+            // Set Status = Analyzing (ONLY this class sets this status)
+            List<Incident__c> toAnalyze = new List<Incident__c>();
+            for (Id incId : incidentIds) {
+                toAnalyze.add(new Incident__c(Id = incId, Status__c = 'Analyzing'));
+            }
+            update toAnalyze;
+
             for (Id incidentId : incidentIds) {
                 AIAnalysisService.AnalysisResult result = AIAnalysisService.analyseIncident(incidentId);
 

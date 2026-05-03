@@ -1,0 +1,285 @@
+/* ── Settings Page ──────────────────────────────────────────────────────── */
+.settings-page {
+    padding: 24px;
+    max-width: 960px;
+}
+
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.page-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary, #f1f5f9);
+    margin: 0 0 4px;
+}
+
+.page-sub {
+    font-size: 13px;
+    color: var(--text-muted, #94a3b8);
+    margin: 0;
+}
+
+/* ── Tab Bar ────────────────────────────────────────────────────────────── */
+.tab-bar {
+    display: flex;
+    gap: 4px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.tab-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: transparent;
+    border: none;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted, #94a3b8);
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+.tab-btn:hover {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-primary, #f1f5f9);
+}
+
+.tab-btn.tab-active {
+    background: rgba(99, 179, 255, 0.12);
+    color: #63b3ff;
+    border: 1px solid rgba(99, 179, 255, 0.25);
+}
+
+/* ── Settings Card ──────────────────────────────────────────────────────── */
+.settings-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    margin-bottom: 20px;
+}
+
+.card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary, #f1f5f9);
+    margin: 0 0 4px;
+}
+
+.card-desc {
+    font-size: 12px;
+    color: var(--text-muted, #94a3b8);
+    margin: 0;
+}
+
+/* ── Form Grid ──────────────────────────────────────────────────────────── */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-field label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted, #94a3b8);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.form-field input,
+.form-field select {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text-primary, #f1f5f9);
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+    border-color: rgba(99, 179, 255, 0.4);
+}
+
+.form-field select option { background: #1a1f2e; }
+
+/* ── Card Actions ───────────────────────────────────────────────────────── */
+.card-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.save-confirm {
+    font-size: 13px;
+    color: #10b981;
+    font-weight: 500;
+}
+
+.form-error   { font-size: 12px; color: #f87171; margin-top: 8px; }
+.form-success { font-size: 12px; color: #10b981; margin-top: 8px; }
+
+/* ── Endpoint List ──────────────────────────────────────────────────────── */
+.endpoint-list { display: flex; flex-direction: column; gap: 10px; }
+
+.endpoint-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 12px 16px;
+    gap: 12px;
+}
+
+.endpoint-info { flex: 1; min-width: 0; }
+.endpoint-name { display: block; font-size: 13px; font-weight: 600; color: var(--text-primary, #f1f5f9); }
+.endpoint-url  { display: block; font-size: 11px; color: var(--text-muted, #94a3b8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.endpoint-meta { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.endpoint-actions { display: flex; gap: 8px; align-items: center; }
+
+/* ── Badges ─────────────────────────────────────────────────────────────── */
+.badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.badge-auth            { background: rgba(99,179,255,0.12); color: #63b3ff; border: 1px solid rgba(99,179,255,0.2); }
+.badge-retry           { background: rgba(168,85,247,0.12); color: #a855f7; border: 1px solid rgba(168,85,247,0.2); }
+.badge-circuit-closed  { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+.badge-circuit-open    { background: rgba(239,68,68,0.12);  color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+.badge-circuit-half    { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
+
+/* ── Small Buttons ──────────────────────────────────────────────────────── */
+.btn-reset     { padding: 5px 12px; background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; }
+.btn-danger-sm { padding: 5px 10px; background: rgba(239,68,68,0.1);   color: #f87171; border: 1px solid rgba(239,68,68,0.2);   border-radius: 6px; font-size: 12px; cursor: pointer; }
+.btn-test      { padding: 9px 14px; background: rgba(99,179,255,0.1);  color: #63b3ff; border: 1px solid rgba(99,179,255,0.2);  border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+
+/* ── Settings List (Tab 2 + 3) ──────────────────────────────────────────── */
+.settings-list { display: flex; flex-direction: column; }
+
+.setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.setting-row:last-child { border-bottom: none; }
+
+.setting-info { flex: 1; }
+.setting-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-primary, #f1f5f9); margin-bottom: 3px; }
+.setting-desc  { display: block; font-size: 12px; color: var(--text-muted, #94a3b8); line-height: 1.5; }
+
+/* ── Toggle ────────────────────────────────────────────────────────────── */
+.toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+
+.slider {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 24px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.slider::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s;
+}
+
+.toggle input:checked + .slider { background: #3b82f6; }
+.toggle input:checked + .slider::before { transform: translateX(20px); }
+
+/* ── Range / Number inputs ──────────────────────────────────────────────── */
+.range-input   { width: 140px; accent-color: #3b82f6; }
+.number-input  { width: 70px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 7px; padding: 7px 10px; color: var(--text-primary, #f1f5f9); font-size: 13px; text-align: center; }
+.input-suffix  { font-size: 12px; color: var(--text-muted, #94a3b8); }
+.select-input  { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 7px; padding: 7px 10px; color: var(--text-primary, #f1f5f9); font-size: 13px; }
+
+/* ── Webhook Input ──────────────────────────────────────────────────────── */
+.slack-row     { flex-wrap: wrap; }
+.webhook-input-group { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+.webhook-input { width: 280px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 9px 12px; color: var(--text-primary, #f1f5f9); font-size: 12px; }
+
+/* ── Slack Preview Card ─────────────────────────────────────────────────── */
+.preview-card .slack-preview {
+    display: flex;
+    background: #1a1d23;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+}
+
+.slack-bar   { width: 4px; background: #ef4444; flex-shrink: 0; }
+.slack-body  { padding: 14px 16px; flex: 1; }
+.slack-title { font-size: 13px; font-weight: 700; color: #f1f5f9; margin-bottom: 10px; }
+.slack-field { font-size: 12px; color: #94a3b8; margin-bottom: 4px; }
+.slack-field span { color: #63b3ff; font-weight: 600; }
+
+/* ── Loading / Empty ────────────────────────────────────────────────────── */
+.loading-row { display: flex; align-items: center; gap: 12px; padding: 20px; color: var(--text-muted, #94a3b8); font-size: 13px; }
+.spinner { width: 16px; height: 16px; border: 2px solid rgba(99,179,255,0.2); border-top-color: #63b3ff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty-state { padding: 24px; text-align: center; color: var(--text-muted, #94a3b8); font-size: 13px; }

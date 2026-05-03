@@ -1,10 +1,9 @@
 public class AccountRecord {
-    public static ID insertData(String name, String rating, String active, String website) {
+    public static ID insertData(String name, String rating, String website) {
         try {
             Account acc = new Account();
             acc.Name = name;
             acc.Rating = rating;
-            acc.Active__C = active;
             acc.Website = website;
 
             insert acc;
@@ -17,7 +16,7 @@ public class AccountRecord {
 
     public static void insertContact() {
         try {
-            Id accId = insertData('nitro 6', 'hot', 'yes', 'www.example.com');
+            Id accId = insertData('nitro 6', 'hot', 'www.example.com');
             if (accId != null) {
                 Contact con = new Contact(FirstName = 'Contact 1', LastName = 'Con 1');
                 con.AccountId = accId;

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" fill="none">
+  <!-- Speed lines (tail) -->
+  <path d="M 40 24 L 40 32 L 15 28 Z" fill="#0A6BFF" />
+  <path d="M 35 44 L 35 56 L 0 50 Z" fill="#0A6BFF" />
+  <path d="M 40 68 L 40 76 L 15 72 Z" fill="#0A6BFF" />
+  
+  <!-- Main circle -->
+  <circle cx="70" cy="50" r="40" fill="#0A6BFF" />
+  
+  <!-- Heartbeat / Pulse -->
+  <path d="M 42 50 L 52 50 L 58 58 L 65 25 L 75 75 L 82 42 L 88 50 L 98 50" 
+        stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SentinelFlow — AI-Powered Incident Intelligence Platform</title>
     <meta name="description" content="SentinelFlow is an enterprise-grade AI incident intelligence platform. Detect, analyze, and auto-heal production incidents in real-time.">
-    <link rel="icon" href="assets/logo.png" type="image/png">
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -15,7 +15,7 @@
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a href="#" class="nav-brand">
-                <img src="assets/logo.png" alt="SentinelFlow Logo" class="nav-logo">
+                <img src="assets/logo.svg" alt="SentinelFlow Logo" class="nav-logo">
                 <span class="nav-brand-text">SentinelFlow</span>
             </a>
             <div class="nav-links" id="navLinks">
@@ -25,6 +25,7 @@
                 <a href="#pricing">Pricing</a>
             </div>
             <div class="nav-actions">
+                <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000YSWXQA4" target="_blank" class="btn btn-ghost" title="Package ID: 04tdL000000YSWXQA4">Install Package</a>
                 <a href="#pricing" class="btn btn-ghost">Start Free Trial</a>
                 <a href="#demo" class="btn btn-primary">Book a Demo</a>
             </div>
@@ -57,14 +58,18 @@
                 issues before they impact your revenue.
             </p>
             <div class="hero-cta">
-                <a href="#pricing" class="btn btn-primary btn-lg">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                    Start Free Trial
+                <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000YSWXQA4" target="_blank" class="btn btn-primary btn-lg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    Install in Salesforce
                 </a>
                 <a href="#demo" class="btn btn-outline btn-lg">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                     Watch Demo
                 </a>
+            </div>
+            <div class="hero-install-info" style="margin-top: 16px; font-size: 0.9rem; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <span>v1.0 Package ID:</span>
+                <code style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; font-family: monospace;">04tdL000000YSWXQA4</code>
             </div>
             <div class="hero-stats">
                 <div class="hero-stat">
@@ -86,6 +91,83 @@
         <div class="hero-dashboard-preview">
             <div class="dashboard-glow"></div>
             <img src="assets/dashboard-preview.png" alt="SentinelFlow Dashboard" class="dashboard-img">
+        </div>
+    </section>
+
+    <!-- ═══════════════════ AGENTEXCHANGE PROMO ═══════════════════ -->
+    <section class="agentexchange-promo" id="agentexchange">
+        <div class="container">
+            <div class="promo-grid">
+                <div class="promo-content">
+                    <div class="promo-badge-tag">
+                        <span class="badge-dot"></span>
+                        AgentExchange Live
+                    </div>
+                    <h2 class="promo-heading">
+                        SentinelFlow is <span class="gradient-text">AgentExchange</span> Ready
+                    </h2>
+                    <p class="promo-desc">
+                        Now available on Salesforce AgentExchange — the next evolution of AppExchange. 
+                        Install our 2GP Managed Package directly into your Sandbox or Production org 
+                        with enterprise-grade SSO and multi-tenant isolation out of the box.
+                    </p>
+                    <div class="promo-cta-group">
+                        <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000YSWXQA4" target="_blank" class="btn btn-primary btn-lg">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                            Install Package
+                        </a>
+                        <a href="javascript:void(0)" class="btn btn-outline btn-lg" data-modal="trial" data-plan="Professional">Start Free Trial</a>
+                    </div>
+                </div>
+                <div class="promo-visual-card">
+                    <div class="promo-card-glow"></div>
+                    <div class="promo-card-inner">
+                        <div class="promo-card-header">
+                            <div class="promo-sf-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="url(#promoGrad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="promoGrad" x1="2" y1="2" x2="22" y2="22"><stop stop-color="#7b52ff"/><stop offset="1" stop-color="#00d2ff"/></linearGradient></defs></svg>
+                            </div>
+                            <div>
+                                <div class="promo-card-name">SentinelFlow</div>
+                                <div class="promo-card-publisher">by TomCodeX Inc.</div>
+                            </div>
+                        </div>
+                        <div class="promo-card-divider"></div>
+                        <div class="promo-card-stats">
+                            <div class="promo-stat-item">
+                                <span class="promo-stat-val">v1.0</span>
+                                <span class="promo-stat-lbl">Version</span>
+                            </div>
+                            <div class="promo-stat-item">
+                                <span class="promo-stat-val">2GP</span>
+                                <span class="promo-stat-lbl">Package</span>
+                            </div>
+                            <div class="promo-stat-item">
+                                <span class="promo-stat-val">SSO</span>
+                                <span class="promo-stat-lbl">Enabled</span>
+                            </div>
+                        </div>
+                        <div class="promo-card-divider"></div>
+                        <div class="promo-card-features">
+                            <div class="promo-feature-row">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                Multi-Tenant Isolation
+                            </div>
+                            <div class="promo-feature-row">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                AI-Powered Classification
+                            </div>
+                            <div class="promo-feature-row">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                Auto-Heal Engine
+                            </div>
+                            <div class="promo-feature-row">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                Experience Cloud Portal
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -290,32 +372,44 @@
             </div>
             <div class="arch-grid">
                 <div class="arch-card">
-                    <div class="arch-icon">🔒</div>
+                    <div class="arch-icon">
+                        <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /><circle cx="12" cy="14" r="1.5" /><path d="M9 18c0-1.5 1.5-2.5 3-2.5s3 1 3 2.5" /></svg>
+                    </div>
                     <h4>Multi-Tenant Isolation</h4>
                     <p>Each tenant's data is fully isolated via Tenant__c lookups and WITH USER_MODE enforcement.</p>
                 </div>
                 <div class="arch-card">
-                    <div class="arch-icon">⚡</div>
+                    <div class="arch-icon">
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2" /><polyline points="2 12 12 17 22 12" /><polyline points="2 17 12 22 22 17" /></svg>
+                    </div>
                     <h4>Async Processing</h4>
                     <p>Bulkified Queueables handle 200+ incidents per transaction without hitting governor limits.</p>
                 </div>
                 <div class="arch-card">
-                    <div class="arch-icon">🛡️</div>
+                    <div class="arch-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+                    </div>
                     <h4>API Rate Limiting</h4>
                     <p>Platform Cache-backed fixed-window rate limiter protects endpoints with HTTP 429 responses.</p>
                 </div>
                 <div class="arch-card">
-                    <div class="arch-icon">🔄</div>
+                    <div class="arch-icon">
+                        <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" /><path d="M16 21v-5h5" /></svg>
+                    </div>
                     <h4>Intelligent Retries</h4>
                     <p>Transient vs. permanent failure classification prevents wasted retries on unrecoverable errors.</p>
                 </div>
                 <div class="arch-card">
-                    <div class="arch-icon">🎛️</div>
+                    <div class="arch-icon">
+                        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6" /><circle cx="8" cy="6" r="2" /><line x1="3" y1="12" x2="21" y2="12" /><circle cx="16" cy="12" r="2" /><line x1="3" y1="18" x2="21" y2="18" /><circle cx="10" cy="18" r="2" /></svg>
+                    </div>
                     <h4>Feature Flags</h4>
                     <p>Custom Metadata-driven toggles let admins enable/disable AI, Auto-Heal, or Alerting per tenant.</p>
                 </div>
                 <div class="arch-card">
-                    <div class="arch-icon">📊</div>
+                    <div class="arch-icon">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="8" y1="13" x2="16" y2="13" /><line x1="8" y1="17" x2="16" y2="17" /><line x1="8" y1="9" x2="10" y2="9" /></svg>
+                    </div>
                     <h4>Dead-Letter Logging</h4>
                     <p>Every failed operation is captured in System_Log__c with full stack traces for post-mortem analysis.</p>
                 </div>
@@ -406,7 +500,7 @@
             <div class="footer-grid">
                 <div class="footer-brand">
                     <div class="footer-logo">
-                        <img src="assets/logo.png" alt="SentinelFlow" class="nav-logo">
+                        <img src="assets/logo.svg" alt="SentinelFlow" class="nav-logo">
                         <span class="nav-brand-text">SentinelFlow</span>
                     </div>
                     <p class="footer-tagline">AI-powered incident intelligence for the modern enterprise.</p>

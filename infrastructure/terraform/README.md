@@ -1,6 +1,6 @@
 # Terraform Scaffold
 
-This directory contains the Phase 1 Terraform scaffold for SEOMP infrastructure planning.
+This directory contains the Phase 1 Terraform scaffold for SentinelFlow infrastructure planning.
 
 ## Intended Resources
 

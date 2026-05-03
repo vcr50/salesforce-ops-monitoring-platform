@@ -1,4 +1,4 @@
-# SEOMP Experience Cloud Build Checklist
+# SentinelFlow Experience Cloud Build Checklist
 
 This checklist converts the Experience Cloud plan into concrete implementation steps for this repo and org.
 
@@ -7,16 +7,16 @@ This checklist converts the Experience Cloud plan into concrete implementation s
 - Enable Experience Cloud in the target org.
 - Confirm a site template is available.
 - Confirm portal users or test users are available.
-- Confirm the `SEOMP_Dashboards` folder and `SEOMP_Analytics` reports are visible to the intended audience.
+- Confirm the `SentinelFlow_Dashboards` folder and `SentinelFlow_Analytics` reports are visible to the intended audience.
 
 ## 2. Metadata Already Reusable
 
 The following pieces are already available and should be reused:
 
-- SEOMP custom objects
+- SentinelFlow custom objects
 - incident automation and triggers
-- report folder `SEOMP_Analytics`
-- dashboard folder `SEOMP_Dashboards`
+- report folder `SentinelFlow_Analytics`
+- dashboard folder `SentinelFlow_Dashboards`
 - sample data seed:
   - `scripts/salesforce/seed-dashboard-sample-data.apex`
 
@@ -25,12 +25,12 @@ The following pieces are already available and should be reused:
 This repo now includes:
 
 - portal permission sets:
-  - `SEOMP_Portal_Viewer`
-  - `SEOMP_Portal_Support`
+  - `SentinelFlow_Portal_Viewer`
+  - `SentinelFlow_Portal_Support`
 - starter LWCs:
-  - `seompPortalSummary`
-  - `seompPortalIncidentTable`
-  - `seompPortalIntegrationTable`
+  - `sentinelFlowPortalSummary`
+  - `sentinelFlowPortalIncidentTable`
+  - `sentinelFlowPortalIntegrationTable`
 
 ## 4. Site Structure To Build
 
@@ -49,29 +49,29 @@ Create these pages in Experience Builder:
 ### Home
 
 - `tomcodexServicePage`
-- `seompPortalSummary`
+- `sentinelFlowPortalSummary`
 - rich text intro / status guidance
 - optional report chart or report table
 
 ### Incidents
 
-- `seompPortalIncidentTable`
+- `sentinelFlowPortalIncidentTable`
 - filters or standard list/report components
 
 ### Integrations
 
-- `seompPortalIntegrationTable`
+- `sentinelFlowPortalIntegrationTable`
 - failed log and warning log views
 
 ### Incident Detail
 
-- `seompPortalIncidentDetail`
+- `sentinelFlowPortalIncidentDetail`
 - route/page path:
   - `incident-detail`
 
 ### Integration Detail
 
-- `seompPortalIntegrationDetail`
+- `sentinelFlowPortalIntegrationDetail`
 - route/page path:
   - `integration-detail`
 

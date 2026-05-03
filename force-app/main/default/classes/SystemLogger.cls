@@ -1,6 +1,6 @@
 /**
  * SystemLogger
- * Centralized error logging utility for the SEOMP platform.
+ * Centralized error logging utility for the SentinelFlow platform.
  * Supports failure classification (Transient/Permanent) and retry tracking.
  *
  * @author Tomcodex
@@ -28,5 +28,18 @@ public without sharing class SystemLogger {
 
     public static void logError(Exception ex, String className, String methodName) {
         logError(ex, className, methodName, ErrorType.PERMANENT_ERROR, 0, null);
+    }
+
+    public static void logMessage(String className, String methodName, String level, String message) {
+        try {
+            System_Log__c log = new System_Log__c();
+            log.Class_Name__c = className;
+            log.Method_Name__c = methodName;
+            log.Exception_Message__c = '[' + level + '] ' + message;
+            log.Error_Type__c = 'Permanent';
+            insert log;
+        } catch (Exception e) {
+            System.debug(LoggingLevel.ERROR, 'SystemLogger failed to write log: ' + e.getMessage());
+        }
     }
 }

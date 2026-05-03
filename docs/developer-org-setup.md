@@ -1,4 +1,4 @@
-# SEOMP Developer Org Setup
+# SentinelFlow Developer Org Setup
 
 This project is designed to work with a single Salesforce Developer Edition org.
 
@@ -19,20 +19,44 @@ This project is designed to work with a single Salesforce Developer Edition org.
 6. Add the scopes needed for API access and refresh tokens.
 7. Copy the client ID and client secret into `.env`.
 
+## Experience Cloud Login
+
+For a single Developer Edition org, use the custom Experience Cloud username/password login flow. Do not configure the portal's Salesforce Auth Provider to point back to the same org as an SSO identity provider; Salesforce rejects that loop with `SAME_ORG_SSO: Cannot sign on into same org`.
+
+The login page intentionally hides SSO buttons by default. Only enable an SSO button after configuring a real external identity provider, such as SAML, OpenID Connect, Google with real OAuth credentials, or a different Salesforce org.
+
+For the developer org, use:
+
+- Login URL: `https://astrosoft2-dev-ed.develop.my.site.com/SentinelFlow/login`
+- Username: `sentinelflow.portal.00ddl0000053505uaa@example.com`
+- Password: `SentinelFlow#2026May!`
+
+If the password is stuck, reset the known developer password from the org:
+
+```bash
+sf apex run --file scripts/apex/resetPassword.apex --target-org sentinelFlow-dev-edition
+```
+
+If the portal user does not exist yet, create it with:
+
+```bash
+sf apex run --file scripts/apex/createPortalLoginUser.apex --target-org sentinelFlow-dev-edition
+```
+
 ## Local Environment
 
 Use the values in `.env.example` as the baseline:
 
 - `APP_ENV=developer-org`
 - `SALESFORCE_INSTANCE_URL=https://login.salesforce.com`
-- `SALESFORCE_ORG_ALIAS=seomp-dev-edition`
+- `SALESFORCE_ORG_ALIAS=sentinelFlow-dev-edition`
 
 ## Suggested Local Workflow
 
 1. Start with one Developer Org as the system of record.
 2. Use custom objects like `Incident__c` and `Integration_Log__c` in that org.
 3. Store Salesforce metadata in `force-app/main/default/` using Salesforce DX source format.
-4. Use `manifest/package.xml` when retrieving or deploying the SEOMP metadata set.
+4. Use `manifest/package.xml` when retrieving or deploying the SentinelFlow metadata set.
 5. Run the Node.js app locally for middleware and API testing.
 6. Add local PostgreSQL and Redis only when you begin Phase 2 event persistence work.
 

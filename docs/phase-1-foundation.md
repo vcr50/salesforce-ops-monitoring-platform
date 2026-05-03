@@ -1,10 +1,10 @@
-# SEOMP Phase 1 Foundation
+# SentinelFlow Phase 1 Foundation
 
-Phase 1 establishes the baseline needed to implement the rest of the SEOMP roadmap.
+Phase 1 establishes the baseline needed to implement the rest of the SentinelFlow roadmap.
 
 ## Completed in This Repository
 
-- SEOMP platform configuration and environment template
+- SentinelFlow platform configuration and environment template
 - Readiness and context API endpoints
 - Data model baseline documentation
 - Terraform scaffold for infrastructure planning

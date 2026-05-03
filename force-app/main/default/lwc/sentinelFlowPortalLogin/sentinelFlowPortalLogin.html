@@ -56,13 +56,16 @@
                     </template>
 
                     <div class="form-group">
-                        <label for="loginEmail">Email Address</label>
+                        <label for="loginEmail">Username or Email</label>
                         <input
                             id="loginEmail"
-                            type="email"
-                            placeholder="you@company.com"
+                            type="text"
+                            autocomplete="username"
+                            spellcheck="false"
+                            placeholder="sentinelflow.portal@example.com"
                             value={username}
                             onchange={handleUsernameChange}
+                            oninput={handleUsernameChange}
                             onkeydown={handleKeyDown}
                         />
                     </div>
@@ -71,9 +74,11 @@
                         <input
                             id="loginPassword"
                             type="password"
-                            placeholder="••••••••"
+                            autocomplete="current-password"
+                            placeholder="Password"
                             value={password}
                             onchange={handlePasswordChange}
+                            oninput={handlePasswordChange}
                             onkeydown={handleKeyDown}
                         />
                     </div>

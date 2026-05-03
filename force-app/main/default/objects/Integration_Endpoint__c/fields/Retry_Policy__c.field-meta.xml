@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Retry_Policy__c</fullName>
+    <label>Retry Policy</label>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>Immediate</fullName><default>true</default><label>Immediate</label></value>
+            <value><fullName>Exponential Backoff</fullName><default>false</default><label>Exponential Backoff</label></value>
+            <value><fullName>No Retry</fullName><default>false</default><label>No Retry</label></value>
+        </valueSetDefinition>
+    </valueSet>
+    <required>false</required>
+</CustomField>

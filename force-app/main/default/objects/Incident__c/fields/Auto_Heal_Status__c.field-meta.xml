@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Auto_Heal_Status__c</fullName>
+    <label>Auto-Heal Status</label>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>Not Attempted</fullName><default>true</default><label>Not Attempted</label></value>
+            <value><fullName>In Progress</fullName><default>false</default><label>In Progress</label></value>
+            <value><fullName>Succeeded</fullName><default>false</default><label>Succeeded</label></value>
+            <value><fullName>Failed</fullName><default>false</default><label>Failed</label></value>
+            <value><fullName>Escalated</fullName><default>false</default><label>Escalated</label></value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

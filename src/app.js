@@ -15,7 +15,7 @@ const systemRoutes = require('./routes/system');
 
 const errorHandler = require('./middleware/errorHandler');
 const { logger } = require('./middleware/logger');
-const { seompConfig, getFoundationStatus } = require('./config/seomp');
+const { sentinelFlowConfig, getFoundationStatus } = require('./config/sentinelFlow');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -75,8 +75,8 @@ app.use('/dashboard', express.static(path.join(__dirname, 'dashboard')));
 app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
-    platform: seompConfig.platform.shortName,
-    phase: seompConfig.platform.phase,
+    platform: sentinelFlowConfig.platform.shortName,
+    phase: sentinelFlowConfig.platform.phase,
     readiness: getFoundationStatus(),
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
@@ -97,10 +97,10 @@ app.use(errorHandler);
 
 const startServer = () => {
   const server = app.listen(PORT, () => {
-    logger.info(`${seompConfig.platform.shortName} server running on port ${PORT}`);
+    logger.info(`${sentinelFlowConfig.platform.shortName} server running on port ${PORT}`);
     logger.info({
       environment: process.env.NODE_ENV || 'development',
-      phase: seompConfig.platform.phase
+      phase: sentinelFlowConfig.platform.phase
     }, 'Application context');
   });
 

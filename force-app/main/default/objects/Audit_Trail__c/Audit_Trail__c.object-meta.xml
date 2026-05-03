@@ -2,7 +2,7 @@
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <compactLayoutAssignment>Audit_Trail_Compact</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
-    <description>Preserves auditable administrator and automation changes across SEOMP workflows.</description>
+    <description>Preserves auditable administrator and automation changes across SentinelFlow workflows.</description>
     <enableActivities>true</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableReports>true</enableReports>

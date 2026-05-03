@@ -1,0 +1,310 @@
+<template>
+  <div class="settings-page">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-left">
+        <h1 class="page-title">Platform Settings</h1>
+        <p class="page-sub">Configure integrations, retry rules, and alert preferences</p>
+      </div>
+    </div>
+
+    <!-- Tab Bar -->
+    <div class="tab-bar">
+      <button
+        class={tab1Class}
+        data-tab="integrations"
+        onclick={switchTab}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+        </svg>
+        Integration Setup
+      </button>
+      <button
+        class={tab2Class}
+        data-tab="retry"
+        onclick={switchTab}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/>
+        </svg>
+        Retry Rules
+      </button>
+      <button
+        class={tab3Class}
+        data-tab="alerts"
+        onclick={switchTab}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        Alert Configuration
+      </button>
+    </div>
+
+    <!-- ═══ TAB 1: Integration Setup ═══ -->
+    <template if:true={isTab1}>
+      <div class="tab-content">
+
+        <!-- Add New Endpoint Form -->
+        <div class="settings-card">
+          <div class="card-header">
+            <h3 class="card-title">Register Integration Endpoint</h3>
+            <p class="card-desc">Add a new integration for SentinelFlow to monitor</p>
+          </div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label>API / Integration Name *</label>
+              <input type="text" placeholder="e.g. Stripe Payments" value={newEndpoint.name}
+                     data-field="name" onchange={handleEndpointField} />
+            </div>
+            <div class="form-field">
+              <label>Endpoint URL</label>
+              <input type="url" placeholder="https://api.stripe.com/v1" value={newEndpoint.endpointUrl}
+                     data-field="endpointUrl" onchange={handleEndpointField} />
+            </div>
+            <div class="form-field">
+              <label>Auth Type</label>
+              <select value={newEndpoint.authType} data-field="authType" onchange={handleEndpointField}>
+                <option value="API Key">API Key</option>
+                <option value="OAuth 2.0">OAuth 2.0</option>
+                <option value="Basic Auth">Basic Auth</option>
+                <option value="Named Credential">Named Credential</option>
+                <option value="No Auth">No Auth</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Retry Policy</label>
+              <select value={newEndpoint.retryPolicy} data-field="retryPolicy" onchange={handleEndpointField}>
+                <option value="Immediate">Immediate</option>
+                <option value="Exponential Backoff">Exponential Backoff</option>
+                <option value="No Retry">No Retry</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Max Retries</label>
+              <input type="number" min="0" max="10" value={newEndpoint.maxRetries}
+                     data-field="maxRetries" onchange={handleEndpointField} />
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-primary" onclick={addEndpoint} disabled={isSaving}>
+              <template if:false={isSaving}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Endpoint
+              </template>
+              <template if:true={isSaving}>Saving...</template>
+            </button>
+          </div>
+          <template if:true={addError}>
+            <p class="form-error">{addError}</p>
+          </template>
+          <template if:true={addSuccess}>
+            <p class="form-success">✓ Endpoint added successfully</p>
+          </template>
+        </div>
+
+        <!-- Existing Endpoints Table -->
+        <div class="settings-card">
+          <div class="card-header">
+            <h3 class="card-title">Monitored Endpoints</h3>
+            <p class="card-desc">{endpointCount} endpoints registered</p>
+          </div>
+          <template if:true={loadingEndpoints}>
+            <div class="loading-row">
+              <div class="spinner"></div>
+              <span>Loading endpoints...</span>
+            </div>
+          </template>
+          <template if:false={loadingEndpoints}>
+            <template if:true={hasEndpoints}>
+              <div class="endpoint-list">
+                <template for:each={endpoints} for:item="ep">
+                  <div key={ep.id} class="endpoint-row">
+                    <div class="endpoint-info">
+                      <span class="endpoint-name">{ep.name}</span>
+                      <span class="endpoint-url">{ep.endpointUrl}</span>
+                    </div>
+                    <div class="endpoint-meta">
+                      <span class="badge badge-auth">{ep.authType}</span>
+                      <span class="badge badge-retry">{ep.retryPolicy}</span>
+                      <span class={ep.circuitBadgeClass}>{ep.circuitStatus}</span>
+                    </div>
+                    <div class="endpoint-actions">
+                      <template if:true={ep.circuitOpen}>
+                        <button class="btn-reset" data-id={ep.id} onclick={resetCircuit}>↺ Reset Circuit</button>
+                      </template>
+                      <button class="btn-danger-sm" data-id={ep.id} onclick={deleteEndpoint}>✕</button>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </template>
+            <template if:false={hasEndpoints}>
+              <div class="empty-state">
+                <p>No endpoints registered yet. Add your first integration above.</p>
+              </div>
+            </template>
+          </template>
+        </div>
+
+      </div>
+    </template>
+
+    <!-- ═══ TAB 2: Retry Rules ═══ -->
+    <template if:true={isTab2}>
+      <div class="tab-content">
+        <div class="settings-card">
+          <div class="card-header">
+            <h3 class="card-title">Global Retry Configuration</h3>
+            <p class="card-desc">These defaults apply to all endpoints unless overridden individually</p>
+          </div>
+          <div class="settings-list">
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-label">Autonomous Self-Healing</span>
+                <span class="setting-desc">Allow SentinelFlow to automatically resolve known issues without manual approval</span>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" checked={autonomousHealing} onchange={toggleAutonomousHealing} />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-label">Minimum AI Confidence for Auto-Heal</span>
+                <span class="setting-desc">Only auto-heal when AI confidence is above this threshold ({confidenceThreshold}%)</span>
+              </div>
+              <input type="range" min="50" max="100" step="5" value={confidenceThreshold}
+                     onchange={handleConfidenceChange} class="range-input" />
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-label">Circuit Breaker Threshold</span>
+                <span class="setting-desc">Trip circuit breaker after this many consecutive failures</span>
+              </div>
+              <input type="number" min="1" max="20" value={circuitBreakerThreshold}
+                     onchange={handleCircuitThreshold} class="number-input" />
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-label">Silent Failure Detection Window</span>
+                <span class="setting-desc">Alert if an integration log hasn't updated in this many minutes</span>
+              </div>
+              <input type="number" min="5" max="1440" value={silentFailureMinutes}
+                     onchange={handleSilentFailure} class="number-input" />
+              <span class="input-suffix">min</span>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-label">Auto-Escalate Critical Incidents</span>
+                <span class="setting-desc">Immediately create a Case and page on-call when Revenue at Risk &gt; $50k</span>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" checked={autoEscalate} onchange={toggleAutoEscalate} />
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-primary" onclick={saveRetryRules} disabled={isSavingRules}>
+              <template if:false={isSavingRules}>Save Retry Rules</template>
+              <template if:true={isSavingRules}>Saving...</template>
+            </button>
+            <template if:true={rulesSaved}>
+              <span class="save-confirm">✓ Saved</span>
+            </template>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- ═══ TAB 3: Alert Configuration ═══ -->
+    <template if:true={isTab3}>
+      <div class="tab-content">
+        <div class="settings-card">
+          <div class="card-header">
+            <h3 class="card-title">Notification Channels</h3>
+            <p class="card-desc">Configure where SentinelFlow sends incident alerts</p>
+          </div>
+          <div class="settings-list">
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-label">Email Alerts</span>
+                <span class="setting-desc">Send email notifications to the tenant admin when Critical incidents are created</span>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" checked={emailAlertsEnabled} onchange={toggleEmail} />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="setting-row slack-row">
+              <div class="setting-info">
+                <span class="setting-label">Slack Webhook</span>
+                <span class="setting-desc">POST real-time incident alerts to your Slack ops channel</span>
+              </div>
+              <div class="webhook-input-group">
+                <input type="url" placeholder="https://hooks.slack.com/services/..." value={slackWebhookUrl}
+                       onchange={handleSlackUrl} class="webhook-input" />
+                <button class="btn-test" onclick={testSlack}>Test</button>
+              </div>
+            </div>
+            <template if:true={slackTestResult}>
+              <p class={slackTestClass}>{slackTestResult}</p>
+            </template>
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-label">Alert Severity Filter</span>
+                <span class="setting-desc">Only send alerts for incidents at or above this severity level</span>
+              </div>
+              <select value={alertSeverity} onchange={handleAlertSeverity} class="select-input">
+                <option value="All">All Severities</option>
+                <option value="Medium">Medium and above</option>
+                <option value="High">High and above</option>
+                <option value="Critical">Critical only</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-label">Healing Success Notifications</span>
+                <span class="setting-desc">Notify when an incident is auto-resolved by SentinelFlow</span>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" checked={notifyOnHeal} onchange={toggleNotifyOnHeal} />
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-primary" onclick={saveAlerts} disabled={isSavingAlerts}>
+              <template if:false={isSavingAlerts}>Save Alert Config</template>
+              <template if:true={isSavingAlerts}>Saving...</template>
+            </button>
+            <template if:true={alertsSaved}>
+              <span class="save-confirm">✓ Saved</span>
+            </template>
+          </div>
+        </div>
+
+        <!-- Alert Preview -->
+        <div class="settings-card preview-card">
+          <div class="card-header">
+            <h3 class="card-title">Alert Preview</h3>
+            <p class="card-desc">Sample of what a Slack alert looks like</p>
+          </div>
+          <div class="slack-preview">
+            <div class="slack-bar"></div>
+            <div class="slack-body">
+              <div class="slack-title">🚨 SentinelFlow Alert — Critical Incident</div>
+              <div class="slack-field"><span>Incident:</span> INC-0042 — Stripe Payment Sync Failure</div>
+              <div class="slack-field"><span>Severity:</span> Critical</div>
+              <div class="slack-field"><span>Revenue at Risk:</span> $84,000</div>
+              <div class="slack-field"><span>Users Affected:</span> 1,200</div>
+              <div class="slack-field"><span>Root Cause:</span> OAuth token expired — auto-refresh initiated</div>
+              <div class="slack-field"><span>Action:</span> Auto-heal in progress (Confidence: 91%)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+  </div>
+</template>

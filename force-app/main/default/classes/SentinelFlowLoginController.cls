@@ -4,6 +4,9 @@
  *              for the Experience Cloud site.
  */
 public without sharing class SentinelFlowLoginController {
+    @TestVisible
+    private static final String SENTINEL_FLOW_LIGHTNING_APP_URL =
+        'https://astrosoft2-dev-ed.develop.lightning.force.com/lightning/n/Sentinel_Flow';
 
     /**
      * @description Authenticates a user with username + password and returns
@@ -16,14 +19,71 @@ public without sharing class SentinelFlowLoginController {
     @AuraEnabled
     public static String loginUser(String username, String password, String startUrl) {
         try {
-            ApexPages.PageReference pageRef = Site.login(username, password, startUrl);
+            ApexPages.PageReference pageRef = Site.login(
+                username,
+                password,
+                String.isBlank(startUrl) ? null : startUrl
+            );
             if (pageRef != null) {
-                return pageRef.getUrl();
+                return SENTINEL_FLOW_LIGHTNING_APP_URL;
             }
             return null;
         } catch (Exception e) {
             throw new AuraHandledException('Login failed: ' + e.getMessage());
         }
+    }
+
+    @TestVisible
+    private static String normalizeLoginRedirect(String redirectUrl) {
+        if (String.isBlank(redirectUrl)) {
+            return getNetworkHomeUrl();
+        }
+
+        String homeUrl = getNetworkHomeUrl();
+        String siteRootPath = getSiteRootPath(homeUrl);
+
+        if (redirectUrl == '/s' || redirectUrl.startsWith('/s/')) {
+            return siteRootPath + redirectUrl.substring(1);
+        }
+        if (redirectUrl == '/') {
+            return siteRootPath;
+        }
+
+        return redirectUrl;
+    }
+
+    @TestVisible
+    private static String getNetworkHomeUrl() {
+        String networkId = Network.getNetworkId();
+        if (String.isNotBlank(networkId)) {
+            return buildHomeUrl(Network.getLoginUrl(networkId));
+        }
+
+        return '/SentinelFlow/';
+    }
+
+    @TestVisible
+    private static String buildHomeUrl(String loginUrl) {
+        if (String.isNotBlank(loginUrl) && loginUrl.endsWith('/login')) {
+            return loginUrl.removeEnd('/login') + '/';
+        }
+
+        return '/SentinelFlow/';
+    }
+
+    @TestVisible
+    private static String getSiteRootPath(String homeUrl) {
+        if (String.isBlank(homeUrl)) {
+            return '/SentinelFlow/';
+        }
+
+        if (homeUrl.startsWith('/')) {
+            return homeUrl.endsWith('/') ? homeUrl : homeUrl + '/';
+        }
+
+        Url parsedUrl = new Url(homeUrl);
+        String path = parsedUrl.getPath();
+        return String.isBlank(path) ? '/' : (path.endsWith('/') ? path : path + '/');
     }
 
     /**
@@ -54,19 +114,14 @@ public without sharing class SentinelFlowLoginController {
     }
 
     /**
-     * @description Fetches SSO login URLs for Salesforce and Google Auth Providers.
+     * @description Fetches enabled SSO login URLs for external identity providers.
+     *              For a single Developer Edition org this intentionally returns
+     *              no links, because a Salesforce auth provider pointing back to
+     *              the same org fails with SAME_ORG_SSO.
      * @return Map of AuthProvider DeveloperName to its SSO URL.
      */
-    @AuraEnabled
+    @AuraEnabled(cacheable=true)
     public static Map<String, String> getSsoUrls() {
-        Map<String, String> urls = new Map<String, String>();
-        String networkId = Network.getNetworkId();
-        if (networkId == null) return urls;
-
-        for (AuthProvider ap : [SELECT Id, DeveloperName, FriendlyName FROM AuthProvider WHERE DeveloperName IN ('Salesforce', 'Google')]) {
-            String ssoUrl = Auth.AuthConfiguration.getAuthProviderSsoUrl(networkId, '/s/', ap.DeveloperName);
-            urls.put(ap.DeveloperName, ssoUrl);
-        }
-        return urls;
+        return new Map<String, String>();
     }
 }

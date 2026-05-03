@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Slack_Webhook_Path__c</fullName>
+    <description>The path portion of the Slack webhook URL (e.g., /services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX).</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter the path portion of your Slack webhook URL. Do not include https://hooks.slack.com.</inlineHelpText>
+    <label>Slack Webhook Path</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

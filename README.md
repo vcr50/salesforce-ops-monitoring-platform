@@ -55,16 +55,16 @@ Follow this flow for a live product demonstration:
 
 ```
 Salesforce Experience Cloud
-├── seompPortalApp          (Master App Shell — Topbar + Navigation)
-├── seompPortalCommandCenter (Home — KPIs + Live Incidents + AI Copilot)
-├── seompPortalIncidentsPage (Full Incident Module — Split Pane Layout)
+├── sentinelFlowPortalApp          (Master App Shell — Topbar + Navigation)
+├── sentinelFlowPortalCommandCenter (Home — KPIs + Live Incidents + AI Copilot)
+├── sentinelFlowPortalIncidentsPage (Full Incident Module — Split Pane Layout)
 │   ├── Alert Banner         (Critical incident notifications)
 │   ├── Incident Table       (Custom HTML table, no lightning-datatable)
 │   ├── Detail Panel         (Business impact, Lifecycle tracker, AI block)
 │   └── Activity Timeline    (Chronological event log per incident)
-├── seompPortalIntegrationsPage (Integration health + Live log terminal)
-├── seompPortalLogin         (Custom dark-mode login page)
-└── Static Resources         (seompLogo.png)
+├── sentinelFlowPortalIntegrationsPage (Integration health + Live log terminal)
+├── sentinelFlowPortalLogin         (Custom dark-mode login page)
+└── Static Resources         (sentinelFlowLogo.png)
 
 Node.js Backend (Local Preview)
 ├── src/app.js              (Express server — serves static dashboard)
@@ -145,7 +145,7 @@ New → Investigating → Healing → Resolved
 ```bash
 # 1. Clone the repo
 git clone <repo-url>
-cd SEOMP
+cd SentinelFlow
 
 # 2. Install dependencies
 npm install
@@ -181,8 +181,8 @@ sf org open -o vjdev@asap.com
 
 **Experience Builder Configuration:**
 1. Navigate to your Experience Cloud site
-2. Drag `seompPortalApp` onto the main page
-3. For Login page — drag `seompPortalLogin` and remove the default Salesforce login component
+2. Drag `sentinelFlowPortalApp` onto the main page
+3. For Login page — drag `sentinelFlowPortalLogin` and remove the default Salesforce login component
 4. Publish the site
 
 ---
@@ -203,21 +203,21 @@ sf org open -o vjdev@asap.com
 ## 📁 Project Structure
 
 ```
-SEOMP/
+SentinelFlow/
 ├── force-app/main/default/
 │   ├── lwc/
-│   │   ├── seompPortalApp/             ← Master app shell
-│   │   ├── seompPortalCommandCenter/   ← Home dashboard
-│   │   ├── seompPortalIncidentsPage/   ← Core incident module ⭐
-│   │   ├── seompPortalIncidentTable/   ← Incident table widget
-│   │   ├── seompPortalIntegrationsPage/← Integration monitor
-│   │   ├── seompPortalLogin/           ← Custom login page
-│   │   ├── seompPortalSummary/         ← KPI summary cards
-│   │   └── seompPortalCopilot/         ← AI Copilot chat
+│   │   ├── sentinelFlowPortalApp/             ← Master app shell
+│   │   ├── sentinelFlowPortalCommandCenter/   ← Home dashboard
+│   │   ├── sentinelFlowPortalIncidentsPage/   ← Core incident module ⭐
+│   │   ├── sentinelFlowPortalIncidentTable/   ← Incident table widget
+│   │   ├── sentinelFlowPortalIntegrationsPage/← Integration monitor
+│   │   ├── sentinelFlowPortalLogin/           ← Custom login page
+│   │   ├── sentinelFlowPortalSummary/         ← KPI summary cards
+│   │   └── sentinelFlowPortalCopilot/         ← AI Copilot chat
 │   ├── classes/
-│   │   └── SEOMPPortalController.cls   ← Apex data layer
+│   │   └── SentinelFlowPortalController.cls   ← Apex data layer
 │   └── staticresources/
-│       └── seompLogo.png               ← Brand asset
+│       └── sentinelFlowLogo.png               ← Brand asset
 ├── src/
 │   ├── app.js                          ← Express server
 │   └── dashboard/                      ← Standalone preview SPA

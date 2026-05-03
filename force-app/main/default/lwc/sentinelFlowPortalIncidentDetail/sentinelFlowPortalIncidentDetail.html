@@ -1,0 +1,63 @@
+<template>
+    <lightning-card icon-name="utility:case">
+        <div class="detail-shell">
+            <div class="detail-header">
+                <div>
+                    <p class="detail-eyebrow">Incident drill-down</p>
+                    <h2 class="detail-title">Incident Detail</h2>
+                    <p class="detail-copy">
+                        Review severity, ownership context, and linked integration information.
+                    </p>
+                </div>
+            </div>
+            <template if:true={error}>
+                <div class="detail-state error-state">{error}</div>
+            </template>
+            <template if:false={error}>
+                <template if:true={hasDetail}>
+                    <div class="detail-banner">
+                        <div>
+                            <span class="detail-label">Incident</span>
+                            <span class="detail-value hero">{detail.name}</span>
+                        </div>
+                        <div class="pill-row">
+                            <span class="status-pill severity">{detail.severity}</span>
+                            <span class="status-pill status">{detail.status}</span>
+                        </div>
+                    </div>
+                    <div class="detail-grid">
+                        <div class="detail-card">
+                            <span class="detail-label">Environment</span>
+                            <span class="detail-value">{detail.environmentName}</span>
+                        </div>
+                        <div class="detail-card">
+                            <span class="detail-label">Linked integration</span>
+                            <span class="detail-value">{detail.integrationLogName}</span>
+                        </div>
+                        <div class="detail-card">
+                            <span class="detail-label">SLA policy</span>
+                            <span class="detail-value">{detail.slaPolicyName}</span>
+                        </div>
+                        <div class="detail-card">
+                            <span class="detail-label">Resolved time</span>
+                            <span class="detail-value">{resolvedTimeLabel}</span>
+                        </div>
+                    </div>
+                    <div class="detail-panel">
+                        <span class="detail-label">Description</span>
+                        <p class="detail-description">{detail.description}</p>
+                    </div>
+                    <!-- ── Incident Timeline ── -->
+                    <div class="timeline-wrapper">
+                        <c-sentinel-flow-portal-timeline record-id={detail.id}></c-sentinel-flow-portal-timeline>
+                    </div>
+                </template>
+                <template if:false={hasDetail}>
+                    <div class="detail-state empty-state">
+                        Select an incident from the portal incidents table to view its detail here.
+                    </div>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>

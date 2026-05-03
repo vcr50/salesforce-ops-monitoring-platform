@@ -1,6 +1,6 @@
-# SEOMP Data Model Baseline
+# SentinelFlow Data Model Baseline
 
-This baseline captures the custom Salesforce objects planned for SEOMP.
+This baseline captures the custom Salesforce objects planned for SentinelFlow.
 
 ## Core Objects
 

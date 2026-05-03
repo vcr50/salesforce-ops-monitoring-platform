@@ -91,7 +91,6 @@ public with sharing class AIAnalysisService {
                    Integration_Log__r.Response_Time__c
             FROM Incident__c
             WHERE Id = :incidentId
-            WITH USER_MODE
             LIMIT 1
         ];
 
@@ -109,7 +108,7 @@ public with sharing class AIAnalysisService {
         inc.AI_Impact_Level__c    = result.impactLevel;
         inc.AI_Confidence__c      = result.confidence;
         
-        update as user inc;
+        update inc;
 
         AuditTrailService.log(incidentId, 'Incident__c', 'AI Analysis', null, 'Matched metadata rule -> Action: ' + result.recommendedAction);
 

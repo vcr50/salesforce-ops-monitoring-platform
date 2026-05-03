@@ -13,9 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── Mobile Nav Toggle ───────────────────────────────────
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
+    const navActions = document.querySelector('.nav-actions');
     if (navToggle) {
         navToggle.addEventListener('click', () => {
             navLinks.classList.toggle('nav-open');
+            navToggle.classList.toggle('active');
+            if (navActions) navActions.classList.toggle('nav-open');
         });
     }
 
@@ -28,7 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const target = document.querySelector(anchor.getAttribute('href'));
             if (target) {
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Close mobile menu
                 if (navLinks) navLinks.classList.remove('nav-open');
+                if (navActions) navActions.classList.remove('nav-open');
+                if (navToggle) navToggle.classList.remove('active');
             }
         });
     });

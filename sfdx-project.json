@@ -1,12 +1,21 @@
 {
   "packageDirectories": [
     {
+      "versionName": "v1.0",
+      "versionNumber": "1.0.0.NEXT",
       "path": "force-app",
-      "default": true
+      "default": true,
+      "package": "SentinelFlow",
+      "versionDescription": "SentinelFlow v1.0 — AI-Powered Incident Intelligence Platform"
     }
   ],
-  "name": "SEOMP",
+  "name": "SentinelFlow",
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "62.0"
+  "sourceApiVersion": "62.0",
+  "packageAliases": {
+    "SentinelFlow": "0HodL0000003WMjSAM",
+    "SentinelFlow@1.0.0-1": "04tdL000000YR5pQAG",
+    "SentinelFlow@1.0.0-2": "04tdL000000YSWXQA4"
+  }
 }

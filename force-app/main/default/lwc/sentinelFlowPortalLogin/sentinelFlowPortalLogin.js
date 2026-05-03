@@ -34,21 +34,17 @@ export default class SentinelFlowPortalLogin extends LightningElement {
         }
     }
 
-    /* ── Getters ── */
-
     get loginBtnLabel() {
-        return this.isLoading ? 'Authenticating…' : 'Log In';
+        return this.isLoading ? 'Authenticating...' : 'Log In';
     }
 
     get resetBtnLabel() {
-        return this.isLoading ? 'Sending…' : 'Send Reset Link';
+        return this.isLoading ? 'Sending...' : 'Send Reset Link';
     }
 
     get isLoginDisabled() {
         return this.isLoading;
     }
-
-    /* ── Input handlers ── */
 
     handleUsernameChange(event) {
         this.username = event.target.value;
@@ -70,28 +66,26 @@ export default class SentinelFlowPortalLogin extends LightningElement {
         this.rememberMe = event.target.checked;
     }
 
-    /* ── Login with username / password ── */
-
     async handleLogin() {
         this.errorMessage = '';
+        const username = this.username.trim();
 
-        if (!this.username || !this.password) {
-            this.errorMessage = 'Please enter both email and password.';
+        if (!username || !this.password) {
+            this.errorMessage = 'Please enter both username/email and password.';
             return;
         }
 
         this.isLoading = true;
 
         try {
-            const startUrl = '/s/';
             const redirectUrl = await loginUser({
-                username: this.username,
+                username,
                 password: this.password,
-                startUrl: startUrl
+                startUrl: this.getStartUrl()
             });
 
             if (redirectUrl) {
-                window.location.href = redirectUrl;
+                window.location.assign(redirectUrl);
             } else {
                 this.errorMessage = 'Invalid username or password. Please try again.';
             }
@@ -105,7 +99,34 @@ export default class SentinelFlowPortalLogin extends LightningElement {
         }
     }
 
-    /* ── Login with Salesforce SSO ── */
+    getStartUrl() {
+        const params = new URLSearchParams(window.location.search);
+        const startUrl = params.get('startURL') || params.get('startUrl');
+
+        if (startUrl && startUrl.startsWith('/')) {
+            return this.stripSitePrefix(startUrl);
+        }
+
+        return '/';
+    }
+
+    stripSitePrefix(startUrl) {
+        const currentPath = window.location.pathname || '/';
+        const loginSuffix = '/login';
+        const loginIndex = currentPath.toLowerCase().lastIndexOf(loginSuffix);
+
+        if (loginIndex > 0) {
+            const sitePrefix = currentPath.substring(0, loginIndex);
+            if (startUrl === sitePrefix || startUrl === `${sitePrefix}/`) {
+                return '/';
+            }
+            if (startUrl.startsWith(`${sitePrefix}/`)) {
+                return startUrl.substring(sitePrefix.length) || '/';
+            }
+        }
+
+        return startUrl;
+    }
 
     handleSalesforceLogin(event) {
         event.preventDefault();
@@ -120,8 +141,6 @@ export default class SentinelFlowPortalLogin extends LightningElement {
             window.location.href = this.googleSsoUrl;
         }
     }
-
-    /* ── Forgot password ── */
 
     handleShowForgot(event) {
         event.preventDefault();
@@ -167,8 +186,6 @@ export default class SentinelFlowPortalLogin extends LightningElement {
             this.isLoading = false;
         }
     }
-
-    /* ── Keyboard support ── */
 
     handleKeyDown(event) {
         if (event.key === 'Enter') {

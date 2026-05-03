@@ -32,6 +32,16 @@
                 <default>false</default>
                 <label>Closed</label>
             </value>
+            <value>
+                <fullName>Analyzing</fullName>
+                <default>false</default>
+                <label>Analyzing</label>
+            </value>
+            <value>
+                <fullName>Healing</fullName>
+                <default>false</default>
+                <label>Healing</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

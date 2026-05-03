@@ -17,19 +17,19 @@ List<Environment__c> environmentsToInsert = new List<Environment__c>();
 if (!environmentsByName.containsKey('Production')) {
     environmentsToInsert.add(new Environment__c(
         Name = 'Production',
-        Org_Id__c = '00DSEOMPDEMO00001'
+        Org_Id__c = '00DSentinelFlowDEMO00001'
     ));
 }
 if (!environmentsByName.containsKey('QA Sandbox')) {
     environmentsToInsert.add(new Environment__c(
         Name = 'QA Sandbox',
-        Org_Id__c = '00DSEOMPDEMO00002'
+        Org_Id__c = '00DSentinelFlowDEMO00002'
     ));
 }
 if (!environmentsByName.containsKey('Developer Org')) {
     environmentsToInsert.add(new Environment__c(
         Name = 'Developer Org',
-        Org_Id__c = '00DSEOMPDEMO00003'
+        Org_Id__c = '00DSentinelFlowDEMO00003'
     ));
 }
 
@@ -163,4 +163,4 @@ if (!hasManualIncident) {
     );
 }
 
-System.debug('SEOMP dashboard sample data ensured successfully.');
+System.debug('SentinelFlow dashboard sample data ensured successfully.');

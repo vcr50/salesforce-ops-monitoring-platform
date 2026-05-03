@@ -36,9 +36,11 @@ private class SentinelFlowProductionValidatorTest {
     static void testSystemLoggerCapturesFailures() {
         // Simulate a permanent failure
         try {
-            insert new Incident__c(); // Will fail due to missing required fields
+            throw new DmlException('Simulated error');
         } catch (Exception e) {
+            Test.startTest();
             SystemLogger.logError(e, 'ValidatorTest', 'testSystemLogger', SystemLogger.ErrorType.PERMANENT_ERROR, 0, null);
+            Test.stopTest();
         }
 
         List<System_Log__c> logs = [SELECT Id, Error_Type__c, Class_Name__c FROM System_Log__c];

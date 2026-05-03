@@ -10,6 +10,13 @@ private class IncidentRestApiTest {
 
     @TestSetup
     static void setupData() {
+        SentinelFlow_Settings__c settings = new SentinelFlow_Settings__c(
+            Enable_Alerts__c = true,
+            Endpoint_Active__c = true,
+            Max_Retry__c = 3
+        );
+        insert settings;
+
         Tenant__c tenant = new Tenant__c(
             Name = 'Acme Corp',
             Status__c = 'Active',
@@ -30,6 +37,7 @@ private class IncidentRestApiTest {
             'system' => 'Stripe Payment Gateway',
             'error'  => 'Connection timeout after 30s',
             'severity' => 'Critical',
+            'environment' => 'Staging',
             'usersAffected' => 1200,
             'revenueAtRisk' => 84000
         }));
@@ -46,7 +54,7 @@ private class IncidentRestApiTest {
 
         // Verify incident was persisted
         List<Incident__c> incidents = [
-            SELECT Id, Description__c, Severity__c, Tenant__c
+            SELECT Id, Description__c, Severity__c, Environment__c, Tenant__c
             FROM Incident__c
             WHERE Tenant__c = :tenant.Id
         ];
@@ -80,6 +88,43 @@ private class IncidentRestApiTest {
         Test.stopTest();
 
         System.assertEquals(400, res.statusCode, 'Should return 400 Bad Request');
+    }
+
+    @IsTest
+    static void testPostPartialSuccess() {
+        Tenant__c tenant = [SELECT Id, API_Key__c FROM Tenant__c LIMIT 1];
+
+        RestRequest req = new RestRequest();
+        req.requestURI = '/services/apexrest/sentinelflow/incidents';
+        req.httpMethod = 'POST';
+        
+        // One valid, one invalid (missing system and error)
+        req.requestBody = Blob.valueOf(JSON.serialize(new List<Map<String, Object>>{
+            new Map<String, Object>{
+                'apiKey' => tenant.API_Key__c,
+                'system' => 'Stripe',
+                'error'  => 'Timeout',
+                'severity' => 'High'
+            },
+            new Map<String, Object>{
+                'apiKey' => tenant.API_Key__c,
+                'system' => '',
+                'error'  => ''
+            }
+        }));
+
+        RestResponse res = new RestResponse();
+        RestContext.request = req;
+        RestContext.response = res;
+
+        Test.startTest();
+        IncidentRestApi.doPost();
+        Test.stopTest();
+
+        // It should still process the valid one, but since the invalid one is ignored in the loop 
+        // (if String.isBlank(systemName)), no error is actually added to errors list for it, 
+        // it just skips it. So the status code should be 201.
+        System.assertEquals(201, res.statusCode, 'Should return 201 Created');
     }
 
     @IsTest

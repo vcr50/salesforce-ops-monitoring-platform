@@ -14,4 +14,4 @@ Recommended metadata areas:
 - `tabs/`: custom tabs
 - `flexipages/`: Lightning record and app pages
 
-SEOMP-specific metadata should be added here as the Salesforce implementation grows.
+SentinelFlow-specific metadata should be added here as the Salesforce implementation grows.

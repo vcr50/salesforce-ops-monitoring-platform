@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Integration_Endpoint__c</fullName>
+    <label>Integration Endpoint</label>
+    <type>Lookup</type>
+    <referenceTo>Integration_Endpoint__c</referenceTo>
+    <relationshipName>Incidents</relationshipName>
+    <relationshipLabel>Incidents</relationshipLabel>
+    <required>false</required>
+    <description>Links this incident to the monitored endpoint that generated it.</description>
+</CustomField>

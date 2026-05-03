@@ -1,7 +1,7 @@
 {
-  "name": "seomp",
+  "name": "sentinelFlow",
   "version": "1.0.0",
-  "description": "Salesforce Enterprise Operations Monitoring Platform (SEOMP) - Phase 1 foundation for a Salesforce Developer Org",
+  "description": "Salesforce Enterprise Operations Monitoring Platform (SentinelFlow) - Phase 1 foundation for a Salesforce Developer Org",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
@@ -13,7 +13,7 @@
   },
   "keywords": [
     "salesforce",
-    "seomp",
+    "sentinelFlow",
     "developer-org",
     "monitoring",
     "incident-management",
