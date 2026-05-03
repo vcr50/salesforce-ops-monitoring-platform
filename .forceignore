@@ -14,3 +14,8 @@ Thumbs.db
 # Salesforce local state
 .sf/
 .sfdx/
+
+# Cannot be packaged in 2GP — deploy manually to target orgs
+force-app/main/default/digitalExperiences/
+force-app/main/default/networks/
+force-app/main/default/sites/

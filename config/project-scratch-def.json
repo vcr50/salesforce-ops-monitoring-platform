@@ -2,12 +2,14 @@
   "orgName": "SentinelFlow Dev Hub",
   "edition": "Developer",
   "features": [
-    "API"
+    "API",
+    "Communities",
+    "ExperienceBundle"
   ],
   "settings": {
     "orgPreferenceSettings": {
       "s1DesktopEnabled": true,
-      "networksEnabled": false,
+      "networksEnabled": true,
       "pathAssistantEnabled": true
     }
   }

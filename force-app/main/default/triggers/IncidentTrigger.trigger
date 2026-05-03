@@ -17,7 +17,7 @@ trigger IncidentTrigger on Incident__c (after insert, before update) {
             // Initialize Auto_Heal_Status on new records
             if (inc.Auto_Heal_Status__c == null) {
                 // Use a separate update list — can't DML in after insert without Queueable
-                // This is handled in SEOMPAutomationService.createIncidentsForFailedLogs
+                // This is handled in SentinelFlowAutomationService.createIncidentsForFailedLogs
                 // which sets Auto_Heal_Status__c at insert time
             }
             if (inc.Severity__c == 'Critical') {
@@ -34,6 +34,6 @@ trigger IncidentTrigger on Incident__c (after insert, before update) {
 
     if (Trigger.isUpdate && Trigger.isBefore) {
         // Apply resolved_time stamp when status moves to Resolved/Closed
-        SEOMPAutomationService.applyIncidentResolutionState(Trigger.new, Trigger.oldMap);
+        SentinelFlowAutomationService.applyIncidentResolutionState(Trigger.new, Trigger.oldMap);
     }
 }

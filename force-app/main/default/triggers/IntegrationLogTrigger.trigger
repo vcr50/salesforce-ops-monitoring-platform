@@ -1,10 +1,10 @@
 trigger IntegrationLogTrigger on Integration_Log__c (after insert, after update) {
     // 1. Auto-create incidents for newly failed logs
-    SEOMPAutomationService.createIncidentsForFailedLogs(Trigger.new, Trigger.oldMap);
+    SentinelFlowAutomationService.createIncidentsForFailedLogs(Trigger.new, Trigger.oldMap);
 
     // 2. Close incidents when logs recover
     if (Trigger.isUpdate) {
-        SEOMPAutomationService.closeIncidentsForRecoveredLogs(Trigger.new, Trigger.oldMap);
+        SentinelFlowAutomationService.closeIncidentsForRecoveredLogs(Trigger.new, Trigger.oldMap);
     }
 
     // 3. Publish platform events for real-time LWC updates
