@@ -493,3 +493,29 @@ Changes:
 - Added published-by / publisher copy as `Tomcodex`.
 - Updated the go-to-market AppExchange launch line to reference SentinelFlow `2.6.0` under publisher `Tomcodex`.
 - Updated the marketing content footer from `v2.0` to `v2.6.0`.
+
+### AppExchange Installation Downgrade Fix
+
+Updated files:
+
+- `website/index.html`
+- `website/terms.html`
+- `website/products.html`
+- `website/privacy-policy.html`
+- `website/contact.html`
+- `website/careers.html`
+- `website/blog.html`
+- `website/about.html`
+- `website-next/` components
+
+Issue:
+
+- The "Install in Salesforce" buttons on the marketing website were hardcoded to point to an older `v1.0 (Beta 2)` package ID (`04tdL000000YSWXQA4`). 
+- When users with the newly installed `v2.6.0.3` clicked the link, Salesforce threw a Downgrade Error and blocked installation.
+
+Resolution:
+
+- Cleaned the local git workspace by resolving merge conflicts that previously deleted the `website/` folders.
+- Globally replaced the old package ID (`04tdL000000YSWXQA4`) with the correct, newly generated `v2.6.0.3` package ID (`04tdL000000aLnVQAU`).
+- Standardized all visible version labels on the live website to `2.6` to match the AppExchange submission.
+- Force-pushed the targeted fixes to `origin/main` to trigger the Render deployment and refresh the live install links.
