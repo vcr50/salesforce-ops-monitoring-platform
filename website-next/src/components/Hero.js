@@ -54,16 +54,16 @@ export default function Hero() {
       <div className="container hero-content">
         <div className="hero-badge">
           <span className="badge-dot"></span>
-          Enterprise-Grade Incident Intelligence
+          AppExchange v2.6.0 - Published by Tomcodex
         </div>
         <h1 className="hero-title">
           Detect. Analyze.<br />
           <span className="gradient-text">Auto-Heal.</span>
         </h1>
         <p className="hero-subtitle">
-          SentinelFlow is an AI-powered platform that monitors your integrations, 
-          classifies incidents in real-time, and automatically resolves production 
-          issues before they impact your revenue.
+          SentinelFlow is an AI-powered Salesforce operations platform that detects incidents,
+          predicts risk, recommends runbooks, auto-heals approved failures, and learns from
+          every recovery outcome.
         </p>
         <div className="hero-cta">
           <a href="#pricing" className="btn btn-primary btn-lg">

@@ -80,16 +80,16 @@ export default function Pricing({ onOpenModal }) {
             </div>
             <span className="sf-card__price-label">Early Access Pricing</span>
             <p className="sf-card__desc">
-              For growing teams that need automation and self-healing.
+              For growing teams that need AppExchange v2.6.0 automation, memory, prediction, and self-healing.
             </p>
             <hr className="sf-card__divider" />
             <p className="sf-card__feature-label">Everything in Starter, plus</p>
             <ul className="sf-card__features">
               <li><CheckIcon blue /><span>Unlimited incidents</span></li>
-              <li><CheckIcon blue /><span>AI classification engine</span></li>
-              <li><CheckIcon blue /><span>Self-healing automation</span></li>
-              <li><CheckIcon blue /><span>Observability dashboard</span></li>
-              <li><CheckIcon blue /><span>Priority support</span></li>
+              <li><CheckIcon blue /><span>AI classification + incident memory</span></li>
+              <li><CheckIcon blue /><span>Adaptive auto-heal runbooks</span></li>
+              <li><CheckIcon blue /><span>Prediction V2 risk scoring</span></li>
+              <li><CheckIcon blue /><span>Dashboard V2 + learning quality</span></li>
             </ul>
             <button
               id="btn-professional"
@@ -107,15 +107,15 @@ export default function Pricing({ onOpenModal }) {
               <span className="sf-card__price sf-card__price--custom">Custom</span>
             </div>
             <p className="sf-card__desc">
-              For organizations needing full control and scalability.
+              For organizations needing full control, security review support, and enterprise scale.
             </p>
             <hr className="sf-card__divider" />
             <p className="sf-card__feature-label">Everything in Professional, plus</p>
             <ul className="sf-card__features">
-              <li><CheckIcon /><span>Multi-tenant isolation</span></li>
-              <li><CheckIcon /><span>Feature flags per tenant</span></li>
-              <li><CheckIcon /><span>API rate limiting</span></li>
-              <li><CheckIcon /><span>Dedicated support</span></li>
+              <li><CheckIcon /><span>Tenant-isolated memory and RLS</span></li>
+              <li><CheckIcon /><span>Reliability simulation suite</span></li>
+              <li><CheckIcon /><span>API rate limits and circuit breakers</span></li>
+              <li><CheckIcon /><span>Security review and packaging support</span></li>
             </ul>
             <button
               id="btn-enterprise"
@@ -129,7 +129,7 @@ export default function Pricing({ onOpenModal }) {
         </div>{/* /grid */}
 
         <p className="sf-pricing__footnote">
-          All plans include SOC 2 compliant infrastructure and 99.9% uptime SLA.
+          All plans include AppExchange v2.6.0 package metadata, Tomcodex publisher support, SOC 2-ready logging design, and 99.9% uptime SLA targets.
         </p>
       </div>
 

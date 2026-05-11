@@ -10,8 +10,8 @@ export default function AgentExchangePromo({ onOpenModal }) {
           </div>
           <h2 className="promo-title">SentinelFlow is AgentExchange Ready</h2>
           <p className="promo-subtitle">
-            Experience the full power of SentinelFlow 2.6.0, published by Tomcodex, with our new 2GP package. 
-            Install seamlessly into your Sandbox or Production org with enterprise-grade SSO configuration support.
+            Experience the full power of SentinelFlow 2.6.0, published by Tomcodex, with our 2GP package.
+            Install memory, prediction intelligence, adaptive runbooks, learning loops, and enterprise isolation.
           </p>
           <div className="promo-actions">
             <button className="btn btn-primary btn-lg" onClick={() => onOpenModal('Free Trial')}>Start Free Trial</button>
