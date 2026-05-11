@@ -1,6 +1,6 @@
 {
   "name": "sentinelFlow",
-  "version": "1.0.0",
+  "version": "2.6.0",
   "description": "Salesforce Enterprise Operations Monitoring Platform (SentinelFlow) - Phase 1 foundation for a Salesforce Developer Org",
   "main": "src/app.js",
   "scripts": {
