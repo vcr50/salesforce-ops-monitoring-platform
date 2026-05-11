@@ -84,7 +84,7 @@ export default function AgentforceSection() {
 
         {/* Bottom CTA */}
         <div className="af-cta">
-          <div className="af-cta-badge">🚀 Launching with SentinelFlow v2.6.0</div>
+          <div className="af-cta-badge">🚀 Launching with SentinelFlow v2.6</div>
           <p>Be the first to experience truly autonomous incident management on the Salesforce platform.</p>
         </div>
       </div>

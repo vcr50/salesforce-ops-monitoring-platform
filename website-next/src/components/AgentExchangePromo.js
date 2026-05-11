@@ -10,7 +10,7 @@ export default function AgentExchangePromo({ onOpenModal }) {
           </div>
           <h2 className="promo-title">SentinelFlow is AgentExchange Ready</h2>
           <p className="promo-subtitle">
-            Experience the full power of SentinelFlow 2.6.0, published by Tomcodex, with our 2GP package.
+            Experience the full power of SentinelFlow 2.6, published by Tomcodex, with our 2GP package.
             Install memory, prediction intelligence, adaptive runbooks, learning loops, and enterprise isolation.
           </p>
           <div className="promo-actions">
@@ -24,7 +24,7 @@ export default function AgentExchangePromo({ onOpenModal }) {
             <img src="/agentexchange-logo.png" alt="Salesforce AgentExchange" className="promo-logo" onError={(e) => e.target.style.display = 'none'} />
             <div className="promo-stats">
               <div className="promo-stat">
-                <span className="promo-stat-val">v2.6.0</span>
+                <span className="promo-stat-val">v2.6</span>
                 <span className="promo-stat-label">Version</span>
               </div>
               <div className="promo-stat">

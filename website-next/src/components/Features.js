@@ -5,7 +5,7 @@ export default function Features() {
         <div className="section-header">
           <span className="section-tag">PLATFORM CAPABILITIES</span>
           <h2 className="section-title">Everything You Need for<br /><span className="gradient-text">Autonomous Salesforce Ops</span></h2>
-          <p className="section-subtitle">Version 2.6.0 adds operational memory, prediction V2, adaptive runbooks, learning loops, and reliability simulation to the full AppExchange-ready product.</p>
+          <p className="section-subtitle">Version 2.6 adds operational memory, prediction V2, adaptive runbooks, learning loops, and reliability simulation to the full AppExchange-ready product.</p>
         </div>
         <div className="features-grid">
           <div className="feature-card" data-aos="fade-up">

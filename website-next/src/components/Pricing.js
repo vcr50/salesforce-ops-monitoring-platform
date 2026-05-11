@@ -80,7 +80,7 @@ export default function Pricing({ onOpenModal }) {
             </div>
             <span className="sf-card__price-label">Early Access Pricing</span>
             <p className="sf-card__desc">
-              For growing teams that need AppExchange v2.6.0 automation, memory, prediction, and self-healing.
+              For growing teams that need AppExchange v2.6 automation, memory, prediction, and self-healing.
             </p>
             <hr className="sf-card__divider" />
             <p className="sf-card__feature-label">Everything in Starter, plus</p>
@@ -129,7 +129,7 @@ export default function Pricing({ onOpenModal }) {
         </div>{/* /grid */}
 
         <p className="sf-pricing__footnote">
-          All plans include AppExchange v2.6.0 package metadata, Tomcodex publisher support, SOC 2-ready logging design, and 99.9% uptime SLA targets.
+          All plans include AppExchange v2.6 package metadata, Tomcodex publisher support, SOC 2-ready logging design, and 99.9% uptime SLA targets.
         </p>
       </div>
 

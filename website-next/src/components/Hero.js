@@ -54,7 +54,7 @@ export default function Hero() {
       <div className="container hero-content">
         <div className="hero-badge">
           <span className="badge-dot"></span>
-          AppExchange v2.6.0 - Published by Tomcodex
+          AppExchange v2.6 - Published by Tomcodex
         </div>
         <h1 className="hero-title">
           Detect. Analyze.<br />
