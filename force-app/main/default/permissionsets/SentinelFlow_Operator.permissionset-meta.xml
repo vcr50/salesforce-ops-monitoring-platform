@@ -1,8 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <classAccesses>
+        <apexClass>AIAnalysisService</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>AutoHealQueueable</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>PlatformEventPublisher</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>SentinelFlowAutomationService</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>SentinelFlowPortalController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>SelfHealingEngine</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     <description>Operational access to SentinelFlow. Can view and act on incidents, run AI analysis, and execute healing actions. Cannot manage tenants or delete records.</description>
     <hasActivationRequired>false</hasActivationRequired>
     <label>SentinelFlow Operator</label>
+    <namedCredentialAccesses>
+        <enabled>true</enabled>
+        <namedCredential>SentinelFlow_Backend</namedCredential>
+    </namedCredentialAccesses>
     <fieldPermissions>
         <editable>false</editable>
         <field>Incident__c.Description__c</field>
@@ -58,6 +86,15 @@
         <field>Audit_Trail__c.Action__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>false</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <object>Integration_Health_Event__e</object>
+        <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
     <objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>false</allowDelete>

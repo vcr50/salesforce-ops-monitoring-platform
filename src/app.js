@@ -16,6 +16,9 @@ const billingRoutes = require('./routes/billing');
 const billingController = require('./controllers/billingController');
 
 const errorHandler = require('./middleware/errorHandler');
+const { tenantContext } = require('./middleware/requestContext');
+const { tenantRateLimit } = require('./middleware/rateLimit');
+const { inputValidation } = require('./middleware/inputValidation');
 const { logger } = require('./middleware/logger');
 const { sentinelFlowConfig, getFoundationStatus } = require('./config/sentinelFlow');
 
@@ -59,6 +62,11 @@ app.use(session({
 // Passport initialization
 app.use(passport.initialize());
 app.use(passport.session());
+
+// AppExchange runtime guardrails
+app.use(tenantContext);
+app.use(inputValidation);
+app.use(tenantRateLimit());
 
 // Routes
 app.use('/auth', authRoutes);

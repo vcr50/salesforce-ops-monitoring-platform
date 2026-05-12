@@ -76,9 +76,13 @@ class CacheService {
 // Create a singleton instance
 const cacheService = new CacheService();
 
-// Run cleanup every minute
-setInterval(() => {
+// Run cleanup every minute without keeping test/CLI processes alive.
+const cleanupTimer = setInterval(() => {
   cacheService.cleanup();
 }, 60000);
+
+if (typeof cleanupTimer.unref === 'function') {
+  cleanupTimer.unref();
+}
 
 module.exports = cacheService;

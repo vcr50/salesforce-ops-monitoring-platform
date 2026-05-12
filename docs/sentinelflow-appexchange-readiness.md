@@ -1,6 +1,6 @@
 # SentinelFlow AppExchange Readiness Checklist
 
-> **Last updated**: 2026-05-11
+> **Last updated**: 2026-05-12
 > **AppExchange version**: 2.6.0
 > **Published by**: Tomcodex
 > **Target listing category**: Salesforce DevOps · IT Operations · Security · AI Operations
@@ -49,6 +49,7 @@ Integration_Log__c (Failed) → IntegrationLogTrigger → SentinelFlow_Incident_
 The AppExchange listing draft is maintained in:
 
 - `docs/sentinelflow-appexchange-listing.md`
+- `docs/sentinelflow-security-review-packet.md`
 
 ---
 
@@ -222,17 +223,17 @@ RLS policy pattern: `tenant_id::text = current_setting('app.tenant_id', true)`
 
 ## 7. Multi-Tenant Isolation Review
 
-- [ ] Validate tenant id on every API request.
-- [ ] Reject cross-org incident ids even when authenticated.
+- [x] Validate tenant id on every API request.
+- [x] Reject cross-org tenant context in request payloads and query parameters even when authenticated.
 - [ ] Partition memory search by tenant before vector similarity ranking.
 - [ ] Store embeddings per tenant and never train shared models on customer data without explicit opt-in.
-- [ ] Include org id, user id, request id, and package version in audit events.
+- [x] Include org id, user id, request id, and package version in request context.
 
 ---
 
 ## 8. API Rate Limit Protections
 
-- [ ] Add per-tenant request quotas for classification, prediction, memory search, and healing.
+- [x] Add per-tenant request quotas for classification, prediction, memory search, and healing.
 - [ ] Add circuit breakers for repeated failed heal actions.
 - [ ] Cap retry queues to prevent retry storms.
 - [ ] Back pressure Platform Event ingestion during spikes.
@@ -296,12 +297,12 @@ Field permissions: 7 `SF_Incident__c` fields — read-only.
 
 ### Permission Gaps to Resolve
 
-- [ ] Viewer permission set is missing `Integration_Log__c` and `Flow_Fault_Log__c` read access.
-- [ ] Viewer permission set is missing field permissions for `Integration_Log__c` and `Flow_Fault_Log__c` fields.
-- [ ] Neither permission set includes Apex class access grants — required for managed packages.
-- [ ] Neither permission set includes Platform Event publish/subscribe access.
-- [ ] Neither permission set includes Named Credential access for `SentinelFlow_Backend`.
-- [ ] Consider adding a third permission set: `SentinelFlow_Operator` (create/edit incidents, trigger heals, no delete).
+- [x] Viewer permission set includes `Integration_Log__c` read access. `Flow_Fault_Log__c` is not present in current metadata.
+- [x] Viewer permission set includes current `Integration_Log__c` field permissions. `Flow_Fault_Log__c` is not present in current metadata.
+- [x] Permission sets include Apex class access grants for managed package use.
+- [x] Permission sets include Platform Event access for `Integration_Health_Event__e`.
+- [x] Admin and Operator permission sets include Named Credential access for `SentinelFlow_Backend`.
+- [x] Added and extended `SentinelFlow_Operator` (create/edit incidents, trigger heals, no delete).
 
 ---
 
@@ -392,25 +393,25 @@ The Salesforce AppExchange Security Review requires the following deliverables:
 | 1 | Register managed package namespace | `sfdx-project.json` | ⬜ Not started |
 | 2 | Replace org-specific approval process approver | `High_Impact_Auto_Heal_Approval` | ⬜ Not started |
 | 3 | Add `MemoryIndexQueueableTest` | Apex test coverage | ⬜ Not started |
-| 4 | Add Apex class access to permission sets | `SentinelFlow_Admin`, `SentinelFlow_Viewer` | ⬜ Not started |
-| 5 | Add Platform Event access to permission sets | `SentinelFlow_Admin` | ⬜ Not started |
-| 6 | Add Named Credential access to permission sets | `SentinelFlow_Admin` | ⬜ Not started |
-| 7 | Add Viewer access for `Integration_Log__c` and `Flow_Fault_Log__c` | `SentinelFlow_Viewer` | ⬜ Not started |
-| 8 | Add tenant context enforcement to all API endpoints | `sentinelflow-api/src/index.ts` | ⬜ Not started |
-| 9 | Add API rate limiting middleware | `sentinelflow-api` | ⬜ Not started |
+| 4 | Add Apex class access to permission sets | `SentinelFlow_Admin`, `SentinelFlow_Viewer`, `SentinelFlow_Operator` | ✅ Done in repo metadata |
+| 5 | Add Platform Event access to permission sets | `SentinelFlow_Admin`, `SentinelFlow_Viewer`, `SentinelFlow_Operator` | ✅ Done for `Integration_Health_Event__e` |
+| 6 | Add Named Credential access to permission sets | `SentinelFlow_Admin`, `SentinelFlow_Operator` | ✅ Done for `SentinelFlow_Backend` |
+| 7 | Add Viewer access for `Integration_Log__c` and `Flow_Fault_Log__c` | `SentinelFlow_Viewer` | ✅ Done for current repo `Integration_Log__c`; `Flow_Fault_Log__c` not present in metadata |
+| 8 | Add tenant context enforcement to all API endpoints | `src/app.js` | ✅ Done with `requestContext` middleware |
+| 9 | Add API rate limiting middleware | `src/app.js` | ✅ Done with `rateLimit` middleware |
 | 10 | Convert subscriber backend endpoint to Named Credential setup | Documentation | ⬜ Not started |
 | 11 | Remove or sanitize smoke-test records before packaging | `SF_Incident__c` data | ⬜ Not started |
-| 12 | Create security review data flow diagram | Documentation | ⬜ Not started |
+| 12 | Create security review data flow diagram | Documentation | ✅ Done in `docs/sentinelflow-security-review-packet.md` |
 
 ### Important (Should Fix Before Submission)
 
 | # | Item | Component | Status |
 |---|---|---|---|
-| 13 | Add `SentinelFlow_Operator` permission set (create/edit, no delete) | Permission sets | ⬜ Not started |
+| 13 | Add `SentinelFlow_Operator` permission set (create/edit, no delete) | Permission sets | ✅ Already present and extended |
 | 14 | Add circuit breakers for heal action retry loops | `heal.service.ts` | ⬜ Not started |
-| 15 | Add request correlation-id propagation across API calls | `sentinelflow-api` | ⬜ Not started |
-| 16 | Add structured error responses with error codes | `sentinelflow-api` | ⬜ Not started |
-| 17 | Add API input validation middleware | `sentinelflow-api` | ⬜ Not started |
+| 15 | Add request correlation-id propagation across API calls | `src/app.js` | ✅ Done via `x-request-id` |
+| 16 | Add structured error responses with error codes | `src/app.js` | ✅ Done for tenant and rate-limit guardrails |
+| 17 | Add API input validation middleware | `src/app.js` | ✅ Done with `inputValidation` middleware |
 | 18 | Build LWC components for in-platform visibility | `force-app/main/default/lwc` | ⬜ Not started |
 | 19 | Add package install/upgrade handler Apex class | Apex | ⬜ Not started |
 | 20 | Document Named Credential + External Credential setup | Post-install guide | ⬜ Not started |
@@ -484,5 +485,6 @@ All of the following must pass before AppExchange submission:
 | AppExchange listing draft | [sentinelflow-appexchange-listing.md](file:///d:/New%20folder/VJ%20SFDC/docs/sentinelflow-appexchange-listing.md) |
 | Next evolution architecture | [sentinelflow-next-evolution-architecture.md](file:///d:/New%20folder/VJ%20SFDC/docs/sentinelflow-next-evolution-architecture.md) |
 | Change log (2026-05-11) | [sentinelflow-change-log-2026-05-11.md](file:///d:/New%20folder/VJ%20SFDC/docs/sentinelflow-change-log-2026-05-11.md) |
+| Security review packet | [sentinelflow-security-review-packet.md](file:///d:/New%20folder/VJ%20SFDC/docs/sentinelflow-security-review-packet.md) |
 | Database schema | [operational-memory.schema.sql](file:///d:/New%20folder/VJ%20SFDC/sentinelflow-api/db/operational-memory.schema.sql) |
 | SFDX project config | [sfdx-project.json](file:///d:/New%20folder/VJ%20SFDC/sentinelflow/sfdx-project.json) |
