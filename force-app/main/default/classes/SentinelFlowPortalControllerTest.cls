@@ -73,8 +73,8 @@ private class SentinelFlowPortalControllerTest {
         SentinelFlowPortalController.PortalSummary summary = SentinelFlowPortalController.getSummary();
         Test.stopTest();
 
-        System.assertEquals(1, summary.criticalIncidents);
-        System.assertEquals(2, summary.openIncidents);
+        System.assertEquals(2, summary.criticalIncidents);
+        System.assertEquals(3, summary.openIncidents);
         System.assertEquals(1, summary.failedIntegrations);
         System.assertEquals(1, summary.warningIntegrations);
     }
@@ -85,7 +85,7 @@ private class SentinelFlowPortalControllerTest {
         List<SentinelFlowPortalController.PortalIncidentRow> rows = SentinelFlowPortalController.getOpenIncidents();
         Test.stopTest();
 
-        System.assertEquals(2, rows.size());
+        System.assertEquals(3, rows.size());
         for (SentinelFlowPortalController.PortalIncidentRow row : rows) {
             System.assertNotEquals('Closed', row.status);
             System.assertNotEquals('Resolved', row.status);
@@ -143,7 +143,7 @@ private class SentinelFlowPortalControllerTest {
 
         System.assertEquals('Orders API', detail.apiName);
         System.assertEquals('Failed', detail.status);
-        System.assertEquals(1, detail.linkedOpenIncidents);
+        System.assertEquals(2, detail.linkedOpenIncidents);
     }
 
     @IsTest

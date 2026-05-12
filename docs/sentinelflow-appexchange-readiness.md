@@ -1,7 +1,7 @@
 # SentinelFlow AppExchange Readiness Checklist
 
 > **Last updated**: 2026-05-12
-> **AppExchange version**: 2.6.0
+> **AppExchange version**: 2.6.1
 > **Published by**: Tomcodex
 > **Target listing category**: Salesforce DevOps · IT Operations · Security · AI Operations
 > **Tagline**: Secure. Learn. Heal. Scale.
@@ -12,7 +12,7 @@
 
 - Lightning app: `SentinelFlow_Console`
 - Label: `SentinelFlow Console`
-- AppExchange version: `2.6.0`
+- AppExchange version: `2.6.1`
 - Published by: `Tomcodex`
 - Description: `Salesforce's Autonomous Immune System: secure, learn, heal, and scale with AI-powered operational intelligence.`
 - Navigation now prioritizes current SentinelFlow objects:
@@ -301,7 +301,7 @@ Field permissions: 7 `SF_Incident__c` fields — read-only.
 - [x] Viewer permission set includes current `Integration_Log__c` field permissions. `Flow_Fault_Log__c` is not present in current metadata.
 - [x] Permission sets include Apex class access grants for managed package use.
 - [x] Permission sets include Platform Event access for `Integration_Health_Event__e`.
-- [x] Admin and Operator permission sets include Named Credential access for `SentinelFlow_Backend`.
+- [ ] Named Credential access for `SentinelFlow_Backend` must be completed through subscriber setup or External Credential principal access metadata; legacy `namedCredentialAccesses` is not package-valid here.
 - [x] Added and extended `SentinelFlow_Operator` (create/edit incidents, trigger heals, no delete).
 
 ---
@@ -395,7 +395,7 @@ The Salesforce AppExchange Security Review requires the following deliverables:
 | 3 | Add `MemoryIndexQueueableTest` | Apex test coverage | ⬜ Not started |
 | 4 | Add Apex class access to permission sets | `SentinelFlow_Admin`, `SentinelFlow_Viewer`, `SentinelFlow_Operator` | ✅ Done in repo metadata |
 | 5 | Add Platform Event access to permission sets | `SentinelFlow_Admin`, `SentinelFlow_Viewer`, `SentinelFlow_Operator` | ✅ Done for `Integration_Health_Event__e` |
-| 6 | Add Named Credential access to permission sets | `SentinelFlow_Admin`, `SentinelFlow_Operator` | ✅ Done for `SentinelFlow_Backend` |
+| 6 | Add Named Credential access to permission sets | `SentinelFlow_Admin`, `SentinelFlow_Operator` | ⬜ Requires subscriber setup / External Credential metadata |
 | 7 | Add Viewer access for `Integration_Log__c` and `Flow_Fault_Log__c` | `SentinelFlow_Viewer` | ✅ Done for current repo `Integration_Log__c`; `Flow_Fault_Log__c` not present in metadata |
 | 8 | Add tenant context enforcement to all API endpoints | `src/app.js` | ✅ Done with `requestContext` middleware |
 | 9 | Add API rate limiting middleware | `src/app.js` | ✅ Done with `rateLimit` middleware |

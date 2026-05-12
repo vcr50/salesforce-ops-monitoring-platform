@@ -1,13 +1,12 @@
 {
   "packageDirectories": [
     {
-      "versionName": "2.6.0",
-      "versionNumber": "2.6.0.NEXT",
+      "versionName": "2.6.1",
+      "versionNumber": "2.6.1.NEXT",
       "path": "force-app",
       "default": true,
       "package": "SentinelFlow",
-      "postInstallScript": "SentinelFlowPostInstallHandler",
-      "versionDescription": "SentinelFlow 2.6.0 - AppExchange-ready AI-powered incident intelligence platform"
+      "versionDescription": "SentinelFlow 2.6.1 - AppExchange-ready AI-powered incident intelligence platform"
     }
   ],
   "name": "SentinelFlow",
@@ -18,6 +17,7 @@
     "SentinelFlow": "0HodL0000003WMjSAM",
     "SentinelFlow@1.0.0-1": "04tdL000000YR5pQAG",
     "SentinelFlow@1.0.0-2": "04tdL000000YSWXQA4",
-    "SentinelFlow@1.0.0-3": "04tdL000000YiJZQA0"
+    "SentinelFlow@1.0.0-3": "04tdL000000YiJZQA0",
+    "SentinelFlow@2.6.1-1": "04tdL000000aQVRQA2"
   }
 }

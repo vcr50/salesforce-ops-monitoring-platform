@@ -4,7 +4,7 @@ private class SentinelFlowAutomationServiceTest {
     static void createReferenceData() {
         insert new Environment__c(
             Name = 'Developer Org',
-            Org_Id__c = '00DSentinelFlowTST000001'
+            Org_Id__c = '00D000000000001AAA'
         );
 
         insert new List<SLA_Policy__c>{

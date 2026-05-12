@@ -15,7 +15,7 @@ export default function AgentExchangePromo({ onOpenModal }) {
           </p>
           <div className="promo-actions">
             <button className="btn btn-primary btn-lg" onClick={() => onOpenModal('Free Trial')}>Start Free Trial</button>
-            <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000YR5pQAG" target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-lg">Get Package (2GP)</a>
+            <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000aQVRQA2" target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-lg">Get Package (2GP)</a>
           </div>
         </div>
         <div className="promo-visual">

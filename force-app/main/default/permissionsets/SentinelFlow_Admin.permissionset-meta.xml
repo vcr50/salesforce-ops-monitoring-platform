@@ -168,10 +168,6 @@
     </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>SentinelFlow Admin</label>
-    <namedCredentialAccesses>
-        <enabled>true</enabled>
-        <namedCredential>SentinelFlow_Backend</namedCredential>
-    </namedCredentialAccesses>
     <objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>false</allowDelete>

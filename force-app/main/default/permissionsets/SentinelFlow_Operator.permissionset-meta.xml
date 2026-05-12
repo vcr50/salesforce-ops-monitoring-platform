@@ -27,10 +27,6 @@
     <description>Operational access to SentinelFlow. Can view and act on incidents, run AI analysis, and execute healing actions. Cannot manage tenants or delete records.</description>
     <hasActivationRequired>false</hasActivationRequired>
     <label>SentinelFlow Operator</label>
-    <namedCredentialAccesses>
-        <enabled>true</enabled>
-        <namedCredential>SentinelFlow_Backend</namedCredential>
-    </namedCredentialAccesses>
     <fieldPermissions>
         <editable>false</editable>
         <field>Incident__c.Description__c</field>
