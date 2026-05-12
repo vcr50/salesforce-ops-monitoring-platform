@@ -24,7 +24,7 @@ export default function AgentExchangePromo({ onOpenModal }) {
             <img src="/agentexchange-logo.png" alt="Salesforce AgentExchange" className="promo-logo" onError={(e) => e.target.style.display = 'none'} />
             <div className="promo-stats">
               <div className="promo-stat">
-                <span className="promo-stat-val">v2.6</span>
+                <span className="promo-stat-val">v2.6.1</span>
                 <span className="promo-stat-label">Version</span>
               </div>
               <div className="promo-stat">
