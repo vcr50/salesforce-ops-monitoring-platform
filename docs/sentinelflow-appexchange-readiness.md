@@ -1,8 +1,8 @@
 # SentinelFlow AppExchange Readiness Checklist
 
 > **Last updated**: 2026-05-12
-> **AppExchange version**: 2.6.1
-> **Published by**: Tomcodex
+> **Installed package version**: 2.6
+> **Published by**: TomcodeX
 > **Target listing category**: Salesforce DevOps · IT Operations · Security · AI Operations
 > **Tagline**: Secure. Learn. Heal. Scale.
 
@@ -12,8 +12,8 @@
 
 - Lightning app: `SentinelFlow_Console`
 - Label: `SentinelFlow Console`
-- AppExchange version: `2.6.1`
-- Published by: `Tomcodex`
+- Installed package version: `2.6`
+- Published by: `TomcodeX`
 - Description: `Salesforce's Autonomous Immune System: secure, learn, heal, and scale with AI-powered operational intelligence.`
 - Navigation now prioritizes current SentinelFlow objects:
   - `SF_Incident__c`
@@ -21,6 +21,23 @@
   - `SF_Prediction_Risk__c`
   - `SF_Healing_Runbook__c`
   - `Integration_Log__c`
+
+### Installed Package Snapshot
+
+| Attribute | Value |
+|---|---|
+| Package name | `SentinelFlow` |
+| Publisher | `TomcodeX` |
+| Version number | `2.6` |
+| Namespace prefix | Blank in installed package UI |
+| Install date | `2026-05-06 17:27` |
+| Limits | Enabled |
+| Apps | `1` |
+| Tabs | `6` |
+| Objects | `16` |
+| AppExchange Ready | `Not Applicable` |
+
+**Readiness interpretation**: `Not Applicable` means this installed package row is not currently being evaluated by the org's Installed Packages page as an AppExchange-ready submitted package. AppExchange submission still depends on the managed package strategy, namespace, security review packet, and packaging gates below.
 
 ### Verified Astrosoft Deployment
 
@@ -257,6 +274,29 @@ RLS policy pattern: `tenant_id::text = current_setting('app.tenant_id', true)`
 - [ ] Keep admin-configurable thresholds in Custom Metadata (`SF_Detection_Threshold__mdt`, `SF_Healing_Rule__mdt`, `SF_Integration_Config__mdt`).
 - [ ] Keep customer data in subscriber org objects or tenant-isolated backend tables.
 - [ ] Validate metadata deployability against a clean scratch org.
+- [ ] Add circuit breakers for repeated failed heal actions.
+- [ ] Cap retry queues to prevent retry storms.
+- [ ] Back pressure Platform Event ingestion during spikes.
+- [ ] Escalate instead of retrying when confidence falls below the configured floor.
+
+---
+
+## 9. Managed Package Strategy
+
+### Namespace
+
+- **Current state**: `sfdx-project.json` has `"namespace": ""` (empty).
+- **Required action**: Register a namespace prefix (e.g., `sfnl`) in a Salesforce packaging org.
+- All Apex classes, Custom Objects, Platform Events, Custom Metadata Types, and LWC must be namespaced.
+
+### Packaging Checklist
+
+- [ ] Register namespace prefix in packaging org.
+- [ ] Update `sfdx-project.json` with namespace and package version definition.
+- [ ] Namespace-qualify all Apex class references, SOQL queries, and trigger references.
+- [ ] Keep admin-configurable thresholds in Custom Metadata (`SF_Detection_Threshold__mdt`, `SF_Healing_Rule__mdt`, `SF_Integration_Config__mdt`).
+- [ ] Keep customer data in subscriber org objects or tenant-isolated backend tables.
+- [ ] Validate metadata deployability against a clean scratch org.
 - [ ] Validate metadata deployability against the packaging org.
 - [ ] Verify upgrade scripts preserve incident history and runbook configuration.
 - [ ] Create 2GP package version: `sf package version create`.
@@ -264,8 +304,8 @@ RLS policy pattern: `tenant_id::text = current_setting('app.tenant_id', true)`
 
 ### Approval Process Fix (Pre-Package)
 
-- **Current state**: Approval process `High_Impact_Auto_Heal_Approval` references org-specific user `vjdev@asap.com`.
-- **Required action**: Replace with a configurable queue, public group, or approver lookup field.
+- **Current state**: ✅ Approval process `High_Impact_Auto_Heal_Approval` uses `relatedUserField` → `Owner` (dynamic, not org-specific). No hardcoded user reference exists.
+- **Status**: Verified clean. Approval process also added to `package.xml` so it deploys with the package.
 
 ---
 
@@ -303,36 +343,6 @@ Field permissions: 7 `SF_Incident__c` fields — read-only.
 - [x] Permission sets include Platform Event access for `Integration_Health_Event__e`.
 - [ ] Named Credential access for `SentinelFlow_Backend` must be completed through subscriber setup or External Credential principal access metadata; legacy `namedCredentialAccesses` is not package-valid here.
 - [x] Added and extended `SentinelFlow_Operator` (create/edit incidents, trigger heals, no delete).
-
----
-
-## 11. Apex Test Coverage
-
-### Current Test Matrix
-
-| Apex Component | Test Class | Status |
-|---|---|---|
-| `AutoHealOrchestrator` | `AutoHealOrchestratorTest` | ✅ Passing |
-| `IncidentClassificationQueueable` | `IncidentClassificationQueueableTest` | ✅ Passing |
-| `PredictionEngineBatch` | `PredictionEngineBatchTest` | ✅ Passing |
-| `PredictionEngineScheduler` | `PredictionEngineSchedulerTest` | ✅ Passing |
-| `SentinelFlowEventPublisher` | `SentinelFlowEventPublisherTest` | ✅ Passing |
-| `SentinelFlowIncidentHandler` | `SentinelFlowIncidentHandlerTest` | ✅ Passing |
-| `SentinelFlowLogger` | `SentinelFlowLoggerTest` | ✅ Passing |
-| `SentinelFlowNotifier` | `SentinelFlowNotifierTest` | ✅ Passing |
-| `IntegrationLogTrigger` | `IntegrationLogTriggerTest` | ✅ Passing |
-| `FlowFaultTrigger` | `FlowFaultTriggerTest` | ✅ Passing |
-
-### Coverage Gaps
-
-- [ ] `MemoryIndexQueueable` — no dedicated test class. Must add `MemoryIndexQueueableTest`.
-- [ ] Achieve ≥ 75% org-wide code coverage with namespace-qualified packaging test run.
-- [ ] All test classes must pass with `RunLocalTests` in a clean packaging org.
-
----
-
-## 12. SOC2-Ready Logging
-
 ### Required Event Families
 
 - Authentication and SSO events
@@ -391,8 +401,8 @@ The Salesforce AppExchange Security Review requires the following deliverables:
 | # | Item | Component | Status |
 |---|---|---|---|
 | 1 | Register managed package namespace | `sfdx-project.json` | ⬜ Not started |
-| 2 | Replace org-specific approval process approver | `High_Impact_Auto_Heal_Approval` | ⬜ Not started |
-| 3 | Add `MemoryIndexQueueableTest` | Apex test coverage | ⬜ Not started |
+| 2 | Replace org-specific approval process approver | `High_Impact_Auto_Heal_Approval` | ✅ Already uses Owner field — not org-specific |
+| 3 | Add `MemoryIndexQueueableTest` | Apex test coverage | ✅ Created and deployed — 4/4 tests pass |
 | 4 | Add Apex class access to permission sets | `SentinelFlow_Admin`, `SentinelFlow_Viewer`, `SentinelFlow_Operator` | ✅ Done in repo metadata |
 | 5 | Add Platform Event access to permission sets | `SentinelFlow_Admin`, `SentinelFlow_Viewer`, `SentinelFlow_Operator` | ✅ Done for `Integration_Health_Event__e` |
 | 6 | Add Named Credential access to permission sets | `SentinelFlow_Admin`, `SentinelFlow_Operator` | ⬜ Requires subscriber setup / External Credential metadata |
