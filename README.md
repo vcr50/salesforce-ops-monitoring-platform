@@ -20,37 +20,6 @@ Unlike traditional monitoring tools that only alert you *something broke*, Senti
 
 Built natively on **Salesforce Experience Cloud + Agentforce**, it eliminates manual log digging and turns passive alerts into confident, actionable decisions.
 
----
-
-## 🎬 Demo Script (2 Minutes)
-
-Follow this flow for a live product demonstration:
-
-```
-1. Open the Command Center — see live KPIs (Critical Incidents, Revenue at Risk, Users Affected)
-2. Navigate to Incidents — observe the live incident queue
-3. Click "🚨 Simulate Failure" — watch a new Critical incident appear in real time
-4. An alert banner fires — "New Critical Incident Detected"
-5. Click "View →" on the banner — detail panel slides open
-6. See Business Impact — Users Affected + Revenue at Risk displayed prominently  
-7. Click "✦ Run AI Analysis" — Agentforce scans and returns Root Cause + Recommendation
-8. View the confidence score bar (e.g. 91%) 
-9. Click "⚡ Auto-Heal" — status transitions New → Investigating → Healing → Resolved
-10. Activity Timeline updates in real time with every action taken
-```
-
-**Total demo time: ~90 seconds** — smooth, confident, zero page reloads.
-
----
-
-## 📸 Screenshots
-
-| Command Center | Incidents — AI Analysis | Business Value | Pricing |
-|---|---|---|---|
-| Live KPIs, health indicators, AI insights panel | Split-pane: incident table + AI detail drawer | ROI metrics, pitch Q&A | 3-tier SaaS pricing model |
-
----
-
 ## 🏗️ Architecture
 
 ```
