@@ -3,6 +3,7 @@
  *              Handles username/password login and forgot-password flows
  *              for the Experience Cloud site.
  */
+@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
 public without sharing class SentinelFlowLoginController {
     @TestVisible
     private static final String SENTINEL_FLOW_LIGHTNING_APP_URL =
@@ -94,6 +95,9 @@ public without sharing class SentinelFlowLoginController {
     @AuraEnabled
     public static Boolean forgotPassword(String usernameOrEmail) {
         try {
+            // -- Security Gate: CRUD/FLS enforcement --
+            SecurityGate.requireReadAccess('User', new Set<String>{'Id', 'Username', 'Email', 'IsActive'});
+
             // First, try to find an active user by Username
             List<User> users = [SELECT Username FROM User WHERE Username = :usernameOrEmail AND IsActive = true LIMIT 1];
             

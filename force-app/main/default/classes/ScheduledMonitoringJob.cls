@@ -13,6 +13,7 @@
  * @author   Tomcodex
  * @version  1.0
  */
+@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
 global with sharing class ScheduledMonitoringJob implements Schedulable {
 
     // ── Thresholds ──────────────────────────────────────────────────────────
@@ -27,6 +28,18 @@ global with sharing class ScheduledMonitoringJob implements Schedulable {
 
     // ── Public so it can be invoked manually from dev console ────────────────
     public static void sweepStaleFailed() {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Integration_Log__c', new Set<String>{
+            'Id', 'API_Name__c', 'Error_Message__c', 'Tenant__c', 'Response_Time__c', 'Status__c'
+        });
+        SecurityGate.requireReadAccess('Incident__c', new Set<String>{
+            'Id', 'Integration_Log__c', 'Status__c'
+        });
+        SecurityGate.requireCreateAccess('Incident__c', new Set<String>{
+            'Status__c', 'Severity__c', 'Description__c', 'Integration_Log__c',
+            'Tenant__c', 'Error_Type__c', 'Auto_Heal_Status__c'
+        });
+
         Datetime threshold = System.now().addMinutes(-STALE_FAILURE_MINUTES);
 
         // Failed logs older than threshold
@@ -94,6 +107,18 @@ global with sharing class ScheduledMonitoringJob implements Schedulable {
     }
 
     public static void sweepSilentStalled() {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Integration_Log__c', new Set<String>{
+            'Id', 'API_Name__c', 'Error_Message__c', 'Tenant__c', 'Status__c'
+        });
+        SecurityGate.requireReadAccess('Incident__c', new Set<String>{
+            'Id', 'Integration_Log__c', 'Status__c'
+        });
+        SecurityGate.requireCreateAccess('Incident__c', new Set<String>{
+            'Status__c', 'Severity__c', 'Description__c', 'Integration_Log__c',
+            'Tenant__c', 'Error_Type__c', 'Auto_Heal_Status__c'
+        });
+
         Datetime threshold = System.now().addMinutes(-SILENT_FAILURE_MINUTES);
 
         // Integration logs that haven't been updated in > 60 min and are not 'Success'

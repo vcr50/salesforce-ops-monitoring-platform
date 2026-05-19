@@ -3,12 +3,8 @@
  * Handles customer creation, retrieval, and management
  */
 
-const Stripe = require('stripe');
 const { logger } = require('../middleware/logger');
-
-const stripe = process.env.STRIPE_SECRET_KEY
-  ? new Stripe(process.env.STRIPE_SECRET_KEY)
-  : null;
+const { getStripe } = require('../services/stripeClient');
 
 /**
  * Create a new customer
@@ -20,16 +16,12 @@ const stripe = process.env.STRIPE_SECRET_KEY
  * @returns {Promise<Object>} Stripe customer object
  */
 const createCustomer = async ({ email, name, orgId, metadata = {} }) => {
-  if (!stripe) {
-    throw new Error('STRIPE_SECRET_KEY is required.');
-  }
-
   if (!email || !orgId) {
     throw new Error('email and orgId are required.');
   }
 
   try {
-    const customer = await stripe.customers.create({
+    const customer = await getStripe().customers.create({
       email,
       name,
       metadata: {
@@ -58,16 +50,12 @@ const createCustomer = async ({ email, name, orgId, metadata = {} }) => {
  * @returns {Promise<Object>} Stripe customer object
  */
 const getCustomer = async (customerId) => {
-  if (!stripe) {
-    throw new Error('STRIPE_SECRET_KEY is required.');
-  }
-
   if (!customerId) {
     throw new Error('customerId is required.');
   }
 
   try {
-    const customer = await stripe.customers.retrieve(customerId);
+    const customer = await getStripe().customers.retrieve(customerId);
     logger.info({ customerId }, 'Customer retrieved successfully');
     return customer;
   } catch (error) {
@@ -82,16 +70,12 @@ const getCustomer = async (customerId) => {
  * @returns {Promise<Object|null>} Stripe customer object or null if not found
  */
 const findCustomerByOrgId = async (orgId) => {
-  if (!stripe) {
-    throw new Error('STRIPE_SECRET_KEY is required.');
-  }
-
   if (!orgId) {
     throw new Error('orgId is required.');
   }
 
   try {
-    const customers = await stripe.customers.list({
+    const customers = await getStripe().customers.list({
       limit: 100,
       expand: ['data.subscriptions']
     });
@@ -118,16 +102,12 @@ const findCustomerByOrgId = async (orgId) => {
  * @returns {Promise<Object>} Updated customer object
  */
 const updateCustomer = async (customerId, updateData) => {
-  if (!stripe) {
-    throw new Error('STRIPE_SECRET_KEY is required.');
-  }
-
   if (!customerId) {
     throw new Error('customerId is required.');
   }
 
   try {
-    const customer = await stripe.customers.update(customerId, updateData);
+    const customer = await getStripe().customers.update(customerId, updateData);
     logger.info({ customerId }, 'Customer updated successfully');
     return customer;
   } catch (error) {
@@ -142,16 +122,12 @@ const updateCustomer = async (customerId, updateData) => {
  * @returns {Promise<Object>} Deleted customer object
  */
 const deleteCustomer = async (customerId) => {
-  if (!stripe) {
-    throw new Error('STRIPE_SECRET_KEY is required.');
-  }
-
   if (!customerId) {
     throw new Error('customerId is required.');
   }
 
   try {
-    const customer = await stripe.customers.del(customerId);
+    const customer = await getStripe().customers.del(customerId);
     logger.info({ customerId }, 'Customer deleted successfully');
     return customer;
   } catch (error) {

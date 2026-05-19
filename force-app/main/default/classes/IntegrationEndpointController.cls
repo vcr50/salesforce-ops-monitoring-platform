@@ -7,6 +7,7 @@
  * @author  Tomcodex
  * @version 1.0
  */
+@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
 public with sharing class IntegrationEndpointController {
 
     public class EndpointRow {
@@ -25,6 +26,13 @@ public with sharing class IntegrationEndpointController {
 
     @AuraEnabled(cacheable=true)
     public static List<EndpointRow> getEndpoints() {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Integration_Endpoint__c', new Set<String>{
+            'Id', 'Name', 'Endpoint_URL__c', 'Auth_Type__c', 'Active__c',
+            'Retry_Policy__c', 'Max_Retries__c', 'Failure_Count__c',
+            'Circuit_Status__c', 'Tenant__c'
+        });
+
         Id tenantId = TenantContext.getCurrentTenantId();
         List<EndpointRow> rows = new List<EndpointRow>();
 
@@ -63,6 +71,13 @@ public with sharing class IntegrationEndpointController {
         String retryPolicy,
         Integer maxRetries
     ) {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireCreateAccess('Integration_Endpoint__c', new Set<String>{
+            'Name', 'Endpoint_URL__c', 'Auth_Type__c', 'Retry_Policy__c',
+            'Max_Retries__c', 'Active__c', 'Circuit_Status__c',
+            'Failure_Count__c', 'Tenant__c'
+        });
+
         Id tenantId = TenantContext.getCurrentTenantId();
 
         Integration_Endpoint__c ep = new Integration_Endpoint__c(
@@ -95,6 +110,12 @@ public with sharing class IntegrationEndpointController {
         Integer maxRetries,
         Boolean active
     ) {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireUpdateAccess('Integration_Endpoint__c', new Set<String>{
+            'Name', 'Endpoint_URL__c', 'Auth_Type__c', 'Retry_Policy__c',
+            'Max_Retries__c', 'Active__c'
+        });
+
         update new Integration_Endpoint__c(
             Id              = recordId,
             Name            = name,
@@ -112,6 +133,11 @@ public with sharing class IntegrationEndpointController {
 
     @AuraEnabled
     public static void resetCircuitBreaker(Id endpointId) {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireUpdateAccess('Integration_Endpoint__c', new Set<String>{
+            'Circuit_Status__c', 'Failure_Count__c'
+        });
+
         update new Integration_Endpoint__c(
             Id               = endpointId,
             Circuit_Status__c = 'Closed',
@@ -125,6 +151,9 @@ public with sharing class IntegrationEndpointController {
 
     @AuraEnabled
     public static void deleteEndpoint(Id endpointId) {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireDeleteAccess('Integration_Endpoint__c');
+
         delete new Integration_Endpoint__c(Id = endpointId);
     }
 }

@@ -1,9 +1,15 @@
+@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
 public with sharing class SentinelFlowCopilotController {
     @AuraEnabled
     public static String handleChatMessage(String userMessage) {
         String msgLower = userMessage.toLowerCase();
         
         if (msgLower.contains('analyze') || msgLower.contains('heal')) {
+            // -- Security Gate: CRUD/FLS enforcement --
+            SecurityGate.requireReadAccess('Incident__c', new Set<String>{
+                'Id', 'Name', 'Description__c', 'Status__c'
+            });
+
             // Find the most recent critical/high open incident
             List<Incident__c> incs = [SELECT Id, Name, Description__c FROM Incident__c WHERE Status__c IN ('Open', 'Investigating') ORDER BY CreatedDate DESC LIMIT 1];
             
@@ -35,6 +41,9 @@ public with sharing class SentinelFlowCopilotController {
         }
         
         if (msgLower.contains('status') || msgLower.contains('summary')) {
+            // -- Security Gate: CRUD/FLS enforcement --
+            SecurityGate.requireAccessible('Incident__c');
+
             Integer critCount = [SELECT COUNT() FROM Incident__c WHERE Severity__c = 'Critical' AND Status__c = 'Open'];
             return 'Currently, there are ' + critCount + ' critical open incidents. The most critical issue is related to the Payment Gateway Timeout. Would you like me to analyze it?';
         }

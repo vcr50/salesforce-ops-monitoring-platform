@@ -116,4 +116,8 @@ class DataSyncService {
   }
 }
 
-module.exports = new DataSyncService();
+// Singleton for production use
+const dataSyncService = new DataSyncService();
+
+module.exports = dataSyncService;
+module.exports.DataSyncService = DataSyncService;

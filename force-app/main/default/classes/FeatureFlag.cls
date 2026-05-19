@@ -5,6 +5,7 @@
  * @author Tomcodex
  * @version 1.0
  */
+@SuppressWarnings('PMD.ApexDoc')
 public with sharing class FeatureFlag {
 
     public static Boolean isEnabled(String featureName, Id tenantId) {

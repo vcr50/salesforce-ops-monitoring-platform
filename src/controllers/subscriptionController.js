@@ -6,6 +6,7 @@
 const subscriptionService = require('../services/subscriptionService');
 const customerPortalService = require('../services/customerPortalService');
 const { logger } = require('../middleware/logger');
+const { config } = require('../config');
 
 /**
  * Get all available plans
@@ -242,7 +243,7 @@ const createPortalSession = async (req, res, next) => {
       });
     }
 
-    const baseUrl = process.env.BILLING_RETURN_BASE_URL || 
+    const baseUrl = config.billing.returnBaseUrl || 
                     `${req.protocol}://${req.get('host')}`;
     const finalReturnUrl = returnUrl || `${baseUrl}/dashboard`;
 

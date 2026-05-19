@@ -6,6 +6,7 @@
  * @author  Tomcodex
  * @version 1.0
  */
+@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
 public with sharing class NotificationService {
 
     /**
@@ -14,6 +15,12 @@ public with sharing class NotificationService {
      */
     public static void sendIncidentAlert(Id incidentId) {
         if (incidentId == null) { return; }
+
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Incident__c', new Set<String>{
+            'Id', 'Name', 'Severity__c', 'Description__c',
+            'Revenue_at_Risk__c', 'Users_Affected__c', 'Tenant__c'
+        });
 
         Incident__c inc = [
             SELECT Id, Name, Severity__c, Description__c,
@@ -75,6 +82,12 @@ public with sharing class NotificationService {
     @future(callout=true)
     public static void sendSlackAlert(Id incidentId) {
         if (incidentId == null) { return; }
+
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Incident__c', new Set<String>{
+            'Id', 'Name', 'Severity__c', 'Description__c',
+            'Revenue_at_Risk__c', 'Users_Affected__c', 'Tenant__c', 'Status__c'
+        });
 
         Incident__c inc = [
             SELECT Id, Name, Severity__c, Description__c,

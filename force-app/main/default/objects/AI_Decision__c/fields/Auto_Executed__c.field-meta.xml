@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Auto_Executed__c</fullName>
+    <description>Whether the AI recommendation was automatically executed (true) or deferred to manual review (false).</description>
+    <defaultValue>false</defaultValue>
+    <externalId>false</externalId>
+    <label>Auto Executed</label>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

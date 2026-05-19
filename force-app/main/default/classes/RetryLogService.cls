@@ -8,6 +8,7 @@
  * @author  Tomcodex
  * @version 1.0
  */
+@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
 public with sharing class RetryLogService {
 
     /**
@@ -28,6 +29,12 @@ public with sharing class RetryLogService {
         if (incidentId == null) {
             return;
         }
+
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Incident__c', new Set<String>{'Id', 'Tenant__c'});
+        SecurityGate.requireCreateAccess('Retry_Log__c', new Set<String>{
+            'Incident__c', 'Retry_Attempt__c', 'Result__c', 'Timestamp__c', 'Tenant__c'
+        });
 
         // Resolve tenant from incident
         Id tenantId = null;
@@ -68,6 +75,10 @@ public with sharing class RetryLogService {
         if (entries == null || entries.isEmpty()) {
             return;
         }
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireCreateAccess('Retry_Log__c', new Set<String>{
+            'Incident__c', 'Retry_Attempt__c', 'Result__c', 'Timestamp__c', 'Tenant__c'
+        });
         try {
             insert entries;
         } catch (Exception ex) {
@@ -88,6 +99,10 @@ public with sharing class RetryLogService {
         if (incidentId == null) {
             return new List<Retry_Log__c>();
         }
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Retry_Log__c', new Set<String>{
+            'Id', 'Name', 'Retry_Attempt__c', 'Result__c', 'Timestamp__c'
+        });
         return [
             SELECT Id, Name, Retry_Attempt__c,
                    Result__c, Timestamp__c

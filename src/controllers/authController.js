@@ -1,13 +1,15 @@
 const { logger } = require('../middleware/logger');
+const { config } = require('../config');
 
 const login = (req, res) => {
   // Redirect to Salesforce OAuth login
-  const clientId = process.env.SALESFORCE_CLIENT_ID;
-  const redirectUri = encodeURIComponent(process.env.SALESFORCE_CALLBACK_URL);
+  const clientId = config.oauth.clientId;
+  const redirectUri = encodeURIComponent(config.oauth.callbackUrl || '');
   const scope = encodeURIComponent('api refresh_token');
   const responseType = 'code';
+  const instanceUrl = config.salesforce.instanceUrl || '';
 
-  const loginUrl = `${process.env.SALESFORCE_INSTANCE_URL}/services/oauth2/authorize?` +
+  const loginUrl = `${instanceUrl}/services/oauth2/authorize?` +
     `client_id=${clientId}&` +
     `redirect_uri=${redirectUri}&` +
     `response_type=${responseType}&` +
@@ -42,7 +44,7 @@ const callback = (req, res, next) => {
     req.session.user = {
       code,
       accessToken: null, // Would be set after token exchange
-      instanceUrl: process.env.SALESFORCE_INSTANCE_URL
+      instanceUrl: config.salesforce.instanceUrl
     };
 
     res.json({

@@ -1,3 +1,4 @@
+@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
 public with sharing class SentinelFlowAutomationService {
     private static final Set<String> RESOLVED_STATUSES = new Set<String>{ 'Resolved', 'Closed' };
     private static final String FAILED_LOG_STATUS = 'Failed';
@@ -28,6 +29,17 @@ public with sharing class SentinelFlowAutomationService {
         List<Integration_Log__c> newRecords,
         Map<Id, Integration_Log__c> oldMap
     ) {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Incident__c', new Set<String>{
+            'Id', 'Integration_Log__c', 'Status__c'
+        });
+        SecurityGate.requireReadAccess('Environment__c', new Set<String>{'Id', 'Name'});
+        SecurityGate.requireReadAccess('SLA_Policy__c', new Set<String>{'Id', 'Severity__c'});
+        SecurityGate.requireCreateAccess('Incident__c', new Set<String>{
+            'Severity__c', 'Status__c', 'Description__c', 'Integration_Log__c',
+            'Environment__c', 'SLA_Policy__c'
+        });
+
         Set<Id> failedLogIds = new Set<Id>();
         Map<Id, Integration_Log__c> failedLogsById = new Map<Id, Integration_Log__c>();
 
@@ -121,6 +133,12 @@ public with sharing class SentinelFlowAutomationService {
         List<Integration_Log__c> newRecords,
         Map<Id, Integration_Log__c> oldMap
     ) {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Incident__c', new Set<String>{
+            'Id', 'Integration_Log__c', 'Status__c'
+        });
+        SecurityGate.requireUpdateAccess('Incident__c', new Set<String>{'Status__c'});
+
         Set<Id> recoveredLogIds = new Set<Id>();
 
         for (Integration_Log__c logRecord : newRecords) {

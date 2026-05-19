@@ -6,11 +6,17 @@
  * @author Tomcodex
  * @version 2.0
  */
+@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
 public without sharing class SystemLogger {
     
     public enum ErrorType { TRANSIENT_ERROR, PERMANENT_ERROR }
 
     public static void logError(Exception ex, String className, String methodName, ErrorType type, Integer retryCount, Id tenantId) {
+        // -- Security Gate: CRUD/FLS enforcement --
+        if (!SecurityGate.isCreateable('System_Log__c')) {
+            System.debug(LoggingLevel.ERROR, 'SystemLogger: No create access on System_Log__c');
+            return;
+        }
         try {
             System_Log__c log = new System_Log__c();
             log.Class_Name__c = className;
@@ -31,6 +37,11 @@ public without sharing class SystemLogger {
     }
 
     public static void logMessage(String className, String methodName, String level, String message) {
+        // -- Security Gate: CRUD/FLS enforcement --
+        if (!SecurityGate.isCreateable('System_Log__c')) {
+            System.debug(LoggingLevel.ERROR, 'SystemLogger: No create access on System_Log__c');
+            return;
+        }
         try {
             System_Log__c log = new System_Log__c();
             log.Class_Name__c = className;

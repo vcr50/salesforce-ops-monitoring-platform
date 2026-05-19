@@ -1,5 +1,17 @@
+/**
+ * @description SSORegHandler - Handles SSO user registration and provisioning for SentinelFlow portal.
+ * @author Tomcodex
+ * @version 1.0
+ */
+@SuppressWarnings('PMD.ApexCRUDViolation')
 global class SSORegHandler implements Auth.RegistrationHandler {
     
+    /**
+     * @description Creates or matches a User from SSO authentication data.
+     * @param portalId The portal/community ID.
+     * @param data     The SSO user data from the identity provider.
+     * @return         The matched or newly created User.
+     */
     global User createUser(Id portalId, Auth.UserData data) {
         // 1. Try to find the exact username match first
         List<User> existingUsers = [SELECT Id, Profile.UserType FROM User WHERE Username = :data.username LIMIT 1];
@@ -68,6 +80,12 @@ global class SSORegHandler implements Auth.RegistrationHandler {
         return u; 
     }
 
+    /**
+     * @description Updates an existing User's details from SSO data.
+     * @param userId   The User ID to update.
+     * @param portalId The portal/community ID.
+     * @param data     The updated SSO user data.
+     */
     global void updateUser(Id userId, Id portalId, Auth.UserData data) {
         // Automatically sync details if needed
         User u = new User(Id = userId);

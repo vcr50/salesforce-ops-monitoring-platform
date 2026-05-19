@@ -3,6 +3,7 @@
  *
  * Endpoint: POST /services/apexrest/subscription/update
  */
+@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
 @RestResource(urlMapping='/subscription/update/*')
 global with sharing class SubscriptionRestApi {
     global class UpdateRequest {
@@ -34,6 +35,10 @@ global with sharing class SubscriptionRestApi {
         response.addHeader('Content-Type', 'application/json');
 
         try {
+            // -- Security Gate: CRUD/FLS enforcement --
+            SecurityGate.requireCreateable('Subscription__c');
+            SecurityGate.requireUpdateable('Subscription__c');
+
             UpdateRequest payload = (UpdateRequest) JSON.deserialize(
                 RestContext.request.requestBody.toString(),
                 UpdateRequest.class

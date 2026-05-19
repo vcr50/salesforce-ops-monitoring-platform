@@ -22,6 +22,7 @@
  * @version 2.1 (Hardened Bulkified + Partial Success Processing)
  */
 @RestResource(urlMapping='/sentinelflow/incidents/*')
+@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
 global with sharing class IncidentRestApi {
 
     // ── Response wrapper ──────────────────────────────────────────────────
@@ -75,6 +76,14 @@ global with sharing class IncidentRestApi {
                 ));
                 return;
             }
+            // Field-level security for create operations
+            SecurityGate.requireFieldsCreateable('Integration_Log__c', new Set<String>{
+                'API_Name__c', 'Status__c', 'Error_Message__c', 'Tenant__c'
+            });
+            SecurityGate.requireFieldsCreateable('Incident__c', new Set<String>{
+                'Description__c', 'Severity__c', 'Status__c', 'Users_Affected__c',
+                'Revenue_at_Risk__c', 'Integration_Log__c', 'Tenant__c'
+            });
 
             try {
                 SubscriptionService.requireIncidentCapacity();
@@ -251,6 +260,13 @@ global with sharing class IncidentRestApi {
         res.addHeader('Content-Type', 'application/json');
 
         try {
+            // -- Security Gate: CRUD/FLS enforcement --
+            SecurityGate.requireReadAccess('Incident__c', new Set<String>{
+                'Id', 'Name', 'Severity__c', 'Status__c', 'Description__c',
+                'Environment__c', 'Revenue_at_Risk__c', 'Users_Affected__c',
+                'AI_Confidence__c', 'AI_Impact_Level__c', 'CreatedDate', 'Tenant__c'
+            });
+
             // Authenticate
             String apiKey = req.params.get('apiKey');
             Id tenantId = TenantContext.getTenantIdByApiKey(apiKey);

@@ -1,13 +1,22 @@
-const axios = require('axios');
 const { logger } = require('../middleware/logger');
 const { SalesforceError } = require('../utils/errors');
 const { API_TIMEOUT, RETRY_ATTEMPTS, RETRY_DELAY } = require('../utils/constants');
+const { createHttpClient } = require('../services/httpClient');
 
 class SalesforceSoapAPI {
-  constructor(accessToken, instanceUrl) {
+  constructor(accessToken, instanceUrl, httpClient = null) {
     this.accessToken = accessToken;
     this.instanceUrl = instanceUrl;
     this.baseURL = `${instanceUrl}/services/Soap/c/58.0`;
+    // Allow injecting a mock client for testing
+    this._client = httpClient || createHttpClient({
+      baseURL: this.baseURL,
+      headers: {
+        'Content-Type': 'text/xml; charset=UTF-8',
+        'SOAPAction': '""'
+      },
+      timeout: API_TIMEOUT
+    });
   }
 
   // Build SOAP envelope
@@ -27,12 +36,11 @@ class SalesforceSoapAPI {
 
   async request(soapBody, retries = RETRY_ATTEMPTS) {
     try {
-      const response = await axios.post(this.baseURL, this.buildSoapEnvelope(soapBody), {
+      const response = await this._client.post('', this.buildSoapEnvelope(soapBody), {
         headers: {
           'Content-Type': 'text/xml; charset=UTF-8',
           'SOAPAction': '""'
-        },
-        timeout: API_TIMEOUT
+        }
       });
 
       // Parse and return response

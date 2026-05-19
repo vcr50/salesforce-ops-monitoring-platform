@@ -1,4 +1,18 @@
+/**
+ * @description AccountRecord - Utility class for Account and Contact data operations.
+ * @author Tomcodex
+ * @version 1.0
+ */
+@SuppressWarnings('PMD.ApexCRUDViolation')
 public class AccountRecord {
+
+    /**
+     * @description Inserts a new Account record with the specified details.
+     * @param name    The Account name.
+     * @param rating  The Account rating.
+     * @param website The Account website URL.
+     * @return        The Id of the newly created Account, or null on failure.
+     */
     public static ID insertData(String name, String rating, String website) {
         try {
             Account acc = new Account();
@@ -14,6 +28,9 @@ public class AccountRecord {
         }
     }
 
+    /**
+     * @description Creates a Contact linked to a newly inserted Account.
+     */
     public static void insertContact() {
         try {
             Id accId = insertData('nitro 6', 'hot', 'www.example.com');

@@ -1,6 +1,6 @@
 const crypto = require('crypto');
-const axios = require('axios');
 const { logger } = require('../middleware/logger');
+const { createHttpClient } = require('./httpClient');
 
 const RAZORPAY_API_BASE_URL = 'https://api.razorpay.com/v1';
 
@@ -15,16 +15,24 @@ const getRazorpayConfig = () => {
   return { keyId, keySecret };
 };
 
+let _client = null;
+
 const getRazorpayClient = () => {
+  if (_client) return _client;
   const { keyId, keySecret } = getRazorpayConfig();
-  return axios.create({
+  _client = createHttpClient({
     baseURL: RAZORPAY_API_BASE_URL,
-    auth: {
-      username: keyId,
-      password: keySecret
-    },
-    timeout: 15000
+    auth: { username: keyId, password: keySecret }
   });
+  return _client;
+};
+
+/**
+ * Inject a custom client (primarily for testing).
+ * Pass null to reset to default lazy initialization.
+ */
+const setRazorpayClient = (client) => {
+  _client = client;
 };
 
 const verifyWebhookSignature = (rawBody, signature, secret = process.env.RAZORPAY_WEBHOOK_SECRET) => {
@@ -40,6 +48,10 @@ const verifyWebhookSignature = (rawBody, signature, secret = process.env.RAZORPA
     .createHmac('sha256', secret)
     .update(rawBody)
     .digest('hex');
+
+  if (!/^[a-f0-9]+$/i.test(signature)) {
+    return false;
+  }
 
   const expectedBuffer = Buffer.from(expected, 'hex');
   const actualBuffer = Buffer.from(signature, 'hex');
@@ -130,5 +142,7 @@ module.exports = {
   createOrReuseCustomer,
   createSubscription,
   getSubscription,
-  createCheckoutSubscription
+  createCheckoutSubscription,
+  getRazorpayClient,
+  setRazorpayClient
 };

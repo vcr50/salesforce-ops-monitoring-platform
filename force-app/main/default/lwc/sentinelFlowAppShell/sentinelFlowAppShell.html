@@ -1,0 +1,120 @@
+<template>
+    <section class={shellClass} aria-label="SentinelFlow">
+        <div class="ambient ambient-one"></div>
+        <div class="ambient ambient-two"></div>
+        <header class="shell-header">
+            <div class="brand">
+                <span class="brand-mark">
+                    <img src={logoUrl} alt="SentinelFlow" />
+                </span>
+                <div>
+                    <h1>SentinelFlow</h1>
+                    <p>Autonomous operations cockpit</p>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="health-pill" data-status={healthTone}>
+                    <span class="status-dot"></span>
+                    <span>{healthLabel}</span>
+                </div>
+                <div class="time-pill">{currentTime}</div>
+                <button class={themeToggleClass} type="button" onclick={toggleTheme} title={themeToggleTitle} aria-label={themeToggleTitle}>
+                    <span class="theme-thumb">
+                        <lightning-icon icon-name={themeIcon} size="xx-small"></lightning-icon>
+                    </span>
+                    <span class="theme-option day-label">Day</span>
+                    <span class="theme-option dark-label">Dark</span>
+                </button>
+                <lightning-button-icon
+                    icon-name="utility:refresh"
+                    variant="bare"
+                    alternative-text="Refresh view"
+                    title="Refresh view"
+                    onclick={refreshView}>
+                </lightning-button-icon>
+            </div>
+        </header>
+
+        <div class="shell-body">
+            <aside class="shell-sidebar" aria-label="SentinelFlow sections">
+                <nav class="nav-list">
+                    <button class={homeNavClass} data-page="home" onclick={navigate}>
+                        <lightning-icon icon-name="utility:home" size="x-small"></lightning-icon>
+                        <span>Home</span>
+                    </button>
+                    <button class={incidentsNavClass} data-page="incidents" onclick={navigate}>
+                        <lightning-icon icon-name="utility:warning" size="x-small"></lightning-icon>
+                        <span>Incidents</span>
+                        <span class="nav-count">{criticalCount}</span>
+                    </button>
+                    <button class={integrationsNavClass} data-page="integrations" onclick={navigate}>
+                        <lightning-icon icon-name="utility:connected_apps" size="x-small"></lightning-icon>
+                        <span>Integrations</span>
+                    </button>
+                    <button class={impactNavClass} data-page="impact" onclick={navigate}>
+                        <lightning-icon icon-name="utility:trending" size="x-small"></lightning-icon>
+                        <span>Impact</span>
+                    </button>
+                    <button class={copilotNavClass} data-page="copilot" onclick={navigate}>
+                        <lightning-icon icon-name="utility:einstein" size="x-small"></lightning-icon>
+                        <span>Agentforce</span>
+                    </button>
+                    <button class={settingsNavClass} data-page="settings" onclick={navigate}>
+                        <lightning-icon icon-name="utility:settings" size="x-small"></lightning-icon>
+                        <span>Settings</span>
+                    </button>
+                </nav>
+
+                <div class="sidebar-card glass-card">
+                    <p class="sidebar-label">Runtime Fabric</p>
+                    <div class="runtime-row">
+                        <span>Apex Jobs</span>
+                        <span class="mini-status ok"></span>
+                    </div>
+                    <div class="runtime-row">
+                        <span>Platform Events</span>
+                        <span class="mini-status ok"></span>
+                    </div>
+                    <div class="runtime-row">
+                        <span>Agentforce</span>
+                        <span class="mini-status warn"></span>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="shell-content">
+                <div class="content-toolbar glass-card">
+                    <div>
+                        <p class="eyebrow">{pageEyebrow}</p>
+                        <h2>{pageTitle}</h2>
+                    </div>
+                    <div class="toolbar-summary">
+                        <span>{toolbarSummary}</span>
+                    </div>
+                </div>
+
+                <section class="content-surface">
+                    <template if:true={isHome}>
+                        <c-sentinel-flow-guardian-home theme={theme}></c-sentinel-flow-guardian-home>
+                    </template>
+                    <template if:true={isIncidents}>
+                        <c-sentinel-flow-portal-incidents-page></c-sentinel-flow-portal-incidents-page>
+                    </template>
+                    <template if:true={isIntegrations}>
+                        <c-sentinel-flow-portal-integrations-page></c-sentinel-flow-portal-integrations-page>
+                    </template>
+                    <template if:true={isImpact}>
+                        <c-sentinel-flow-portal-impact-panel></c-sentinel-flow-portal-impact-panel>
+                    </template>
+                    <template if:true={isCopilot}>
+                        <c-sentinel-flow-portal-copilot></c-sentinel-flow-portal-copilot>
+                    </template>
+                    <template if:true={isSettings}>
+                        <c-sentinel-flow-portal-settings></c-sentinel-flow-portal-settings>
+                    </template>
+                </section>
+            </main>
+        </div>
+    </section>
+</template>

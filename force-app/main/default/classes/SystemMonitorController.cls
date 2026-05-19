@@ -5,6 +5,7 @@
  * @author Tomcodex
  * @version 1.0
  */
+@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
 public with sharing class SystemMonitorController {
 
     public class SystemHealth {
@@ -16,6 +17,10 @@ public with sharing class SystemMonitorController {
 
     @AuraEnabled(cacheable=true)
     public static SystemHealth getSystemHealth() {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireAccessible('System_Log__c');
+        SecurityGate.requireAccessible('Incident__c');
+
         SystemHealth health = new SystemHealth();
 
         // Error count last 1 hour
@@ -58,6 +63,12 @@ public with sharing class SystemMonitorController {
 
     @AuraEnabled(cacheable=true)
     public static List<System_Log__c> getRecentLogs() {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('System_Log__c', new Set<String>{
+            'Id', 'Name', 'Class_Name__c', 'Method_Name__c', 'Error_Type__c',
+            'Retry_Count__c', 'CreatedDate'
+        });
+
         return [
             SELECT Id, Name, Class_Name__c, Method_Name__c, Error_Type__c, 
                    Retry_Count__c, CreatedDate

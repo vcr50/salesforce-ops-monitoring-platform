@@ -4,16 +4,8 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentInstanceProperties>
-                    <name>entityName</name>
-                    <value>Incident__c</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>filterName</name>
-                    <value>Critical_Incidents</value>
-                </componentInstanceProperties>
-                <componentName>flexipage:filterListCard</componentName>
-                <identifier>flexipage_filterListCard</identifier>
+                <componentName>c:sentinelFlowAppShell</componentName>
+                <identifier>c_sentinelFlowAppShell</identifier>
             </componentInstance>
         </itemInstances>
         <name>main</name>

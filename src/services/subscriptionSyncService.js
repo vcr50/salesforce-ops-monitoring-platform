@@ -1,6 +1,6 @@
 const crypto = require('crypto');
-const axios = require('axios');
 const { logger } = require('../middleware/logger');
+const { createHttpClient } = require('./httpClient');
 
 const ACTIVE_STATUSES = new Set(['active', 'trialing']);
 const PAST_DUE_STATUSES = new Set(['past_due', 'unpaid', 'incomplete', 'incomplete_expired']);
@@ -72,6 +72,26 @@ const getSalesforceConfig = () => {
   };
 };
 
+let _sfClient = null;
+
+const getSalesforceClient = () => {
+  if (_sfClient) return _sfClient;
+  const { instanceUrl, accessToken } = getSalesforceConfig();
+  _sfClient = createHttpClient({
+    baseURL: instanceUrl,
+    headers: { Authorization: `Bearer ${accessToken}` }
+  });
+  return _sfClient;
+};
+
+/**
+ * Inject a custom Salesforce client (primarily for testing).
+ * Pass null to reset to default lazy initialization.
+ */
+const setSalesforceClient = (client) => {
+  _sfClient = client;
+};
+
 const syncSubscriptionToSalesforce = async ({
   orgId,
   plan = 'Professional',
@@ -86,7 +106,6 @@ const syncSubscriptionToSalesforce = async ({
     throw new Error('orgId is required to sync a subscription.');
   }
 
-  const { instanceUrl, accessToken } = getSalesforceConfig();
   const payload = {
     orgId: normalizeOrgIdForSalesforce(orgId),
     plan,
@@ -98,17 +117,8 @@ const syncSubscriptionToSalesforce = async ({
     billingEmail: billingEmail || getBillingEmailFromOrgId(orgId)
   };
 
-  const response = await axios.post(
-    `${instanceUrl}/services/apexrest/subscription/update`,
-    payload,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
-      },
-      timeout: 15000
-    }
-  );
+  const client = getSalesforceClient();
+  const response = await client.post('/services/apexrest/subscription/update', payload);
 
   logger.info({ orgId, status, eventName }, 'Subscription synced to Salesforce');
   return response.data;
@@ -154,5 +164,7 @@ module.exports = {
   mapRazorpaySubscriptionForSalesforce,
   getBillingEmailFromOrgId,
   normalizeOrgIdForSalesforce,
-  syncSubscriptionToSalesforce
+  syncSubscriptionToSalesforce,
+  getSalesforceClient,
+  setSalesforceClient
 };

@@ -8,6 +8,7 @@
  *
  * @author   Tomcodex
  */
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class AuditTrailService {
 
     /**
@@ -23,6 +24,12 @@ public with sharing class AuditTrailService {
         String newValue
     ) {
         if (String.isBlank(objectName) || String.isBlank(action)) { return; }
+
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireCreateAccess('Audit_Trail__c', new Set<String>{
+            'Object_Name__c', 'Action__c', 'Old_Value__c', 'New_Value__c',
+            'Timestamp__c', 'Record_Id__c', 'Tenant__c', 'User__c'
+        });
 
         Audit_Trail__c trail  = new Audit_Trail__c();
         trail.Object_Name__c  = objectName;
@@ -58,6 +65,12 @@ public with sharing class AuditTrailService {
      */
     public static void logAll(List<Audit_Trail__c> entries) {
         if (entries == null || entries.isEmpty()) { return; }
+
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireCreateAccess('Audit_Trail__c', new Set<String>{
+            'Object_Name__c', 'Action__c', 'Old_Value__c', 'New_Value__c',
+            'Timestamp__c', 'Record_Id__c', 'Tenant__c', 'User__c'
+        });
 
         Id tenantId;
         try {

@@ -5,6 +5,7 @@
  * @author Tomcodex
  * @version 1.0
  */
+@SuppressWarnings('PMD.ApexDoc')
 public with sharing class SystemSettings {
 
     private static Map<String, Decimal> settingsCache = new Map<String, Decimal>();

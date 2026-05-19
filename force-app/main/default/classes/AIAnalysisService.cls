@@ -6,6 +6,7 @@
  * @author   Tomcodex
  * @version  2.0
  */
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class AIAnalysisService {
 
     public class AnalysisInput {
@@ -31,6 +32,9 @@ public with sharing class AIAnalysisService {
         if (input == null) {
             throw new AIAnalysisException('AnalysisInput must not be null.');
         }
+
+        // -- Security Gate: Custom Metadata read check --
+        SecurityGate.requireAccessible('AI_Rule__mdt');
 
         AnalysisResult result = new AnalysisResult();
         String errLower = String.isBlank(input.errorMessage) ? '' : input.errorMessage.toLowerCase();
@@ -84,6 +88,15 @@ public with sharing class AIAnalysisService {
             throw new AIAnalysisException('Incident Id must not be null.');
         }
 
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Incident__c', new Set<String>{
+            'Id', 'Description__c', 'Status__c', 'Root_Cause__c',
+            'Recommended_Action__c', 'AI_Impact_Level__c', 'AI_Confidence__c'
+        });
+        SecurityGate.requireUpdateAccess('Incident__c', new Set<String>{
+            'Root_Cause__c', 'Recommended_Action__c', 'AI_Impact_Level__c', 'AI_Confidence__c'
+        });
+
         Incident__c inc = [
             SELECT Id, Description__c, Status__c,
                    Integration_Log__r.Status__c,
@@ -109,6 +122,24 @@ public with sharing class AIAnalysisService {
         inc.AI_Confidence__c      = result.confidence;
         
         update inc;
+
+        // -- Persist AI Decision audit trail --
+        SecurityGate.requireCreateAccess('AI_Decision__c', new Set<String>{
+            'Incident__c', 'Root_Cause__c', 'Recommended_Action__c',
+            'Confidence_Score__c', 'Impact_Level__c', 'Auto_Executed__c',
+            'Matched_Rule__c', 'Tenant__c'
+        });
+        AI_Decision__c decision = new AI_Decision__c(
+            Incident__c           = incidentId,
+            Root_Cause__c         = result.rootCause,
+            Recommended_Action__c = result.recommendedAction,
+            Confidence_Score__c   = result.confidence,
+            Impact_Level__c       = result.impactLevel,
+            Auto_Executed__c      = false,
+            Matched_Rule__c       = result.explanation,
+            Tenant__c             = TenantContext.getCurrentTenantId()
+        );
+        insert decision;
 
         AuditTrailService.log(incidentId, 'Incident__c', 'AI Analysis', null, 'Matched metadata rule -> Action: ' + result.recommendedAction);
 

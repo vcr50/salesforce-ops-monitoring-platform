@@ -1,3 +1,4 @@
+@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
 public with sharing class WebsiteLeadConversionService {
     @TestVisible private static Boolean isRunning = false;
     @TestVisible private static String convertedStatusOverride;
@@ -36,6 +37,15 @@ public with sharing class WebsiteLeadConversionService {
     }
 
     private static void convertLeadIds(List<Id> leadIds) {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Lead', new Set<String>{
+            'Id', 'Company', 'Description', 'Email', 'FirstName', 'IsConverted', 'LastName', 'LeadSource'
+        });
+        SecurityGate.requireAccessible('Account');
+        SecurityGate.requireUpdateAccess('Opportunity', new Set<String>{
+            'StageName', 'Amount', 'CloseDate'
+        });
+
         List<Lead> leadsToConvert = [
             SELECT Id, Company, Description, Email, FirstName, IsConverted, LastName, LeadSource
             FROM Lead
@@ -98,6 +108,9 @@ public with sharing class WebsiteLeadConversionService {
         if (accountNames.isEmpty()) {
             return accountsByName;
         }
+
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Account', new Set<String>{'Id', 'Name'});
 
         for (Account accountRecord : [
             SELECT Id, Name

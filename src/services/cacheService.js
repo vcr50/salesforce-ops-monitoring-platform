@@ -73,12 +73,19 @@ class CacheService {
   }
 }
 
-// Create a singleton instance
+// Create a singleton instance for production use
 const cacheService = new CacheService();
 
-// Run cleanup every minute
-setInterval(() => {
+// Run cleanup every minute (can be stopped for testing)
+let _cleanupTimer = setInterval(() => {
   cacheService.cleanup();
 }, 60000);
 
+const stopCleanupTimer = () => {
+  clearInterval(_cleanupTimer);
+  _cleanupTimer = null;
+};
+
 module.exports = cacheService;
+module.exports.CacheService = CacheService;
+module.exports.stopCleanupTimer = stopCleanupTimer;

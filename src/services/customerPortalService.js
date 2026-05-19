@@ -3,12 +3,8 @@
  * Handles Stripe Customer Portal operations for subscription management
  */
 
-const Stripe = require('stripe');
 const { logger } = require('../middleware/logger');
-
-const stripe = process.env.STRIPE_SECRET_KEY
-  ? new Stripe(process.env.STRIPE_SECRET_KEY)
-  : null;
+const { getStripe } = require('../services/stripeClient');
 
 /**
  * Create a customer portal session
@@ -17,16 +13,12 @@ const stripe = process.env.STRIPE_SECRET_KEY
  * @returns {Promise<Object>} Portal session object with URL
  */
 const createPortalSession = async (customerId, returnUrl) => {
-  if (!stripe) {
-    throw new Error('STRIPE_SECRET_KEY is required.');
-  }
-
   if (!customerId) {
     throw new Error('customerId is required.');
   }
 
   try {
-    const session = await stripe.billingPortal.sessions.create({
+    const session = await getStripe().billingPortal.sessions.create({
       customer: customerId,
       return_url: returnUrl
     });
@@ -45,12 +37,8 @@ const createPortalSession = async (customerId, returnUrl) => {
  * @returns {Promise<Object|null>} Subscription object or null if not found
  */
 const getCustomerSubscription = async (customerId) => {
-  if (!stripe) {
-    throw new Error('STRIPE_SECRET_KEY is required.');
-  }
-
   try {
-    const subscriptions = await stripe.subscriptions.list({
+    const subscriptions = await getStripe().subscriptions.list({
       customer: customerId,
       status: 'all',
       limit: 1
@@ -75,12 +63,8 @@ const getCustomerSubscription = async (customerId) => {
  * @returns {Promise<Array>} Array of payment methods
  */
 const getCustomerPaymentMethods = async (customerId) => {
-  if (!stripe) {
-    throw new Error('STRIPE_SECRET_KEY is required.');
-  }
-
   try {
-    const paymentMethods = await stripe.paymentMethods.list({
+    const paymentMethods = await getStripe().paymentMethods.list({
       customer: customerId,
       type: 'card'
     });
@@ -101,12 +85,8 @@ const getCustomerPaymentMethods = async (customerId) => {
  * @returns {Promise<Object>} Object with invoices array and has_more flag
  */
 const getCustomerInvoices = async (customerId, options = {}) => {
-  if (!stripe) {
-    throw new Error('STRIPE_SECRET_KEY is required.');
-  }
-
   try {
-    const invoices = await stripe.invoices.list({
+    const invoices = await getStripe().invoices.list({
       customer: customerId,
       limit: options.limit || 10
     });
@@ -129,12 +109,8 @@ const getCustomerInvoices = async (customerId, options = {}) => {
  * @returns {Promise<Object>} Upcoming invoice object
  */
 const getUpcomingInvoice = async (customerId, subscriptionId = null) => {
-  if (!stripe) {
-    throw new Error('STRIPE_SECRET_KEY is required.');
-  }
-
   try {
-    const invoice = await stripe.invoices.retrieveUpcoming({
+    const invoice = await getStripe().invoices.retrieveUpcoming({
       customer: customerId,
       subscription: subscriptionId
     });
@@ -154,12 +130,8 @@ const getUpcomingInvoice = async (customerId, subscriptionId = null) => {
  * @returns {Promise<Object>} Updated customer object
  */
 const updateDefaultPaymentMethod = async (customerId, paymentMethodId) => {
-  if (!stripe) {
-    throw new Error('STRIPE_SECRET_KEY is required.');
-  }
-
   try {
-    const customer = await stripe.customers.update(customerId, {
+    const customer = await getStripe().customers.update(customerId, {
       invoice_settings: {
         default_payment_method: paymentMethodId
       }
@@ -180,12 +152,8 @@ const updateDefaultPaymentMethod = async (customerId, paymentMethodId) => {
  * @returns {Promise<Object>} Payment method object
  */
 const attachPaymentMethod = async (customerId, paymentMethodId) => {
-  if (!stripe) {
-    throw new Error('STRIPE_SECRET_KEY is required.');
-  }
-
   try {
-    const paymentMethod = await stripe.paymentMethods.attach(paymentMethodId, {
+    const paymentMethod = await getStripe().paymentMethods.attach(paymentMethodId, {
       customer: customerId
     });
 
@@ -203,12 +171,8 @@ const attachPaymentMethod = async (customerId, paymentMethodId) => {
  * @returns {Promise<Object>} Payment method object
  */
 const detachPaymentMethod = async (paymentMethodId) => {
-  if (!stripe) {
-    throw new Error('STRIPE_SECRET_KEY is required.');
-  }
-
   try {
-    const paymentMethod = await stripe.paymentMethods.detach(paymentMethodId);
+    const paymentMethod = await getStripe().paymentMethods.detach(paymentMethodId);
 
     logger.info({ paymentMethodId }, 'Payment method detached');
     return paymentMethod;

@@ -17,7 +17,7 @@ const validateRecordId = (recordId) => {
 };
 
 const validateAccessToken = (token) => {
-  return token && typeof token === 'string' && token.length > 0;
+  return Boolean(token && typeof token === 'string' && token.length > 0);
 };
 
 module.exports = {

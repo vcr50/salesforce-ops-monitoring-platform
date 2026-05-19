@@ -10,6 +10,7 @@
  * @author  Tomcodex
  * @version 1.0
  */
+@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
 public with sharing class TenantContext {
 
     private static Id cachedTenantId;
@@ -23,6 +24,10 @@ public with sharing class TenantContext {
         if (cachedTenantId != null) {
             return cachedTenantId;
         }
+
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('User', new Set<String>{'Id', 'Tenant_Id__c'});
+        SecurityGate.requireReadAccess('Tenant__c', new Set<String>{'Id', 'Status__c'});
 
         // Try to read the user's assigned tenant
         try {
@@ -59,6 +64,9 @@ public with sharing class TenantContext {
         if (String.isBlank(apiKey)) {
             return null;
         }
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Tenant__c', new Set<String>{'Id', 'API_Key__c', 'Status__c'});
+
         List<Tenant__c> tenants = [
             SELECT Id FROM Tenant__c
             WHERE API_Key__c = :apiKey

@@ -1,3 +1,9 @@
+const getSalesforceBaseUrl = () => {
+  const url = process.env.SALESFORCE_INSTANCE_URL;
+  if (!url) return '';
+  return url.replace(/\/$/, '');
+};
+
 module.exports = {
   // HTTP Status Codes
   HTTP_OK: 200,
@@ -9,19 +15,33 @@ module.exports = {
   HTTP_CONFLICT: 409,
   HTTP_SERVER_ERROR: 500,
 
-  // Salesforce API endpoints
-  SALESFORCE_AUTH_URL: `${process.env.SALESFORCE_INSTANCE_URL}/services/oauth2/authorize`,
-  SALESFORCE_TOKEN_URL: `${process.env.SALESFORCE_INSTANCE_URL}/services/oauth2/token`,
-  SALESFORCE_REST_API_BASE: `${process.env.SALESFORCE_INSTANCE_URL}/services/data`,
-  SALESFORCE_SOAP_API_BASE: `${process.env.SALESFORCE_INSTANCE_URL}/services/Soap/c`,
+  // Salesforce API endpoints — lazy getters so env vars are read at access time
+  get SALESFORCE_AUTH_URL() {
+    return `${getSalesforceBaseUrl()}/services/oauth2/authorize`;
+  },
+  get SALESFORCE_TOKEN_URL() {
+    return `${getSalesforceBaseUrl()}/services/oauth2/token`;
+  },
+  get SALESFORCE_REST_API_BASE() {
+    return `${getSalesforceBaseUrl()}/services/data`;
+  },
+  get SALESFORCE_SOAP_API_BASE() {
+    return `${getSalesforceBaseUrl()}/services/Soap/c`;
+  },
 
   // Salesforce API versions
   SALESFORCE_API_VERSION: 'v58.0',
 
-  // Default timeouts
-  API_TIMEOUT: parseInt(process.env.API_TIMEOUT) || 30000,
-  RETRY_ATTEMPTS: parseInt(process.env.RETRY_ATTEMPTS) || 3,
-  RETRY_DELAY: parseInt(process.env.RETRY_DELAY) || 1000,
+  // Default timeouts — lazy getters so env vars are read at access time
+  get API_TIMEOUT() {
+    return parseInt(process.env.API_TIMEOUT) || 30000;
+  },
+  get RETRY_ATTEMPTS() {
+    return parseInt(process.env.RETRY_ATTEMPTS) || 3;
+  },
+  get RETRY_DELAY() {
+    return parseInt(process.env.RETRY_DELAY) || 1000;
+  },
 
   // Sync configuration
   SYNC_BATCH_SIZE: 100,

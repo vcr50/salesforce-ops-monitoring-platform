@@ -5,32 +5,26 @@
  * subscription authorization flow is different from Stripe Billing.
  */
 
-const Stripe = require('stripe');
 const { logger } = require('../middleware/logger');
+const { getStripe } = require('../services/stripeClient');
+const { config } = require('../config');
 
-const getStripe = () => {
-  if (!process.env.STRIPE_SECRET_KEY) {
-    throw new Error('STRIPE_SECRET_KEY is required.');
-  }
-  return new Stripe(process.env.STRIPE_SECRET_KEY);
-};
-
-const getProfessionalAmount = () => Number(process.env.PROFESSIONAL_MONTHLY_AMOUNT_INR || 2499);
+const getProfessionalAmount = () => config.billing.professionalMonthlyAmountInr;
 
 const getPlans = () => [
   {
     id: 'starter',
     name: 'Starter',
     price: 0,
-    currency: process.env.BILLING_CURRENCY || 'INR',
+    currency: config.billing.currency,
     interval: 'month',
     features: ['5 integrations', 'Basic alerts', '7-day history', 'Email support']
   },
   {
-    id: process.env.STRIPE_PROFESSIONAL_PRICE_ID || process.env.RAZORPAY_PROFESSIONAL_PLAN_ID || 'professional',
+    id: config.stripe.professionalPriceId || config.razorpay.professionalPlanId || 'professional',
     name: 'Professional',
     price: getProfessionalAmount(),
-    currency: process.env.BILLING_CURRENCY || 'INR',
+    currency: config.billing.currency,
     interval: 'month',
     features: ['25 integrations', 'Agentforce AI', 'Business impact', '30-day history', 'Priority support']
   },
@@ -38,7 +32,7 @@ const getPlans = () => [
     id: 'enterprise',
     name: 'Enterprise',
     price: null,
-    currency: process.env.BILLING_CURRENCY || 'INR',
+    currency: config.billing.currency,
     interval: 'month',
     features: ['Unlimited integrations', 'Auto-heal', 'Custom runbooks', 'Unlimited history', 'Dedicated success manager']
   }
@@ -107,6 +101,7 @@ module.exports = {
   getPlans,
   getPlanByName,
   getPlanById,
+  normalizePlanName,
   createSubscription,
   getSubscription,
   updateSubscription,

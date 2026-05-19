@@ -1,0 +1,200 @@
+<template>
+    <div class={homeClass}>
+        <section class="hero-panel">
+            <div class="hero-copy">
+                <span class="hero-kicker">
+                    <lightning-icon icon-name="utility:einstein" size="x-small"></lightning-icon>
+                    AI Operations
+                </span>
+                <h1>SentinelFlow Guardian</h1>
+                <p>Live reliability posture, revenue impact, and remediation focus in one flexible command surface.</p>
+            </div>
+            <div class="hero-status" data-status={healthStatus}>
+                <span class="hero-status-label">System Status</span>
+                <strong>{healthStatus}</strong>
+                <span class="hero-status-sub">{activeIncidents} critical incidents</span>
+            </div>
+        </section>
+
+        <section class="live-section">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">Live Graph</span>
+                    <h2>Telemetry stream</h2>
+                </div>
+                <span class="section-note">Auto-refreshing</span>
+            </div>
+            <div class="chart-layout">
+                <div class="chart-panel">
+                    <div class="chart-header">
+                        <div>
+                            <span class="chart-label">Operational signal</span>
+                            <strong>{chartLatest}%</strong>
+                        </div>
+                        <span class="chart-delta">{chartDelta}</span>
+                    </div>
+                    <svg class="live-chart" viewBox="0 0 640 180" preserveAspectRatio="none" aria-label="Live telemetry chart">
+                        <defs>
+                            <linearGradient id="signalGradient" x1="0" x2="0" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.34"></stop>
+                                <stop offset="100%" stop-color="#60a5fa" stop-opacity="0"></stop>
+                            </linearGradient>
+                        </defs>
+                        <polygon points={chartAreaPoints} class="chart-area"></polygon>
+                        <polyline points={chartPoints} class="chart-line"></polyline>
+                    </svg>
+                </div>
+                <div class="chart-side">
+                    <div class="chart-stat">
+                        <span>Latency</span>
+                        <strong>{chartLatency}</strong>
+                    </div>
+                    <div class="chart-stat">
+                        <span>Events</span>
+                        <strong>{chartEvents}</strong>
+                    </div>
+                    <div class="mini-bars" aria-hidden="true">
+                        <template for:each={chartBars} for:item="bar">
+                            <span key={bar.id} style={bar.style}></span>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard-section">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">Health Pulse</span>
+                    <h2>System telemetry</h2>
+                </div>
+                <span class="section-note">Last hour</span>
+            </div>
+            <div class="pulse-grid">
+                <div class="pulse-card" data-status={healthStatus}>
+                    <span class="metric-icon status-icon">
+                        <lightning-icon icon-name="utility:activity" size="small"></lightning-icon>
+                    </span>
+                    <span class="pulse-label">System Status</span>
+                    <strong class="pulse-value">{healthStatus}</strong>
+                </div>
+                <div class="pulse-card">
+                    <span class="metric-icon danger-icon">
+                        <lightning-icon icon-name="utility:error" size="small"></lightning-icon>
+                    </span>
+                    <span class="pulse-label">Errors (1h)</span>
+                    <strong class="pulse-value">{errorCount1H}</strong>
+                </div>
+                <div class="pulse-card">
+                    <span class="metric-icon warn-icon">
+                        <lightning-icon icon-name="utility:warning" size="small"></lightning-icon>
+                    </span>
+                    <span class="pulse-label">Failed Jobs</span>
+                    <strong class="pulse-value">{failedJobs}</strong>
+                </div>
+                <div class="pulse-card">
+                    <span class="metric-icon danger-icon">
+                        <lightning-icon icon-name="utility:incident" size="small"></lightning-icon>
+                    </span>
+                    <span class="pulse-label">Critical Incidents</span>
+                    <strong class="pulse-value">{activeIncidents}</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard-section">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">Revenue Pulse</span>
+                    <h2>Business impact</h2>
+                </div>
+                <span class="section-note">Current exposure</span>
+            </div>
+            <div class="revenue-grid">
+                <div class="revenue-card revenue-at-risk">
+                    <span class="revenue-accent"></span>
+                    <span class="revenue-label">Revenue at Risk</span>
+                    <strong class="revenue-value">${revenueAtRisk}</strong>
+                    <span class="revenue-sub">{openIncidents} open incidents</span>
+                </div>
+                <div class="revenue-card users-affected">
+                    <span class="revenue-accent"></span>
+                    <span class="revenue-label">Users Affected</span>
+                    <strong class="revenue-value">{usersAffected}</strong>
+                    <span class="revenue-sub">across active incidents</span>
+                </div>
+                <div class="revenue-card auto-healed">
+                    <span class="revenue-accent"></span>
+                    <span class="revenue-label">Auto-Healed Today</span>
+                    <strong class="revenue-value">{autoHealedToday}</strong>
+                    <span class="revenue-sub">autonomous recoveries</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="actions-section">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">AI Actions</span>
+                    <h2>Recommended focus</h2>
+                </div>
+                <span class="section-note">Agentforce ready</span>
+            </div>
+            <template if:true={hasRecommendations}>
+                <div class="actions-list">
+                    <template for:each={recommendations} for:item="rec">
+                        <div class="action-card" key={rec.incidentId}>
+                            <div class="action-header">
+                                <span class="action-severity" data-severity={rec.severity}>{rec.severity}</span>
+                                <span class="action-name">{rec.name}</span>
+                            </div>
+                            <div class="action-body">
+                                <p class="action-root-cause"><strong>Root Cause:</strong> {rec.rootCause}</p>
+                                <p class="action-recommendation"><strong>AI Recommends:</strong> {rec.recommendedAction}</p>
+                                <div class="action-confidence">
+                                    <div class="confidence-bar">
+                                        <div class="confidence-fill" style={rec.confidenceStyle}></div>
+                                    </div>
+                                    <span class="confidence-text">{rec.confidence}% confidence</span>
+                                </div>
+                            </div>
+                            <div class="action-footer">
+                                <template if:true={rec.canAutoHeal}>
+                                    <lightning-button
+                                        label="Execute Auto-Heal"
+                                        variant="brand"
+                                        icon-name="utility:touch_action"
+                                        onclick={handleHealClick}
+                                        data-incident-id={rec.incidentId}
+                                        data-action={rec.recommendedAction}
+                                        disabled={rec.isHealing}>
+                                    </lightning-button>
+                                </template>
+                                <template if:false={rec.canAutoHeal}>
+                                    <span class="manual-label">Manual review required</span>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+            <template if:false={hasRecommendations}>
+                <div class="no-actions">
+                    <span class="success-orb">
+                        <lightning-icon icon-name="utility:success" size="small"></lightning-icon>
+                    </span>
+                    <h3>All clear</h3>
+                    <p>All systems are operating normally. No AI actions are needed right now.</p>
+                </div>
+            </template>
+        </section>
+
+        <template if:true={showHealResult}>
+            <div class="heal-result-toast" data-result={healResultSuccess}>
+                <lightning-icon icon-name={healResultIcon} size="small"></lightning-icon>
+                <span>{healResultMessage}</span>
+                <lightning-button-icon icon-name="utility:close" variant="bare" onclick={closeToast}></lightning-button-icon>
+            </div>
+        </template>
+    </div>
+</template>

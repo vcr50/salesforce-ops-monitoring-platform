@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Permanent audit record of every auto-heal playbook execution by the SentinelFlow Guardian Engine.</description>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <label>Auto Heal Run</label>
+    <nameField>
+        <displayFormat>AHR-{0000}</displayFormat>
+        <label>Auto Heal Run Number</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Auto Heal Runs</pluralLabel>
+    <sharingModel>ReadWrite</sharingModel>
+    <visibility>Public</visibility>
+</CustomObject>

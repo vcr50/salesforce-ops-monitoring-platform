@@ -18,6 +18,10 @@ const billingController = require('./controllers/billingController');
 const errorHandler = require('./middleware/errorHandler');
 const { logger } = require('./middleware/logger');
 const { sentinelFlowConfig, getFoundationStatus } = require('./config/sentinelFlow');
+const { registerDefaults } = require('./container');
+
+// Initialize the DI container with all production services
+registerDefaults();
 
 const app = express();
 const PORT = process.env.PORT || 3000;

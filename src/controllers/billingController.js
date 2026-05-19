@@ -1,4 +1,3 @@
-const Stripe = require('stripe');
 const { logger } = require('../middleware/logger');
 const customerService = require('../services/customerService');
 const subscriptionService = require('../services/subscriptionService');
@@ -9,17 +8,9 @@ const {
   mapRazorpaySubscriptionForSalesforce,
   syncSubscriptionToSalesforce
 } = require('../services/subscriptionSyncService');
-
-const stripe = process.env.STRIPE_SECRET_KEY
-  ? new Stripe(process.env.STRIPE_SECRET_KEY)
-  : null;
-
-const getStripe = () => {
-  if (!stripe) {
-    throw new Error('STRIPE_SECRET_KEY is required.');
-  }
-  return stripe;
-};
+const { getStripe } = require('../services/stripeClient');
+const { idempotencyService } = require('../services/idempotencyService');
+const { config } = require('../config');
 
 const createCheckoutSession = async (req, res, next) => {
   try {
@@ -81,13 +72,13 @@ const createCheckoutSession = async (req, res, next) => {
     });
 
     const priceId = planDetails.name === 'Professional'
-      ? process.env.STRIPE_PROFESSIONAL_PRICE_ID
+      ? config.stripe.professionalPriceId
       : planDetails.id;
     if (!priceId) {
       return res.status(500).json({ error: 'Plan price ID is not configured.' });
     }
 
-    const baseUrl = process.env.BILLING_RETURN_BASE_URL || `${req.protocol}://${req.get('host')}`;
+    const baseUrl = config.billing.returnBaseUrl || `${req.protocol}://${req.get('host')}`;
 
     const session = await getStripe().checkout.sessions.create({
       mode: 'subscription',
@@ -153,7 +144,7 @@ const handleWebhook = async (req, res, next) => {
     }
 
     const signature = req.headers['stripe-signature'];
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    const webhookSecret = config.stripe.webhookSecret;
     const event = webhookSecret
       ? getStripe().webhooks.constructEvent(req.body, signature, webhookSecret)
       : JSON.parse(req.body.toString('utf8'));
@@ -198,8 +189,6 @@ const handleWebhook = async (req, res, next) => {
     return next(error);
   }
 };
-
-const processedRazorpayEvents = new Set();
 
 const getRazorpayEventId = (event) => {
   const subscriptionId = event?.payload?.subscription?.entity?.id;
@@ -257,7 +246,7 @@ const handleRazorpayWebhook = async (req, res, next) => {
     const event = JSON.parse(rawBody.toString('utf8'));
     const eventId = getRazorpayEventId(event);
 
-    if (eventId && processedRazorpayEvents.has(eventId)) {
+    if (eventId && idempotencyService.has(eventId)) {
       logger.info({ eventId, eventType: event.event }, 'Duplicate Razorpay webhook acknowledged');
       return res.json({ received: true, duplicate: true });
     }
@@ -277,7 +266,7 @@ const handleRazorpayWebhook = async (req, res, next) => {
     }
 
     if (eventId) {
-      processedRazorpayEvents.add(eventId);
+      idempotencyService.mark(eventId);
     }
 
     return res.json({ received: true });
@@ -301,7 +290,7 @@ const createPortalSession = async (req, res, next) => {
       return res.status(404).json({ error: 'Customer not found.' });
     }
 
-    const baseUrl = process.env.BILLING_RETURN_BASE_URL || `${req.protocol}://${req.get('host')}`;
+    const baseUrl = config.billing.returnBaseUrl || `${req.protocol}://${req.get('host')}`;
 
     const session = await getStripe().billingPortal.sessions.create({
       customer: customer.id,

@@ -12,8 +12,41 @@ jest.mock('../src/services/subscriptionSyncService', () => {
   };
 });
 
+jest.mock('../src/services/stripeClient', () => ({
+  getStripe: jest.fn(),
+  resetStripeInstance: jest.fn()
+}));
+
+jest.mock('../src/services/idempotencyService', () => ({
+  idempotencyService: {
+    has: jest.fn().mockReturnValue(false),
+    mark: jest.fn(),
+    clear: jest.fn(),
+    cleanup: jest.fn(),
+    size: 0
+  },
+  IdempotencyService: jest.fn(),
+  stopCleanup: jest.fn()
+}));
+
+jest.mock('../src/services/customerService', () => ({
+  getOrCreateCustomer: jest.fn(),
+  findCustomerByOrgId: jest.fn()
+}));
+
+jest.mock('../src/services/subscriptionService', () => ({
+  getPlanByName: jest.fn()
+}));
+
+jest.mock('../src/services/billingProviderService', () => ({
+  getBillingProvider: jest.fn()
+}));
+
 const razorpayService = require('../src/services/razorpayService');
 const { syncSubscriptionToSalesforce } = require('../src/services/subscriptionSyncService');
+const { getBillingProvider } = require('../src/services/billingProviderService');
+const subscriptionService = require('../src/services/subscriptionService');
+const { idempotencyService } = require('../src/services/idempotencyService');
 const billingController = require('../src/controllers/billingController');
 
 const createResponse = () => {
@@ -29,6 +62,17 @@ describe('billingController Razorpay flow', () => {
     process.env.BILLING_CURRENCY = 'INR';
     process.env.PROFESSIONAL_MONTHLY_AMOUNT_INR = '2499';
     jest.clearAllMocks();
+
+    // Configure mocked service responses
+    getBillingProvider.mockReturnValue('razorpay');
+    subscriptionService.getPlanByName.mockReturnValue({
+      id: 'professional',
+      name: 'Professional',
+      price: 2499,
+      currency: 'INR',
+      interval: 'month',
+      features: []
+    });
   });
 
   test('rejects checkout without orgId', async () => {
@@ -56,6 +100,8 @@ describe('billingController Razorpay flow', () => {
   });
 
   test('rejects invalid checkout plan', async () => {
+    subscriptionService.getPlanByName.mockReturnValueOnce(null);
+
     const req = { body: { orgId: '00D000000000001AAA', email: 'buyer@example.com', plan: 'Gold' } };
     const res = createResponse();
     const next = jest.fn();

@@ -6,6 +6,7 @@
  * @author  Tomcodex
  * @version 4.0 (Enterprise Polish)
  */
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class AIAnalysisQueueable implements Queueable, Database.AllowsCallouts {
 
     private List<Id> incidentIds;
@@ -33,6 +34,9 @@ public with sharing class AIAnalysisQueueable implements Queueable, Database.All
         if (!FeatureFlag.isEnabled('AI_ANALYSIS')) {
             return;
         }
+
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireUpdateAccess('Incident__c', new Set<String>{'Status__c'});
 
         List<Id> autoHealIds = new List<Id>();
 

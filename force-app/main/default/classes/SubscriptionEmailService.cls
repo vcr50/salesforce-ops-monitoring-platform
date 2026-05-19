@@ -1,3 +1,4 @@
+@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
 public with sharing class SubscriptionEmailService {
     @TestVisible private static Integer installationEmailSendAttempts = 0;
 

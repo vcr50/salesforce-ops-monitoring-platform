@@ -11,6 +11,7 @@
  *
  * @author   Tomcodex
  */
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class BusinessImpactCalculator {
 
     private static final Decimal THRESHOLD_CRITICAL = 50000;
@@ -50,6 +51,13 @@ public with sharing class BusinessImpactCalculator {
         if (incidentId == null) {
             throw new ImpactCalculationException('Incident Id must not be null.');
         }
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Incident__c', new Set<String>{
+            'Id', 'Severity__c', 'Users_Affected__c', 'Description__c'
+        });
+        SecurityGate.requireUpdateAccess('Incident__c', new Set<String>{
+            'Revenue_at_Risk__c', 'AI_Impact_Level__c', 'Users_Affected__c'
+        });
         Incident__c inc = [
             SELECT Id, Severity__c, Users_Affected__c, Description__c
             FROM   Incident__c WHERE Id = :incidentId LIMIT 1
@@ -73,6 +81,13 @@ public with sharing class BusinessImpactCalculator {
 
     @AuraEnabled
     public static List<ImpactResult> calculateAllOpen() {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Incident__c', new Set<String>{
+            'Id', 'Severity__c', 'Users_Affected__c', 'Description__c'
+        });
+        SecurityGate.requireUpdateAccess('Incident__c', new Set<String>{
+            'Revenue_at_Risk__c', 'AI_Impact_Level__c', 'Users_Affected__c'
+        });
         List<Incident__c> incidents = [
             SELECT Id, Severity__c, Users_Affected__c, Description__c
             FROM   Incident__c

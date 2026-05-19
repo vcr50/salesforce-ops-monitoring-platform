@@ -119,4 +119,8 @@ class AnalyticsService {
   }
 }
 
-module.exports = new AnalyticsService();
+// Singleton for production use
+const analyticsService = new AnalyticsService();
+
+module.exports = analyticsService;
+module.exports.AnalyticsService = AnalyticsService;

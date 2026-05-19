@@ -1,6 +1,7 @@
 /**
  * Org-level subscription service for SentinelFlow AppExchange packaging.
  */
+@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
 public with sharing class SubscriptionService {
     public static final String PLAN_STARTER = 'Starter';
     public static final String PLAN_PROFESSIONAL = 'Professional';
@@ -35,6 +36,13 @@ public with sharing class SubscriptionService {
     }
 
     public static Subscription__c ensureCurrentOrgSubscription() {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Subscription__c', new Set<String>{
+            'Id', 'Org_Id__c', 'Plan__c', 'Status__c', 'Expiry_Date__c',
+            'Stripe_Customer_Id__c', 'Stripe_Subscription_Id__c',
+            'Last_Event__c', 'Last_Sync__c'
+        });
+
         String orgId = UserInfo.getOrganizationId();
         List<Subscription__c> existing = [
             SELECT Id, Org_Id__c, Plan__c, Status__c, Expiry_Date__c,
@@ -48,12 +56,17 @@ public with sharing class SubscriptionService {
         if (!existing.isEmpty()) {
             Subscription__c current = existing[0];
             if (isExpiredTrial(current)) {
+                SecurityGate.requireUpdateAccess('Subscription__c', new Set<String>{'Status__c'});
                 current.Status__c = STATUS_EXPIRED;
                 update current;
             }
             return current;
         }
 
+        SecurityGate.requireCreateAccess('Subscription__c', new Set<String>{
+            'Org_Id__c', 'Plan__c', 'Status__c', 'Expiry_Date__c',
+            'Last_Event__c', 'Last_Sync__c'
+        });
         Subscription__c trial = new Subscription__c(
             Org_Id__c = orgId,
             Plan__c = PLAN_STARTER,
@@ -88,6 +101,7 @@ public with sharing class SubscriptionService {
         }
 
         if (subscription.Plan__c == PLAN_STARTER) {
+            SecurityGate.requireAccessible('Incident__c');
             Integer incidentCount = [
                 SELECT COUNT()
                 FROM Incident__c
@@ -133,6 +147,18 @@ public with sharing class SubscriptionService {
         validatePlan(plan);
         validateStatus(status);
 
+        // -- Security Gate: CRUD/FLS for upsert --
+        SecurityGate.requireCreateAccess('Subscription__c', new Set<String>{
+            'Org_Id__c', 'Plan__c', 'Status__c', 'Expiry_Date__c',
+            'Stripe_Customer_Id__c', 'Stripe_Subscription_Id__c',
+            'Last_Event__c', 'Last_Sync__c'
+        });
+        SecurityGate.requireUpdateAccess('Subscription__c', new Set<String>{
+            'Org_Id__c', 'Plan__c', 'Status__c', 'Expiry_Date__c',
+            'Stripe_Customer_Id__c', 'Stripe_Subscription_Id__c',
+            'Last_Event__c', 'Last_Sync__c'
+        });
+
         List<Subscription__c> existingSubscriptions = [
             SELECT Id, Status__c
             FROM Subscription__c
@@ -174,6 +200,14 @@ public with sharing class SubscriptionService {
     }
 
     public static Integer expireTrials() {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Subscription__c', new Set<String>{
+            'Id', 'Status__c', 'Expiry_Date__c'
+        });
+        SecurityGate.requireUpdateAccess('Subscription__c', new Set<String>{
+            'Status__c', 'Last_Event__c', 'Last_Sync__c'
+        });
+
         List<Subscription__c> expiredTrials = [
             SELECT Id, Status__c
             FROM Subscription__c
@@ -202,6 +236,7 @@ public with sharing class SubscriptionService {
             ? null
             : Date.today().daysBetween(subscription.Expiry_Date__c);
         view.starterIncidentLimit = STARTER_INCIDENT_LIMIT;
+        SecurityGate.requireAccessible('Incident__c');
         view.currentIncidentCount = [
             SELECT COUNT()
             FROM Incident__c

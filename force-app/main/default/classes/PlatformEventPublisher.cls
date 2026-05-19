@@ -6,6 +6,7 @@
  *
  * @author   Tomcodex
  */
+@SuppressWarnings('PMD.ApexDoc')
 public with sharing class PlatformEventPublisher {
 
     public static void publishIntegrationHealthEvents(

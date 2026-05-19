@@ -1,32 +1,29 @@
-const axios = require('axios');
 const { logger } = require('../middleware/logger');
 const { SalesforceError } = require('../utils/errors');
 const { API_TIMEOUT, RETRY_ATTEMPTS, RETRY_DELAY } = require('../utils/constants');
+const { createHttpClient } = require('../services/httpClient');
 
 class SalesforceRestAPI {
-  constructor(accessToken, instanceUrl) {
+  constructor(accessToken, instanceUrl, httpClient = null) {
     this.accessToken = accessToken;
     this.instanceUrl = instanceUrl;
     this.baseURL = `${instanceUrl}/services/data/v58.0`;
+    // Allow injecting a mock client for testing
+    this._client = httpClient || createHttpClient({
+      baseURL: this.baseURL,
+      headers: { Authorization: `Bearer ${this.accessToken}` },
+      timeout: API_TIMEOUT
+    });
   }
 
   async request(method, endpoint, data = null, retries = RETRY_ATTEMPTS) {
     try {
-      const config = {
-        method,
-        url: `${this.baseURL}${endpoint}`,
-        headers: {
-          'Authorization': `Bearer ${this.accessToken}`,
-          'Content-Type': 'application/json'
-        },
-        timeout: API_TIMEOUT
-      };
-
+      const config = { method, url: endpoint };
       if (data) {
         config.data = data;
       }
 
-      const response = await axios(config);
+      const response = await this._client.request(config);
       return response.data;
     } catch (error) {
       if (retries > 0 && this.isRetryableError(error)) {

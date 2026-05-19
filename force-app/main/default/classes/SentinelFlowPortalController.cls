@@ -6,6 +6,7 @@
  * @author  Tomcodex
  * @version 2.0 — Multi-Tenant Production
  */
+@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
 public with sharing class SentinelFlowPortalController {
 
     // ── Inner types ───────────────────────────────────────────────────────────
@@ -76,6 +77,10 @@ public with sharing class SentinelFlowPortalController {
 
     @AuraEnabled(cacheable=true)
     public static PortalSummary getSummary() {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireAccessible('Incident__c');
+        SecurityGate.requireAccessible('Integration_Log__c');
+
         Id tenantId = TenantContext.getCurrentTenantId();
         PortalSummary summary = new PortalSummary();
 
@@ -170,6 +175,14 @@ public with sharing class SentinelFlowPortalController {
 
     @AuraEnabled(cacheable=true)
     public static List<PortalIncidentRow> getOpenIncidents() {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Incident__c', new Set<String>{
+            'Id', 'Name', 'Severity__c', 'Status__c', 'Description__c',
+            'Root_Cause__c', 'Recommended_Action__c', 'AI_Confidence__c',
+            'AI_Impact_Level__c', 'Revenue_at_Risk__c', 'Users_Affected__c',
+            'Self_Heal_Attempted__c', 'Integration_Log__c', 'Tenant__c'
+        });
+
         Id tenantId = TenantContext.getCurrentTenantId();
         List<PortalIncidentRow> rows = new List<PortalIncidentRow>();
 
@@ -210,6 +223,11 @@ public with sharing class SentinelFlowPortalController {
 
     @AuraEnabled(cacheable=true)
     public static List<PortalIntegrationRow> getIntegrationLogs() {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Integration_Log__c', new Set<String>{
+            'Id', 'API_Name__c', 'Status__c', 'Response_Time__c', 'Tenant__c'
+        });
+
         Id tenantId = TenantContext.getCurrentTenantId();
         List<PortalIntegrationRow> rows = new List<PortalIntegrationRow>();
 
@@ -235,6 +253,11 @@ public with sharing class SentinelFlowPortalController {
 
     @AuraEnabled(cacheable=true)
     public static List<PortalIntegrationRow> getActiveIntegrations() {
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Integration_Log__c', new Set<String>{
+            'Id', 'Name', 'API_Name__c', 'Status__c', 'Response_Time__c', 'Tenant__c'
+        });
+
         Id tenantId = TenantContext.getCurrentTenantId();
         List<PortalIntegrationRow> rows = new List<PortalIntegrationRow>();
 
@@ -303,6 +326,14 @@ public with sharing class SentinelFlowPortalController {
             return null;
         }
 
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Incident__c', new Set<String>{
+            'Id', 'Name', 'Severity__c', 'Status__c', 'Description__c',
+            'Resolved_Time__c', 'Root_Cause__c', 'Recommended_Action__c',
+            'AI_Impact_Level__c', 'AI_Confidence__c', 'Auto_Heal_Status__c',
+            'Environment__c', 'Integration_Log__c', 'SLA_Policy__c'
+        });
+
         Incident__c incidentRecord = [
             SELECT Id, Name, Severity__c, Status__c, Description__c,
                    Resolved_Time__c, Environment__r.Name,
@@ -338,6 +369,12 @@ public with sharing class SentinelFlowPortalController {
         if (recordId == null) {
             return null;
         }
+
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Integration_Log__c', new Set<String>{
+            'Id', 'Name', 'API_Name__c', 'Status__c', 'Response_Time__c', 'Error_Message__c'
+        });
+        SecurityGate.requireAccessible('Incident__c');
 
         Integration_Log__c logRecord = [
             SELECT Id, Name, API_Name__c, Status__c, Response_Time__c, Error_Message__c
@@ -381,6 +418,15 @@ public with sharing class SentinelFlowPortalController {
         }
 
         Id tenantId = TenantContext.getCurrentTenantId();
+
+        // -- Security Gate: CRUD/FLS enforcement for create --
+        SecurityGate.requireCreateAccess('Integration_Log__c', new Set<String>{
+            'API_Name__c', 'Status__c', 'Error_Message__c', 'Tenant__c'
+        });
+        SecurityGate.requireCreateAccess('Incident__c', new Set<String>{
+            'Description__c', 'Severity__c', 'Status__c', 'Users_Affected__c',
+            'Revenue_at_Risk__c', 'Integration_Log__c', 'Tenant__c'
+        });
 
         Integration_Log__c log = new Integration_Log__c();
         log.API_Name__c = integrationName;

@@ -547,3 +547,155 @@
     animation: spin 0.7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* SentinelFlow product palette override */
+:host {
+    --sf-navy: #0b132b;
+    --sf-panel: #101b33;
+    --sf-panel-2: #14223d;
+    --sf-line: #263a5f;
+    --sf-blue: #0a6bff;
+    --sf-blue-dark: #0054d6;
+    --sf-text: #f2f4f7;
+    --sf-muted: #c4d0e5;
+    --sf-soft: #8ea0bf;
+}
+
+.incidents-module {
+    color: var(--sf-text);
+}
+
+.page-title,
+.desc-title,
+.users-cell,
+.detail-desc,
+.ai-field p,
+.impact-num,
+.tl-event {
+    color: var(--sf-text);
+}
+
+.page-sub,
+.desc-sub,
+.sys-cell,
+.mono,
+.empty-state,
+.tl-time,
+.section-label,
+.ai-idle,
+.ai-field label,
+.conf-label {
+    color: var(--sf-muted);
+}
+
+.page-header {
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-ai {
+    background: var(--sf-blue);
+    color: #ffffff;
+}
+
+.btn-primary:hover,
+.btn-ai:hover:not(:disabled) {
+    background: var(--sf-blue-dark);
+    opacity: 1;
+}
+
+.btn-ghost,
+.filter-chip,
+.search-input,
+.table-card,
+.detail-card,
+.impact-card {
+    background: var(--sf-panel);
+    border-color: var(--sf-line);
+}
+
+.btn-ghost,
+.filter-chip,
+.search-input {
+    color: var(--sf-muted);
+}
+
+.filter-chip:hover,
+.filter-chip.active,
+.btn-ghost:hover {
+    border-color: var(--sf-blue);
+    color: #ffffff;
+    background: rgba(10, 107, 255, 0.14);
+}
+
+.table-meta,
+.data-table th,
+.detail-header,
+.detail-body,
+.timeline-section {
+    border-color: var(--sf-line);
+}
+
+.data-table th {
+    background: #0d172c;
+    color: var(--sf-soft);
+}
+
+.data-table td {
+    border-color: rgba(38, 58, 95, 0.78);
+}
+
+.data-table tr:hover td,
+.data-table tr.selected td {
+    background: rgba(10, 107, 255, 0.10);
+}
+
+.count-badge,
+.action-btn,
+.integration-tag {
+    background: rgba(10, 107, 255, 0.12);
+    border-color: rgba(10, 107, 255, 0.34);
+    color: #9cc4ff;
+}
+
+.action-btn:hover {
+    background: rgba(10, 107, 255, 0.22);
+}
+
+.detail-header {
+    background: var(--sf-panel-2);
+}
+
+.ai-block {
+    background: rgba(10, 107, 255, 0.08);
+    border-color: rgba(10, 107, 255, 0.26);
+}
+
+.ai-label,
+.ai-rec,
+.detail-mono {
+    color: #9cc4ff !important;
+}
+
+.confidence-fill,
+.loading-fill {
+    background: linear-gradient(90deg, var(--sf-blue), #22c55e);
+}
+
+.search-input::placeholder {
+    color: #8ea0bf;
+}
+
+@media (max-width: 900px) {
+    .filter-bar,
+    .page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .search-wrap,
+    .search-input {
+        width: 100%;
+    }
+}

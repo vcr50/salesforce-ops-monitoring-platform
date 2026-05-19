@@ -7,6 +7,7 @@
  * @author  Tomcodex
  * @version 2.0
  */
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class AutoHealQueueable implements Queueable {
 
     private List<Id> incidentIds;

@@ -16,6 +16,7 @@
  * @author   Tomcodex
  * @version  3.0 (FINAL)
  */
+@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
 public with sharing class SelfHealingEngine {
 
     // ── Constants ──────────────────────────────────────────────────────────────
@@ -44,6 +45,17 @@ public with sharing class SelfHealingEngine {
         if (integrationLogIds == null || integrationLogIds.isEmpty()) {
             return;
         }
+
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Incident__c', new Set<String>{
+            'Id', 'Severity__c', 'Status__c', 'Self_Heal_Attempted__c',
+            'Auto_Heal_Status__c', 'Integration_Endpoint__c', 'Integration_Log__c',
+            'Retry_Count__c', 'Max_Retry__c', 'Root_Cause__c', 'Recommended_Action__c',
+            'AI_Impact_Level__c', 'AI_Confidence__c'
+        });
+        SecurityGate.requireReadAccess('Integration_Endpoint__c', new Set<String>{
+            'Id', 'Circuit_Status__c', 'Failure_Count__c', 'Max_Retries__c', 'Retry_Policy__c'
+        });
 
         List<Incident__c> incidents = [
             SELECT  Id, Severity__c, Status__c, Self_Heal_Attempted__c,
@@ -137,7 +149,37 @@ public with sharing class SelfHealingEngine {
         }
 
         if (!incidentsToUpdate.isEmpty()) {
+            SecurityGate.requireUpdateAccess('Incident__c', new Set<String>{
+                'Root_Cause__c', 'Recommended_Action__c', 'AI_Impact_Level__c',
+                'AI_Confidence__c', 'Self_Heal_Attempted__c', 'Auto_Heal_Status__c',
+                'Status__c'
+            });
             update incidentsToUpdate;
+        }
+
+        // -- Persist AI Decision audit trail --
+        if (!incidentsToUpdate.isEmpty()) {
+            SecurityGate.requireCreateAccess('AI_Decision__c', new Set<String>{
+                'Incident__c', 'Root_Cause__c', 'Recommended_Action__c',
+                'Confidence_Score__c', 'Impact_Level__c', 'Auto_Executed__c',
+                'Matched_Rule__c', 'Tenant__c'
+            });
+            List<AI_Decision__c> decisions = new List<AI_Decision__c>();
+            for (Incident__c inc : incidentsToUpdate) {
+                AI_Decision__c decision = new AI_Decision__c(
+                    Incident__c           = inc.Id,
+                    Root_Cause__c         = inc.Root_Cause__c,
+                    Recommended_Action__c = inc.Recommended_Action__c,
+                    Confidence_Score__c   = inc.AI_Confidence__c,
+                    Impact_Level__c       = inc.AI_Impact_Level__c,
+                    Auto_Executed__c      = inc.AI_Confidence__c >= MIN_CONFIDENCE_FOR_AUTO_HEAL,
+                    Tenant__c             = inc.Tenant__c
+                );
+                decisions.add(decision);
+            }
+            if (!decisions.isEmpty()) {
+                insert decisions;
+            }
         }
 
         if (!idsToHeal.isEmpty()) {
@@ -153,6 +195,16 @@ public with sharing class SelfHealingEngine {
         if (incidentId == null) {
             throw new SelfHealException('Incident Id must not be null.');
         }
+
+        // -- Security Gate: CRUD/FLS enforcement --
+        SecurityGate.requireReadAccess('Incident__c', new Set<String>{
+            'Id', 'Status__c', 'Recommended_Action__c', 'AI_Confidence__c',
+            'Integration_Log__c', 'Integration_Endpoint__c', 'Retry_Count__c',
+            'Max_Retry__c', 'Auto_Heal_Status__c'
+        });
+        SecurityGate.requireUpdateAccess('Incident__c', new Set<String>{
+            'Status__c', 'Auto_Heal_Status__c', 'Retry_Count__c'
+        });
 
         Incident__c inc = [
             SELECT  Id, Status__c, Recommended_Action__c, AI_Confidence__c,
@@ -200,6 +252,9 @@ public with sharing class SelfHealingEngine {
         // Update status to Healing + In Progress before action
         inc.Auto_Heal_Status__c = 'In Progress';
         inc.Status__c = 'Healing';
+        SecurityGate.requireUpdateAccess('Incident__c', new Set<String>{
+            'Status__c', 'Auto_Heal_Status__c', 'Retry_Count__c'
+        });
         update inc;
 
         HealResult result = executeAction(incidentId, inc.Integration_Log__c, action, retryCount);
@@ -212,6 +267,22 @@ public with sharing class SelfHealingEngine {
             update new Incident__c(Id = incidentId, Status__c = 'Escalated', Auto_Heal_Status__c = 'Failed');
             RetryLogService.log(incidentId, retryCount + 1, 'Failed', result.message);
         }
+
+        // -- Persist Auto Heal Run audit trail --
+        SecurityGate.requireCreateAccess('Auto_Heal_Run__c', new Set<String>{
+            'Incident__c', 'Action_Taken__c', 'Result__c',
+            'Confidence_Score__c', 'Retry_Attempt__c', 'Detail_Message__c', 'Tenant__c'
+        });
+        Auto_Heal_Run__c healRun = new Auto_Heal_Run__c(
+            Incident__c        = incidentId,
+            Action_Taken__c    = action,
+            Result__c          = result.success ? 'Succeeded' : 'Failed',
+            Confidence_Score__c = inc.AI_Confidence__c,
+            Retry_Attempt__c   = retryCount + 1,
+            Detail_Message__c  = result.message,
+            Tenant__c          = TenantContext.getCurrentTenantId()
+        );
+        insert healRun;
 
         AuditTrailService.log(
             incidentId,
@@ -260,6 +331,7 @@ public with sharing class SelfHealingEngine {
 
         // Update log retry count
         if (logId != null) {
+            SecurityGate.requireUpdateAccess('Integration_Log__c', new Set<String>{'Retry_Count__c'});
             update new Integration_Log__c(
                 Id             = logId,
                 Retry_Count__c = attemptNum
@@ -306,6 +378,9 @@ public with sharing class SelfHealingEngine {
      * Escalate — create a Case, notify ops team.
      */
     private static HealResult doEscalate(Id incidentId, HealResult result) {
+        SecurityGate.requireReadAccess('Incident__c', new Set<String>{
+            'Id', 'Name', 'Description__c', 'Severity__c', 'Root_Cause__c'
+        });
         Incident__c inc = [
             SELECT Id, Name, Description__c, Severity__c, Root_Cause__c
             FROM   Incident__c
@@ -314,6 +389,9 @@ public with sharing class SelfHealingEngine {
         ];
 
         try {
+            SecurityGate.requireCreateAccess('Case', new Set<String>{
+                'Subject', 'Description', 'Priority', 'Status', 'Origin'
+            });
             Case escalationCase = new Case(
                 Subject     = 'SentinelFlow Escalation — ' + inc.Name,
                 Description = 'Incident: ' + inc.Name
@@ -347,12 +425,16 @@ public with sharing class SelfHealingEngine {
      */
     private static void tripEndpointFailureCount(Id incidentId) {
         try {
+            SecurityGate.requireReadAccess('Incident__c', new Set<String>{'Integration_Endpoint__c'});
             List<Incident__c> incList = [
                 SELECT Integration_Endpoint__c FROM Incident__c WHERE Id = :incidentId LIMIT 1
             ];
             if (incList.isEmpty() || incList[0].Integration_Endpoint__c == null) return;
 
             Id epId = incList[0].Integration_Endpoint__c;
+            SecurityGate.requireReadAccess('Integration_Endpoint__c', new Set<String>{
+                'Id', 'Failure_Count__c', 'Circuit_Status__c'
+            });
             Integration_Endpoint__c ep = [
                 SELECT Id, Failure_Count__c, Circuit_Status__c
                 FROM   Integration_Endpoint__c
@@ -370,6 +452,9 @@ public with sharing class SelfHealingEngine {
                 );
             }
 
+            SecurityGate.requireUpdateAccess('Integration_Endpoint__c', new Set<String>{
+                'Failure_Count__c', 'Circuit_Status__c'
+            });
             update ep;
         } catch (Exception ex) {
             // Non-fatal — circuit breaker update is best-effort
