@@ -85,6 +85,7 @@ if (typeof cleanupTimer.unref === 'function') {
   cleanupTimer.unref();
 }
 
+const stopCleanupTimer = () => clearInterval(cleanupTimer);
 module.exports = cacheService;
 module.exports.CacheService = CacheService;
 module.exports.stopCleanupTimer = stopCleanupTimer;

@@ -1,3 +1,4 @@
+/* eslint-env browser */
 'use strict';
 // ── DATA ──────────────────────────────────────────────────────────────────────
 const INCIDENTS = [

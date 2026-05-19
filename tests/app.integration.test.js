@@ -57,7 +57,7 @@ describe('app integration', () => {
   });
 
   test('GET /api/system/readiness returns readiness status', async () => {
-    const response = await request(app).get('/api/system/readiness').expect(200);
+    const response = await request(app).get('/api/system/readiness').set('x-sf-org-id', '00D000000000001AAA').expect(200);
 
     expect(response.body).toEqual(expect.objectContaining({
       status: 'ok',

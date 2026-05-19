@@ -3,6 +3,13 @@ module.exports = {
   testEnvironment: 'node',
   roots: ['<rootDir>/tests'],
   testMatch: ['**/*.test.js'],
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "/\\.tmp-chrome",
+    "/political-dashboard/",
+    "/sentinelflow-dashboard/",
+    "/website-next/"
+  ],
   collectCoverageFrom: [
     'src/controllers/billingController.js',
     'src/services/razorpayService.js',
