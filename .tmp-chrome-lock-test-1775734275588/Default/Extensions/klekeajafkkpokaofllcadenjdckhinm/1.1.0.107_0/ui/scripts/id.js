@@ -1,1 +1,0 @@
-import{sendMessage}from"./utils";class IdDisplayer{static showId(){sendMessage({action:"GetId"},e=>{if(void 0!==e){const d=document.createTextNode(e);document.getElementById("uid").appendChild(d)}})}}IdDisplayer.showId();
