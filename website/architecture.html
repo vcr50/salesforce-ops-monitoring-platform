@@ -9,135 +9,686 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
-        /* ── Page shell ── */
-        .arch-page {
-            padding-top: 120px;
-            padding-bottom: 140px;
-            min-height: 100vh;
-        }
+/* ═══════════════════════════════════════════════════════════
+   Zentom Architecture — LWC Portal Page
+   Matches the SentinelFlow portal dark theme (Slate 900)
+   ═══════════════════════════════════════════════════════════ */
 
-        /* ── Hero block ── */
-        .arch-hero {
-            max-width: 800px;
-            margin: 0 auto 80px;
-            text-align: center;
-        }
-        .arch-hero-eyebrow {
-            display: inline-block;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            color: var(--accent-blue);
-            margin-bottom: 20px;
-        }
-        .arch-hero-title {
-            font-size: clamp(2.5rem, 4vw, 3.5rem);
-            font-weight: 800;
-            letter-spacing: -1.2px;
-            line-height: 1.1;
-            color: var(--text-primary);
-            margin-bottom: 24px;
-        }
-        .arch-hero-lead {
-            font-size: 1.15rem;
-            font-weight: 400;
-            color: var(--text-secondary);
-            line-height: 1.75;
-            max-width: 640px;
-            margin: 0 auto;
-        }
+.zentom-container {
+    padding: 0;
+    background: #0a0e1a;
+    color: #f0f0f5;
+    min-height: 100%;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
 
-        /* ── Divider ── */
-        .arch-rule {
-            height: 1px;
-            background: var(--border-color);
-            max-width: 1000px;
-            margin: 0 auto 60px;
-        }
+/* ── Gradient Text ──────────────────────────────────────── */
+.gradient-text {
+    background: linear-gradient(135deg, #7b52ff 0%, #00d2ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
 
-        /* ── Diagram Sections ── */
-        .arch-rows {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 60px;
-        }
-        .arch-section {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 40px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        }
-        .arch-section h2 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 16px;
-            letter-spacing: -0.5px;
-        }
-        .arch-section p {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-        .arch-image-wrapper {
-            background: var(--bg-primary);
-            padding: 20px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-color);
-            display: flex;
-            justify-content: center;
-        }
-        .arch-image-wrapper img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-        }
+/* ── Hero Banner ────────────────────────────────────────── */
+.hero-banner {
+    position: relative;
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    overflow: hidden;
+    border-radius: 1rem;
+    margin: 1rem;
+    background: linear-gradient(180deg, rgba(123,82,255,0.08) 0%, rgba(0,210,255,0.04) 50%, transparent 100%);
+    border: 1px solid rgba(255,255,255,0.04);
+}
 
-        .arch-feature-list {
-            margin-top: 24px;
-            list-style: none;
-            padding: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 16px;
-        }
-        .arch-feature-list li {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-        .arch-feature-list li svg {
-            flex-shrink: 0;
-            margin-top: 2px;
-            color: var(--accent-purple);
-        }
-        .arch-feature-list strong {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
+.hero-glow {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    height: 300px;
+    background: radial-gradient(ellipse, rgba(123,82,255,0.15) 0%, transparent 70%);
+    pointer-events: none;
+}
 
-        /* ── Fade-in ── */
-        .fade-in { animation: fadeInPage 0.6s ease forwards; }
-        @keyframes fadeInPage { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
-        
-        /* ── Responsive ── */
-        @media (max-width: 768px) {
-            .arch-section { padding: 24px; }
-            .arch-image-wrapper { padding: 12px; }
-            .arch-feature-list { grid-template-columns: 1fr; }
-        }
+.hero-inner {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 16px;
+    border-radius: 50px;
+    border: 1px solid rgba(123,82,255,0.3);
+    background: rgba(123,82,255,0.08);
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: #9b7bff;
+    letter-spacing: 2px;
+    margin-bottom: 1.25rem;
+}
+
+.badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
+    animation: pulseDot 2s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+    50% { opacity: 0.6; box-shadow: 0 0 0 8px rgba(16,185,129,0); }
+}
+
+.hero-title {
+    font-size: 2.2rem;
+    font-weight: 900;
+    line-height: 1.1;
+    margin: 0 0 1rem;
+    letter-spacing: -1px;
+}
+
+.hero-subtitle {
+    font-size: 0.95rem;
+    color: #8890a0;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    line-height: 1.7;
+}
+
+.hero-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.stat-item { text-align: center; }
+
+.stat-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 900;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.68rem;
+    color: #606070;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+
+.stat-divider {
+    width: 1px;
+    height: 36px;
+    background: rgba(255,255,255,0.06);
+}
+
+/* ── Tab Bar ────────────────────────────────────────────── */
+.tab-bar {
+    display: flex;
+    gap: 4px;
+    padding: 0.5rem 1rem;
+    margin: 0 1rem;
+    background: rgba(15,20,35,0.6);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.04);
+    overflow-x: auto;
+}
+
+.tab-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #8890a0;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    font-family: inherit;
+}
+
+.tab-btn:hover {
+    color: #c0c8d8;
+    background: rgba(255,255,255,0.03);
+}
+
+.tab-btn.active {
+    background: rgba(123,82,255,0.12);
+    color: #c4b5ff;
+    box-shadow: inset 0 0 0 1px rgba(123,82,255,0.2);
+}
+
+.tab-icon { font-size: 1rem; }
+
+/* ── Section Content ────────────────────────────────────── */
+.section-content {
+    padding: 2rem 1.5rem;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-size: 1.6rem;
+    font-weight: 900;
+    margin: 0 0 0.75rem;
+    letter-spacing: -0.5px;
+}
+
+.section-subtitle {
+    font-size: 0.92rem;
+    color: #8890a0;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+/* ── Flow Stack (Architecture) ──────────────────────────── */
+.flow-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.flow-layer {
+    width: 100%;
+    background: rgba(22,22,31,0.8);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 14px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.flow-layer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    opacity: 0.6;
+}
+
+.flow-layer:hover {
+    border-color: rgba(255,255,255,0.1);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+}
+
+.flow-salesforce::before { background: linear-gradient(90deg, #00a1e0, #0070d2); }
+.flow-core::before { background: linear-gradient(90deg, #7b52ff, #9b7bff); }
+.flow-zentom::before { background: linear-gradient(90deg, #7b52ff, #00d2ff, #10b981); }
+.flow-agentforce::before { background: linear-gradient(90deg, #f59e0b, #ec4899); }
+
+.flow-layer-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.flow-layer-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.flow-icon-sf { background: rgba(0,161,224,0.12); }
+.flow-icon-core { background: rgba(123,82,255,0.12); }
+.flow-icon-zentom { background: linear-gradient(135deg, rgba(123,82,255,0.12), rgba(0,210,255,0.12)); }
+.flow-icon-af { background: rgba(245,158,11,0.12); }
+
+.flow-layer-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.flow-layer-role {
+    font-size: 0.72rem;
+    color: #606070;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.flow-layer-desc {
+    font-size: 0.85rem;
+    color: #8890a0;
+    line-height: 1.6;
+    margin: 0 0 12px;
+}
+
+.flow-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.chip {
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.03);
+    color: #a0a0b0;
+}
+
+/* Flow Arrow */
+.flow-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 0;
+}
+
+.flow-arrow-line {
+    width: 2px;
+    height: 24px;
+    background: linear-gradient(180deg, #7b52ff, #00d2ff);
+    opacity: 0.4;
+    border-radius: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.flow-arrow-line::before {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, #7b52ff, #00d2ff);
+    animation: flowPulse 2s ease-in-out infinite;
+}
+
+@keyframes flowPulse {
+    0% { top: -100%; }
+    100% { top: 200%; }
+}
+
+.flow-arrow-label {
+    font-size: 0.62rem;
+    color: #606070;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 10px;
+    border-radius: 50px;
+    background: rgba(123,82,255,0.06);
+    border: 1px solid rgba(123,82,255,0.12);
+}
+
+.flow-arrow-head {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #7b52ff;
+    opacity: 0.5;
+}
+
+/* ── Engines Grid ───────────────────────────────────────── */
+.engines-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.engine-card {
+    background: rgba(22,22,31,0.7);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 14px;
+    padding: 1.5rem 1.25rem;
+    transition: all 0.3s ease;
+}
+
+.engine-card:hover {
+    border-color: rgba(255,255,255,0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+}
+
+.engine-icon {
+    display: block;
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+}
+
+.engine-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    margin: 0 0 8px;
+}
+
+.engine-desc {
+    font-size: 0.82rem;
+    color: #8890a0;
+    line-height: 1.6;
+    margin: 0 0 12px;
+}
+
+.engine-tags {
+    display: block;
+    font-size: 0.7rem;
+    color: #606070;
+    font-weight: 600;
+}
+
+/* ── Models Grid ────────────────────────────────────────── */
+.models-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.model-card {
+    background: rgba(22,22,31,0.7);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.model-card:hover {
+    border-color: rgba(255,255,255,0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+}
+
+.model-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.model-icon {
+    font-size: 2rem;
+}
+
+.weight-badge {
+    padding: 4px 14px;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.weight-primary { background: rgba(123,82,255,0.12); color: #9b7bff; border: 1px solid rgba(123,82,255,0.25); }
+.weight-secondary { background: rgba(0,210,255,0.1); color: #00d2ff; border: 1px solid rgba(0,210,255,0.2); }
+.weight-tertiary { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+.weight-quaternary { background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
+
+.model-name {
+    font-size: 1.3rem;
+    font-weight: 900;
+    margin: 0 0 4px;
+}
+
+.model-role {
+    display: block;
+    font-size: 0.72rem;
+    color: #606070;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.model-desc {
+    font-size: 0.88rem;
+    color: #8890a0;
+    line-height: 1.7;
+    margin: 0 0 1.25rem;
+}
+
+.model-caps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cap-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: #a0a0b0;
+}
+
+.cap-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #7b52ff;
+    flex-shrink: 0;
+}
+
+/* ── Governance Gates ───────────────────────────────────── */
+.gates-timeline {
+    position: relative;
+    max-width: 680px;
+    margin: 0 auto;
+    padding-left: 2.5rem;
+}
+
+.timeline-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 28px;
+    width: 2px;
+    background: linear-gradient(180deg, #7b52ff, #00d2ff, #10b981, #f59e0b, #ec4899);
+    opacity: 0.25;
+    border-radius: 1px;
+}
+
+.gate-item {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.25rem 0;
+    position: relative;
+}
+
+.gate-number {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 900;
+    flex-shrink: 0;
+    background: rgba(123,82,255,0.1);
+    color: #9b7bff;
+    border: 2px solid rgba(123,82,255,0.3);
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.gate-item:hover .gate-number {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(123,82,255,0.3);
+}
+
+.gate-body {
+    flex: 1;
+    padding-top: 6px;
+}
+
+.gate-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    margin: 0 0 6px;
+}
+
+.gate-desc {
+    font-size: 0.85rem;
+    color: #8890a0;
+    line-height: 1.6;
+    margin: 0 0 10px;
+}
+
+.gate-rules {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.rule-chip {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+}
+
+.rule-pass {
+    background: rgba(16,185,129,0.08);
+    border: 1px solid rgba(16,185,129,0.2);
+    color: #10b981;
+}
+
+.rule-escalate {
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.2);
+    color: #f59e0b;
+}
+
+.rule-block {
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.2);
+    color: #ef4444;
+}
+
+/* ── Actions Grid ───────────────────────────────────────── */
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.action-card {
+    background: rgba(22,22,31,0.7);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 14px;
+    padding: 1.5rem 1.25rem;
+    transition: all 0.3s ease;
+}
+
+.action-card:hover {
+    border-color: rgba(255,255,255,0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+}
+
+.action-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.action-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.risk-badge {
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.risk-lowest { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2); color: #10b981; }
+.risk-low { background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.2); color: #06b6d4; }
+.risk-medium { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); color: #f59e0b; }
+.risk-variable { background: rgba(123,82,255,0.1); border: 1px solid rgba(123,82,255,0.2); color: #9b7bff; }
+.risk-high { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: #ef4444; }
+.risk-highest { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #ef4444; }
+
+.action-desc {
+    font-size: 0.82rem;
+    color: #8890a0;
+    line-height: 1.6;
+    margin: 0 0 12px;
+}
+
+.action-autonomy {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #606070;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .engines-grid { grid-template-columns: repeat(2, 1fr); }
+    .actions-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-title { font-size: 1.8rem; }
+}
+
+@media (max-width: 600px) {
+    .engines-grid { grid-template-columns: 1fr; }
+    .models-grid { grid-template-columns: 1fr; }
+    .actions-grid { grid-template-columns: 1fr; }
+    .tab-bar { gap: 2px; }
+    .tab-btn { padding: 8px 10px; font-size: 0.75rem; }
+    .hero-stats { gap: 1rem; }
+    .stat-divider { display: none; }
+}
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+        main { background: #0a0e1a; min-height: 100vh; padding-top: 100px; padding-bottom: 60px; }
+        .zentom-container { margin: 0 auto; max-width: 1200px; }
     </style>
 </head>
-<body>
-    <!-- ═══════════════════ NAVBAR ═══════════════════ -->
+<body style="background: #0a0e1a;">
+<!-- ═══════════════════ NAVBAR ═══════════════════ -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a href="index.html" class="nav-brand">
@@ -162,84 +713,523 @@
         </div>
     </nav>
 
-    <!-- ═══════════════════ ARCHITECTURE ═══════════════════ -->
-    <main class="arch-page">
-        <div class="container">
-
-            <!-- Hero -->
-            <div class="arch-hero fade-in">
-                <span class="arch-hero-eyebrow">Zentom AI Orchestration Moat</span>
-                <h1 class="arch-hero-title">Inside the SentinelFlow<br><span class="gradient-text">Architecture</span></h1>
-                <p class="arch-hero-lead">
-                    SentinelFlow operates as a closed-loop autonomous system. From real-time event detection to Zentom AI root cause analysis and automated healing execution, discover how our enterprise architecture is built for scale, security, and precision.
+<main>
+    <div class="zentom-container theme-dark">
+        <!-- Hero Banner -->
+        <div class="hero-banner">
+            <div class="hero-glow"></div>
+            <div class="hero-inner">
+                <span class="hero-badge">
+                    <span class="badge-dot"></span>
+                    THE ORCHESTRATION MOAT
+                </span>
+                <h1 class="hero-title">
+                    <span class="gradient-text">Zentom</span> Architecture
+                </h1>
+                <p class="hero-subtitle">
+                    Eight AI engines. Five governance gates. One reasoning-first strategy.
+                    Full auditability, structural governance, enterprise trust.
                 </p>
-            </div>
-
-            <div class="arch-rule fade-in"></div>
-
-            <!-- Diagrams -->
-            <div class="arch-rows">
-
-                <!-- Overall Architecture -->
-                <div class="arch-section fade-in" style="animation-delay: 0.1s;">
-                    <h2>System Component Architecture</h2>
-                    <p>The complete service and object relationship map showing the core components, connectors, security gates, and the Zentom AI engine integration.</p>
-                    <div class="arch-image-wrapper">
-                        <img src="assets/diagrams/architecture-diagram.png" alt="SentinelFlow Architecture Diagram">
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-value gradient-text">8</span>
+                        <span class="stat-label">Engines</span>
                     </div>
-                    <ul class="arch-feature-list">
-                        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> <span><strong>Core Services</strong> — SelfHealingEngine, AIAnalysisService, BusinessImpactCalculator, and OperationalMemoryEngine.</span></li>
-                        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> <span><strong>Security Layer</strong> — AppExchange-ready SecurityGate, TenantContext, RateLimiter, and CircuitBreaker protecting all operations.</span></li>
-                        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> <span><strong>Zentom AI Stack</strong> — Deep integration with ZentomAIClient, ZentomPolicyEngine, and ReplayEngine.</span></li>
-                    </ul>
-                </div>
-
-                <!-- Sequence Diagram -->
-                <div class="arch-section fade-in" style="animation-delay: 0.2s;">
-                    <h2>End-to-End Platform Sequence</h2>
-                    <p>The complete interaction flow from user authentication through incident detection, AI analysis, auto-healing execution, and integration health monitoring.</p>
-                    <div class="arch-image-wrapper">
-                        <img src="assets/diagrams/sequence-diagram.png" alt="SentinelFlow Sequence Diagram">
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-value gradient-text">5</span>
+                        <span class="stat-label">Gates</span>
                     </div>
-                    <ul class="arch-feature-list">
-                        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> <span><strong>Incident Flow</strong> — Scheduled monitoring publishes Platform Events which instantly create incident records.</span></li>
-                        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> <span><strong>AI Pipeline</strong> — Classification triggers confidence scoring, root cause analysis, and recommendation generation dynamically.</span></li>
-                        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> <span><strong>Auto-Healing</strong> — Threshold evaluation triggers circuit breakers before running the recovery validation sequence.</span></li>
-                    </ul>
-                </div>
-
-                <!-- Process Flowchart -->
-                <div class="arch-section fade-in" style="animation-delay: 0.3s;">
-                    <h2>Decision & Orchestration Logic</h2>
-                    <p>The decision-making pipeline showing how incidents flow through classification, automated notifications, healing algorithms, and resolution.</p>
-                    <div class="arch-image-wrapper">
-                        <img src="assets/diagrams/flowchart-diagram.png" alt="SentinelFlow Process Flowchart">
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-value gradient-text">4</span>
+                        <span class="stat-label">AI Models</span>
                     </div>
-                    <ul class="arch-feature-list">
-                        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> <span><strong>Incident Routing</strong> — Severity and priority-based branching ensures critical failures are processed first.</span></li>
-                        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> <span><strong>Heal Decision Tree</strong> — Intelligent confidence threshold checks control runbook execution gating.</span></li>
-                        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> <span><strong>Resolution Memory</strong> — Post-heal verification logs an audit trail and indexes success patterns into Operational Memory.</span></li>
-                    </ul>
-                </div>
-                
-                <!-- Class Diagram -->
-                <div class="arch-section fade-in" style="animation-delay: 0.4s;">
-                    <h2>Data Model & Class Architecture</h2>
-                    <p>The detailed Salesforce schema and Apex class relationships powering the SentinelFlow ecosystem.</p>
-                    <div class="arch-image-wrapper">
-                        <img src="assets/diagrams/class-diagram.png" alt="SentinelFlow Class Diagram">
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-value gradient-text">45%</span>
+                        <span class="stat-label">R1 Weight</span>
                     </div>
-                    <ul class="arch-feature-list">
-                        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> <span><strong>Core Data Objects</strong> — `Incident__c`, `AI_Decision__c`, `Auto_Heal_Run__c`, `Revenue_Risk__c`, and `Universal_Event__c`.</span></li>
-                        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> <span><strong>Extensible Connectors</strong> — Standardized `ConnectorBase` interfaces for Stripe, Razorpay, SAP, NetSuite, and more.</span></li>
-                    </ul>
                 </div>
-
             </div>
         </div>
-    </main>
 
-    <!-- ═══════════════════ FOOTER ═══════════════════ -->
+        <!-- Tab Navigation -->
+        <div class="tab-bar">
+            <button class="tab-btn active" data-section="overview" onclick="openTab(event, 'overview')">
+                <span class="tab-icon">🏗️</span> Architecture
+            </button>
+            <button class="tab-btn" data-section="engines" onclick="openTab(event, 'engines')">
+                <span class="tab-icon">⚙️</span> 8 Engines
+            </button>
+            <button class="tab-btn" data-section="models" onclick="openTab(event, 'models')">
+                <span class="tab-icon">🧪</span> AI Models
+            </button>
+            <button class="tab-btn" data-section="governance" onclick="openTab(event, 'governance')">
+                <span class="tab-icon">🛡️</span> Governance
+            </button>
+            <button class="tab-btn" data-section="actions" onclick="openTab(event, 'actions')">
+                <span class="tab-icon">🎯</span> Actions
+            </button>
+        </div>
+
+        <!-- OVERVIEW -->
+        <div id="overview" class="tab-content active">
+            <div class="section-content">
+                <div class="section-header">
+                    <h2 class="section-title">How Data Flows Through <span class="gradient-text">Zentom</span></h2>
+                    <p class="section-subtitle">Every incident follows a governed, traceable path from Salesforce through the intelligence stack and back.</p>
+                </div>
+
+                <div class="flow-stack">
+                    <div class="flow-layer flow-salesforce">
+                        <div class="flow-layer-header">
+                            <span class="flow-layer-icon flow-icon-sf">☁️</span>
+                            <div>
+                                <h3 class="flow-layer-title">Salesforce</h3>
+                                <span class="flow-layer-role">System of Record</span>
+                            </div>
+                        </div>
+                        <p class="flow-layer-desc">Authoritative source for incidents, cases, accounts, contracts, and revenue data. Publishes Platform Events on failure.</p>
+                        <div class="flow-chips">
+                            <span class="chip">Accounts</span>
+                            <span class="chip">Cases</span>
+                            <span class="chip">Contracts</span>
+                            <span class="chip">Revenue</span>
+                            <span class="chip">Platform Events</span>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">
+                        <div class="flow-arrow-line"></div>
+                        <span class="flow-arrow-label">Platform Events</span>
+                        <div class="flow-arrow-head"></div>
+                    </div>
+
+                    <div class="flow-layer flow-core">
+                        <div class="flow-layer-header">
+                            <span class="flow-layer-icon flow-icon-core">🔍</span>
+                            <div>
+                                <h3 class="flow-layer-title">SentinelFlow Core</h3>
+                                <span class="flow-layer-role">Analysis &amp; Routing</span>
+                            </div>
+                        </div>
+                        <p class="flow-layer-desc">Receives events, extracts structured incident data, performs revenue-aware prioritization, applies the 80% Confidence Gate.</p>
+                        <div class="flow-chips">
+                            <span class="chip">Analyzer</span>
+                            <span class="chip">Prioritizer</span>
+                            <span class="chip">Confidence Gate</span>
+                            <span class="chip">Router</span>
+                            <span class="chip">Tracer</span>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">
+                        <div class="flow-arrow-line"></div>
+                        <span class="flow-arrow-label">Enriched Context</span>
+                        <div class="flow-arrow-head"></div>
+                    </div>
+
+                    <div class="flow-layer flow-zentom">
+                        <div class="flow-layer-header">
+                            <span class="flow-layer-icon flow-icon-zentom">🧠</span>
+                            <div>
+                                <h3 class="flow-layer-title">Zentom Orchestration</h3>
+                                <span class="flow-layer-role">The Moat</span>
+                            </div>
+                        </div>
+                        <p class="flow-layer-desc">Eight engines working in concert. Every AI decision passes through structural governance before reaching production.</p>
+                        <div class="flow-chips">
+                            <span class="chip">Context</span>
+                            <span class="chip">Memory</span>
+                            <span class="chip">Policy</span>
+                            <span class="chip">Risk</span>
+                            <span class="chip">Replay</span>
+                            <span class="chip">Evaluation</span>
+                            <span class="chip">Execution</span>
+                            <span class="chip">Router</span>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">
+                        <div class="flow-arrow-line"></div>
+                        <span class="flow-arrow-label">Governed Action</span>
+                        <div class="flow-arrow-head"></div>
+                    </div>
+
+                    <div class="flow-layer flow-agentforce">
+                        <div class="flow-layer-header">
+                            <span class="flow-layer-icon flow-icon-af">🤖</span>
+                            <div>
+                                <h3 class="flow-layer-title">Agentforce</h3>
+                                <span class="flow-layer-role">Salesforce-Native Execution</span>
+                            </div>
+                        </div>
+                        <p class="flow-layer-desc">Translates governed decisions into Salesforce operations — cases, Flows, records, rollbacks — with full Trust Layer compliance.</p>
+                        <div class="flow-chips">
+                            <span class="chip">Cases</span>
+                            <span class="chip">Flows</span>
+                            <span class="chip">Record Updates</span>
+                            <span class="chip">Notifications</span>
+                            <span class="chip">Rollbacks</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ENGINES -->
+        <div id="engines" class="tab-content">
+            <div class="section-content">
+                <div class="section-header">
+                    <h2 class="section-title">Every Component of the <span class="gradient-text">Moat</span></h2>
+                    <p class="section-subtitle">Each engine has a distinct function. Together, they make autonomous AI actions trustworthy at enterprise scale.</p>
+                </div>
+                <div class="engines-grid">
+                    
+                    <div class="engine-card">
+                        <span class="engine-icon">🧠</span>
+                        <h3 class="engine-title">Context Engine</h3>
+                        <p class="engine-desc">Assembles full situational awareness — past incidents, runbooks, account details, deployment history, and failure patterns.</p>
+                        <span class="engine-tags">RAG · Salesforce · Knowledge Base · History</span>
+                    </div>
+                    <div class="engine-card">
+                        <span class="engine-icon">💾</span>
+                        <h3 class="engine-title">Memory Engine</h3>
+                        <p class="engine-desc">Embeddings + RAG over PostgreSQL/pgvector. Recognizes failure patterns even without keyword matches.</p>
+                        <span class="engine-tags">pgvector · Redis · Embeddings · RAG</span>
+                    </div>
+                    <div class="engine-card">
+                        <span class="engine-icon">🛡️</span>
+                        <h3 class="engine-title">Policy Engine</h3>
+                        <p class="engine-desc">The governance spine. Evaluates AI recommendations against hard gates — confidence, production checks, risk blocks.</p>
+                        <span class="engine-tags">Confidence Gate · Hard Rules · Escalation</span>
+                    </div>
+                    <div class="engine-card">
+                        <span class="engine-icon">⚡</span>
+                        <h3 class="engine-title">Risk Engine</h3>
+                        <p class="engine-desc">Quantifies danger across four dimensions: technical severity, business impact, blast radius, and operational context.</p>
+                        <span class="engine-tags">Severity · ARR Impact · Blast Radius</span>
+                    </div>
+                    <div class="engine-card">
+                        <span class="engine-icon">🔄</span>
+                        <h3 class="engine-title">Replay Engine</h3>
+                        <p class="engine-desc">Records every AI decision lifecycle in enough detail to be re-run or challenged. Powers audit and post-mortems.</p>
+                        <span class="engine-tags">Audit Trail · Post-mortem · Training Data</span>
+                    </div>
+                    <div class="engine-card">
+                        <span class="engine-icon">📊</span>
+                        <h3 class="engine-title">Evaluation Engine</h3>
+                        <p class="engine-desc">Judges AI performance by comparing recommendations against actual outcomes. Detects model drift.</p>
+                        <span class="engine-tags">Accuracy · Drift Detection · Calibration</span>
+                    </div>
+                    <div class="engine-card">
+                        <span class="engine-icon">🎯</span>
+                        <h3 class="engine-title">Execution Controller</h3>
+                        <p class="engine-desc">Final gate before production. Pre-execution checks, multi-step sequencing, step verification with rollback.</p>
+                        <span class="engine-tags">Circuit Breaker · Idempotency · Rollback</span>
+                    </div>
+                    <div class="engine-card">
+                        <span class="engine-icon">🔀</span>
+                        <h3 class="engine-title">Model Router</h3>
+                        <p class="engine-desc">Selects the optimal AI model combination based on task type, risk level, latency, and confidence needs.</p>
+                        <span class="engine-tags">R1 · Coder · Llama 3 · Agentforce</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODELS -->
+        <div id="models" class="tab-content">
+            <div class="section-content">
+                <div class="section-header">
+                    <h2 class="section-title">Reasoning-First <span class="gradient-text">Model Strategy</span></h2>
+                    <p class="section-subtitle">Four specialized models, routed intelligently by the Model Router based on task type, risk, and latency.</p>
+                </div>
+                <div class="models-grid">
+                    
+                    <div class="model-card">
+                        <div class="model-header">
+                            <span class="model-icon">🧪</span>
+                            <span class="weight-badge weight-primary">45%</span>
+                        </div>
+                        <h3 class="model-name">DeepSeek R1</h3>
+                        <span class="model-role">Primary Reasoning Engine</span>
+                        <p class="model-desc">Trained via reinforcement learning with emergent self-reflection, verification, and dynamic strategy adaptation. Handles multi-system failures and novel failure types.</p>
+                        <div class="model-caps">
+                            
+                            <div class="cap-item">
+                                <span class="cap-dot"></span>
+                                <span>Multi-system failure diagnosis</span>
+                            </div>
+                            <div class="cap-item">
+                                <span class="cap-dot"></span>
+                                <span>Chain-of-thought reasoning</span>
+                            </div>
+                            <div class="cap-item">
+                                <span class="cap-dot"></span>
+                                <span>High-revenue-risk prioritization</span>
+                            </div>
+                            <div class="cap-item">
+                                <span class="cap-dot"></span>
+                                <span>Low-confidence escalation authority</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="model-card">
+                        <div class="model-header">
+                            <span class="model-icon">⚙️</span>
+                            <span class="weight-badge weight-secondary">20%</span>
+                        </div>
+                        <h3 class="model-name">Agentforce</h3>
+                        <span class="model-role">Salesforce-Native Execution</span>
+                        <p class="model-desc">Runs inside the Salesforce Trust Layer with native access to all objects and full permission enforcement. Handles the return path — cases, flows, records.</p>
+                        <div class="model-caps">
+                            
+                            <div class="cap-item">
+                                <span class="cap-dot"></span>
+                                <span>Trust Layer compliance</span>
+                            </div>
+                            <div class="cap-item">
+                                <span class="cap-dot"></span>
+                                <span>Step-verified execution</span>
+                            </div>
+                            <div class="cap-item">
+                                <span class="cap-dot"></span>
+                                <span>Full Salesforce object access</span>
+                            </div>
+                            <div class="cap-item">
+                                <span class="cap-dot"></span>
+                                <span>AppExchange compatibility</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="model-card">
+                        <div class="model-header">
+                            <span class="model-icon">🦙</span>
+                            <span class="weight-badge weight-tertiary">10%</span>
+                        </div>
+                        <h3 class="model-name">Llama 3</h3>
+                        <span class="model-role">Local Inference via Ollama</span>
+                        <p class="model-desc">Zero-latency local inference for initial triage and classification. Runs via Ollama with no external API calls.</p>
+                        <div class="model-caps">
+                            
+                            <div class="cap-item">
+                                <span class="cap-dot"></span>
+                                <span>Zero-latency local execution</span>
+                            </div>
+                            <div class="cap-item">
+                                <span class="cap-dot"></span>
+                                <span>Initial triage and classification</span>
+                            </div>
+                            <div class="cap-item">
+                                <span class="cap-dot"></span>
+                                <span>Low-risk recommendations</span>
+                            </div>
+                            <div class="cap-item">
+                                <span class="cap-dot"></span>
+                                <span>Privacy-preserving inference</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="model-card">
+                        <div class="model-header">
+                            <span class="model-icon">💻</span>
+                            <span class="weight-badge weight-quaternary">10%</span>
+                        </div>
+                        <h3 class="model-name">DeepSeek Coder</h3>
+                        <span class="model-role">Code Analysis Engine</span>
+                        <p class="model-desc">Processes code as structured text — call graphs, dependency chains, type hierarchies. Diagnoses Flow failures and Apex bugs.</p>
+                        <div class="model-caps">
+                            
+                            <div class="cap-item">
+                                <span class="cap-dot"></span>
+                                <span>Salesforce Flow & Apex analysis</span>
+                            </div>
+                            <div class="cap-item">
+                                <span class="cap-dot"></span>
+                                <span>LWC frontend diagnosis</span>
+                            </div>
+                            <div class="cap-item">
+                                <span class="cap-dot"></span>
+                                <span>API schema mismatch detection</span>
+                            </div>
+                            <div class="cap-item">
+                                <span class="cap-dot"></span>
+                                <span>Structured file/line output</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GOVERNANCE -->
+        <div id="governance" class="tab-content">
+            <div class="section-content">
+                <div class="section-header">
+                    <h2 class="section-title">Five Gates to <span class="gradient-text">Production</span></h2>
+                    <p class="section-subtitle">No LLM action touches production without mandatory passage through five sequential governance gates.</p>
+                </div>
+                <div class="gates-timeline">
+                    <div class="timeline-line"></div>
+                    
+                    <div class="gate-item">
+                        <div class="gate-number">1</div>
+                        <div class="gate-body">
+                            <h3 class="gate-title">Risk Evaluation</h3>
+                            <p class="gate-desc">Every action must pass a quantified risk assessment measuring Technical Severity, Business Impact, Blast Radius, and Operational Context.</p>
+                            <div class="gate-rules">
+                                
+                                <span class="rule-chip rule-pass">Risk Score → 4 Dimensions</span>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gate-item">
+                        <div class="gate-number">2</div>
+                        <div class="gate-body">
+                            <h3 class="gate-title">Policy Validation</h3>
+                            <p class="gate-desc">The final action must be cleared by the Policy Engine against hard gates. Production systems always trigger escalation.</p>
+                            <div class="gate-rules">
+                                
+                                <span class="rule-chip rule-escalate">confidence < 80% → human</span>
+                                
+                                <span class="rule-chip rule-escalate">prod system → escalate</span>
+                                
+                                <span class="rule-chip rule-block">high risk → block</span>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gate-item">
+                        <div class="gate-number">3</div>
+                        <div class="gate-body">
+                            <h3 class="gate-title">Confidence & AI Guardian</h3>
+                            <p class="gate-desc">Autonomous execution is blocked when confidence < 80%, Revenue Risk > $50K, or the action involves irreversible data changes.</p>
+                            <div class="gate-rules">
+                                
+                                <span class="rule-chip rule-block">confidence < 80% → BLOCK</span>
+                                
+                                <span class="rule-chip rule-block">revenue > $50K → BLOCK</span>
+                                
+                                <span class="rule-chip rule-block">irreversible → BLOCK</span>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gate-item">
+                        <div class="gate-number">4</div>
+                        <div class="gate-body">
+                            <h3 class="gate-title">Replay Logging</h3>
+                            <p class="gate-desc">Every step of the decision lifecycle is logged — context, prompt/response, risk scores, policy outcomes, final action.</p>
+                            <div class="gate-rules">
+                                
+                                <span class="rule-chip rule-pass">Full trace recorded</span>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gate-item">
+                        <div class="gate-number">5</div>
+                        <div class="gate-body">
+                            <h3 class="gate-title">Execution</h3>
+                            <p class="gate-desc">The Execution Controller manages pre-execution checks, sequencing, and step verification before dispatching via Agentforce.</p>
+                            <div class="gate-rules">
+                                
+                                <span class="rule-chip rule-escalate">Circuit breaker check</span>
+                                
+                                <span class="rule-chip rule-pass">Step-by-step verify</span>
+                                
+                                <span class="rule-chip rule-pass">Rollback on failure</span>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div id="actions" class="tab-content">
+            <div class="section-content">
+                <div class="section-header">
+                    <h2 class="section-title">The Risk <span class="gradient-text">Gradient</span></h2>
+                    <p class="section-subtitle">Six action types ordered by risk. Same governance stack for all — but thresholds tighten as risk increases.</p>
+                </div>
+                <div class="actions-grid">
+                    
+                    <div class="action-card">
+                        <div class="action-header">
+                            <span class="action-name">Notify Teams</span>
+                            <span class="risk-badge risk-lowest">Lowest</span>
+                        </div>
+                        <p class="action-desc">Zero production side effects. Sends notifications safely.</p>
+                        <span class="action-autonomy">Fully autonomous</span>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-header">
+                            <span class="action-name">Open Case</span>
+                            <span class="risk-badge risk-low">Low</span>
+                        </div>
+                        <p class="action-desc">Creates Salesforce cases for incident tracking.</p>
+                        <span class="action-autonomy">Fully autonomous</span>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-header">
+                            <span class="action-name">Retry Integration</span>
+                            <span class="risk-badge risk-medium">Medium</span>
+                        </div>
+                        <p class="action-desc">Circuit breaker checked first. Holds retry if flapping detected.</p>
+                        <span class="action-autonomy">Non-prod: auto · Prod: risk-scored</span>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-header">
+                            <span class="action-name">Trigger SF Flow</span>
+                            <span class="risk-badge risk-variable">Variable</span>
+                        </div>
+                        <p class="action-desc">Risk depends on Flow target. Billing Flows trigger Gate 2.</p>
+                        <span class="action-autonomy">Varies by Flow target</span>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-header">
+                            <span class="action-name">Restart Workflow</span>
+                            <span class="risk-badge risk-high">High</span>
+                        </div>
+                        <p class="action-desc">Stop → confirm stopped → restart. Phase 4 MVP goal.</p>
+                        <span class="action-autonomy">Prod: human approval required</span>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-header">
+                            <span class="action-name">Rollback Deploy</span>
+                            <span class="risk-badge risk-highest">Highest</span>
+                        </div>
+                        <p class="action-desc">Joint DeepSeek Coder + R1 analysis. Human makes the final call.</p>
+                        <span class="action-autonomy">Always requires human approval</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+    }
+    tablinks = document.getElementsByClassName("tab-btn");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).className += " active";
+    evt.currentTarget.className += " active";
+}
+</script>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
     <footer class="footer" style="border-top: 1px solid var(--border-color); padding: 24px 0; background: var(--bg-primary); margin-top: auto;">
         <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; font-size: 0.8rem; color: var(--text-secondary);">
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
@@ -315,4 +1305,3 @@
     </script>
 </body>
 </html>
-
