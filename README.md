@@ -109,50 +109,68 @@ New → Investigating → Healing → Resolved
 
 ---
 
-## 🚀 Run Locally
+## 🚀 Quick Start
+
+### Prerequisites
+- **Node.js** 16+ 
+- **npm** or **yarn**
+- **Salesforce CLI** (optional, for org deployments)
+- Environment variables configured in `.env`
+
+### Local Development
 
 ```bash
-# 1. Clone the repo
-git clone <repo-url>
-cd SentinelFlow
+# 1. Clone the repository
+git clone https://github.com/vcr50/salesforce-ops-monitoring-platform.git
+cd salesforce-ops-monitoring-platform
 
 # 2. Install dependencies
 npm install
 
-# 3. Setup environment
+# 3. Setup environment variables
 cp .env.example .env
+# Edit .env with your Salesforce credentials, Stripe/Razorpay keys, etc.
 
-# 4. Start the dev server (auto-reload with nodemon)
+# 4. Start development server (with hot-reload via nodemon)
 npm run dev
+# Server runs at http://localhost:3000
 
-# 5. Open in browser
-open http://localhost:3000
+# 5. Run tests
+npm test
+
+# 6. Lint code
+npm run lint
 ```
 
-Dashboard is available at: **http://localhost:3000/dashboard/index.html**
+**Dashboard is available at:** http://localhost:3000/dashboard/index.html  
+**Mock data works without Salesforce credentials** — use `.env` for live API integration.
 
-> The dashboard SPA works fully with built-in mock data. Salesforce credentials in `.env` are only required for live Apex data sync.
+### Development Commands
 
----
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Start Express server with auto-reload |
+| `npm test` | Run Jest test suite |
+| `npm run lint` | Run ESLint code quality checks |
+| `npm start` | Production server (no hot-reload) |
 
-## 🔧 Deploy to Salesforce
+### Deploy to Salesforce
 
 ```bash
-# Authenticate to your org
-sf org login web -a vjdev@asap.com
+# Authenticate to your Salesforce org
+sf org login web -a my-org@company.com
 
-# Deploy all LWC components + static resources
-sf project deploy start -d force-app -o vjdev@asap.com
+# Deploy Apex classes, LWC components, and metadata
+sf project deploy start -d force-app -o my-org@company.com
 
-# Open Experience Builder to configure pages
-sf org open -o vjdev@asap.com
+# Open Experience Builder to configure the portal
+sf org open -o my-org@company.com
 ```
 
-**Experience Builder Configuration:**
-1. Navigate to your Experience Cloud site
-2. Drag `sentinelFlowPortalApp` onto the main page
-3. For Login page — drag `sentinelFlowPortalLogin` and remove the default Salesforce login component
-4. Publish the site
+Configure in Experience Builder:
+1. Drag `sentinelFlowAppShell` to the page
+2. Set `sentinelFlowPortalLogin` as custom login component
+3. Publish the site
 
 ---
 
@@ -172,34 +190,332 @@ sf org open -o vjdev@asap.com
 ## 📁 Project Structure
 
 ```
-SentinelFlow/
-├── force-app/main/default/
-│   ├── lwc/
-│   │   ├── sentinelFlowPortalApp/             ← Master app shell
-│   │   ├── sentinelFlowPortalCommandCenter/   ← Home dashboard
-│   │   ├── sentinelFlowPortalIncidentsPage/   ← Core incident module ⭐
-│   │   ├── sentinelFlowPortalIncidentTable/   ← Incident table widget
-│   │   ├── sentinelFlowPortalIntegrationsPage/← Integration monitor
-│   │   ├── sentinelFlowPortalLogin/           ← Custom login page
-│   │   ├── sentinelFlowPortalSummary/         ← KPI summary cards
-│   │   └── sentinelFlowPortalCopilot/         ← AI Copilot chat
-│   ├── classes/
-│   │   └── SentinelFlowPortalController.cls   ← Apex data layer
-│   └── staticresources/
-│       └── sentinelFlowLogo.png               ← Brand asset
-├── src/
-│   ├── app.js                          ← Express server
-│   └── dashboard/                      ← Standalone preview SPA
-│       ├── index.html
-│       ├── style.css
-│       └── app.js
-├── package.json
-└── README.md
+salesforce-ops-monitoring-platform/
+├── 🎯 Core Backend (Node.js + Express)
+│   ├── src/
+│   │   ├── app.js                           ← Express server entry point
+│   │   ├── container.js                     ← Dependency injection container
+│   │   ├── config/
+│   │   │   └── index.js                     ← Configuration management
+│   │   ├── controllers/
+│   │   │   ├── authController.js            ← OAuth, SSO, Login
+│   │   │   ├── billingController.js         ← Stripe/Razorpay integration
+│   │   │   └── subscriptionController.js    ← Subscription lifecycle
+│   │   ├── routes/
+│   │   │   ├── auth.js                      ← Auth endpoints
+│   │   │   ├── records.js                   ← CRUD operations
+│   │   │   ├── sync.js                      ← Data sync from Salesforce
+│   │   │   ├── analytics.js                 ← Analytics/reporting
+│   │   │   └── system.js                    ← Health checks & metrics
+│   │   ├── modules/
+│   │   │   ├── restApi.js                   ← Salesforce REST API wrapper
+│   │   │   ├── soapApi.js                   ← Salesforce SOAP API wrapper
+│   │   │   ├── bulkApi.js                   ← Salesforce Bulk API v2
+│   │   │   └── dataSync.js                  ← Bi-directional data sync
+│   │   ├── services/
+│   │   │   ├── analyticsService.js          ← Metrics & dashboarding
+│   │   │   ├── cacheService.js              ← Redis-like in-memory cache
+│   │   │   ├── customerService.js           ← Customer operations
+│   │   │   ├── customerPortalService.js     ← Portal functionality
+│   │   │   ├── httpClient.js                ← HTTP utilities
+│   │   │   ├── idempotencyService.js        ← Duplicate request prevention
+│   │   │   ├── razorpayService.js           ← Razorpay payments
+│   │   │   ├── subscriptionService.js       ← Subscription logic
+│   │   │   ├── subscriptionSyncService.js   ← Sync with Salesforce
+│   │   │   └── stripeClient.js              ← Stripe payments
+│   │   ├── middleware/
+│   │   │   └── logger.js                    ← Pino structured logging
+│   │   ├── utils/
+│   │   │   ├── constants.js                 ← App constants
+│   │   │   └── validators.js                ← Input validation
+│   │   └── dashboard/                       ← Standalone demo SPA
+│   │       ├── index.html
+│   │       ├── style.css
+│   │       └── app.js
+│   ├── tests/
+│   │   ├── app.integration.test.js          ← Full app integration tests
+│   │   ├── architecture.test.js             ← Architecture/DI tests
+│   │   ├── billingController.test.js        ← Billing functionality tests
+│   │   ├── middleware.test.js               ← Logger & middleware tests
+│   │   ├── razorpayService.test.js          ← Payment service tests
+│   │   ├── services.test.js                 ← Service layer tests
+│   │   ├── subscriptionSyncService.test.js  ← Sync logic tests
+│   │   ├── utils.test.js                    ← Utility tests
+│   │   └── setup.js                         ← Test configuration
+│   ├── jest.config.js                       ← Jest test configuration
+│   └── package.json                         ← Node.js dependencies
+│
+├── 🌐 Salesforce Metadata (Apex + LWC)
+│   └── force-app/main/default/
+│       ├── classes/                         ← Apex controllers & services
+│       │   ├── SentinelFlowPortalController.cls
+│       │   ├── SentinelFlowAutomationService.cls
+│       │   ├── IncidentRestApi.cls
+│       │   ├── SubscriptionRestApi.cls
+│       │   ├── SubscriptionService.cls
+│       │   ├── NotificationService.cls
+│       │   ├── AuditTrailService.cls
+│       │   ├── SystemLogger.cls
+│       │   ├── SelfHealingEngine.cls
+│       │   ├── AIAnalysisService.cls
+│       │   ├── SecurityGate.cls
+│       │   └── ... (25+ more classes)
+│       ├── lwc/
+│       │   ├── sentinelFlowAppShell/        ← Master app shell
+│       │   ├── sentinelFlowGuardianHome/    ← Home dashboard
+│       │   ├── sentinelFlowPortalIncidentsPage/ ← Incidents module ⭐
+│       │   ├── sentinelFlowPortalLogin/     ← Custom login
+│       │   └── ... (more components)
+│       ├── flexipages/                      ← Experience Cloud pages
+│       ├── objects/                         ← Custom objects
+│       │   ├── AI_Decision__c/
+│       │   └── Auto_Heal_Run__c/
+│       └── staticresources/                 ← Images & assets
+│
+├── 📚 Documentation
+│   ├── docs/
+│   │   ├── SentinelFlow_Implementation_Guide.md
+│   │   ├── API_REFERENCE.md
+│   │   ├── FRONTEND_INTEGRATION.md
+│   │   ├── architecture.md
+│   │   ├── deployment.md
+│   │   ├── development.md
+│   │   └── ... (10+ more guides)
+│
+├── 🏗️ Infrastructure & Deployment
+│   ├── infrastructure/terraform/            ← IaC configs
+│   ├── scripts/
+│   │   ├── create_metadata.js
+│   │   ├── sync-github.sh
+│   │   └── salesforce/                      ← Apex deployment scripts
+│   ├── Procfile                             ← Heroku deployment config
+│   └── sfdx-project.json                    ← Salesforce project config
+│
+├── 🎨 Web Frontends
+│   ├── website/                             ← Marketing website
+│   │   ├── index.html
+│   │   ├── products.html
+│   │   ├── pricing.html
+│   │   ├── about.html
+│   │   └── ... (marketing pages)
+│   ├── website-next/                        ← Next.js dashboard (new)
+│   │   ├── src/
+│   │   ├── public/
+│   │   ├── next.config.mjs
+│   │   └── package.json
+│   └── examples/
+│       ├── react-integration/               ← React SDK example
+│       └── vanilla-js/                      ← Plain JS example
+│
+├── 🔧 Configuration & Metadata
+│   ├── .env.example                         ← Environment template
+│   ├── config/project-scratch-def.json      ← Salesforce scratch org config
+│   ├── manifest/
+│   │   ├── package.xml
+│   │   └── destructiveChanges.xml
+│   └── sfdx-project.json
+│
+├── 📊 Analytics & Reports
+│   ├── scanner_results.json                 ← Code quality scan
+│   ├── coverage/                            ← Test coverage reports
+│   └── deploy_errors.json                   ← Deployment logs
+│
+└── 📝 Core Files
+    ├── README.md                            ← This file
+    ├── CONTRIBUTING.md
+    ├── CHANGELOG.md
+    ├── package.json
+    └── server.js
 ```
 
 ---
 
-## 👤 Author
+## � Quick Start
+
+### Prerequisites
+- **Node.js** 16+ 
+- **npm** or **yarn**
+- **Salesforce CLI** (optional, for org deployments)
+- Environment variables configured in `.env`
+
+### Local Development
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/vcr50/salesforce-ops-monitoring-platform.git
+cd salesforce-ops-monitoring-platform
+
+# 2. Install dependencies
+npm install
+
+# 3. Setup environment variables
+cp .env.example .env
+# Edit .env with your Salesforce credentials, Stripe/Razorpay keys, etc.
+
+# 4. Start development server (with hot-reload via nodemon)
+npm run dev
+# Server runs at http://localhost:3000
+
+# 5. Run tests
+npm test
+
+# 6. Lint code
+npm run lint
+```
+
+**Dashboard is available at:** http://localhost:3000/dashboard/index.html  
+**Mock data works without Salesforce credentials** — use `.env` for live API integration.
+
+### Development Commands
+
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Start Express server with auto-reload |
+| `npm test` | Run Jest test suite |
+| `npm run lint` | Run ESLint code quality checks |
+| `npm start` | Production server (no hot-reload) |
+
+### Deploy to Salesforce
+
+```bash
+# Authenticate to your Salesforce org
+sf org login web -a my-org@company.com
+
+# Deploy Apex classes, LWC components, and metadata
+sf project deploy start -d force-app -o my-org@company.com
+
+# Open Experience Builder to configure the portal
+sf org open -o my-org@company.com
+```
+
+Configure in Experience Builder:
+1. Drag `sentinelFlowAppShell` to the page
+2. Set `sentinelFlowPortalLogin` as custom login component
+3. Publish the site
+
+---
+
+## 🔌 API Endpoints
+
+### Authentication
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| `POST` | `/api/auth/login` | User login (OAuth 2.0) |
+| `POST` | `/api/auth/logout` | User logout |
+| `POST` | `/api/auth/refresh` | Refresh access token |
+| `POST` | `/api/auth/sso` | Single Sign-On |
+
+### Records Management
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| `GET` | `/api/records/incidents` | List all incidents |
+| `GET` | `/api/records/incidents/:id` | Get incident details |
+| `POST` | `/api/records/incidents` | Create incident |
+| `PATCH` | `/api/records/incidents/:id` | Update incident |
+
+### Billing & Subscriptions
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| `POST` | `/api/billing/create-payment` | Create payment (Stripe/Razorpay) |
+| `GET` | `/api/subscriptions` | List subscriptions |
+| `POST` | `/api/subscriptions` | Create subscription |
+| `PATCH` | `/api/subscriptions/:id` | Update subscription |
+| `DELETE` | `/api/subscriptions/:id` | Cancel subscription |
+
+### Data Sync
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| `POST` | `/api/sync/full` | Full data sync from Salesforce |
+| `POST` | `/api/sync/incremental` | Incremental sync |
+| `GET` | `/api/sync/status` | Sync status & last run |
+
+### Analytics
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| `GET` | `/api/analytics/dashboard` | Dashboard metrics |
+| `GET` | `/api/analytics/incidents` | Incident analytics |
+| `GET` | `/api/analytics/revenue-impact` | Revenue impact report |
+
+### System Health
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| `GET` | `/api/system/health` | Service health check |
+| `GET` | `/api/system/metrics` | Performance metrics |
+| `GET` | `/api/system/integrations` | Integration status |
+
+---
+
+## 🧪 Testing
+
+The project includes comprehensive test coverage:
+
+```bash
+# Run all tests with coverage report
+npm test
+
+# Watch mode (auto-re-run on file changes)
+npm test -- --watch
+
+# Test specific file
+npm test -- billingController.test.js
+
+# Generate coverage HTML report
+npm test -- --coverage
+```
+
+**Test Files:**
+- `app.integration.test.js` — Full app integration tests
+- `billingController.test.js` — Payment processing
+- `middleware.test.js` — Logger & middleware
+- `razorpayService.test.js` — Razorpay integration
+- `services.test.js` — Core service layer
+- `subscriptionSyncService.test.js` — Salesforce sync
+- `utils.test.js` — Utility functions
+- `architecture.test.js` — DI container & architecture
+
+Coverage reports available in `coverage/` directory.
+
+---
+
+## 🔐 Security Features
+
+- **OAuth 2.0** — Secure user authentication
+- **CORS Protection** — Cross-origin request validation
+- **Input Validation** — XSS & SQL injection prevention
+- **Audit Trail** — Full audit logging via `AuditTrailService`
+- **Rate Limiting** — Request throttling
+- **Idempotency** — Duplicate request prevention (`idempotencyService`)
+- **Security Gate** — Apex security enforcement layer
+
+---
+
+## 📦 Tech Stack
+
+**Backend**
+- Node.js 16+ with Express.js
+- Jest for unit/integration testing
+- Pino for structured logging
+- Dependency Injection (custom container)
+
+**Salesforce**
+- Apex (25+ classes for business logic)
+- Lightning Web Components (5+ components)
+- Platform Events for real-time sync
+- SOQL/SOSL for data queries
+
+**Frontend**
+- Vanilla JavaScript (dashboard SPA)
+- Lightning Design System (LDS) for Salesforce UI
+- Next.js (upcoming dashboard redesign)
+- React integration examples
+
+**Payments & Integrations**
+- Stripe for payments
+- Razorpay for Indian/international payments
+- Salesforce REST & SOAP APIs
+- Bulk API v2 for data imports
+
+---
 
 **VJ** · TomCodeX Inc  
 Salesforce Developer · Product Builder  
