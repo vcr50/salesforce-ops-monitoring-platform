@@ -5,7 +5,7 @@ export default function HowItWorks() {
         <div className="section-header">
           <span className="section-tag">WORKFLOW</span>
           <h2 className="section-title">How SentinelFlow <span className="gradient-text">Protects You</span></h2>
-          <p className="section-subtitle">From the moment an integration fails to full resolution — in seconds, not hours.</p>
+          <p className="section-subtitle">From the moment an integration fails to prediction, recovery, validation, and learning.</p>
         </div>
         <div className="steps-timeline">
           <div className="step">
@@ -18,22 +18,22 @@ export default function HowItWorks() {
           <div className="step">
             <div className="step-number">02</div>
             <div className="step-content">
-              <h3>Classify</h3>
-              <p>The AI engine matches failure patterns against configurable rules (Custom Metadata), assigns severity, root cause, and business impact score.</p>
+              <h3>Classify + Remember</h3>
+              <p>The AI engine assigns severity and root cause, then checks operational memory for similar incidents and proven fixes.</p>
             </div>
           </div>
           <div className="step">
             <div className="step-number">03</div>
             <div className="step-content">
-              <h3>Heal</h3>
-              <p>Transient failures are automatically retried. Credential resets, queue restarts, and integration resyncs execute without human intervention.</p>
+              <h3>Predict</h3>
+              <p>Prediction V2 scores failure probability, deployment risk, and org stability so teams can prevent the next outage.</p>
             </div>
           </div>
           <div className="step">
             <div className="step-number">04</div>
             <div className="step-content">
-              <h3>Alert &amp; Report</h3>
-              <p>Unresolvable incidents escalate to the right team. Full audit trails, dead-letter logs, and the observability dashboard provide complete visibility.</p>
+              <h3>Heal + Learn</h3>
+              <p>Approved runbooks execute recovery actions, validate outcomes, and feed the learning loop to improve future confidence.</p>
             </div>
           </div>
         </div>

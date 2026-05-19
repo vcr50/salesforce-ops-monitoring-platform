@@ -22,7 +22,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>SentinelFlow package installation URL</shortDescription>
-        <value>https://login.salesforce.com/packaging/installPackage.apexp?p0=REPLACE_PACKAGE_ID</value>
+        <value>https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000aQVRQA2</value>
     </labels>
     <labels>
         <fullName>SentinelFlow_Pricing_Url</fullName>

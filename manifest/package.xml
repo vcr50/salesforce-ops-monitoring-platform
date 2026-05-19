@@ -70,6 +70,8 @@
         <members>SentinelFlowAutomationServiceTest</members>
         <members>SentinelFlowPortalController</members>
         <members>SentinelFlowPortalControllerTest</members>
+        <members>MemoryIndexQueueable</members>
+        <members>MemoryIndexQueueableTest</members>
         <members>SentinelFlowPostInstallHandler</members>
         <members>SentinelFlowPostInstallHandlerTest</members>
         <members>SubscriptionRestApi</members>
@@ -100,6 +102,14 @@
         <members>SentinelFlow_Support_Email</members>
         <members>SentinelFlow_Terms_Url</members>
         <name>CustomLabel</name>
+    </types>
+    <types>
+        <members>SF_Incident__c.High_Impact_Auto_Heal_Approval</members>
+        <name>ApprovalProcess</name>
+    </types>
+    <types>
+        <members>SentinelFlow_Backend</members>
+        <name>NamedCredential</name>
     </types>
     <types>
         <members>unfiled$public/SentinelFlow_Welcome_Email</members>
