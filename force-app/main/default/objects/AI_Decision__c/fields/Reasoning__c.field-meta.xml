@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reasoning__c</fullName>
+    <description>The explanation or reasoning behind the AI's recommendation and confidence score.</description>
+    <externalId>false</externalId>
+    <label>Reasoning</label>
+    <length>32768</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>5</visibleLines>
+</CustomField>

@@ -1,11 +1,11 @@
-import { LightningElement, api, wire, track } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import { refreshApex } from '@salesforce/apex';
 import { subscribe, unsubscribe } from 'lightning/empApi';
 import getOpenIncidents from '@salesforce/apex/SentinelFlowPortalController.getOpenIncidents';
 import healIncident    from '@salesforce/apex/SentinelFlowPortalController.healIncident';
 import analyseIncident from '@salesforce/apex/SentinelFlowPortalController.analyseIncident';
+import getCurrencyConfig from '@salesforce/apex/SettingsController.getCurrencyConfig';
 
 export default class SentinelFlowPortalIncidentTable extends NavigationMixin(LightningElement) {
 
@@ -23,34 +23,57 @@ export default class SentinelFlowPortalIncidentTable extends NavigationMixin(Lig
     searchTerm    = '';
     severityFilter = 'all';
 
-    _wiredResult;
     _subscription;
+    rawData = [];
 
-    // ── Wire ──────────────────────────────────────────────────────────────────
-    @wire(getOpenIncidents)
-    wiredIncidents(result) {
-        this._wiredResult = result;
-        const { error, data } = result;
-        if (data) {
-            this.rows  = this._processRows(data);
-            this.error = undefined;
-        } else if (error) {
-            this.rows  = [];
-            this.error = 'Unable to load live incident data.';
-        }
-    }
+    @track currencySymbol = '$';
+    @track currencyRate = 1.0;
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
     connectedCallback() {
+        this._fetchData();
         subscribe('/event/Integration_Health_Event__e', -1, () => {
-            refreshApex(this._wiredResult);
+            this._fetchData();
         }).then(sub => { this._subscription = sub; })
           .catch(err => { console.warn('empApi subscribe failed:', err); });
+        this._loadCurrency();
+    }
+
+    _loadCurrency() {
+        getCurrencyConfig()
+            .then(config => {
+                if (config) {
+                    this.currencySymbol = config.symbol || '$';
+                    this.currencyRate = config.rate || 1.0;
+                    if (this.rawData && this.rawData.length > 0) {
+                        this.rows = this._processRows(this.rawData);
+                    }
+                }
+            })
+            .catch(err => {
+                console.error('Error loading currency config:', err);
+            });
     }
 
     disconnectedCallback() {
         if (this._subscription) unsubscribe(this._subscription, () => {});
     }
+
+    _fetchData() {
+        getOpenIncidents()
+            .then(data => {
+                this.rawData = data;
+                this.rows  = this._processRows(data);
+                this.error = undefined;
+            })
+            .catch(err => {
+                this.rows  = [];
+                this.rawData = [];
+                this.error = 'Unable to load live incident data.';
+                console.error('Incidents fetch error', err);
+            });
+    }
+
 
     // ── Computed ──────────────────────────────────────────────────────────────
     get hasRows()    { return this.filteredRows.length > 0; }
@@ -101,9 +124,7 @@ export default class SentinelFlowPortalIncidentTable extends NavigationMixin(Lig
 
     @api
     refreshData() {
-        if (this._wiredResult) {
-            return refreshApex(this._wiredResult);
-        }
+        this._fetchData();
     }
 
     handleHeal(event) {
@@ -113,7 +134,7 @@ export default class SentinelFlowPortalIncidentTable extends NavigationMixin(Lig
         healIncident({ incidentId: id })
             .then(result => {
                 this._toast('⚡ Self-Heal Initiated', result.message, 'success');
-                return refreshApex(this._wiredResult);
+                return this._fetchData();
             })
             .catch(err => {
                 this._toast('Heal Failed', err.body?.message || 'Unknown error', 'error');
@@ -132,7 +153,7 @@ export default class SentinelFlowPortalIncidentTable extends NavigationMixin(Lig
                     `${result.recommendedAction} · Confidence: ${result.confidence}%`,
                     'success'
                 );
-                return refreshApex(this._wiredResult);
+                return this._fetchData();
             })
             .catch(err => {
                 this._toast('Analysis Failed', err.body?.message || 'Unknown error', 'error');
@@ -182,9 +203,11 @@ export default class SentinelFlowPortalIncidentTable extends NavigationMixin(Lig
     }
 
     _fmtMoney(n) {
-        if (n >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M';
-        if (n >= 1000)    return '$' + (n / 1000).toFixed(0) + 'K';
-        return '$' + n.toFixed(0);
+        const converted = n * this.currencyRate;
+        const sym = this.currencySymbol;
+        if (converted >= 1000000) return sym + (converted / 1000000).toFixed(1) + 'M';
+        if (converted >= 1000)    return sym + (converted / 1000).toFixed(0) + 'K';
+        return sym + converted.toFixed(0);
     }
 
     _toast(title, msg, variant) {

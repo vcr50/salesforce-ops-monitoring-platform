@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Execution_Result__c</fullName>
+    <label>Execution Result</label>
+    <description>Actual outcome after autonomous heal execution (Succeeded / Failed / Pending).</description>
+    <type>Picklist</type>
+    <required>false</required>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>Pending</fullName><default>true</default><label>Pending</label></value>
+            <value><fullName>Succeeded</fullName><default>false</default><label>Succeeded</label></value>
+            <value><fullName>Failed</fullName><default>false</default><label>Failed</label></value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

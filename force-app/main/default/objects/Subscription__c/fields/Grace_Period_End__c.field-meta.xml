@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Grace_Period_End__c</fullName>
+    <label>Grace Period End</label>
+    <type>Date</type>
+    <required>false</required>
+    <externalId>false</externalId>
+    <trackTrending>false</trackTrending>
+    <description>End date of the grace period after trial or subscription expiration. Features remain available until this date.</description>
+</CustomField>

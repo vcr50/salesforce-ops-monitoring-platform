@@ -2,6 +2,8 @@
 private class SentinelFlowPostInstallHandlerTest {
     @IsTest
     static void installCreatesTrialAndSchedulesExpiry() {
+        SecurityGate.bypassForTests = true;
+
         Test.startTest();
         Test.testInstall(new SentinelFlowPostInstallHandler(), null);
         Test.stopTest();
@@ -23,6 +25,15 @@ private class SentinelFlowPostInstallHandlerTest {
                 SELECT COUNT()
                 FROM CronTrigger
                 WHERE CronJobDetail.Name = 'SentinelFlow Subscription Trial Expiry'
+            ]
+        );
+
+        System.assertEquals(
+            4,
+            [
+                SELECT COUNT()
+                FROM CronTrigger
+                WHERE CronJobDetail.Name LIKE 'SentinelFlow Guardian Sweep%'
             ]
         );
     }

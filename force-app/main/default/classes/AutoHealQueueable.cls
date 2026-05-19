@@ -31,6 +31,9 @@ public with sharing class AutoHealQueueable implements Queueable {
             try {
                 SelfHealingEngine.HealResult result = SelfHealingEngine.healIncident(incidentId);
 
+                // Close the AI Decision telemetry loop
+                HealTelemetryService.recordHealOutcome(incidentId, result.success, result.actionTaken);
+
                 AuditTrailService.log(
                     incidentId,
                     'Incident__c',

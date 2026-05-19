@@ -1,0 +1,175 @@
+/* 
+  PES PLUGIN — Personal Execution System
+  TomCodex Academy Add-on
+*/
+
+:root {
+  --pes-blue: #0176D3;
+  --pes-blue-dark: #014486;
+  --pes-glass: rgba(255, 255, 255, 0.05);
+  --pes-border: rgba(255, 255, 255, 0.1);
+  --pes-glow: 0 0 15px rgba(1, 118, 211, 0.3);
+}
+
+/* FAB - Start My Day (Bottom Left) */
+.pes-smd-fab {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--pes-blue);
+  border: 4px solid var(--pes-glass);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3), var(--pes-glow);
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.pes-smd-fab:hover {
+  transform: scale(1.1) rotate(5deg);
+  background: var(--pes-blue-dark);
+}
+
+.pes-smd-icon {
+  font-size: 24px;
+}
+
+/* Plan Card (Injected in Overview) */
+.pes-plan-card {
+  background: linear-gradient(135deg, rgba(1, 118, 211, 0.1), rgba(1, 118, 211, 0.05));
+  border: 1px solid var(--pes-blue);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  animation: pesFadeIn 0.5s ease-out;
+}
+
+.pes-plan-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: var(--pes-blue);
+}
+
+.pes-plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.pes-plan-title {
+  font-weight: 700;
+  color: var(--pes-blue);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.pes-plan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.pes-plan-item {
+  background: rgba(0,0,0,0.2);
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--pes-border);
+}
+
+/* Focus Overlay */
+.pes-focus-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: #020617;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+}
+
+.pes-focus-timer {
+  font-size: 120px;
+  font-weight: 200;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 20px;
+  letter-spacing: -5px;
+}
+
+.pes-focus-task {
+  font-size: 24px;
+  opacity: 0.8;
+  margin-bottom: 40px;
+}
+
+.pes-focus-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.pes-focus-btn {
+  padding: 12px 32px;
+  border-radius: 30px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.05);
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.pes-focus-btn:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.pes-focus-btn.primary {
+  background: var(--pes-blue);
+  border-color: var(--pes-blue);
+}
+
+/* Night Review Card */
+.pes-night-card {
+  background: rgba(0,0,0,0.3);
+  border: 1px dashed var(--pes-border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 30px;
+  text-align: center;
+}
+
+.pes-night-quote {
+  font-style: italic;
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-top: 10px;
+}
+
+/* Helper Animations */
+@keyframes pesFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pesPulse {
+  0% { box-shadow: 0 0 0 0 rgba(1, 118, 211, 0.4); }
+  70% { box-shadow: 0 0 0 15px rgba(1, 118, 211, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(1, 118, 211, 0); }
+}
+
+.pes-pulse {
+  animation: pesPulse 2s infinite;
+}

@@ -1,0 +1,97 @@
+<template>
+    <div class="workflow-container">
+        <!-- Header -->
+        <div class="header-section">
+            <div class="header-content">
+                <lightning-icon icon-name="utility:flow" size="large" variant="inverse" class="header-icon"></lightning-icon>
+                <div>
+                    <h1 class="header-title">Revenue Workflow Topology</h1>
+                    <p class="header-subtitle">Real-time health and incident mapping across the revenue chain</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <lightning-button label="Test ERP Sync" icon-name="utility:connect" onclick={handleSimulateERP} disabled={isSyncing} variant="neutral" class="slds-m-right_x-small"></lightning-button>
+                <lightning-button label="Refresh Map" icon-name="utility:refresh" onclick={handleRefresh} disabled={isLoading} variant="brand"></lightning-button>
+            </div>
+        </div>
+
+        <template if:true={isLoading}>
+            <div class="spinner-container">
+                <lightning-spinner alternative-text="Mapping workflow..." size="medium"></lightning-spinner>
+                <p>Mapping revenue topology...</p>
+            </div>
+        </template>
+
+        <template if:true={error}>
+            <div class="error-panel">
+                <lightning-icon icon-name="utility:error" size="small" variant="error"></lightning-icon>
+                <span class="error-text">Map Error: {error}</span>
+            </div>
+        </template>
+
+        <template if:true={workflowData}>
+            
+            <!-- Summary Metrics -->
+            <div class="metrics-bar">
+                <div class="metric-card">
+                    <span class="metric-label">Overall Health</span>
+                    <span class="metric-value" data-status={workflowData.overallHealth}>{workflowData.overallHealth}</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">Revenue at Risk</span>
+                    <span class="metric-value risk-amount"><lightning-formatted-number value={workflowData.totalRevenueAtRisk} format-style="currency"></lightning-formatted-number></span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">Active Threats</span>
+                    <span class="metric-value threat-count">{workflowData.activeThreats}</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">Broken Links</span>
+                    <span class="metric-value broken-count">{workflowData.brokenLinks}</span>
+                </div>
+            </div>
+
+            <!-- Workflow Graph Visualization -->
+            <div class="graph-container">
+                <div class="nodes-wrapper">
+                    <template for:each={workflowData.nodes} for:item="node">
+                        <div key={node.id} class="node-wrapper">
+                            
+                            <!-- Node Box -->
+                            <div class={node.statusClass}>
+                                <div class="node-header">
+                                    <span class="node-label">{node.label}</span>
+                                </div>
+                                <div class="node-body">
+                                    <div class="node-connector">
+                                        <lightning-icon icon-name="utility:connected_apps" size="x-small"></lightning-icon>
+                                        <span>{node.connectorName}</span>
+                                    </div>
+                                    <template if:true={node.hasActiveIncident}>
+                                        <div class="node-alert">
+                                            <lightning-icon icon-name="utility:warning" size="x-small" variant="error"></lightning-icon>
+                                            <span>{node.incidentCount} Active Incidents</span>
+                                        </div>
+                                    </template>
+                                    <template if:false={node.hasActiveIncident}>
+                                        <div class="node-safe">
+                                            <lightning-icon icon-name="utility:success" size="x-small" variant="success"></lightning-icon>
+                                            <span>Operational</span>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <!-- Link / Arrow (Skip for last node) -->
+                            <div class="link-arrow">
+                                <!-- Arrow is drawn via CSS on the next sibling -->
+                                <lightning-icon icon-name="utility:arrow_right" size="medium" class="flow-arrow"></lightning-icon>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+        </template>
+    </div>
+</template>

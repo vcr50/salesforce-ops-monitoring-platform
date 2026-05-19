@@ -39,6 +39,35 @@ public with sharing class AIAnalysisService {
         AnalysisResult result = new AnalysisResult();
         String errLower = String.isBlank(input.errorMessage) ? '' : input.errorMessage.toLowerCase();
 
+        // ── AI Analysis (Zentom Orchestration Layer) ──────────────────────
+        String userPrompt = 'Analyze the following incident and recommend an action. Error: ' + (String.isBlank(input.errorMessage) ? 'Unknown Error' : input.errorMessage);
+        String additionalContext = 'Severity: Critical\nRevenue Risk: 0'; // In background, we fetch the real incident for Revenue Risk if possible
+        
+        if (input.incidentId != null) {
+            try {
+                Incident__c inc = [SELECT Severity__c, Revenue_at_Risk__c FROM Incident__c WHERE Id = :input.incidentId LIMIT 1];
+                additionalContext = 'Severity: ' + inc.Severity__c + '\nRevenue Risk: ' + (inc.Revenue_at_Risk__c != null ? String.valueOf(inc.Revenue_at_Risk__c) : '0');
+            } catch (Exception e) {}
+        }
+        
+        ZentomAIClient.ZentomDecision decision = null;
+        if (!Test.isRunningTest()) {
+            try {
+                decision = ZentomAIClient.getZentomResponse(userPrompt, additionalContext);
+            } catch (Exception e) {
+                System.debug('Zentom Callout failed: ' + e.getMessage());
+            }
+        }
+
+        if (decision != null) {
+            result.rootCause         = decision.recommendation + '\n\nRationale: ' + decision.rationale;
+            result.recommendedAction = decision.proposed_action;
+            result.impactLevel       = 'High';
+            result.confidence        = decision.confidence_score;
+            result.explanation       = 'Zentom Agentforce AI Analysis';
+            return result;
+        }
+
         // Query active Custom Metadata Rules
         List<AI_Rule__mdt> rules = [
             SELECT Keyword__c, Root_Cause__c, Recommendation__c, Confidence__c, Impact_Level__c
@@ -120,6 +149,7 @@ public with sharing class AIAnalysisService {
         inc.Recommended_Action__c = result.recommendedAction;
         inc.AI_Impact_Level__c    = result.impactLevel;
         inc.AI_Confidence__c      = result.confidence;
+        inc.Status__c             = 'Investigating';
         
         update inc;
 

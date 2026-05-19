@@ -1,6 +1,8 @@
 import { LightningElement, track } from 'lwc';
+import sentinelFlowPulseLogo from '@salesforce/resourceUrl/sentinelFlowPulseLogo';
 
 export default class SentinelFlowThemeHeader extends LightningElement {
+    logoUrl = sentinelFlowPulseLogo;
     @track currentTime = '';
 
     connectedCallback() {

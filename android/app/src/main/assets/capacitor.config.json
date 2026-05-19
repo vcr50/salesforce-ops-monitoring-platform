@@ -1,0 +1,24 @@
+{
+	"appId": "com.tomcodex.app",
+	"appName": "TomCodex",
+	"webDir": "dist",
+	"plugins": {
+		"FirebaseAuthentication": {
+			"skipNativeAuth": false,
+			"providers": [
+				"google.com"
+			]
+		},
+		"CapacitorUpdater": {
+			"autoUpdate": true,
+			"resetWhenUpdate": false
+		},
+		"PushNotifications": {
+			"presentationOptions": [
+				"badge",
+				"sound",
+				"alert"
+			]
+		}
+	}
+}

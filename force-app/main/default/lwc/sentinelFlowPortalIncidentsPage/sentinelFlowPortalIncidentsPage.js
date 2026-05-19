@@ -4,6 +4,7 @@ import getOpenIncidents from '@salesforce/apex/SentinelFlowPortalController.getO
 import healIncident    from '@salesforce/apex/SentinelFlowPortalController.healIncident';
 import analyseIncident from '@salesforce/apex/SentinelFlowPortalController.analyseIncident';
 import createSimulatedIncident from '@salesforce/apex/SentinelFlowPortalController.createSimulatedIncident';
+import getCurrencyConfig from '@salesforce/apex/SettingsController.getCurrencyConfig';
 
 // ── Simulated failure scenarios ──────────────────────────────────────────────
 const FAILURE_SCENARIOS = [
@@ -81,11 +82,39 @@ export default class SentinelFlowPortalIncidentsPage extends LightningElement {
 
     _autoRefreshInterval;
     _simulatedIds = new Set();
+    rawData = [];
+
+    @track currencySymbol = '$';
+    @track currencyRate = 1.0;
 
     // ── Lifecycle ──────────────────────────────────────────────────────────
     connectedCallback() {
         this.fetchData();
         this._autoRefreshInterval = setInterval(() => { this.fetchData(); }, 10000);
+        this._loadCurrency();
+    }
+
+    _loadCurrency() {
+        getCurrencyConfig()
+            .then(config => {
+                if (config) {
+                    this.currencySymbol = config.symbol || '$';
+                    this.currencyRate = config.rate || 1.0;
+                    if (this.rawData && this.rawData.length > 0) {
+                        this.allIncidents = this.rawData.map(inc => this._processRow(inc));
+                        if (this.selectedIncident) {
+                            const upd = this.allIncidents.find(i => i.id === this.selectedIncident.id);
+                            if (upd) {
+                                this.selectedIncident = { ...upd };
+                            }
+                        }
+                        this.applyFilters();
+                    }
+                }
+            })
+            .catch(err => {
+                console.error('Error loading currency config:', err);
+            });
     }
 
     disconnectedCallback() {
@@ -99,10 +128,14 @@ export default class SentinelFlowPortalIncidentsPage extends LightningElement {
     fetchData() {
         getOpenIncidents()
             .then(result => {
+                this.rawData = result;
                 this.allIncidents = result.map(inc => this._processRow(inc));
                 if (this.selectedIncident) {
                     const upd = this.allIncidents.find(i => i.id === this.selectedIncident.id);
-                    if (upd) this.selectedIncident = { ...upd, rootCause: this.selectedIncident.rootCause, recommendedAction: this.selectedIncident.recommendedAction, aiConfidence: this.selectedIncident.aiConfidence, confidenceFormatted: this.selectedIncident.confidenceFormatted };
+                    if (upd) {
+                        this.selectedIncident = { ...upd };
+                        this.aiReady = !!(this.selectedIncident.rootCause && this.selectedIncident.confidenceFormatted !== '—');
+                    }
                 }
                 this.applyFilters();
             })
@@ -218,7 +251,7 @@ export default class SentinelFlowPortalIncidentsPage extends LightningElement {
         this.aiReady = false;
         const id = this.selectedIncident.id;
         this._updateLocalStatus(id, 'Investigating');
-        this._addTimelineEvent(id, 'ai_triggered', '✦ Agentforce AI analysis triggered');
+        this._addTimelineEvent(id, 'ai_triggered', 'Zentom Hybrid AI analysis triggered');
 
         analyseIncident({ incidentId: id })
             .then(result => {
@@ -233,6 +266,12 @@ export default class SentinelFlowPortalIncidentsPage extends LightningElement {
                 };
                 this.aiReady = true;
                 this._addTimelineEvent(id, 'ai_complete', `✦ AI analysis complete — ${result.confidence}% confidence · Root cause identified`);
+                if (this._shouldAutoHeal(result)) {
+                    this._addTimelineEvent(id, 'auto_heal_cleared', 'Zentom governance cleared autonomous healing');
+                    this._executeHeal(id, result.recommendedAction, true);
+                } else {
+                    this._addTimelineEvent(id, 'auto_heal_blocked', 'Auto-heal held for human review by governance policy');
+                }
             })
             .catch(err => {
                 // Fallback: use simulated data if present
@@ -250,41 +289,55 @@ export default class SentinelFlowPortalIncidentsPage extends LightningElement {
     handleExecuteRec(event) {
         const id = event.currentTarget.dataset.id;
         const action = this.selectedIncident.recommendedAction || 'Execute runbook';
+        this._executeHeal(id, action, false);
+    }
+
+    _executeHeal(id, action, isAutomatic) {
+        if (!id || this.isHealing) return;
         this.isHealing = true;
         this._updateLocalStatus(id, 'Healing');
-        this._addTimelineEvent(id, 'healing_started', `⚡ Executing: ${action}`);
+        this._addTimelineEvent(id, 'healing_started', `${isAutomatic ? 'Autonomous healing' : 'Executing'}: ${action}`);
 
         healIncident({ incidentId: id })
             .then(result => {
-                this._toast('⚡ Action Initiated', result.message, 'success');
-                this._updateLocalStatus(id, 'Resolved');
-                this._addTimelineEvent(id, 'resolved', '✅ Incident resolved — execution completed successfully');
+                const escalated = result.actionTaken === 'Escalate' || action === 'Escalate' || result.success === false;
+                const nextStatus = escalated ? 'Escalated' : 'Resolved';
+                this._toast(escalated ? 'Action Escalated' : 'Action Initiated', result.message, escalated ? 'warning' : 'success');
+                this._updateLocalStatus(id, nextStatus);
+                this._addTimelineEvent(
+                    id,
+                    escalated ? 'escalated' : 'resolved',
+                    escalated ? 'Incident escalated for human review' : 'Incident resolved — execution completed successfully'
+                );
                 if (this.selectedIncident?.id === id) {
-                    this.selectedIncident = { ...this.selectedIncident, status: 'Resolved', statusClass: 'chip status-resolved' };
+                    this.selectedIncident = { ...this.selectedIncident, status: nextStatus, statusClass: `chip ${this._statusClass(nextStatus)}` };
                 }
                 
                 // Post-Resolution Validation
-                setTimeout(() => {
-                    this._addTimelineEvent(id, 'validation', '✅ Integration health verified — systems nominal');
-                    this._toast('Health Verified', 'System check passed', 'success');
-                }, 1500);
+                if (!escalated) {
+                    setTimeout(() => {
+                        this._addTimelineEvent(id, 'validation', 'Integration health verified — systems nominal');
+                        this._toast('Health Verified', 'System check passed', 'success');
+                    }, 1500);
+                }
             })
             .catch(err => {
-                // Fallback for demo
-                this._updateLocalStatus(id, 'Resolved');
-                this._addTimelineEvent(id, 'resolved', '✅ Incident resolved — execution completed successfully');
-                if (this.selectedIncident?.id === id) {
-                    this.selectedIncident = { ...this.selectedIncident, status: 'Resolved', statusClass: 'chip status-resolved' };
-                }
-                this._toast('⚡ Action Completed', action, 'success');
-                
-                // Post-Resolution Validation
-                setTimeout(() => {
-                    this._addTimelineEvent(id, 'validation', '✅ Integration health verified — systems nominal');
-                    this._toast('Health Verified', 'System check passed', 'success');
-                }, 1500);
+                this._updateLocalStatus(id, 'Investigating');
+                this._addTimelineEvent(id, 'healing_failed', `Auto-heal failed: ${err.body?.message || err.message || 'Unknown error'}`);
+                this._toast('Heal Error', err.body?.message || 'Could not execute auto-heal', 'error');
             })
             .finally(() => { this.isHealing = false; });
+    }
+
+    _shouldAutoHeal(result) {
+        const confidence = Number(result?.confidence || 0);
+        const action = (result?.recommendedAction || '').toLowerCase();
+        const revenueAtRisk = Number(this.selectedIncident?.revenueAtRisk || 0);
+
+        return confidence >= 80
+            && revenueAtRisk <= 50000
+            && action
+            && action !== 'escalate';
     }
 
     // ── Escalate ───────────────────────────────────────────────────────────
@@ -347,7 +400,10 @@ export default class SentinelFlowPortalIncidentsPage extends LightningElement {
             incident_selected: 'tl-dot dot-blue',
             ai_triggered     : 'tl-dot dot-purple',
             ai_complete      : 'tl-dot dot-purple',
+            auto_heal_cleared: 'tl-dot dot-green',
+            auto_heal_blocked: 'tl-dot dot-yellow',
             healing_started  : 'tl-dot dot-yellow',
+            healing_failed   : 'tl-dot dot-red',
             resolved         : 'tl-dot dot-green',
             escalated        : 'tl-dot dot-red',
         };
@@ -380,8 +436,10 @@ export default class SentinelFlowPortalIncidentsPage extends LightningElement {
 
     _lcClass(step) {
         const order = ['New', 'Investigating', 'Healing', 'Resolved'];
-        const status = this.selectedIncident?.status || 'New';
-        const cur = order.indexOf(status === 'Open' ? 'New' : status);
+        let status = this.selectedIncident?.status || 'New';
+        if (status === 'Open') status = 'New';
+        if (status === 'Analyzing') status = 'Investigating';
+        const cur = order.indexOf(status);
         const idx = order.indexOf(step);
         if (idx < cur) return 'lc-step done';
         if (idx === cur) return 'lc-step active';
@@ -426,8 +484,8 @@ export default class SentinelFlowPortalIncidentsPage extends LightningElement {
     }
 
     _sevClass(s)    { return { Critical:'sev-critical', High:'sev-high', Medium:'sev-medium', Low:'sev-low' }[s] || 'sev-low'; }
-    _statusClass(s) { return { 'Open':'status-open','New':'status-open','Investigating':'status-investigating','Healing':'status-healing','Resolved':'status-resolved' }[s] || 'status-open'; }
-    _fmtMoney(n)    { if (n >= 1000000) return '$'+(n/1000000).toFixed(1)+'M'; if (n >= 1000) return '$'+(n/1000).toFixed(0)+'K'; return '$'+n; }
+    _statusClass(s) { return { 'Open':'status-open','New':'status-open','Investigating':'status-investigating','Analyzing':'status-investigating','Healing':'status-healing','Resolved':'status-resolved','Escalated':'status-escalated' }[s] || 'status-open'; }
+    _fmtMoney(n)    { const converted = n * this.currencyRate; const sym = this.currencySymbol; if (converted >= 1000000) return sym+(converted/1000000).toFixed(1)+'M'; if (converted >= 1000) return sym+(converted/1000).toFixed(0)+'K'; return sym+converted.toFixed(0); }
 
     _toast(title, message, variant) {
         this.dispatchEvent(new ShowToastEvent({ title, message, variant }));

@@ -1,17 +1,20 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import handleChatMessage from '@salesforce/apex/SentinelFlowCopilotController.handleChatMessage';
 
 export default class SentinelFlowPortalCopilot extends LightningElement {
+    @api theme = 'dark';
+
     @track messages = [
         {
             id: 'msg-1',
             isUser: false,
             msgClass: 'msg-row ai',
-            content: 'Hello, I am SentinelFlow Copilot, powered by Agentforce. How can I help you resolve incidents today?'
+            content: 'Hello, I am Zentom Hybrid AI for SentinelFlow. Zentom Gen AI handles reasoning and governance, while Agentforce executes trusted Salesforce actions. How can I help you resolve incidents today?'
         }
     ];
 
     @track isTyping = false;
+    @track activeView = 'chat';
     currentInput = '';
 
     quickActions = [
@@ -20,6 +23,15 @@ export default class SentinelFlowPortalCopilot extends LightningElement {
         "Show revenue at risk",
         "Summarize recent failures"
     ];
+
+    // View switching
+    get isChatView() { return this.activeView === 'chat'; }
+    get isArchView() { return this.activeView === 'arch'; }
+    get chatTabClass() { return this.activeView === 'chat' ? 'view-tab active' : 'view-tab'; }
+    get archTabClass() { return this.activeView === 'arch' ? 'view-tab active' : 'view-tab'; }
+
+    showChat() { this.activeView = 'chat'; }
+    showArch() { this.activeView = 'arch'; }
 
     handleInputChange(event) {
         this.currentInput = event.target.value;
@@ -35,8 +47,6 @@ export default class SentinelFlowPortalCopilot extends LightningElement {
         this.currentInput = event.target.innerText;
         this.sendMessage();
     }
-
-
 
     sendMessage() {
         if (!this.currentInput.trim()) return;

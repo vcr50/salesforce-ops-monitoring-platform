@@ -61,6 +61,7 @@ public with sharing class SelfHealingEngine {
             SELECT  Id, Severity__c, Status__c, Self_Heal_Attempted__c,
                     Auto_Heal_Status__c, Integration_Endpoint__c,
                     Integration_Log__c, Retry_Count__c, Max_Retry__c,
+                    Tenant__c, Revenue_at_Risk__c, Root_Cause__c, Recommended_Action__c, AI_Confidence__c, AI_Impact_Level__c,
                     Integration_Log__r.Error_Message__c,
                     Integration_Log__r.Response_Time__c,
                     Integration_Log__r.Retry_Count__c,
@@ -111,41 +112,81 @@ public with sharing class SelfHealingEngine {
                 }
             }
 
-            // ── AI Analysis ───────────────────────────────────────────────
-            AIAnalysisService.AnalysisInput inp = new AIAnalysisService.AnalysisInput();
-            inp.incidentId    = inc.Id;
-            inp.status        = inc.Integration_Log__r != null ? inc.Integration_Log__r.Status__c       : inc.Status__c;
-            inp.errorMessage  = inc.Integration_Log__r != null ? inc.Integration_Log__r.Error_Message__c : '';
-            inp.responseTime  = inc.Integration_Log__r != null ? inc.Integration_Log__r.Response_Time__c : null;
-            inp.pastIncidentCount = 0;
+            // ── AI Analysis (Zentom Orchestration Layer) ──────────────────────
+            String errorMessageContext = inc.Integration_Log__r != null ? inc.Integration_Log__r.Error_Message__c : 'Unknown Error';
+            String userPrompt = 'Analyze the following incident and recommend an action. Error: ' + errorMessageContext;
+            
+            ZentomAIClient.ZentomDecision decision = null;
+            try {
+                // Determine workflow stage based on endpoint or context
+                String workflowStage = 'General';
+                if (inc.Integration_Endpoint__c != null && endpointMap.containsKey(inc.Integration_Endpoint__c)) {
+                    workflowStage = 'Integration';
+                }
+                
+                decision = ZentomAIClient.orchestrateIncident(
+                    inc.Id,
+                    userPrompt,
+                    'DIAGNOSIS',
+                    workflowStage
+                );
+            } catch (Exception e) {
+                System.debug('Zentom Orchestration failed: ' + e.getMessage());
+            }
 
-            AIAnalysisService.AnalysisResult aiResult = AIAnalysisService.analyse(inp);
+            if (decision != null) {
+                // Zentom AI successfully generated a governed decision
+                inc.Root_Cause__c          = decision.recommendation + '\n\nRationale: ' + decision.rationale;
+                inc.Recommended_Action__c  = decision.proposed_action;
+                inc.AI_Confidence__c       = decision.confidence_score;
+                inc.AI_Impact_Level__c     = 'High'; 
+            } else {
+                // Fallback to internal metadata rules if Zentom is unavailable
+                AIAnalysisService.AnalysisInput inp = new AIAnalysisService.AnalysisInput();
+                inp.incidentId    = inc.Id;
+                inp.status        = inc.Integration_Log__r != null ? inc.Integration_Log__r.Status__c       : inc.Status__c;
+                inp.errorMessage  = errorMessageContext;
+                inp.responseTime  = inc.Integration_Log__r != null ? inc.Integration_Log__r.Response_Time__c : null;
+                inp.pastIncidentCount = 0;
 
-            // Persist AI findings + init Auto_Heal_Status__c
-            inc.Root_Cause__c          = aiResult.rootCause;
-            inc.Recommended_Action__c  = aiResult.recommendedAction;
-            inc.AI_Impact_Level__c     = aiResult.impactLevel;
-            inc.AI_Confidence__c       = aiResult.confidence;
+                AIAnalysisService.AnalysisResult aiResult = AIAnalysisService.analyse(inp);
+
+                inc.Root_Cause__c          = aiResult.rootCause;
+                inc.Recommended_Action__c  = aiResult.recommendedAction;
+                inc.AI_Impact_Level__c     = aiResult.impactLevel;
+                inc.AI_Confidence__c       = aiResult.confidence;
+            }
+
             inc.Self_Heal_Attempted__c = true;
             inc.Auto_Heal_Status__c    = 'In Progress';
             incidentsToUpdate.add(inc);
 
-            if (aiResult.confidence >= MIN_CONFIDENCE_FOR_AUTO_HEAL) {
+            // ── Structural Governance via ZentomPolicyEngine (Phase 3) ────────────
+            ZentomPolicyEngine.PolicyEvaluation evalResult = ZentomPolicyEngine.evaluateAction(inc.Recommended_Action__c, inc.AI_Confidence__c, 'System');
+            
+            if (evalResult.mode == ZentomPolicyEngine.ExecutionMode.AUTONOMOUS_EXECUTION) {
+                // Confidence is high enough to allow autonomous Agentforce/Self-Heal execution
                 idsToHeal.add(inc.Id);
+                AuditTrailService.log(
+                    inc.Id,
+                    'Incident__c',
+                    'Self-Heal Evaluated',
+                    null,
+                    evalResult.policyReasoning
+                );
             } else {
-                // Low confidence — mark as not attempted, fall to manual
-                inc.Auto_Heal_Status__c = 'Not Attempted';
+                // Governance Gate Failed. Override action to Escalate.
+                inc.Recommended_Action__c = ACTION_ESCALATE;
+                idsToHeal.add(inc.Id);
+                
+                AuditTrailService.log(
+                    inc.Id,
+                    'Incident__c',
+                    'Governance Gate Failed',
+                    null,
+                    evalResult.policyReasoning
+                );
             }
-
-            AuditTrailService.log(
-                inc.Id,
-                'Incident__c',
-                'Self-Heal Evaluated',
-                null,
-                'Action: ' + aiResult.recommendedAction
-                + ' | Confidence: ' + aiResult.confidence + '%'
-                + ' | Auto-executed: ' + (aiResult.confidence >= MIN_CONFIDENCE_FOR_AUTO_HEAL)
-            );
         }
 
         if (!incidentsToUpdate.isEmpty()) {
@@ -246,6 +287,22 @@ public with sharing class SelfHealingEngine {
             return escalated;
         }
 
+        // ── CIRCUIT BREAKER CHECK ─────────────────────────────────────
+        if (inc.Integration_Endpoint__c != null && CircuitBreaker.isCircuitOpen(inc.Integration_Endpoint__c)) {
+            inc.Status__c = 'Escalated';
+            inc.Auto_Heal_Status__c = 'Failed';
+            update inc;
+
+            RetryLogService.log(inc.Id, retryCount, 'Failed', 'Circuit breaker is OPEN for endpoint. Auto-heal skipped.');
+
+            HealResult bypassed = new HealResult();
+            bypassed.incidentId  = incidentId;
+            bypassed.actionTaken = 'Bypassed';
+            bypassed.success     = false;
+            bypassed.message     = 'Circuit breaker is OPEN. Healing bypassed.';
+            return bypassed;
+        }
+
         // Increment retry count AFTER check
         inc.Retry_Count__c = retryCount + 1;
 
@@ -259,13 +316,24 @@ public with sharing class SelfHealingEngine {
 
         HealResult result = executeAction(incidentId, inc.Integration_Log__c, action, retryCount);
 
+        Boolean isEscalation = action == ACTION_ESCALATE || result.actionTaken == ACTION_ESCALATE;
+
         // Update Auto_Heal_Status based on result
-        if (result.success) {
+        if (result.success && !isEscalation) {
             update new Incident__c(Id = incidentId, Status__c = 'Resolved', Auto_Heal_Status__c = 'Succeeded');
             RetryLogService.log(incidentId, retryCount + 1, 'Success', null);
+            if (inc.Integration_Endpoint__c != null) {
+                CircuitBreaker.recordSuccess(inc.Integration_Endpoint__c);
+            }
+        } else if (isEscalation) {
+            update new Incident__c(Id = incidentId, Status__c = 'Escalated', Auto_Heal_Status__c = 'Pending Review');
+            RetryLogService.log(incidentId, retryCount + 1, 'Escalated', result.message);
         } else {
             update new Incident__c(Id = incidentId, Status__c = 'Escalated', Auto_Heal_Status__c = 'Failed');
             RetryLogService.log(incidentId, retryCount + 1, 'Failed', result.message);
+            if (inc.Integration_Endpoint__c != null) {
+                CircuitBreaker.recordFailure(inc.Integration_Endpoint__c);
+            }
         }
 
         // -- Persist Auto Heal Run audit trail --
@@ -314,8 +382,12 @@ public with sharing class SelfHealingEngine {
             result = doRestart(incidentId, logId, result);
         } else if (action == ACTION_TOKEN_REFRESH) {
             result = doTokenRefresh(incidentId, result);
-        } else {
+        } else if (action == ACTION_ESCALATE) {
             result = doEscalate(incidentId, result);
+        } else {
+            // Unknown or dynamically generated action from Zentom (DeepSeek)
+            // Hand off to Agentforce for native execution
+            result = ZentomAgentforceRouter.handoffToAgentforce(incidentId, action);
         }
 
         return result;

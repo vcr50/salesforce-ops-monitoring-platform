@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">SentinelFlow</title>
+  <desc id="desc">Blue SentinelFlow pulse icon with speed lines and a heartbeat mark.</desc>
+  <defs>
+    <linearGradient id="bg" x1="84" y1="64" x2="428" y2="448" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0A7BFF"/>
+      <stop offset="0.55" stop-color="#075BE8"/>
+      <stop offset="1" stop-color="#0637B7"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="96" y1="74" x2="316" y2="294" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#031A63" flood-opacity="0.24"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect x="36" y="30" width="300" height="230" rx="86" fill="url(#shine)"/>
+  <g filter="url(#softShadow)">
+    <path fill="#FFFFFF" d="M54 250l177-25L54 197l230-36c34-55 101-85 169-70 88 20 143 107 123 195-20 88-107 143-195 123-48-11-87-42-110-83L54 250zm280 17c18 55 75 88 133 75 60-14 98-73 84-133-14-60-73-98-133-84-37 8-67 36-81 69l-4 10-124 19 127 17-2 27z"/>
+    <path fill="#0A63F4" d="M361 282h-42c-9 0-16-7-16-16s7-16 16-16h31l15-58c2-7 8-12 16-12s14 5 16 12l24 102 18-74c2-7 8-12 16-12 7 0 14 5 16 12l9 30h53c9 0 16 7 16 16s-7 16-16 16h-65c-7 0-14-5-16-12l-1-4-18 74c-2 7-8 12-16 12s-14-5-16-12l-24-101-5 31c-2 7-8 12-16 12z"/>
+  </g>
+</svg>

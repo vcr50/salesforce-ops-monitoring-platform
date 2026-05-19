@@ -1,8 +1,8 @@
 import { LightningElement, track } from 'lwc';
-import sentinelFlowLogo from '@salesforce/resourceUrl/sentinelFlowLogo';
+import sentinelFlowPulseLogo from '@salesforce/resourceUrl/sentinelFlowPulseLogo';
 
 export default class SentinelFlowPortalApp extends LightningElement {
-    logoUrl = sentinelFlowLogo;
+    logoUrl = sentinelFlowPulseLogo;
     @track currentPage = 'home';
     @track currentTime = '';
     

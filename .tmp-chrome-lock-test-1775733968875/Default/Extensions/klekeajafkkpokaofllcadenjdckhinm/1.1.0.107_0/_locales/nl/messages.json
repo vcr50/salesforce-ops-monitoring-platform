@@ -1,0 +1,162 @@
+{
+   "about_Brand_Copy_rights": {
+      "message": "© $YEAR$ McAfee, LLC",
+      "placeholders": {
+         "year": {
+            "content": "2025",
+            "example": "Copyright Jaar"
+         }
+      }
+   },
+   "about_License_Link": {
+      "message": "https://www.mcafee.com/consumer/nl-nl/policy/legal.html?tab=license"
+   },
+   "about_License_Title": {
+      "message": "Licentieovereenkomst"
+   },
+   "about_Privacy_Link": {
+      "message": "https://www.mcafee.com/consumer/nl-nl/policy/legal.html?tab=privacy"
+   },
+   "about_Privacy_Title": {
+      "message": "Privacyverklaring"
+   },
+   "autoPause_Active_SubTitle": {
+      "message": "video('s) gestopt op deze site"
+   },
+   "autoPause_Active_Title": {
+      "message": "Automatisch afspelen van video's gestopt"
+   },
+   "autoPause_Deactive_SubTitle": {
+      "message": "Wilt u dit stoppen? Schakel"
+   },
+   "autoPause_Deactive_SubTitle_Link": {
+      "message": "Web Boost in"
+   },
+   "autoPause_Deactive_Title": {
+      "message": "U hebt automatisch afspelen van video's toegestaan"
+   },
+   "autoPause_Initial_Nolist_FirstLine": {
+      "message": "Nog niets te rapporteren."
+   },
+   "autoPause_Initial_Nolist_SecondLine": {
+      "message": "Kom terug na het internetten. "
+   },
+   "autoPause_Initial_SubTitle": {
+      "message": "We voorkomen dat video's automatisch worden afgespeeld op websites. "
+   },
+   "autoPause_Initial_Title": {
+      "message": "U hebt Web Boost!"
+   },
+   "autoPause_Table_Data_Total": {
+      "message": "Totalen"
+   },
+   "autoPause_Table_Data_TotalVideosSaved": {
+      "message": "Data bespaard*:"
+   },
+   "autoPause_Table_Data_TotalVideosStopped": {
+      "message": "Gestopte video's:"
+   },
+   "autoPause_Table_Header_DataSaved": {
+      "message": "Data bespaard*"
+   },
+   "autoPause_Table_Header_DataSaved_Message": {
+      "message": "* Bespaarde data wordt geschat op basis van videogrootte."
+   },
+   "autoPause_Table_Header_VideosStopped": {
+      "message": "Gestopte video's"
+   },
+   "autoPause_Table_Header_Website": {
+      "message": "Website"
+   },
+   "autoPause_Unit_Bytes": {
+      "message": "bytes"
+   },
+   "autoPause_Unit_GB": {
+      "message": "GB"
+   },
+   "autoPause_Unit_KB": {
+      "message": "KB"
+   },
+   "autoPause_Unit_MB": {
+      "message": "MB"
+   },
+   "autoPause_Unit_No_Info": {
+      "message": "Geen informatie"
+   },
+   "autoPause_Whitelist_Button_AllowAutoPlay": {
+      "message": "Video's op deze site automatisch afspelen"
+   },
+   "autoPause_Whitelist_Button_StopAutoPlay": {
+      "message": "Automatisch afspelen van video's op deze site stoppen"
+   },
+   "autoPause_Whitelisted_Title": {
+      "message": "Video's worden automatisch afgespeeld op deze site"
+   },
+   "banner_Text": {
+      "message": "Onderbroken door McAfee® Web Boost"
+   },
+   "brand_Name": {
+      "description": "Merknaam.",
+      "message": "$BRAND$",
+      "placeholders": {
+         "brand": {
+            "content": "McAfee®",
+            "example": "Merknaam"
+         }
+      }
+   },
+   "ext_Description": {
+      "message": "Voorkom dat video's automatisch worden afgespeeld en uw internetactiviteiten vertragen"
+   },
+   "ext_FullName": {
+      "message": "McAfee® Web Boost"
+   },
+   "ext_Name": {
+      "message": "Web Boost"
+   },
+   "faq_Answer_1": {
+      "message": "Iedereen die gegevens wil opslaan, sneller wil internetten en irritante video's wil stoppen die automatisch worden afgespeeld."
+   },
+   "faq_Answer_2": {
+      "message": "Web Boost is een Chrome-extensie die ingeschakeld moet zijn om u te helpen sneller te internetten."
+   },
+   "faq_Answer_3": {
+      "message": "Web Boost voorkomt dat video's automatisch worden afgespeeld, zelfs als het geluid van de video is gedempt. Het maakt het ook gemakkelijk om uw instellingen te personaliseren als u wilt dat video's op sommige websites wel automatisch worden afgespeeld. De Chrome-functie is soms moeilijk in te schakelen, kan een video met gedempt geluid die automatisch wordt afgespeeld niet pauzeren, en u kunt de instellingen niet aanpassen buiten de Media Engagement Index (MEI) van Chrome."
+   },
+   "faq_Answer_4": {
+      "message": "Op basis van de grootte van de ingesloten video: hoe groter de video, hoe hoger de geschatte gegevensbesparing. Soms stoppen we video's zo snel dat we niet kunnen bepalen hoeveel gegevens zijn bespaard. In dat geval wordt 'Geen informatie' weergegeven."
+   },
+   "faq_Question_1": {
+      "message": "Voor wie is Web Boost bedoeld?"
+   },
+   "faq_Question_2": {
+      "message": "Waarom moet Web Boost ingeschakeld blijven?"
+   },
+   "faq_Question_3": {
+      "message": "Hoe verschilt Web Boost van de ondersteuning van Google Chrome voor automatisch afspelen?"
+   },
+   "faq_Question_4": {
+      "message": "Hoe wordt mijn gegevensbesparing geschat?"
+   },
+   "navigation_header_about": {
+      "message": "Info"
+   },
+   "navigation_header_faq": {
+      "message": "Veelgestelde vragen"
+   },
+   "navigation_header_whitelist": {
+      "message": "Instellingen voor automatisch afspelen"
+   },
+   "whiteList_Empty_List_Message": {
+      "message": "Uw lijst is leeg"
+   },
+   "whiteList_Remove_Success_Message": {
+      "message": "is uit uw witte lijst verwijderd"
+   },
+   "whiteList_Url_Listing_title": {
+      "message": "Automatisch afspelen van video's op deze websites toestaan"
+   },
+   "whitelist_Toggle_Text": {
+      "message": "Inschakelen om automatisch afspelen van video's op websites te stoppen"
+   }
+}

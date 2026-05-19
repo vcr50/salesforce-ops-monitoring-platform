@@ -1,0 +1,162 @@
+{
+   "about_Brand_Copy_rights": {
+      "message": "© $YEAR$ McAfee, LLC",
+      "placeholders": {
+         "year": {
+            "content": "2025",
+            "example": "Szerzői jog éve"
+         }
+      }
+   },
+   "about_License_Link": {
+      "message": "https://www.mcafee.com/consumer/hu-hu/policy/legal.html?tab=license"
+   },
+   "about_License_Title": {
+      "message": "Licencmegállapodás"
+   },
+   "about_Privacy_Link": {
+      "message": "https://www.mcafee.com/consumer/hu-hu/policy/legal.html?tab=privacy"
+   },
+   "about_Privacy_Title": {
+      "message": "Adatvédelmi közlemény"
+   },
+   "autoPause_Active_SubTitle": {
+      "message": "videó leállítva ezen a webhelyen"
+   },
+   "autoPause_Active_Title": {
+      "message": "Leállítottuk az automatikusan lejátszódó videókat"
+   },
+   "autoPause_Deactive_SubTitle": {
+      "message": "Le szeretné állítani ezeket? Csak"
+   },
+   "autoPause_Deactive_SubTitle_Link": {
+      "message": "kapcsolja be a Web Boost szolgáltatást"
+   },
+   "autoPause_Deactive_Title": {
+      "message": "Engedélyezte a videók automatikus lejátszását"
+   },
+   "autoPause_Initial_Nolist_FirstLine": {
+      "message": "Nincs még mit jelenteni."
+   },
+   "autoPause_Initial_Nolist_SecondLine": {
+      "message": "Böngészés után nézze meg újból. "
+   },
+   "autoPause_Initial_SubTitle": {
+      "message": "Leállítjuk a webhelyeken a videók automatikus lejátszását. "
+   },
+   "autoPause_Initial_Title": {
+      "message": "Most már használhatja a Web Boost szolgáltatást!"
+   },
+   "autoPause_Table_Data_Total": {
+      "message": "Összesen"
+   },
+   "autoPause_Table_Data_TotalVideosSaved": {
+      "message": "Adatmegtakarítás*:"
+   },
+   "autoPause_Table_Data_TotalVideosStopped": {
+      "message": "Leállított videók:"
+   },
+   "autoPause_Table_Header_DataSaved": {
+      "message": "Adatmegtakarítás*"
+   },
+   "autoPause_Table_Header_DataSaved_Message": {
+      "message": "* Az adatmegtakarítás becslése a videó mérete alapján történik."
+   },
+   "autoPause_Table_Header_VideosStopped": {
+      "message": "Videók leállítva"
+   },
+   "autoPause_Table_Header_Website": {
+      "message": "Webhely"
+   },
+   "autoPause_Unit_Bytes": {
+      "message": "bájt"
+   },
+   "autoPause_Unit_GB": {
+      "message": "GB"
+   },
+   "autoPause_Unit_KB": {
+      "message": "kB"
+   },
+   "autoPause_Unit_MB": {
+      "message": "MB"
+   },
+   "autoPause_Unit_No_Info": {
+      "message": "Nincs információ"
+   },
+   "autoPause_Whitelist_Button_AllowAutoPlay": {
+      "message": "Videók automatikus lejátszása ezen a webhelyen"
+   },
+   "autoPause_Whitelist_Button_StopAutoPlay": {
+      "message": "Ezen a webhelyen ne induljanak el automatikusan a videók"
+   },
+   "autoPause_Whitelisted_Title": {
+      "message": "A videók automatikusan lejátszódnak ezen a webhelyen"
+   },
+   "banner_Text": {
+      "message": "A McAfee® Web Boost leállította"
+   },
+   "brand_Name": {
+      "description": "Márkanév.",
+      "message": "$BRAND$",
+      "placeholders": {
+         "brand": {
+            "content": "McAfee®",
+            "example": "Márkanév"
+         }
+      }
+   },
+   "ext_Description": {
+      "message": "Megakadályozza a videók automatikus lejátszását, ami lelassítja a böngészést"
+   },
+   "ext_FullName": {
+      "message": "McAfee® Web Boost"
+   },
+   "ext_Name": {
+      "message": "Web Boost"
+   },
+   "faq_Answer_1": {
+      "message": "Bárki, aki spórolni szeretne az adatforgalommal, fel szeretné gyorsítani a böngészést, és le szeretné állítani a bosszantó, automatikusan elinduló videókat."
+   },
+   "faq_Answer_2": {
+      "message": "A Web Boost egy olyan Chrome-bővítmény, amelyet be kell kapcsolni, hogy felgyorsíthassa a böngészést."
+   },
+   "faq_Answer_3": {
+      "message": "A Web Boost automatikusan leállítja az automatikus lejátszást, még akkor is, ha a videó le van némítva. Ezen kívül megkönnyíti a beállítások testreszabását, ha bizonyos webhelyeken látni szeretné az automatikus lejátszódó videókat. A Chrome-funkció nehezen kapcsolható be, nem tudja leállítani azokat az automatikus lejátszódó videókat, amelyek némítva vannak, és nem teszi lehetővé, hogy személyre szabja a beállításokat a Chrome MEI-jén kívül."
+   },
+   "faq_Answer_4": {
+      "message": "A beágyazott videó mérete alapján – minél nagyobb a méret, annál nagyobb a becsült adatmegtakarítás. Néha annyira gyorsan leállítjuk a máskülönben automatikusan elinduló videókat, hogy nem tudjuk meghatározni, hogy mennyivel csökken az adatforgalom. Ebben az esetben a „Nincs információ” üzenet jelenik meg."
+   },
+   "faq_Question_1": {
+      "message": "Ki használhatja a Web Boost szolgáltatást?"
+   },
+   "faq_Question_2": {
+      "message": "Miért legyen bekapcsolva a Web Boost szolgáltatás?"
+   },
+   "faq_Question_3": {
+      "message": "Mennyiben tér el a Web Boost a Google Chrome automatikus lejátszási támogatásától?"
+   },
+   "faq_Question_4": {
+      "message": "Hogyan lehet megbecsülni az adatforgalom csökkenését?"
+   },
+   "navigation_header_about": {
+      "message": "Névjegy"
+   },
+   "navigation_header_faq": {
+      "message": "GYIK"
+   },
+   "navigation_header_whitelist": {
+      "message": "Automatikus lejátszás beállításai"
+   },
+   "whiteList_Empty_List_Message": {
+      "message": "Az Ön listája üres"
+   },
+   "whiteList_Remove_Success_Message": {
+      "message": "el lett távolítva az engedélyezőlistáról"
+   },
+   "whiteList_Url_Listing_title": {
+      "message": "Videók automatikus lejátszásának engedélyezése ezeken a webhelyeken"
+   },
+   "whitelist_Toggle_Text": {
+      "message": "Videók automatikus lejátszásának leállítása a webhelyeken"
+   }
+}

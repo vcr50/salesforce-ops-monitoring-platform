@@ -5,6 +5,7 @@ global with sharing class SentinelFlowPostInstallHandler implements InstallHandl
     global void onInstall(InstallContext context) {
         SubscriptionService.ensureCurrentOrgSubscription();
         scheduleTrialExpiryJob();
+        scheduleGuardianSweep();
     }
 
     private static void scheduleTrialExpiryJob() {
@@ -23,5 +24,9 @@ global with sharing class SentinelFlowPostInstallHandler implements InstallHandl
                 new SubscriptionTrialExpiryScheduler()
             );
         }
+    }
+
+    private static void scheduleGuardianSweep() {
+        FlowHealthSchedulable.scheduleEveryFifteenMinutes();
     }
 }

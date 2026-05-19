@@ -10,7 +10,10 @@ trigger IntegrationLogTrigger on Integration_Log__c (after insert, after update)
     // 3. Publish platform events for real-time LWC updates
     PlatformEventPublisher.publishIntegrationHealthEvents(Trigger.new);
 
-    // 4. Queue self-healing evaluation for newly failed logs
+    // 4. Normalize source telemetry into the CTO universal event layer
+    UniversalEventNormalizer.normalizeIntegrationLogs(Trigger.new);
+
+    // 5. Queue self-healing evaluation for newly failed logs
     //    (Queueable avoids DML-after-callout and keeps trigger lean)
     if (Trigger.isInsert) {
         List<Id> failedLogIds = new List<Id>();

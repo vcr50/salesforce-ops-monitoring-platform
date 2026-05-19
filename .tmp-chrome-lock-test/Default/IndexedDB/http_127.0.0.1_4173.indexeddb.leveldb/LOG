@@ -1,0 +1,5 @@
+2026/04/09-16:44:45.016 6c28 Reusing MANIFEST D:\New folder\VJ SFDC\.tmp-chrome-lock-test\Default\IndexedDB\http_127.0.0.1_4173.indexeddb.leveldb/MANIFEST-000001
+2026/04/09-16:44:45.017 6c28 Recovering log #10
+2026/04/09-16:44:45.019 6c28 Reusing old log D:\New folder\VJ SFDC\.tmp-chrome-lock-test\Default\IndexedDB\http_127.0.0.1_4173.indexeddb.leveldb/000010.log 
+2026/04/09-16:44:45.020 6c28 Delete type=2 #8
+2026/04/09-16:44:45.081 1d84 Manual compaction at level-0 from '\x00\x07\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x08\x00\x00\x00' @ 0 : 0; will stop at (end)

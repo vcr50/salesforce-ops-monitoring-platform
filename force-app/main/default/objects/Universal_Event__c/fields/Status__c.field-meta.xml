@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <label>Status</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>New</fullName><default>true</default><label>New</label></value>
+            <value><fullName>Analyzed</fullName><default>false</default><label>Analyzed</label></value>
+            <value><fullName>Governed</fullName><default>false</default><label>Governed</label></value>
+            <value><fullName>Healing</fullName><default>false</default><label>Healing</label></value>
+            <value><fullName>Resolved</fullName><default>false</default><label>Resolved</label></value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

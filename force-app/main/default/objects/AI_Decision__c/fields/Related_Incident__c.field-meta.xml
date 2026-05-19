@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Related_Incident__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The incident evaluated by the AI engine.</description>
+    <externalId>false</externalId>
+    <label>Related Incident</label>
+    <referenceTo>Incident__c</referenceTo>
+    <relationshipLabel>AI Decisions (Related)</relationshipLabel>
+    <relationshipName>AI_Decisions_Related</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

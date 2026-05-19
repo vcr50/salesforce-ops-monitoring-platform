@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Affected_Pipeline__c</fullName>
+    <description>The specific pipeline value directly affected by this failure.</description>
+    <externalId>false</externalId>
+    <label>Affected Pipeline</label>
+    <precision>18</precision>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

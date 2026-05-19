@@ -1,0 +1,154 @@
+/* Browser compatibility layer for current Chrome, Firefox, Edge, and Safari. */
+
+html {
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  text-rendering: optimizeLegibility;
+}
+
+img,
+svg,
+canvas,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+select,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+
+input[type="checkbox"],
+input[type="radio"],
+input[type="color"] {
+  -webkit-appearance: auto;
+  appearance: auto;
+}
+
+textarea {
+  resize: vertical;
+}
+
+:focus-visible {
+  outline: 2px solid var(--sf-light, #1B96FF);
+  outline-offset: 2px;
+}
+
+@supports not selector(:focus-visible) {
+  :focus {
+    outline: 2px solid var(--sf-light, #1B96FF);
+    outline-offset: 2px;
+  }
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .sidebar,
+  .modal,
+  .modal-overlay,
+  .dark-toggle,
+  .notif-btn,
+  .week-nav,
+  .pomo-widget,
+  .fc-card-front,
+  .fc-card-back,
+  .proj-card,
+  .notes-content,
+  .project-content,
+  .trailhead-content,
+  .daily-table-wrapper,
+  .ai-key-card,
+  .th-sync-panel,
+  .tstat,
+  .th-profile-panel,
+  .an-weather-pill,
+  .an-ring-inner-multi,
+  #aiSettingsPanel {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .sidebar,
+  .modal,
+  .dark-toggle,
+  .notif-btn,
+  .week-nav,
+  .pomo-widget,
+  .fc-card-front,
+  .fc-card-back,
+  .proj-card,
+  .notes-content,
+  .project-content,
+  .trailhead-content,
+  .daily-table-wrapper,
+  .ai-key-card,
+  .th-sync-panel,
+  .tstat,
+  .th-profile-panel,
+  .an-weather-pill,
+  .an-ring-inner-multi,
+  #aiSettingsPanel {
+    background: var(--surface, #ffffff) !important;
+    border-color: var(--border, #E3E8EF) !important;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12) !important;
+  }
+
+  [data-theme="dark"] .sidebar,
+  [data-theme="dark"] .modal,
+  [data-theme="dark"] .dark-toggle,
+  [data-theme="dark"] .notif-btn,
+  [data-theme="dark"] .week-nav,
+  [data-theme="dark"] .pomo-widget,
+  [data-theme="dark"] .fc-card-front,
+  [data-theme="dark"] .fc-card-back,
+  [data-theme="dark"] .proj-card,
+  [data-theme="dark"] .notes-content,
+  [data-theme="dark"] .project-content,
+  [data-theme="dark"] .trailhead-content,
+  [data-theme="dark"] .daily-table-wrapper,
+  [data-theme="dark"] .ai-key-card,
+  [data-theme="dark"] .th-sync-panel,
+  [data-theme="dark"] .tstat,
+  [data-theme="dark"] .th-profile-panel,
+  [data-theme="dark"] .an-weather-pill,
+  [data-theme="dark"] .an-ring-inner-multi,
+  [data-theme="dark"] #aiSettingsPanel {
+    background: var(--surface, #161B22) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45) !important;
+  }
+
+  .modal-overlay {
+    background: rgba(15, 23, 42, 0.42) !important;
+  }
+
+  [data-theme="dark"] .modal-overlay {
+    background: rgba(0, 0, 0, 0.62) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

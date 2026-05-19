@@ -9,6 +9,7 @@
 @SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class AIAnalysisQueueable implements Queueable, Database.AllowsCallouts {
 
+    private static final Decimal MIN_CONFIDENCE_FOR_AUTO_HEAL = 80.0;
     private List<Id> incidentIds;
     private Integer retryCount;
 
@@ -51,7 +52,7 @@ public with sharing class AIAnalysisQueueable implements Queueable, Database.All
             for (Id incidentId : incidentIds) {
                 AIAnalysisService.AnalysisResult result = AIAnalysisService.analyseIncident(incidentId);
 
-                if (result.confidence != null && result.confidence >= 90.0) {
+                if (shouldAutoHeal(result)) {
                     autoHealIds.add(incidentId);
                 }
             }
@@ -63,6 +64,15 @@ public with sharing class AIAnalysisQueueable implements Queueable, Database.All
         } catch (Exception ex) {
             handleException(ex);
         }
+    }
+
+    private static Boolean shouldAutoHeal(AIAnalysisService.AnalysisResult result) {
+        if (result == null || result.confidence == null || result.confidence < MIN_CONFIDENCE_FOR_AUTO_HEAL) {
+            return false;
+        }
+
+        return String.isBlank(result.recommendedAction)
+            || !result.recommendedAction.equalsIgnoreCase('Escalate');
     }
 
     private void handleException(Exception ex) {

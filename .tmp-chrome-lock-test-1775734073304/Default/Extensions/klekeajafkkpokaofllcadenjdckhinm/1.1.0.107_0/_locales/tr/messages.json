@@ -1,0 +1,162 @@
+{
+   "about_Brand_Copy_rights": {
+      "message": "© $YEAR$ McAfee, LLC",
+      "placeholders": {
+         "year": {
+            "content": "2025",
+            "example": "Telif Hakkı Yıl"
+         }
+      }
+   },
+   "about_License_Link": {
+      "message": "https://www.mcafee.com/consumer/tr-tr/policy/legal.html?tab=license"
+   },
+   "about_License_Title": {
+      "message": "Lisans Sözleşmesi"
+   },
+   "about_Privacy_Link": {
+      "message": "https://www.mcafee.com/consumer/tr-tr/policy/legal.html?tab=privacy"
+   },
+   "about_Privacy_Title": {
+      "message": "Gizlilik Bildirimi"
+   },
+   "autoPause_Active_SubTitle": {
+      "message": "video bu sitede durduruldu"
+   },
+   "autoPause_Active_Title": {
+      "message": "Otomatik olarak oynatılan videolar durduruldu"
+   },
+   "autoPause_Deactive_SubTitle": {
+      "message": "Durdurmak ister misiniz? Bunun için"
+   },
+   "autoPause_Deactive_SubTitle_Link": {
+      "message": "Web Boost'u açmanız yeterli"
+   },
+   "autoPause_Deactive_Title": {
+      "message": "Otomatik olarak oynatılan videolara izin verdiniz"
+   },
+   "autoPause_Initial_Nolist_FirstLine": {
+      "message": "Henüz bildirilmesi gereken bir şey yok."
+   },
+   "autoPause_Initial_Nolist_SecondLine": {
+      "message": "Web'de gezindikten sonra tekrar kontrol edin. "
+   },
+   "autoPause_Initial_SubTitle": {
+      "message": "Web sitelerinde videoların otomatik olarak oynatılmasını önleyeceğiz. "
+   },
+   "autoPause_Initial_Title": {
+      "message": "Web Boost'a sahipsiniz!"
+   },
+   "autoPause_Table_Data_Total": {
+      "message": "Toplam"
+   },
+   "autoPause_Table_Data_TotalVideosSaved": {
+      "message": "Veri tasarrufu*:"
+   },
+   "autoPause_Table_Data_TotalVideosStopped": {
+      "message": "Durdurulan video sayısı:"
+   },
+   "autoPause_Table_Header_DataSaved": {
+      "message": "Veri tasarrufu*"
+   },
+   "autoPause_Table_Header_DataSaved_Message": {
+      "message": "* Veri tasarrufu, video boyutuna bağlı tahmini bir değerdir."
+   },
+   "autoPause_Table_Header_VideosStopped": {
+      "message": "Durdurulan videolar"
+   },
+   "autoPause_Table_Header_Website": {
+      "message": "Web Sitesi"
+   },
+   "autoPause_Unit_Bytes": {
+      "message": "Bayt"
+   },
+   "autoPause_Unit_GB": {
+      "message": "GB"
+   },
+   "autoPause_Unit_KB": {
+      "message": "KB"
+   },
+   "autoPause_Unit_MB": {
+      "message": "MB"
+   },
+   "autoPause_Unit_No_Info": {
+      "message": "Bilgi yok"
+   },
+   "autoPause_Whitelist_Button_AllowAutoPlay": {
+      "message": "Bu sitede videoları otomatik olarak oynat"
+   },
+   "autoPause_Whitelist_Button_StopAutoPlay": {
+      "message": "Bu sitede videoların otomatik olarak oynatılmasını önle"
+   },
+   "autoPause_Whitelisted_Title": {
+      "message": "Videolar bu sitede otomatik olarak oynatılır"
+   },
+   "banner_Text": {
+      "message": "McAfee® Web Boost tarafından duraklatıldı"
+   },
+   "brand_Name": {
+      "description": "Marka Adı.",
+      "message": "$BRAND$",
+      "placeholders": {
+         "brand": {
+            "content": "McAfee®",
+            "example": "Marka Adı"
+         }
+      }
+   },
+   "ext_Description": {
+      "message": "Otomatik olarak oynayan ve web'de gezinmenizi yavaşlatan videoları durdurun"
+   },
+   "ext_FullName": {
+      "message": "McAfee® Web Boost"
+   },
+   "ext_Name": {
+      "message": "Web Boost"
+   },
+   "faq_Answer_1": {
+      "message": "Veri tasarrufu yapmak, web'de daha hızlı gezinmek ve sinir bozucu otomatik oynatılan videoları durdurmak isteyen herkes."
+   },
+   "faq_Answer_2": {
+      "message": "Web Boost, web'de gezinmenizi hızlandırmaya yardımcı olması için açık tutulması gereken bir Chrome eklentisidir."
+   },
+   "faq_Answer_3": {
+      "message": "Web Boost, video sesi kapalı olsa bile otomatik olarak oynatılan videoları durdurur. Ayrıca bazı web sitelerinde otomatik olarak oynatılan videoları görmek istiyorsanız ayarlarınızı kişiselleştirmenizi de kolaylaştırır. Chrome özelliğinin açılması zor olabilir, sesi kapalı videoların otomatik olarak oynatılmasını duraklatamayabilir ve Chrome'un Ortam Katılım Endeksi (MEI) dışındaki ayarları kişiselleştirmenize imkan tanımaz."
+   },
+   "faq_Answer_4": {
+      "message": "Gömülü video boyutuna bağlıdır; boyut ne kadar büyükse, veri tasarrufu hesaplaması o kadar yüksektir. Bazen otomatik olarak oynatılan videoları o kadar hızlı durduruyoruz ki tasarruf edilen veri miktarını hesaplayamıyoruz. Bu durumda 'Bilgi yok' diyoruz."
+   },
+   "faq_Question_1": {
+      "message": "Kimler Web Boost'u kullanmalıdır?"
+   },
+   "faq_Question_2": {
+      "message": "Web Boost'u neden açık tutmalıyım?"
+   },
+   "faq_Question_3": {
+      "message": "Web Boost'un Google Chrome otomatik oynatma desteğinden farkı nedir?"
+   },
+   "faq_Question_4": {
+      "message": "Veri tasarruflarım nasıl hesaplanır?"
+   },
+   "navigation_header_about": {
+      "message": "Hakkında"
+   },
+   "navigation_header_faq": {
+      "message": "SSS"
+   },
+   "navigation_header_whitelist": {
+      "message": "Otomatik oynatma ayarları"
+   },
+   "whiteList_Empty_List_Message": {
+      "message": "Listeniz boş"
+   },
+   "whiteList_Remove_Success_Message": {
+      "message": "beyaz listenizden kaldırıldı"
+   },
+   "whiteList_Url_Listing_title": {
+      "message": "Bu web sitelerinde otomatik olarak oynatılan videolara izin ver"
+   },
+   "whitelist_Toggle_Text": {
+      "message": "Web sitelerinde videoların otomatik olarak oynatılmasını önlemek için açın"
+   }
+}

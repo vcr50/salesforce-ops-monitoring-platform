@@ -1,12 +1,12 @@
 {
   "packageDirectories": [
     {
-      "versionName": "2.6.1",
-      "versionNumber": "2.6.1.NEXT",
+      "versionName": "3.0.0",
+      "versionNumber": "3.0.0.NEXT",
       "path": "force-app",
       "default": true,
       "package": "SentinelFlow",
-      "versionDescription": "SentinelFlow 2.6.1 - AppExchange-ready AI-powered incident intelligence platform"
+      "versionDescription": "SentinelFlow 3.0.0 - Zentom AI Orchestration Moat Edition"
     }
   ],
   "name": "SentinelFlow",

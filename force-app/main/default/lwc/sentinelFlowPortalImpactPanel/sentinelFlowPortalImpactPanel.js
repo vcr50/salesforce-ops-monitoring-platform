@@ -1,7 +1,8 @@
 import { LightningElement, wire, track } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
 import { subscribe, unsubscribe } from 'lightning/empApi';
-import calculateAllOpen from '@salesforce/apex/BusinessImpactCalculator.calculateAllOpen';
+import getOpenImpact from '@salesforce/apex/BusinessImpactCalculator.getOpenImpact';
+import getCurrencyConfig from '@salesforce/apex/SettingsController.getCurrencyConfig';
 
 export default class SentinelFlowPortalImpactPanel extends LightningElement {
     @track impactData = [];
@@ -10,20 +11,26 @@ export default class SentinelFlowPortalImpactPanel extends LightningElement {
 
     _wiredResult;
     _subscription;
+    rawData = null;
 
-    @wire(calculateAllOpen)
+    @track currencySymbol = '$';
+    @track currencyRate = 1.0;
+
+    @wire(getOpenImpact)
     wiredImpact(result) {
         this._wiredResult = result;
         const { error, data } = result;
         if (data) {
+            this.rawData = data;
             this.impactData = data.map(item => ({
                 ...item,
                 revenueFormatted: this._fmtMoney(item.revenueAtRisk),
-                usersFormatted: item.usersAffected.toLocaleString(),
+                usersFormatted: (item.usersAffected || 0).toLocaleString(),
                 riskClass: this._riskClass(item.riskLevel)
             }));
             this.error = undefined;
         } else if (error) {
+            this.rawData = null;
             this.impactData = [];
             this.error = 'Unable to load impact data.';
         }
@@ -34,6 +41,28 @@ export default class SentinelFlowPortalImpactPanel extends LightningElement {
             this.handleRefresh();
         }).then(sub => { this._subscription = sub; })
           .catch(err => { console.warn('empApi subscribe failed:', err); });
+        this._loadCurrency();
+    }
+
+    _loadCurrency() {
+        getCurrencyConfig()
+            .then(config => {
+                if (config) {
+                    this.currencySymbol = config.symbol || '$';
+                    this.currencyRate = config.rate || 1.0;
+                    if (this.rawData) {
+                        this.impactData = this.rawData.map(item => ({
+                            ...item,
+                            revenueFormatted: this._fmtMoney(item.revenueAtRisk),
+                            usersFormatted: (item.usersAffected || 0).toLocaleString(),
+                            riskClass: this._riskClass(item.riskLevel)
+                        }));
+                    }
+                }
+            })
+            .catch(err => {
+                console.error('Error loading currency config:', err);
+            });
     }
 
     disconnectedCallback() {
@@ -64,9 +93,11 @@ export default class SentinelFlowPortalImpactPanel extends LightningElement {
     }
 
     _fmtMoney(n) {
-        if (n >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M';
-        if (n >= 1000)    return '$' + (n / 1000).toFixed(0) + 'K';
-        return '$' + n.toFixed(0);
+        n = Number(n || 0) * this.currencyRate;
+        const sym = this.currencySymbol;
+        if (n >= 1000000) return sym + (n / 1000000).toFixed(1) + 'M';
+        if (n >= 1000)    return sym + (n / 1000).toFixed(0) + 'K';
+        return sym + n.toFixed(0);
     }
 
     _riskClass(r) {

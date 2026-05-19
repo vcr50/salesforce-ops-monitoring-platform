@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Silent_Failure_Minutes__c</fullName>
+    <label>Silent Failure Window (Min)</label>
+    <type>Number</type>
+    <precision>5</precision>
+    <scale>0</scale>
+    <defaultValue>30</defaultValue>
+</CustomField>

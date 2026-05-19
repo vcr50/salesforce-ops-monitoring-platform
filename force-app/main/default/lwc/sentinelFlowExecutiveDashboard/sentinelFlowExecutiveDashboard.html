@@ -1,0 +1,79 @@
+<template>
+    <div class="sf-executive-container">
+        
+        <header class="sf-header">
+            <h1 class="sf-title">Executive Intelligence</h1>
+            <p class="sf-subtitle">Real-time Business Continuity & Risk Assessment</p>
+        </header>
+
+        <template if:true={isLoading}>
+            <div class="sf-loading">
+                <lightning-spinner alternative-text="Loading Metrics" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:true={error}>
+            <div class="sf-error-card">
+                <p>Failed to load executive metrics: {error.body.message}</p>
+            </div>
+        </template>
+
+        <template if:true={metrics}>
+            <!-- Top Metric Cards -->
+            <div class="sf-metrics-grid">
+                
+                <div class="sf-metric-card sf-glass">
+                    <div class="sf-metric-header">Revenue at Risk</div>
+                    <div class="sf-metric-value danger-text">{formattedRevenueAtRisk}</div>
+                    <div class="sf-metric-footer">Active threat across {metrics.activeCriticalIncidents} critical workflows</div>
+                </div>
+
+                <div class="sf-metric-card sf-glass sf-score-card">
+                    <div class="sf-metric-header">Business Safety Score</div>
+                    <div class="sf-score-container">
+                        <div class={safetyScoreClass}>
+                            {metrics.businessSafetyScore}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sf-metric-card sf-glass">
+                    <div class="sf-metric-header">AI Prevention ROI</div>
+                    <div class="sf-metric-value success-text">{formattedRevenueSaved}</div>
+                    <div class="sf-metric-footer">Revenue protected by autonomous healing this month</div>
+                </div>
+
+            </div>
+
+            <!-- Workflow Risk Map -->
+            <div class="sf-section sf-glass">
+                <h2 class="sf-section-title">Workflow Risk Map</h2>
+                <div class="sf-table-wrapper">
+                    <table class="sf-table">
+                        <thead>
+                            <tr>
+                                <th>Workflow Stage</th>
+                                <th>Failure Count</th>
+                                <th>Aggregated Risk Exposure</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={metrics.topWorkflowRisks} for:item="risk">
+                                <tr key={risk.workflowStage}>
+                                    <td class="fw-bold">{risk.workflowStage}</td>
+                                    <td>
+                                        <div class="sf-badge">{risk.failureCount}</div>
+                                    </td>
+                                    <td class="danger-text fw-bold">
+                                        $<lightning-formatted-number value={risk.aggregatedRisk} maximum-fraction-digits="0"></lightning-formatted-number>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </template>
+
+    </div>
+</template>

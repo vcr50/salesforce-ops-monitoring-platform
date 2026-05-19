@@ -1,0 +1,218 @@
+<!--
+
+MCAFEE RESTRICTED CONFIDENTIAL
+Copyright (c) 2025 McAfee, LLC
+
+The source code contained or described herein and all documents related
+to the source code ("Material") are owned by McAfee or its
+suppliers or licensors. Title to the Material remains with McAfee
+or its suppliers and licensors. The Material contains trade
+secrets and proprietary and confidential information of McAfee or its
+suppliers and licensors. The Material is protected by worldwide copyright
+and trade secret laws and treaty provisions. No part of the Material may
+be used, copied, reproduced, modified, published, uploaded, posted,
+transmitted, distributed, or disclosed in any way without McAfee's prior
+express written permission.
+
+No license under any patent, copyright, trade secret or other intellectual
+property right is granted to or conferred upon you by disclosure or
+delivery of the Materials, either expressly, by implication, inducement,
+estoppel or otherwise. Any license under such intellectual property rights
+must be expressed and approved by McAfee in writing.
+
+-->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <!-- styles -->
+        <link rel="stylesheet" type="text/css" href="styles/mcafee_wb_main.css">
+    </head>
+    <body>
+        <div class="wrapper">
+            <!-- Header -->
+            <div>
+                <header>
+                    <nav class="logo-adj">
+                        <div class="brand-logo">
+                            <span class="responsive-img"></span>
+                        </div>
+                    </nav>
+                    <nav>
+                        <ul id="menuIcon">
+                            <li class="nav-icon">
+                                <a><span></span></a>
+                            </li>
+                            <li>
+                                <a><span></span></a>
+                            </li>
+                        </ul>
+                        <div class="main-menu" id="menuDiv">
+                            <ol>
+                                <li>
+                                    <span title="auto_pause_setting">
+                                        <div></div>
+                                        <span id="navigation_header_whitelist" x-mclocalizedtext="true"></span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span title="faq">
+                                        <div></div>
+                                        <span id="navigation_header_faq" x-mclocalizedtext="true"></span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span title="about">
+                                        <div></div>
+                                        <span id="navigation_header_about" x-mclocalizedtext="true"></span>
+                                    </span>
+                                </li>
+                            </ol>
+                        </div>
+                    </nav>
+                </header>
+            </div>
+            <!-- header end -->
+
+            <!-- Content area -->
+            <div class="container" id="containerDiv">
+                <!-- Auto pause main page html -->
+                <div class="pageContent" id="autoPlayMedia">
+                    <div class="loader-wrapper" id="loadingData">
+                        <div class="loader"></div>
+                    </div>
+                    <div class="auto-play-media hide" id="autoPlayMediaContent">
+                        <div class="counter-block">
+                            <div class="counter-block-top-info">
+                                <div class="video-icon" id="videoIcon" alt=""></div>
+                            </div>
+                        </div>
+                        <h2 id="autoPause_Deactive_Title" class="hide" x-mclocalizedtext="true"></h2>
+                        <h2 id="autoPause_Initial_Title" class="hide" x-mclocalizedtext="true"></h2>
+                        <h2 id="active_Title" class="hide" x-mclocalizedtext="true"></h2>
+                        <h3 id="deactiveSubTitle">
+                            <span id="autoPause_Deactive_SubTitle" x-mclocalizedtext="true"></span>&nbsp;
+                            <span class="urllink" id="autoPause_Deactive_SubTitle_Link" x-mclocalizedtext="true"></span>
+                        </h3>
+                        <h3 id="autoPause_Initial_SubTitle" class="hide" x-mclocalizedtext="true"></h3>
+                        <h3 id="subTitleActiveDiv" class="hide" x-mclocalizedtext="true"></h3>
+                        <div class="auto-play-media-action">
+                            <button type="button" name="button" id="whiteListBtn" class="white-list-btn"></button>
+                            <span id="arrowIcon" class="toggleListing"></span>
+                        </div>
+                    </div>
+                    <div class="auto-play-media-list-block hide" id="auto-play-media-list">
+                        <table class="data-info">
+                            <tr>
+                                <th>
+                                    <div id="autoPause_Table_Data_Total" x-mclocalizedtext="true"></div>
+                                </th>
+                                <th>
+                                    <div id="autoPause_Table_Data_TotalVideosStopped" x-mclocalizedtext="true"></div>
+                                    &nbsp;
+                                    <span class="videos-stopped" id="videosStopped" x-mclocalizedtext="true"></span>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <div id="autoPause_Table_Data_TotalVideosSaved" x-mclocalizedtext="true"></div>
+                                    &nbsp;
+                                    <span class="data-saved" id="dataSaved" x-mclocalizedtext="true"></span>
+                                </th>
+                            </tr>
+                        </table>
+                        <p class="NoAutoPause-List" id="noAutoPauseList">
+                            <span id="autoPause_Initial_Nolist_FirstLine" x-mclocalizedtext="true"></span><br /> <span id="autoPause_Initial_Nolist_SecondLine" x-mclocalizedtext="true"></span>
+                        </p>
+                        <table class="main-table" id="mainTable">
+                            <thead>
+                            <tr>
+                                <td id="autoPause_Table_Header_Website" x-mclocalizedtext="true"></td>
+                                <td>
+                                    <span id="autoPause_Table_Header_VideosStopped" x-mclocalizedtext="true"></span>
+                                    <div id="videoPointer"></div>
+                                </td>
+                                <td></td>
+                                <td>
+                                    <span id="autoPause_Table_Header_DataSaved" x-mclocalizedtext="true"></span>
+                                    <div id="dataPointer"></div>
+                                </td>
+                                <td></td>
+                            </tr>
+                            </thead>
+                        </table>
+                        <div id="autoPausedList" class="table-block">
+                            <table>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="auto-play-media-submessage hide" id="autoPause_Table_Header_DataSaved_Message" x-mclocalizedtext="true"></div>
+                </div>
+                <!-- Auto pause main page html -->
+                <!-- Auto pause settings html -->
+                <div class="whitelist-page pageContent hide" id="auto_pause_setting">
+                    <div class="hero">
+                        <h3><span id="navigation_header_whitelist" x-mclocalizedtext="true"></span><small id="whitelist_Toggle_Text"  x-mclocalizedtext="true"></small></h3>
+                        <button type="button" name="button" id="toggleAutoPlay"><span></span></button>
+                    </div>
+
+                    <div class="notification-block">
+                        <p id="showNotification" class="hide">
+                            <span id="notifyMessage"  x-mclocalizedtext="true"></span> 
+                            <span id="whiteList_Remove_Success_Message" x-mclocalizedtext="true"></span>
+                        </p>
+                    </div>
+
+                    <p id="whiteList_Url_Listing_title"  x-mclocalizedtext="true"></p>
+
+                    <div class="whitelist-listing">
+                        <p id="emptyList" class="hide"><span id="whiteList_Empty_List_Message"  x-mclocalizedtext="true"></span></p>
+                        <div id="whitelistDiv"></div>
+                    </div>
+                </div>
+                 <!-- Auto pause settings html end -->
+                 <!-- FAQ html -->
+                <div class="generic-page-style faqPage pageContent hide" id="faq">
+                    <h1 id="navigation_header_faq" x-mclocalizedtext="true"></h1>
+                    <div class="faqList">
+                        <ul>
+                            <li>
+                                <h3 id='faq_Question_1' x-mclocalizedtext="true"></h3>
+                                <p id='faq_Answer_1' x-mclocalizedtext="true"></p>
+                            </li>
+                            <li>
+                                <h3 id='faq_Question_2' x-mclocalizedtext="true"></h3>
+                                <p id='faq_Answer_2' x-mclocalizedtext="true"></p>
+                            </li>
+                            <li>
+                                <h3 id='faq_Question_3' x-mclocalizedtext="true"></h3>
+                                <p id='faq_Answer_3' x-mclocalizedtext="true"></p>
+                            </li>
+                            <li>
+                                <h3 id='faq_Question_4' x-mclocalizedtext="true"></h3>
+                                <p id='faq_Answer_4' x-mclocalizedtext="true"></p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- FAQ html end -->
+                <!-- About html -->
+                 <div class="generic-page-style about-page pageContent hide" id="about">
+                    <h1 id="navigation_header_about" x-mclocalizedtext="true"></h1>
+                    <div class="brand"><span id="brand_Name" x-mclocalizedtext="true"></span> <span id="ext_Name" x-mclocalizedtext="true"></span></div>
+                    <div class="copyright" id="about_Brand_Copy_rights" x-mclocalizedtext="true"></div>
+                    <div class="urllink-wrapper">
+                        <a class="urllink" id="about_License_Title" x-mclocalizedtext="true"></a>
+                    </div>
+                    <div class="urllink-wrapper">
+                        <a class="urllink" id="about_Privacy_Title" x-mclocalizedtext="true"></a>
+                    </div>
+                </div>
+                <!-- About html end -->
+            </div>
+            <!-- content area end -->
+        </div>
+
+        <!-- // Custom scripts -->
+        <script type="text/javascript" src="scripts/index.js"></script>
+    </body>
+</html>

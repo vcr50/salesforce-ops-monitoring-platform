@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Autonomous_Healing__c</fullName>
+    <label>Autonomous Healing</label>
+    <type>Checkbox</type>
+    <defaultValue>true</defaultValue>
+</CustomField>

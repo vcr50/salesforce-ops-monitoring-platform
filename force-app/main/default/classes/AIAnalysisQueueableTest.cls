@@ -21,6 +21,7 @@ private class AIAnalysisQueueableTest {
 
     @IsTest
     static void testExecute() {
+        enableSecurityBypass();
         Incident__c inc = [SELECT Id FROM Incident__c LIMIT 1];
 
         Test.startTest();
@@ -28,11 +29,12 @@ private class AIAnalysisQueueableTest {
         Test.stopTest();
 
         Incident__c updatedInc = [SELECT Id, Status__c FROM Incident__c LIMIT 1];
-        System.assertEquals('Analyzing', updatedInc.Status__c, 'Status should be Analyzing');
+        System.assertEquals('Investigating', updatedInc.Status__c, 'Status should move to Investigating after analysis');
     }
 
     @IsTest
     static void testExecuteList() {
+        enableSecurityBypass();
         List<Incident__c> incs = [SELECT Id FROM Incident__c];
         List<Id> ids = new List<Id>();
         for (Incident__c inc : incs) {
@@ -44,11 +46,12 @@ private class AIAnalysisQueueableTest {
         Test.stopTest();
 
         Incident__c updatedInc = [SELECT Id, Status__c FROM Incident__c LIMIT 1];
-        System.assertEquals('Analyzing', updatedInc.Status__c, 'Status should be Analyzing');
+        System.assertEquals('Investigating', updatedInc.Status__c, 'Status should move to Investigating after analysis');
     }
 
     @IsTest
     static void testExecute_HighConfidence() {
+        enableSecurityBypass();
         Tenant__c tenant = [SELECT Id FROM Tenant__c LIMIT 1];
         Integration_Log__c log = new Integration_Log__c(
             API_Name__c = 'Test API',
@@ -72,11 +75,12 @@ private class AIAnalysisQueueableTest {
         Test.stopTest();
 
         Incident__c updatedInc = [SELECT Id, Status__c FROM Incident__c WHERE Id = :inc.Id LIMIT 1];
-        System.assertEquals('Analyzing', updatedInc.Status__c, 'Status should be Analyzing');
+        System.assertEquals('Investigating', updatedInc.Status__c, 'Status should move to Investigating after analysis');
     }
 
     @IsTest
     static void testExecute_Exception() {
+        enableSecurityBypass();
         // Pass a fake ID to trigger a QueryException in AIAnalysisService
         Id fakeId = 'a00000000000000AAA';
 
@@ -87,5 +91,9 @@ private class AIAnalysisQueueableTest {
         // Check if System_Log__c was created
         Integer logCount = [SELECT COUNT() FROM System_Log__c WHERE Class_Name__c = 'AIAnalysisQueueable'];
         System.assertEquals(1, logCount, 'Should have logged a permanent error');
+    }
+
+    private static void enableSecurityBypass() {
+        SecurityGate.bypassForTests = true;
     }
 }

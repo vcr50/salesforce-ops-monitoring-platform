@@ -1,0 +1,162 @@
+{
+   "about_Brand_Copy_rights": {
+      "message": "© $YEAR$ McAfee, LLC",
+      "placeholders": {
+         "year": {
+            "content": "2025",
+            "example": "Copyright Year"
+         }
+      }
+   },
+   "about_License_Link": {
+      "message": "https://www.mcafee.com/consumer/es-mx/policy/legal.html?tab=license"
+   },
+   "about_License_Title": {
+      "message": "Acuerdo de licencia"
+   },
+   "about_Privacy_Link": {
+      "message": "https://www.mcafee.com/consumer/es-mx/policy/legal.html?tab=privacy"
+   },
+   "about_Privacy_Title": {
+      "message": "Aviso de privacidad"
+   },
+   "autoPause_Active_SubTitle": {
+      "message": "video(s) detenido(s) en este sitio"
+   },
+   "autoPause_Active_Title": {
+      "message": "Se detuvo la reproducción automática de videos"
+   },
+   "autoPause_Deactive_SubTitle": {
+      "message": "¿Quiere detenerlos? ​"
+   },
+   "autoPause_Deactive_SubTitle_Link": {
+      "message": "Basta con activar Web Boost"
+   },
+   "autoPause_Deactive_Title": {
+      "message": "Ha permitido la reproducción automática de videos"
+   },
+   "autoPause_Initial_Nolist_FirstLine": {
+      "message": "Todavía nada que informar."
+   },
+   "autoPause_Initial_Nolist_SecondLine": {
+      "message": "Vuelva a visitar la página después de haber navegado por Internet. "
+   },
+   "autoPause_Initial_SubTitle": {
+      "message": "Evitaremos que los videos se reproduzcan automáticamente en los sitios web. "
+   },
+   "autoPause_Initial_Title": {
+      "message": "¡Ya tiene Web Boost!"
+   },
+   "autoPause_Table_Data_Total": {
+      "message": "Totales"
+   },
+   "autoPause_Table_Data_TotalVideosSaved": {
+      "message": "Datos ahorrados*:"
+   },
+   "autoPause_Table_Data_TotalVideosStopped": {
+      "message": "Videos detenidos:"
+   },
+   "autoPause_Table_Header_DataSaved": {
+      "message": "Datos ahorrados*"
+   },
+   "autoPause_Table_Header_DataSaved_Message": {
+      "message": "* Los datos ahorrados se estiman según el tamaño del video."
+   },
+   "autoPause_Table_Header_VideosStopped": {
+      "message": "Videos detenidos"
+   },
+   "autoPause_Table_Header_Website": {
+      "message": "Sitio web"
+   },
+   "autoPause_Unit_Bytes": {
+      "message": "Bytes"
+   },
+   "autoPause_Unit_GB": {
+      "message": "GB"
+   },
+   "autoPause_Unit_KB": {
+      "message": "KB"
+   },
+   "autoPause_Unit_MB": {
+      "message": "MB"
+   },
+   "autoPause_Unit_No_Info": {
+      "message": "Sin información"
+   },
+   "autoPause_Whitelist_Button_AllowAutoPlay": {
+      "message": "Reproducir automáticamente videos en este sitio web"
+   },
+   "autoPause_Whitelist_Button_StopAutoPlay": {
+      "message": "Detener la reproducción automática de videos en este sitio"
+   },
+   "autoPause_Whitelisted_Title": {
+      "message": "Los videos se reproducirán automáticamente en este sitio"
+   },
+   "banner_Text": {
+      "message": "Puesto en pausa por McAfee® Web Boost"
+   },
+   "brand_Name": {
+      "description": "Brand Name.",
+      "message": "$BRAND$",
+      "placeholders": {
+         "brand": {
+            "content": "McAfee®",
+            "example": "Brand Name"
+         }
+      }
+   },
+   "ext_Description": {
+      "message": "Detenga la reproducción automática de videos que ralentizan su navegación por la web"
+   },
+   "ext_FullName": {
+      "message": "McAfee® Web Boost"
+   },
+   "ext_Name": {
+      "message": "Web Boost"
+   },
+   "faq_Answer_1": {
+      "message": "Cualquiera que desee ahorrar en datos, acelerar la navegación web y evitar los molestos videos de reproducción automática."
+   },
+   "faq_Answer_2": {
+      "message": "Web Boost es una extensión de Chrome que necesita ser activada para que ayudarle a acelerar su navegación."
+   },
+   "faq_Answer_3": {
+      "message": "Web Boost detiene la reproducción automática de videos incluso si el audio del video está silenciado. También le facilita la personalización de la configuración si desea ver videos de reproducción automática en algunos sitios web. La función Chrome puede ser difícil de activar, no puede pausar un video de reproducción automática que tenga el audio silenciado y no permite personalizar la configuración fuera del Índice de interacción con los medios (MEI) de Chrome."
+   },
+   "faq_Answer_4": {
+      "message": "Según el tamaño del video incrustado, cuanto mayor sea el tamaño, mayor será la estimación del ahorro de datos. A veces somos tan rápidos a la hora de impedir que los videos se reproduzcan automáticamente que no podemos determinar la cantidad de datos ahorrados. Cuando esto ocurra, mostraremos “Sin información”."
+   },
+   "faq_Question_1": {
+      "message": "¿Quién debería usar Web Boost?"
+   },
+   "faq_Question_2": {
+      "message": "¿Por qué debo mantener Web Boost activado?"
+   },
+   "faq_Question_3": {
+      "message": "¿En qué se diferencia Web Boost de la compatibilidad con la reproducción automática de Google Chrome?"
+   },
+   "faq_Question_4": {
+      "message": "¿Cómo se estiman mis ahorros de mis datos?"
+   },
+   "navigation_header_about": {
+      "message": "Acerca de"
+   },
+   "navigation_header_faq": {
+      "message": "Preguntas frecuentes"
+   },
+   "navigation_header_whitelist": {
+      "message": "Configuración de reproducción automática"
+   },
+   "whiteList_Empty_List_Message": {
+      "message": "Su lista está vacía"
+   },
+   "whiteList_Remove_Success_Message": {
+      "message": "ha sido eliminado de su lista blanca"
+   },
+   "whiteList_Url_Listing_title": {
+      "message": "Permitir la reproducción automática de videos en estos sitios web"
+   },
+   "whitelist_Toggle_Text": {
+      "message": "Activar para detener la reproducción automática de videos en sitios web"
+   }
+}

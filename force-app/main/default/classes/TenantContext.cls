@@ -45,16 +45,32 @@ public with sharing class TenantContext {
         }
 
         // Fallback: return the first active tenant (for demo/dev environments)
-        List<Tenant__c> tenants = [
-            SELECT Id FROM Tenant__c
-            WHERE Status__c = 'Active'
-            ORDER BY CreatedDate ASC
-            LIMIT 1
-        ];
-        if (!tenants.isEmpty()) {
-            cachedTenantId = tenants[0].Id;
+        try {
+            if (fieldExists('Tenant__c', 'Status__c')) {
+                List<Tenant__c> tenants = [
+                    SELECT Id FROM Tenant__c
+                    WHERE Status__c = 'Active'
+                    ORDER BY CreatedDate ASC
+                    LIMIT 1
+                ];
+                if (!tenants.isEmpty()) {
+                    cachedTenantId = tenants[0].Id;
+                }
+            }
+        } catch (Exception ex) {
+            return null;
         }
         return cachedTenantId;
+    }
+
+    private static Boolean objectExists(String objectApiName) {
+        return Schema.getGlobalDescribe().containsKey(objectApiName);
+    }
+
+    private static Boolean fieldExists(String objectApiName, String fieldApiName) {
+        return objectExists(objectApiName)
+            && Schema.getGlobalDescribe().get(objectApiName).getDescribe().fields.getMap().containsKey(fieldApiName)
+            && Schema.getGlobalDescribe().get(objectApiName).getDescribe().fields.getMap().get(fieldApiName).getDescribe().isAccessible();
     }
 
     /**

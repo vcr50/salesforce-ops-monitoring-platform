@@ -12,15 +12,14 @@
 
 .login-wrapper {
     min-height: 100vh;
+    min-height: 100dvh;
     width: 100%;
     background-color: #0b0f19;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: fixed;
-    top: 0;
-    left: 0;
+    position: relative;
     z-index: 99999;
     overflow: auto;
     padding: 32px 20px;
@@ -114,6 +113,19 @@
     margin: 0;
 }
 
+.footer-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.footer-brand img {
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 0.35rem;
+    flex: 0 0 auto;
+}
+
 .footer-links {
     display: flex;
     gap: 12px;
@@ -144,9 +156,13 @@
 }
 
 .brand-logo {
-    width: 40px;
-    height: 40px;
+    width: 52px;
+    height: 52px;
     object-fit: contain;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 8px;
+    flex-shrink: 0;
 }
 
 .brand-name {

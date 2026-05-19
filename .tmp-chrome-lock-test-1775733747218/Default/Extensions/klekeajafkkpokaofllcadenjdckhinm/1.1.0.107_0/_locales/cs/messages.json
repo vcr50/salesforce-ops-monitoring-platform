@@ -1,0 +1,162 @@
+{
+   "about_Brand_Copy_rights": {
+      "message": "© $YEAR$ McAfee, LLC",
+      "placeholders": {
+         "year": {
+            "content": "2025",
+            "example": "Copyright Year"
+         }
+      }
+   },
+   "about_License_Link": {
+      "message": "https://www.mcafee.com/consumer/cs-cz/policy/legal.html?tab=license"
+   },
+   "about_License_Title": {
+      "message": "Licenční smlouva"
+   },
+   "about_Privacy_Link": {
+      "message": "https://www.mcafee.com/consumer/cs-cz/policy/legal.html?tab=privacy"
+   },
+   "about_Privacy_Title": {
+      "message": "Prohlášení o ochraně osobních údajů"
+   },
+   "autoPause_Active_SubTitle": {
+      "message": "– počet zastavených videí na těchto stránkách"
+   },
+   "autoPause_Active_Title": {
+      "message": "Automaticky přehrávaná videa byla zastavena"
+   },
+   "autoPause_Deactive_SubTitle": {
+      "message": "Chcete je zastavit? Stačí"
+   },
+   "autoPause_Deactive_SubTitle_Link": {
+      "message": "zapnout rozšíření Web Boost"
+   },
+   "autoPause_Deactive_Title": {
+      "message": "Povolili jste automatické přehrávání videí"
+   },
+   "autoPause_Initial_Nolist_FirstLine": {
+      "message": "Zatím není k dispozici žádná zpráva."
+   },
+   "autoPause_Initial_Nolist_SecondLine": {
+      "message": "Vraťte se sem, až si prohlédnete nějaké webové stránky. "
+   },
+   "autoPause_Initial_SubTitle": {
+      "message": "Budeme na webových stránkách zastavovat automaticky přehrávaná videa. "
+   },
+   "autoPause_Initial_Title": {
+      "message": "Získali jste rozšíření Web Boost!"
+   },
+   "autoPause_Table_Data_Total": {
+      "message": "Celkem"
+   },
+   "autoPause_Table_Data_TotalVideosSaved": {
+      "message": "Úspora dat*:"
+   },
+   "autoPause_Table_Data_TotalVideosStopped": {
+      "message": "Zastavená videa:"
+   },
+   "autoPause_Table_Header_DataSaved": {
+      "message": "Úspora dat*"
+   },
+   "autoPause_Table_Header_DataSaved_Message": {
+      "message": "* Úspora dat je odhadována na základě velikosti videí."
+   },
+   "autoPause_Table_Header_VideosStopped": {
+      "message": "Byla zastavena videa"
+   },
+   "autoPause_Table_Header_Website": {
+      "message": "Webová stránka"
+   },
+   "autoPause_Unit_Bytes": {
+      "message": "B"
+   },
+   "autoPause_Unit_GB": {
+      "message": "GB"
+   },
+   "autoPause_Unit_KB": {
+      "message": "kB"
+   },
+   "autoPause_Unit_MB": {
+      "message": "MB"
+   },
+   "autoPause_Unit_No_Info": {
+      "message": "Žádné informace"
+   },
+   "autoPause_Whitelist_Button_AllowAutoPlay": {
+      "message": "Automatické přehrávání videí na těchto stránkách"
+   },
+   "autoPause_Whitelist_Button_StopAutoPlay": {
+      "message": "Zastavovat na těchto stránkách automaticky přehrávaná videa"
+   },
+   "autoPause_Whitelisted_Title": {
+      "message": "Na těchto stránkách se budou automaticky přehrávat videa"
+   },
+   "banner_Text": {
+      "message": "Zastaveno rozšířením McAfee® Web Boost"
+   },
+   "brand_Name": {
+      "description": "Brand Name.",
+      "message": "$BRAND$",
+      "placeholders": {
+         "brand": {
+            "content": "McAfee®",
+            "example": "Brand Name"
+         }
+      }
+   },
+   "ext_Description": {
+      "message": "Zastavte automaticky přehrávaná videa, která zpomalují prohlížení webových stránek"
+   },
+   "ext_FullName": {
+      "message": "McAfee® Web Boost"
+   },
+   "ext_Name": {
+      "message": "Web Boost"
+   },
+   "faq_Answer_1": {
+      "message": "Pro každého, kdo chce snížit spotřebu dat, zrychlit prohlížení webových stránek a zabránit nepříjemnému automatické přehrávání videí."
+   },
+   "faq_Answer_2": {
+      "message": "Rozšíření Web Boost pro prohlížeč Chrome vám pomůže zrychlit prohlížení webových stránek pouze v případě, že je zapnuté."
+   },
+   "faq_Answer_3": {
+      "message": "Rozšíření Web Boost zastavuje automaticky přehrávaná videa, i když je zvuk videa ztlumen. Usnadňuje také přizpůsobení nastavení pro případ, že byste chtěli videa na některých webových stránkách automaticky přehrávat. Funkce v prohlížeči Chrome neumí zastavit automaticky přehrávaná videa se ztlumeným zvukem, neumožňuje přizpůsobit jiná nastavení než MEI (Media Engagement Index) prohlížeče Chrome a může být obtížené ji zapnout."
+   },
+   "faq_Answer_4": {
+      "message": "To záleží na velikosti vloženého videa. Čím je větší, tím vyšší bude odhadovaná úspora dat. Někdy jsou automaticky přehrávaná videa zastavena tak rychle, že nelze množství ušetřených datu určit. V takovém případě se zobrazí zpráva „Žádné informace“."
+   },
+   "faq_Question_1": {
+      "message": "Pro koho je rozšíření Web Boost určeno?"
+   },
+   "faq_Question_2": {
+      "message": "Proč bych měl(a) mít rozšíření Web Boost zapnuté?"
+   },
+   "faq_Question_3": {
+      "message": "V čem se rozšíření Web Boost liší od podpory automatického přehrávání v prohlížeči Google Chrome?"
+   },
+   "faq_Question_4": {
+      "message": "Kolik dat odhadem ušetřím?"
+   },
+   "navigation_header_about": {
+      "message": "O aplikaci"
+   },
+   "navigation_header_faq": {
+      "message": "Nejčastější dotazy"
+   },
+   "navigation_header_whitelist": {
+      "message": "Nastavení automatického přehrávání"
+   },
+   "whiteList_Empty_List_Message": {
+      "message": "Váš seznam je prázdný"
+   },
+   "whiteList_Remove_Success_Message": {
+      "message": "byla odebrána ze seznamu povolených položek"
+   },
+   "whiteList_Url_Listing_title": {
+      "message": "Povolit automatické přehrávání videí na těchto webových stránkách"
+   },
+   "whitelist_Toggle_Text": {
+      "message": "Zapnutím zastavíte automatické přehrávání videí na webových stránkách"
+   }
+}

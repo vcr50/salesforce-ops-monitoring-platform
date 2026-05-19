@@ -33,7 +33,7 @@
               "attributes" : {
                 "dxpStyle" : { }
               },
-              "definition" : "c:sentinelFlowPortalApp",
+              "definition" : "c:sentinelFlowAppShell",
               "id" : "5d44bb46-8db9-4a9c-8066-0489b6104d6d",
               "type" : "component"
             } ],

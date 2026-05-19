@@ -1,13 +1,13 @@
-import { LightningElement, wire, api } from 'lwc';
-import { refreshApex } from '@salesforce/apex';
-import getSummary from '@salesforce/apex/SentinelFlowPortalController.getSummary';
+import { LightningElement, api, track } from 'lwc';
 import { subscribe, unsubscribe, onError } from 'lightning/empApi';
+import getSummary from '@salesforce/apex/SentinelFlowPortalController.getSummary';
+import getCurrencyConfig from '@salesforce/apex/SettingsController.getCurrencyConfig';
 
 export default class SentinelFlowPortalSummary extends LightningElement {
     // KPI values
-    criticalIncidents  = 0;
-    openIncidents      = 0;
-    failedIntegrations = 0;
+    criticalIncidents   = 0;
+    openIncidents       = 0;
+    failedIntegrations  = 0;
     warningIntegrations = 0;
     totalRevenueAtRisk  = 0;
     totalUsersAffected  = 0;
@@ -17,25 +17,29 @@ export default class SentinelFlowPortalSummary extends LightningElement {
     lastRefreshedLabel = 'Loading…';
     isRefreshing       = false;
 
-    // empApi subscription for real-time updates
     _subscription;
-    _wiredResult;
 
-    // ── Wire ──────────────────────────────────────────────────────────────────
-    @wire(getSummary)
-    wiredSummary(result) {
-        this._wiredResult = result;
-        const { error, data } = result;
-        if (data) {
-            this._applyData(data);
-        } else if (error) {
-            this.error = 'Unable to load live summary data.';
-        }
-    }
+    @track currencySymbol = '$';
+    @track currencyRate = 1.0;
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
     connectedCallback() {
+        this._fetchData();
         this._subscribeToEvents();
+        this._loadCurrency();
+    }
+
+    _loadCurrency() {
+        getCurrencyConfig()
+            .then(config => {
+                if (config) {
+                    this.currencySymbol = config.symbol || '$';
+                    this.currencyRate = config.rate || 1.0;
+                }
+            })
+            .catch(err => {
+                console.error('Error loading currency config:', err);
+            });
     }
 
     disconnectedCallback() {
@@ -46,10 +50,8 @@ export default class SentinelFlowPortalSummary extends LightningElement {
 
     // ── Platform Event subscription ───────────────────────────────────────────
     _subscribeToEvents() {
-        const channel = '/event/Integration_Health_Event__e';
-        subscribe(channel, -1, () => {
-            // Re-fetch summary whenever an integration health event fires
-            this._refresh();
+        subscribe('/event/Integration_Health_Event__e', -1, () => {
+            this._fetchData();
         }).then(sub => {
             this._subscription = sub;
         }).catch(err => {
@@ -72,6 +74,26 @@ export default class SentinelFlowPortalSummary extends LightningElement {
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
+    _fetchData() {
+        getSummary()
+            .then(data  => { this._applyData(data); })
+            .catch(err  => {
+                this.error = 'Unable to load live summary data.';
+                console.error('Summary fetch error', err);
+            });
+    }
+
+    _refresh() {
+        this.isRefreshing = true;
+        getSummary()
+            .then(data  => { this._applyData(data); })
+            .catch(err  => {
+                this.error = 'Unable to load live summary data.';
+                console.error('Summary fetch error', err);
+            })
+            .finally(() => { this.isRefreshing = false; });
+    }
+
     _applyData(data) {
         this.criticalIncidents   = data.criticalIncidents   ?? 0;
         this.openIncidents       = data.openIncidents       ?? 0;
@@ -84,19 +106,13 @@ export default class SentinelFlowPortalSummary extends LightningElement {
         this.lastRefreshedLabel  = new Date().toLocaleString();
     }
 
-    _refresh() {
-        this.isRefreshing = true;
-        refreshApex(this._wiredResult).finally(() => {
-            this.isRefreshing = false;
-        });
-    }
-
     // ── Computed getters ──────────────────────────────────────────────────────
     get revenueFormatted() {
-        const n = this.totalRevenueAtRisk;
-        if (n >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M';
-        if (n >= 1000)    return '$' + (n / 1000).toFixed(0) + 'K';
-        return '$' + n.toFixed(0);
+        const n = this.totalRevenueAtRisk * this.currencyRate;
+        const sym = this.currencySymbol;
+        if (n >= 1000000) return sym + (n / 1000000).toFixed(1) + 'M';
+        if (n >= 1000)    return sym + (n / 1000).toFixed(0) + 'K';
+        return sym + n.toFixed(0);
     }
 
     get usersFormatted() {
@@ -108,13 +124,13 @@ export default class SentinelFlowPortalSummary extends LightningElement {
     }
 
     get systemStatusLabel() {
-        if (this.criticalIncidents > 0) return 'Critical';
+        if (this.criticalIncidents > 0)  return 'Critical';
         if (this.failedIntegrations > 0) return 'Degraded';
         return 'Healthy';
     }
 
     get systemStatusClass() {
-        if (this.criticalIncidents > 0) return 'status-indicator status-critical';
+        if (this.criticalIncidents > 0)  return 'status-indicator status-critical';
         if (this.failedIntegrations > 0) return 'status-indicator status-warning';
         return 'status-indicator status-healthy';
     }

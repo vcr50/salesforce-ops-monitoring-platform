@@ -6,7 +6,7 @@ SentinelFlow
 
 ## AppExchange Version
 
-2.6.0
+3.0.0
 
 ## Published By
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Trigger_Incident__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The incident that triggered this auto-heal run.</description>
+    <externalId>false</externalId>
+    <label>Trigger Incident</label>
+    <referenceTo>Incident__c</referenceTo>
+    <relationshipLabel>Auto Heal Runs (Trigger)</relationshipLabel>
+    <relationshipName>Auto_Heal_Runs_Trigger</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

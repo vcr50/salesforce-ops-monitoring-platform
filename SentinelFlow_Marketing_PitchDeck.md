@@ -1,7 +1,7 @@
 # SentinelFlow — Marketing One-Pager & Pitch Deck
 
 > *The First Self-Healing Salesforce Operations Platform*
-> **AppExchange version:** 2.6.0
+> **AppExchange version:** 3.0.0
 > **Published by:** Tomcodex
 
 ---
@@ -104,7 +104,7 @@ Executive dashboard shows health, savings & trends
 Built on Salesforce-native architecture:
 
 - **Apex + Platform Events** — Zero-latency event processing
-- **OpenAI API** — Classification, root cause analysis, AI recommendations
+- **Zentom Generative AI v1** — Classification, root cause analysis, AI recommendations
 - **Vector Database** — Semantic incident memory retrieval
 - **Next.js Dashboard** — Real-time executive intelligence UI
 - **Node.js/Supabase Backend** — Secure, scalable middleware
@@ -125,7 +125,7 @@ Built on Salesforce-native architecture:
 Salesforce specialists. AI engineers. Operations veterans.
 We've lived on-call. We built SentinelFlow so no one else has to.
 
-**AppExchange Version:** 2.6.0
+**AppExchange Version:** 3.0.0
 **Published By:** Tomcodex
 **Website:** sentinelflow.io
 **Email:** hello@sentinelflow.io
@@ -144,7 +144,7 @@ We've lived on-call. We built SentinelFlow so no one else has to.
 
 Secure. Learn. Heal. Scale.
 
-AppExchange Version 2.6.0
+AppExchange Version 3.0.0
 
 *[Presented by Tomcodex]*
 
@@ -205,7 +205,7 @@ SentinelFlow is the first platform that:
 Salesforce Org
       ↓ Platform Events (real-time)
 AI Detection Layer
-      ↓ OpenAI Classification
+      ↓ Zentom GenAI v1 Classification
 Incident Memory (Vector DB)
       ↓ Semantic Matching
 Auto-Heal Orchestrator
@@ -265,7 +265,7 @@ Your Team (informed, not firefighting)
 ### Slide 9 — Go-To-Market
 
 **Phase 1 — Salesforce ISV Channel**
-- List SentinelFlow `2.6.0` on Salesforce AppExchange under publisher `Tomcodex`
+- List SentinelFlow `3.0.0` on Salesforce AppExchange under publisher `Tomcodex`
 - Target ISVs with 50+ customer orgs (recurring revenue from managed instances)
 
 **Phase 2 — Enterprise Direct**
@@ -361,4 +361,4 @@ sentinelflow.io | hello@sentinelflow.io
 
 ---
 
-*SentinelFlow Marketing & Pitch Deck Content v2.6.0*
+*SentinelFlow Marketing & Pitch Deck Content v3.0.0*

@@ -1,0 +1,226 @@
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pageTitle {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+/* Reusable Glass Card Style */
+.card {
+  background-color: rgba(10, 16, 30, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+}
+
+.cardTitle {
+  font-size: 14px;
+  color: #a0aec0;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+/* KPI Grid */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.kpiValue {
+  font-size: 32px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.2;
+}
+
+/* Middle Section: Chart and Top Integrations */
+.middleSection {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.chartCard {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chartContainer {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  margin-top: 16px;
+  position: relative;
+}
+
+/* Top Integrations List */
+.integrationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.integrationItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.integrationLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.integrationIcon {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1e293b;
+}
+
+.integrationName {
+  font-size: 14px;
+  font-weight: 500;
+  color: #e2e8f0;
+}
+
+.integrationRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.incidentCount {
+  font-size: 14px;
+  color: #a0aec0;
+}
+
+.statusIndicator {
+  width: 12px;
+  height: 12px;
+}
+
+/* Recent Incidents Table */
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th {
+  color: #a0aec0;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.table td {
+  padding: 16px;
+  font-size: 14px;
+  color: #e2e8f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.statusResolved {
+  color: #10b981;
+}
+
+.statusOpen {
+  color: #ef4444;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dotResolved {
+  background-color: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.dotOpen {
+  background-color: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+}
+
+.tableIntegration {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tableTime {
+  color: #a0aec0;
+}
+
+/* Custom Tooltip for Recharts */
+.customTooltip {
+  background-color: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 12px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.tooltipHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #10b981;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.tooltipBody {
+  color: #e2e8f0;
+  font-size: 12px;
+}

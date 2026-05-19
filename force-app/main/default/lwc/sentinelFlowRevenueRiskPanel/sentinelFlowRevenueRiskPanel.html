@@ -1,0 +1,54 @@
+<template>
+    <section class={panelClass}>
+        <div class="panel-head">
+            <div>
+                <span class="eyebrow">Revenue Pulse</span>
+                <h2>Revenue exposure</h2>
+            </div>
+            <span class="status-pill">{openRisksLabel}</span>
+        </div>
+
+        <div class="risk-summary">
+            <div class="risk-total">
+                <span>Total at risk</span>
+                <strong>{formattedRiskAmount}</strong>
+                <small>{criticalLabel}</small>
+            </div>
+            <div class="risk-split">
+                <span>
+                    <strong>{criticalCount}</strong>
+                    Critical
+                </span>
+                <span>
+                    <strong>{highCount}</strong>
+                    High
+                </span>
+            </div>
+        </div>
+
+        <template if:true={hasActions}>
+            <ol class="action-list">
+                <template for:each={topActions} for:item="action">
+                    <li key={action.key} class="action-row">
+                        <span class="rank">{action.rank}</span>
+                        <div>
+                            <div class="row-title">
+                                <span class="risk-level" data-level={action.riskLevel}>{action.riskLevel}</span>
+                                <strong>{action.incidentName}</strong>
+                            </div>
+                            <p>{action.businessImpact}</p>
+                            <small>{action.recommendedAction}</small>
+                        </div>
+                    </li>
+                </template>
+            </ol>
+        </template>
+
+        <template if:false={hasActions}>
+            <div class="empty-state">
+                <lightning-icon icon-name="utility:success" size="small"></lightning-icon>
+                <span>No open revenue risk needs attention.</span>
+            </div>
+        </template>
+    </section>
+</template>

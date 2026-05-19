@@ -9,6 +9,33 @@
       </div>
     </div>
 
+    <div class="settings-card subscription-settings-card">
+      <div class="card-header subscription-header">
+        <div>
+          <h3 class="card-title">Subscription Status</h3>
+          <p class="card-desc">Plan and entitlement state for this SentinelFlow org</p>
+        </div>
+        <span class={subscriptionBadgeClass}>{subscriptionPlan}</span>
+      </div>
+      <div class="subscription-grid">
+        <div class="subscription-metric">
+          <span class="metric-label">Status</span>
+          <strong class="metric-value">{subscriptionStatus}</strong>
+        </div>
+        <div class="subscription-metric">
+          <span class="metric-label">Expires</span>
+          <strong class="metric-value">{subscriptionExpiryLabel}</strong>
+        </div>
+        <div class="subscription-metric">
+          <span class="metric-label">Incidents</span>
+          <strong class="metric-value">{subscriptionIncidentUsage}</strong>
+        </div>
+      </div>
+      <template if:true={subscriptionError}>
+        <p class="form-error">{subscriptionError}</p>
+      </template>
+    </div>
+
     <!-- Tab Bar -->
     <div class="tab-bar">
       <button
@@ -38,6 +65,15 @@
         </svg>
         Alert Configuration
       </button>
+      <button
+        class={tab4Class}
+        data-tab="automation"
+        onclick={switchTab}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+        Automation
+      </button>
     </div>
 
     <!-- ═══ TAB 1: Integration Setup ═══ -->
@@ -50,7 +86,7 @@
             <h3 class="card-title">Register Integration Endpoint</h3>
             <p class="card-desc">Add a new integration for SentinelFlow to monitor</p>
           </div>
-          <div class="form-grid">
+          <div class="form-grid" key={formKey}>
             <div class="form-field">
               <label>API / Integration Name *</label>
               <input type="text" placeholder="e.g. Stripe Payments" value={newEndpoint.name}
@@ -108,6 +144,9 @@
             <h3 class="card-title">Monitored Endpoints</h3>
             <p class="card-desc">{endpointCount} endpoints registered</p>
           </div>
+          <template if:true={endpointLoadError}>
+            <p class="form-error">{endpointLoadError}</p>
+          </template>
           <template if:true={loadingEndpoints}>
             <div class="loading-row">
               <div class="spinner"></div>
@@ -205,14 +244,17 @@
             </div>
           </div>
           <div class="card-actions">
-            <button class="btn-primary" onclick={saveRetryRules} disabled={isSavingRules}>
+            <button class="btn-primary" onclick={saveRetryRulesHandler} disabled={isSavingRules}>
               <template if:false={isSavingRules}>Save Retry Rules</template>
               <template if:true={isSavingRules}>Saving...</template>
             </button>
             <template if:true={rulesSaved}>
-              <span class="save-confirm">✓ Saved</span>
+              <span class="save-confirm">✓ Rules saved to Salesforce</span>
             </template>
           </div>
+          <template if:true={rulesSaveError}>
+            <p class="form-error">{rulesSaveError}</p>
+          </template>
         </div>
       </div>
     </template>
@@ -238,13 +280,16 @@
             </div>
             <div class="setting-row slack-row">
               <div class="setting-info">
-                <span class="setting-label">Slack Webhook</span>
-                <span class="setting-desc">POST real-time incident alerts to your Slack ops channel</span>
+                <span class="setting-label">Slack Webhook Path</span>
+                <span class="setting-desc">Webhook path from your Slack app (starts with /services/...) — base URL is already configured in Named Credentials</span>
               </div>
               <div class="webhook-input-group">
-                <input type="url" placeholder="https://hooks.slack.com/services/..." value={slackWebhookUrl}
-                       onchange={handleSlackUrl} class="webhook-input" />
-                <button class="btn-test" onclick={testSlack}>Test</button>
+                <input type="text" placeholder="/services/TXXXXXXX/BXXXXXXX/..." value={slackWebhookPath}
+                       onchange={handleSlackPath} class="webhook-input" />
+                <button class="btn-test" onclick={testSlack} disabled={isTestingSlack}>
+                  <template if:false={isTestingSlack}>Test</template>
+                  <template if:true={isTestingSlack}>Testing...</template>
+                </button>
               </div>
             </div>
             <template if:true={slackTestResult}>
@@ -274,14 +319,17 @@
             </div>
           </div>
           <div class="card-actions">
-            <button class="btn-primary" onclick={saveAlerts} disabled={isSavingAlerts}>
+            <button class="btn-primary" onclick={saveAlertsHandler} disabled={isSavingAlerts}>
               <template if:false={isSavingAlerts}>Save Alert Config</template>
               <template if:true={isSavingAlerts}>Saving...</template>
             </button>
             <template if:true={alertsSaved}>
-              <span class="save-confirm">✓ Saved</span>
+              <span class="save-confirm">✓ Alert config saved to Salesforce</span>
             </template>
           </div>
+          <template if:true={alertsSaveError}>
+            <p class="form-error">{alertsSaveError}</p>
+          </template>
         </div>
 
         <!-- Alert Preview -->
@@ -303,6 +351,99 @@
             </div>
           </div>
         </div>
+      </div>
+    </template>
+    <!-- ═══ TAB 4: Automation ═══ -->
+    <template if:true={isTab4}>
+      <div class="tab-content">
+
+        <!-- Revenue Pulse Scheduler -->
+        <div class="settings-card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">📈 Revenue Pulse Engine</h3>
+              <p class="card-desc">Automatically synchronize incident failures to Revenue Risk records on an hourly schedule.</p>
+            </div>
+            <span class={pulseStatusBadgeClass}>{pulseStatusLabel}</span>
+          </div>
+
+          <div class="automation-grid">
+            <div class="automation-stat">
+              <span class="stat-label">Schedule</span>
+              <strong class="stat-value">Every Hour</strong>
+            </div>
+            <div class="automation-stat">
+              <span class="stat-label">Next Run</span>
+              <strong class="stat-value">{nextFireDisplay}</strong>
+            </div>
+            <div class="automation-stat">
+              <span class="stat-label">Last Run</span>
+              <strong class="stat-value">{prevFireDisplay}</strong>
+            </div>
+            <div class="automation-stat">
+              <span class="stat-label">Job State</span>
+              <strong class="stat-value">{pulseJobState}</strong>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <button class="btn-primary" onclick={scheduleRevenuePulse} disabled={isScheduling}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+              <template if:false={isScheduling}>Activate Hourly Sync</template>
+              <template if:true={isScheduling}>Scheduling...</template>
+            </button>
+            <button class="btn-secondary" onclick={refreshPulseStatus}>
+              ↺ Refresh Status
+            </button>
+          </div>
+
+          <template if:true={pulseScheduleError}>
+            <p class="form-error">{pulseScheduleError}</p>
+          </template>
+          <template if:true={pulseScheduleSuccess}>
+            <p class="form-success">✓ Revenue Pulse Engine activated — syncing every hour.</p>
+          </template>
+        </div>
+
+        <!-- How it works -->
+        <div class="settings-card">
+          <div class="card-header">
+            <h3 class="card-title">How It Works</h3>
+          </div>
+          <ol class="howto-list">
+            <li>
+              <span class="howto-num">1</span>
+              <div>
+                <strong>Incident Detection</strong>
+                <p>SentinelFlow detects open incidents across all monitored integrations.</p>
+              </div>
+            </li>
+            <li>
+              <span class="howto-num">2</span>
+              <div>
+                <strong>Business Impact Calculation</strong>
+                <p>Each incident is evaluated using the formula: <code>Users Affected × ARPU = Revenue at Risk</code>.</p>
+              </div>
+            </li>
+            <li>
+              <span class="howto-num">3</span>
+              <div>
+                <strong>Revenue Risk Ledger Sync</strong>
+                <p>Results are upserted to <code>Revenue_Risk__c</code> for real-time dashboard visibility.</p>
+              </div>
+            </li>
+            <li>
+              <span class="howto-num">4</span>
+              <div>
+                <strong>Autonomous Remediation</strong>
+                <p>Critical risks trigger the Zentom AI governance gate for auto-heal consideration.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+
       </div>
     </template>
 

@@ -19,6 +19,7 @@ public with sharing class FeatureFlag {
         ];
 
         if (flags.isEmpty()) {
+            if (featureName == 'AI_ANALYSIS' || featureName == 'AUTO_HEAL') return true;
             return Test.isRunningTest() ? true : false;
         }
 
@@ -38,6 +39,7 @@ public with sharing class FeatureFlag {
             }
         }
 
+        if (featureName == 'AI_ANALYSIS' || featureName == 'AUTO_HEAL') return true;
         return Test.isRunningTest() ? true : false;
     }
 

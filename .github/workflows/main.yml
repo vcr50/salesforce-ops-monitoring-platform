@@ -1,0 +1,38 @@
+name: SentinelFlow CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Salesforce CLI
+        run: npm install @salesforce/cli --global
+
+      - name: Authenticate to Salesforce Hub
+        run: |
+          echo "${{ secrets.SFDX_AUTH_URL }}" > auth_url.txt
+          sf org login sfdx-url -f auth_url.txt -s -a DevHub
+
+      - name: Run Apex Tests (Code Coverage)
+        run: |
+          sf apex run test -l RunLocalTests -c -r human -w 20
+
+      - name: Create Package Version (Main Only)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          sf package version create -p "SentinelFlow" -x -w 20 -c --installationkeybypass

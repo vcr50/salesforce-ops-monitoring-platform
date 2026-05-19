@@ -1,0 +1,271 @@
+<template>
+    <div class={containerClass}>
+
+        <!-- Hero Banner -->
+        <div class="hero-banner">
+            <div class="hero-glow"></div>
+            <div class="hero-inner">
+                <span class="hero-badge">
+                    <span class="badge-dot"></span>
+                    THE ORCHESTRATION MOAT
+                </span>
+                <h1 class="hero-title">
+                    <span class="gradient-text">Zentom</span> Architecture
+                </h1>
+                <p class="hero-subtitle">
+                    Eight AI engines. Five governance gates. One reasoning-first strategy.
+                    Full auditability, structural governance, enterprise trust.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-value gradient-text">8</span>
+                        <span class="stat-label">Engines</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-value gradient-text">5</span>
+                        <span class="stat-label">Gates</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-value gradient-text">4</span>
+                        <span class="stat-label">AI Models</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-value gradient-text">45%</span>
+                        <span class="stat-label">R1 Weight</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-bar">
+            <button class={overviewTabClass} data-section="overview" onclick={handleTabClick}>
+                <span class="tab-icon">🏗️</span> Architecture
+            </button>
+            <button class={enginesTabClass} data-section="engines" onclick={handleTabClick}>
+                <span class="tab-icon">⚙️</span> 8 Engines
+            </button>
+            <button class={modelsTabClass} data-section="models" onclick={handleTabClick}>
+                <span class="tab-icon">🧪</span> AI Models
+            </button>
+            <button class={governanceTabClass} data-section="governance" onclick={handleTabClick}>
+                <span class="tab-icon">🛡️</span> Governance
+            </button>
+            <button class={actionsTabClass} data-section="actions" onclick={handleTabClick}>
+                <span class="tab-icon">🎯</span> Actions
+            </button>
+        </div>
+
+        <!-- ═══ OVERVIEW: Data Flow ═══ -->
+        <template if:true={isOverview}>
+            <div class="section-content">
+                <div class="section-header">
+                    <h2 class="section-title">How Data Flows Through <span class="gradient-text">Zentom</span></h2>
+                    <p class="section-subtitle">Every incident follows a governed, traceable path from Salesforce through the intelligence stack and back.</p>
+                </div>
+
+                <div class="flow-stack">
+                    <!-- Salesforce Layer -->
+                    <div class="flow-layer flow-salesforce">
+                        <div class="flow-layer-header">
+                            <span class="flow-layer-icon flow-icon-sf">☁️</span>
+                            <div>
+                                <h3 class="flow-layer-title">Salesforce</h3>
+                                <span class="flow-layer-role">System of Record</span>
+                            </div>
+                        </div>
+                        <p class="flow-layer-desc">Authoritative source for incidents, cases, accounts, contracts, and revenue data. Publishes Platform Events on failure.</p>
+                        <div class="flow-chips">
+                            <span class="chip">Accounts</span>
+                            <span class="chip">Cases</span>
+                            <span class="chip">Contracts</span>
+                            <span class="chip">Revenue</span>
+                            <span class="chip">Platform Events</span>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">
+                        <div class="flow-arrow-line"></div>
+                        <span class="flow-arrow-label">Platform Events</span>
+                        <div class="flow-arrow-head"></div>
+                    </div>
+
+                    <!-- Core Layer -->
+                    <div class="flow-layer flow-core">
+                        <div class="flow-layer-header">
+                            <span class="flow-layer-icon flow-icon-core">🔍</span>
+                            <div>
+                                <h3 class="flow-layer-title">SentinelFlow Core</h3>
+                                <span class="flow-layer-role">Analysis &amp; Routing</span>
+                            </div>
+                        </div>
+                        <p class="flow-layer-desc">Receives events, extracts structured incident data, performs revenue-aware prioritization, applies the 80% Confidence Gate.</p>
+                        <div class="flow-chips">
+                            <span class="chip">Analyzer</span>
+                            <span class="chip">Prioritizer</span>
+                            <span class="chip">Confidence Gate</span>
+                            <span class="chip">Router</span>
+                            <span class="chip">Tracer</span>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">
+                        <div class="flow-arrow-line"></div>
+                        <span class="flow-arrow-label">Enriched Context</span>
+                        <div class="flow-arrow-head"></div>
+                    </div>
+
+                    <!-- Zentom Layer -->
+                    <div class="flow-layer flow-zentom">
+                        <div class="flow-layer-header">
+                            <span class="flow-layer-icon flow-icon-zentom">🧠</span>
+                            <div>
+                                <h3 class="flow-layer-title">Zentom Orchestration</h3>
+                                <span class="flow-layer-role">The Moat</span>
+                            </div>
+                        </div>
+                        <p class="flow-layer-desc">Eight engines working in concert. Every AI decision passes through structural governance before reaching production.</p>
+                        <div class="flow-chips">
+                            <span class="chip">Context</span>
+                            <span class="chip">Memory</span>
+                            <span class="chip">Policy</span>
+                            <span class="chip">Risk</span>
+                            <span class="chip">Replay</span>
+                            <span class="chip">Evaluation</span>
+                            <span class="chip">Execution</span>
+                            <span class="chip">Router</span>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">
+                        <div class="flow-arrow-line"></div>
+                        <span class="flow-arrow-label">Governed Action</span>
+                        <div class="flow-arrow-head"></div>
+                    </div>
+
+                    <!-- Agentforce Layer -->
+                    <div class="flow-layer flow-agentforce">
+                        <div class="flow-layer-header">
+                            <span class="flow-layer-icon flow-icon-af">🤖</span>
+                            <div>
+                                <h3 class="flow-layer-title">Agentforce</h3>
+                                <span class="flow-layer-role">Salesforce-Native Execution</span>
+                            </div>
+                        </div>
+                        <p class="flow-layer-desc">Translates governed decisions into Salesforce operations — cases, Flows, records, rollbacks — with full Trust Layer compliance.</p>
+                        <div class="flow-chips">
+                            <span class="chip">Cases</span>
+                            <span class="chip">Flows</span>
+                            <span class="chip">Record Updates</span>
+                            <span class="chip">Notifications</span>
+                            <span class="chip">Rollbacks</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- ═══ ENGINES ═══ -->
+        <template if:true={isEngines}>
+            <div class="section-content">
+                <div class="section-header">
+                    <h2 class="section-title">Every Component of the <span class="gradient-text">Moat</span></h2>
+                    <p class="section-subtitle">Each engine has a distinct function. Together, they make autonomous AI actions trustworthy at enterprise scale.</p>
+                </div>
+                <div class="engines-grid">
+                    <template for:each={engines} for:item="engine">
+                        <div key={engine.id} class="engine-card">
+                            <span class="engine-icon">{engine.icon}</span>
+                            <h3 class="engine-title">{engine.title}</h3>
+                            <p class="engine-desc">{engine.desc}</p>
+                            <span class="engine-tags">{engine.tags}</span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <!-- ═══ AI MODELS ═══ -->
+        <template if:true={isModels}>
+            <div class="section-content">
+                <div class="section-header">
+                    <h2 class="section-title">Reasoning-First <span class="gradient-text">Model Strategy</span></h2>
+                    <p class="section-subtitle">Four specialized models, routed intelligently by the Model Router based on task type, risk, and latency.</p>
+                </div>
+                <div class="models-grid">
+                    <template for:each={processedModels} for:item="model">
+                        <div key={model.id} class="model-card">
+                            <div class="model-header">
+                                <span class="model-icon">{model.icon}</span>
+                                <span class={model.weightClass}>{model.weight}</span>
+                            </div>
+                            <h3 class="model-name">{model.name}</h3>
+                            <span class="model-role">{model.role}</span>
+                            <p class="model-desc">{model.desc}</p>
+                            <div class="model-caps">
+                                <template for:each={model.processedCaps} for:item="cap">
+                                    <div key={cap.id} class="cap-item">
+                                        <span class="cap-dot"></span>
+                                        <span>{cap.text}</span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <!-- ═══ GOVERNANCE ═══ -->
+        <template if:true={isGovernance}>
+            <div class="section-content">
+                <div class="section-header">
+                    <h2 class="section-title">Five Gates to <span class="gradient-text">Production</span></h2>
+                    <p class="section-subtitle">No LLM action touches production without mandatory passage through five sequential governance gates.</p>
+                </div>
+                <div class="gates-timeline">
+                    <div class="timeline-line"></div>
+                    <template for:each={processedGates} for:item="gate">
+                        <div key={gate.id} class="gate-item">
+                            <div class="gate-number">{gate.num}</div>
+                            <div class="gate-body">
+                                <h3 class="gate-title">{gate.title}</h3>
+                                <p class="gate-desc">{gate.desc}</p>
+                                <div class="gate-rules">
+                                    <template for:each={gate.processedRules} for:item="rule">
+                                        <span key={rule.id} class={rule.ruleClass}>{rule.text}</span>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <!-- ═══ ACTIONS ═══ -->
+        <template if:true={isActions}>
+            <div class="section-content">
+                <div class="section-header">
+                    <h2 class="section-title">The Risk <span class="gradient-text">Gradient</span></h2>
+                    <p class="section-subtitle">Six action types ordered by risk. Same governance stack for all — but thresholds tighten as risk increases.</p>
+                </div>
+                <div class="actions-grid">
+                    <template for:each={processedActions} for:item="action">
+                        <div key={action.id} class="action-card">
+                            <div class="action-header">
+                                <span class="action-name">{action.name}</span>
+                                <span class={action.riskClass}>{action.risk}</span>
+                            </div>
+                            <p class="action-desc">{action.desc}</p>
+                            <span class="action-autonomy">{action.autonomy}</span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

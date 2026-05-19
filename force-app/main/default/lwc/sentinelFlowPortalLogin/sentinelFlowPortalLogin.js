@@ -1,11 +1,11 @@
 import { LightningElement, track } from 'lwc';
-import sentinelFlowLogo from '@salesforce/resourceUrl/sentinelFlowLogo';
+import sentinelFlowPulseLogo from '@salesforce/resourceUrl/sentinelFlowPulseLogo';
 import loginUser from '@salesforce/apex/SentinelFlowLoginController.loginUser';
 import forgotPassword from '@salesforce/apex/SentinelFlowLoginController.forgotPassword';
 import getSsoUrls from '@salesforce/apex/SentinelFlowLoginController.getSsoUrls';
 
 export default class SentinelFlowPortalLogin extends LightningElement {
-    logoUrl = sentinelFlowLogo;
+    logoUrl = sentinelFlowPulseLogo;
 
     @track username = '';
     @track password = '';
@@ -19,7 +19,32 @@ export default class SentinelFlowPortalLogin extends LightningElement {
     @track googleSsoUrl;
 
     connectedCallback() {
+        this.setFavicon();
         this.fetchSsoUrls();
+    }
+
+    setFavicon() {
+        if (typeof document === 'undefined' || !document.head) {
+            return;
+        }
+
+        let icon = document.querySelector('link[rel="icon"]');
+        if (!icon) {
+            icon = document.createElement('link');
+            icon.rel = 'icon';
+            document.head.appendChild(icon);
+        }
+        icon.type = 'image/svg+xml';
+        icon.href = this.logoUrl;
+
+        let shortcutIcon = document.querySelector('link[rel="shortcut icon"]');
+        if (!shortcutIcon) {
+            shortcutIcon = document.createElement('link');
+            shortcutIcon.rel = 'shortcut icon';
+            document.head.appendChild(shortcutIcon);
+        }
+        shortcutIcon.type = 'image/svg+xml';
+        shortcutIcon.href = this.logoUrl;
     }
 
     async fetchSsoUrls() {

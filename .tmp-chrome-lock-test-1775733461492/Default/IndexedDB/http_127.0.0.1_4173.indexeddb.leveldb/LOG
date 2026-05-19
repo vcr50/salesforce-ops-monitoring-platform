@@ -1,0 +1,6 @@
+2026/04/09-16:47:45.530 4e34 Creating DB D:\New folder\VJ SFDC\.tmp-chrome-lock-test-1775733461492\Default\IndexedDB\http_127.0.0.1_4173.indexeddb.leveldb since it was missing.
+2026/04/09-16:47:45.541 4e34 Reusing MANIFEST D:\New folder\VJ SFDC\.tmp-chrome-lock-test-1775733461492\Default\IndexedDB\http_127.0.0.1_4173.indexeddb.leveldb/MANIFEST-000001
+2026/04/09-16:47:45.549 4e34 Level-0 table #5: started
+2026/04/09-16:47:45.551 4e34 Level-0 table #5: 1262 bytes OK
+2026/04/09-16:47:45.553 4e34 Delete type=0 #3
+2026/04/09-16:47:45.553 4e34 Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)

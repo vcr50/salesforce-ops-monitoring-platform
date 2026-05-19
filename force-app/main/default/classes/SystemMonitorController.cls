@@ -15,6 +15,12 @@ public with sharing class SystemMonitorController {
         @AuraEnabled public Integer activeIncidents;
     }
 
+    public class RuntimeFabricStatus {
+        @AuraEnabled public String name;
+        @AuraEnabled public String status; // ok, warn, critical
+        @AuraEnabled public String label;
+    }
+
     @AuraEnabled(cacheable=true)
     public static SystemHealth getSystemHealth() {
         // -- Security Gate: CRUD/FLS enforcement --
@@ -22,29 +28,39 @@ public with sharing class SystemMonitorController {
         SecurityGate.requireAccessible('Incident__c');
 
         SystemHealth health = new SystemHealth();
+        health.errorCount1H = 0;
+        health.failedJobs = 0;
+        health.activeIncidents = 0;
 
-        // Error count last 1 hour
-        Datetime oneHourAgo = Datetime.now().addHours(-1);
-        health.errorCount1H = [
-            SELECT COUNT() FROM System_Log__c 
-            WHERE CreatedDate >= :oneHourAgo
-            WITH USER_MODE
-        ];
+        if (SecurityGate.isAccessible('System_Log__c')) {
+            Datetime oneHourAgo = Datetime.now().addHours(-1);
+            health.errorCount1H = [
+                SELECT COUNT()
+                FROM System_Log__c
+                WHERE CreatedDate >= :oneHourAgo
+                WITH USER_MODE
+            ];
 
-        // Failed jobs (Permanent errors or max retries)
-        health.failedJobs = [
-            SELECT COUNT() FROM System_Log__c
-            WHERE Error_Type__c = 'Permanent' AND CreatedDate = TODAY
-            WITH USER_MODE
-        ];
+            if (fieldAccessible('System_Log__c', 'Error_Type__c')) {
+                health.failedJobs = [
+                    SELECT COUNT()
+                    FROM System_Log__c
+                    WHERE Error_Type__c = 'Permanent'
+                    AND CreatedDate = TODAY
+                    WITH USER_MODE
+                ];
+            }
+        }
 
-        // Active critical incidents
-        health.activeIncidents = [
-            SELECT COUNT() FROM Incident__c
-            WHERE Status__c NOT IN ('Resolved', 'Closed')
-            AND Severity__c = 'Critical'
-            WITH USER_MODE
-        ];
+        if (SecurityGate.isAccessible('Incident__c')) {
+            health.activeIncidents = [
+                SELECT COUNT()
+                FROM Incident__c
+                WHERE Status__c NOT IN ('Resolved', 'Closed')
+                AND Severity__c = 'Critical'
+                WITH USER_MODE
+            ];
+        }
 
         // Compute Health Status
         Integer degradedThreshold = SystemSettings.getInt('HEALTH_DEGRADED_ERRORS', 10);
@@ -59,6 +75,116 @@ public with sharing class SystemMonitorController {
         }
 
         return health;
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static List<RuntimeFabricStatus> getRuntimeFabricStatus() {
+        List<RuntimeFabricStatus> rows = new List<RuntimeFabricStatus>();
+
+        Integer failedApexJobsToday = 0;
+        try {
+            failedApexJobsToday = [
+                SELECT COUNT()
+                FROM AsyncApexJob
+                WHERE Status = 'Failed'
+                AND CreatedDate = TODAY
+            ];
+        } catch (Exception ignored) {
+            failedApexJobsToday = -1;
+        }
+
+        if (failedApexJobsToday > 0) {
+            rows.add(statusRow('Apex Jobs', 'critical', failedApexJobsToday + ' failed today'));
+        } else if (failedApexJobsToday == 0) {
+            rows.add(statusRow('Apex Jobs', 'ok', 'No failed jobs today'));
+        } else {
+            rows.add(statusRow('Apex Jobs', 'warn', 'Job telemetry unavailable'));
+        }
+
+        rows.add(
+            objectExists('Integration_Health_Event__e')
+                ? statusRow('Platform Events', 'ok', 'Integration stream configured')
+                : statusRow('Platform Events', 'critical', 'Integration stream missing')
+        );
+
+        Integer recentDecisions = countRecentAIDecisions();
+        Integer recentExecutions = countRecentAgentforceExecutions();
+
+        if (recentExecutions > 0) {
+            rows.add(statusRow('Agentforce', 'ok', recentExecutions + ' executions in 30d'));
+        } else if (recentDecisions > 0) {
+            rows.add(statusRow('Agentforce', 'warn', 'No recent executions'));
+        } else {
+            rows.add(statusRow('Agentforce', 'warn', 'No decision telemetry'));
+        }
+
+        if (recentDecisions > 0) {
+            rows.add(statusRow('Zentom Gen AI', 'ok', recentDecisions + ' decisions in 30d'));
+        } else if (objectExists('AI_Decision__c')) {
+            rows.add(statusRow('Zentom Gen AI', 'warn', 'No recent decisions'));
+        } else {
+            rows.add(statusRow('Zentom Gen AI', 'critical', 'Decision object missing'));
+        }
+
+        return rows;
+    }
+
+    private static Boolean objectExists(String objectApiName) {
+        return Schema.getGlobalDescribe().containsKey(objectApiName);
+    }
+
+    private static Boolean fieldExists(String objectApiName, String fieldApiName) {
+        return objectExists(objectApiName)
+            && Schema.getGlobalDescribe().get(objectApiName).getDescribe().fields.getMap().containsKey(fieldApiName);
+    }
+
+    private static Boolean fieldAccessible(String objectApiName, String fieldApiName) {
+        return fieldExists(objectApiName, fieldApiName)
+            && Schema.getGlobalDescribe().get(objectApiName).getDescribe().fields.getMap().get(fieldApiName).getDescribe().isAccessible();
+    }
+
+    private static RuntimeFabricStatus statusRow(String name, String status, String label) {
+        RuntimeFabricStatus row = new RuntimeFabricStatus();
+        row.name = name;
+        row.status = status;
+        row.label = label;
+        return row;
+    }
+
+    private static Integer countRecentAIDecisions() {
+        if (!SecurityGate.isAccessible('AI_Decision__c')) {
+            return 0;
+        }
+
+        try {
+            return [
+                SELECT COUNT()
+                FROM AI_Decision__c
+                WHERE CreatedDate = LAST_N_DAYS:30
+                WITH USER_MODE
+            ];
+        } catch (Exception ignored) {
+            return 0;
+        }
+    }
+
+    private static Integer countRecentAgentforceExecutions() {
+        if (!SecurityGate.isAccessible('AI_Decision__c')
+            || !fieldAccessible('AI_Decision__c', 'Auto_Executed__c')) {
+            return 0;
+        }
+
+        try {
+            return [
+                SELECT COUNT()
+                FROM AI_Decision__c
+                WHERE CreatedDate = LAST_N_DAYS:30
+                AND Auto_Executed__c = true
+                WITH USER_MODE
+            ];
+        } catch (Exception ignored) {
+            return 0;
+        }
     }
 
     @AuraEnabled(cacheable=true)

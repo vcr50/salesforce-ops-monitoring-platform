@@ -148,7 +148,7 @@ The AppExchange listing draft is maintained in:
 - Location: `sentinelflow-api/`
 - Health endpoint: `GET /api/health` → `{ status: "ok", version: "2.0.0", intelligenceMode: "self-evolving" }`
 
-### Endpoints (13)
+### Endpoints (14)
 
 | Method | Endpoint | Service | Category |
 |---|---|---|---|
@@ -166,6 +166,7 @@ The AppExchange listing draft is maintained in:
 | `POST` | `/api/heal/pause-batch` | `healService` | Auto-Heal |
 | `POST` | `/api/heal/requeue-job` | `healService` | Auto-Heal |
 | `POST` | `/api/reliability/simulate` | `reliabilityService` | Reliability Testing |
+| `GET` | `/api/heal/status` | `healService` | Circuit Breaker Health |
 
 ### Backend Services (7)
 
@@ -409,7 +410,7 @@ The Salesforce AppExchange Security Review requires the following deliverables:
 | 7 | Add Viewer access for `Integration_Log__c` and `Flow_Fault_Log__c` | `SentinelFlow_Viewer` | ✅ Done for current repo `Integration_Log__c`; `Flow_Fault_Log__c` not present in metadata |
 | 8 | Add tenant context enforcement to all API endpoints | `src/app.js` | ✅ Done with `requestContext` middleware |
 | 9 | Add API rate limiting middleware | `src/app.js` | ✅ Done with `rateLimit` middleware |
-| 10 | Convert subscriber backend endpoint to Named Credential setup | Documentation | ⬜ Not started |
+| 10 | Convert subscriber backend endpoint to Named Credential setup | Documentation | ✅ Done in `docs/sentinelflow-post-install-guide.md` |
 | 11 | Remove or sanitize smoke-test records before packaging | `SF_Incident__c` data | ⬜ Not started |
 | 12 | Create security review data flow diagram | Documentation | ✅ Done in `docs/sentinelflow-security-review-packet.md` |
 
@@ -418,13 +419,13 @@ The Salesforce AppExchange Security Review requires the following deliverables:
 | # | Item | Component | Status |
 |---|---|---|---|
 | 13 | Add `SentinelFlow_Operator` permission set (create/edit, no delete) | Permission sets | ✅ Already present and extended |
-| 14 | Add circuit breakers for heal action retry loops | `heal.service.ts` | ⬜ Not started |
+| 14 | Add circuit breakers for heal action retry loops | `heal.service.js` | ✅ Done (per-action breakers with CLOSED/OPEN/HALF_OPEN states) |
 | 15 | Add request correlation-id propagation across API calls | `src/app.js` | ✅ Done via `x-request-id` |
 | 16 | Add structured error responses with error codes | `src/app.js` | ✅ Done for tenant and rate-limit guardrails |
 | 17 | Add API input validation middleware | `src/app.js` | ✅ Done with `inputValidation` middleware |
-| 18 | Build LWC components for in-platform visibility | `force-app/main/default/lwc` | ⬜ Not started |
-| 19 | Add package install/upgrade handler Apex class | Apex | ⬜ Not started |
-| 20 | Document Named Credential + External Credential setup | Post-install guide | ⬜ Not started |
+| 18 | Build LWC components for in-platform visibility | `force-app/main/default/lwc` | ✅ Done (added SentinelFlowPortalChart to Command Center) |
+| 19 | Add package install/upgrade handler Apex class | Apex | ✅ Done (assigns SentinelFlow_Admin) |
+| 20 | Document Named Credential + External Credential setup | Post-install guide | ✅ Done in `docs/sentinelflow-post-install-guide.md` |
 
 ### Nice to Have (Post-Launch)
 
@@ -498,3 +499,4 @@ All of the following must pass before AppExchange submission:
 | Security review packet | [sentinelflow-security-review-packet.md](file:///d:/New%20folder/VJ%20SFDC/docs/sentinelflow-security-review-packet.md) |
 | Database schema | [operational-memory.schema.sql](file:///d:/New%20folder/VJ%20SFDC/sentinelflow-api/db/operational-memory.schema.sql) |
 | SFDX project config | [sfdx-project.json](file:///d:/New%20folder/VJ%20SFDC/sentinelflow/sfdx-project.json) |
+| Post-install guide | [sentinelflow-post-install-guide.md](file:///d:/New%20folder/VJ%20SFDC/docs/sentinelflow-post-install-guide.md) |

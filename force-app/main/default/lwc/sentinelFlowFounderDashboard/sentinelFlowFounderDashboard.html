@@ -1,0 +1,83 @@
+<template>
+    <div class="founder-container">
+        
+        <div class="header-section">
+            <div class="header-content">
+                <lightning-icon icon-name="utility:strategy" size="large" variant="inverse" class="header-icon"></lightning-icon>
+                <div>
+                    <h1 class="header-title">Founder Command</h1>
+                    <p class="header-subtitle">Executive summary of revenue continuity and business protection</p>
+                </div>
+            </div>
+            <lightning-button label="Refresh" icon-name="utility:refresh" onclick={handleRefresh} disabled={isLoading} variant="brand"></lightning-button>
+        </div>
+
+        <template if:true={isLoading}>
+            <div class="spinner-container">
+                <lightning-spinner alternative-text="Analyzing business safety..." size="medium"></lightning-spinner>
+                <p>Analyzing business safety...</p>
+            </div>
+        </template>
+
+        <template if:true={error}>
+            <div class="error-panel">
+                <lightning-icon icon-name="utility:error" size="small" variant="error"></lightning-icon>
+                <span class="error-text">Failed to load safety score: {error}</span>
+            </div>
+        </template>
+
+        <template if:true={safetyData}>
+            
+            <!-- High Level Verdict -->
+            <div class="verdict-card" data-grade={safetyData.grade}>
+                <div class="verdict-content">
+                    <span class="score-number">{safetyData.score}</span>
+                    <div class="verdict-text">
+                        <h2>{safetyData.verdict}</h2>
+                        <p>Business Safety Score</p>
+                    </div>
+                </div>
+                <div class="revenue-summary">
+                    <div class="rev-stat protected">
+                        <span class="stat-label">Revenue Protected</span>
+                        <span class="stat-value"><lightning-formatted-number value={safetyData.revenueProtected} format-style="currency"></lightning-formatted-number></span>
+                    </div>
+                    <div class="rev-stat at-risk">
+                        <span class="stat-label">Revenue at Risk</span>
+                        <span class="stat-value"><lightning-formatted-number value={safetyData.revenueAtRisk} format-style="currency"></lightning-formatted-number></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Four Pillars of Business Safety -->
+            <div class="dimensions-grid">
+                <template for:each={safetyData.dimensions} for:item="dim">
+                    <div key={dim.name} class="dimension-card">
+                        <div class="dim-header">
+                            <h3>{dim.name}</h3>
+                            <span class="dim-score" data-status={dim.status}>{dim.score}%</span>
+                        </div>
+                        <p class="dim-detail">{dim.detail}</p>
+                        <div class="dim-status" data-status={dim.status}>Status: {dim.status}</div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Quick Metrics -->
+            <div class="quick-metrics">
+                <div class="metric">
+                    <span class="m-label">Active Threats</span>
+                    <span class="m-val threat">{safetyData.activeThreats}</span>
+                </div>
+                <div class="metric">
+                    <span class="m-label">Resolved Today</span>
+                    <span class="m-val safe">{safetyData.resolvedToday}</span>
+                </div>
+                <div class="metric">
+                    <span class="m-label">Avg Resolution Time</span>
+                    <span class="m-val neutral">{safetyData.mttrMinutes} min</span>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

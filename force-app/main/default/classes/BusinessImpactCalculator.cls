@@ -92,6 +92,7 @@ public with sharing class BusinessImpactCalculator {
             SELECT Id, Severity__c, Users_Affected__c, Description__c
             FROM   Incident__c
             WHERE  Status__c NOT IN ('Resolved', 'Closed')
+            WITH USER_MODE
             ORDER BY Severity__c ASC LIMIT 200
         ];
         List<ImpactResult> results  = new List<ImpactResult>();
@@ -101,12 +102,60 @@ public with sharing class BusinessImpactCalculator {
             Integer users = inc.Users_Affected__c != null ? Integer.valueOf(inc.Users_Affected__c) : estimateUsers(inc.Severity__c);
             ImpactResult r = calculate(users, arpu, inc.Description__c);
             results.add(r);
-            inc.Revenue_at_Risk__c = r.revenueAtRisk;
-            inc.AI_Impact_Level__c = r.riskLevel;
-            if (inc.Users_Affected__c == null) { inc.Users_Affected__c = users; }
-            toUpdate.add(inc);
+            if (canPersistImpact) {
+                inc.Revenue_at_Risk__c = r.revenueAtRisk;
+                inc.AI_Impact_Level__c = r.riskLevel;
+                if (inc.Users_Affected__c == null) { inc.Users_Affected__c = users; }
+                toUpdate.add(inc);
+            }
         }
-        if (!toUpdate.isEmpty()) { update toUpdate; }
+        if (!toUpdate.isEmpty()) {
+            try {
+                update as user toUpdate;
+            } catch (Exception ignored) {
+                // Keep the dashboard read path alive even when impact persistence is blocked.
+            }
+        }
+        return results;
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<ImpactResult> getOpenImpact() {
+        SecurityGate.requireReadAccess('Incident__c', new Set<String>{
+            'Id', 'Status__c', 'Severity__c', 'Users_Affected__c',
+            'Description__c', 'Revenue_at_Risk__c', 'AI_Impact_Level__c'
+        });
+
+        List<ImpactResult> results = new List<ImpactResult>();
+        for (Incident__c inc : [
+            SELECT Id, Severity__c, Users_Affected__c, Description__c,
+                   Revenue_at_Risk__c, AI_Impact_Level__c
+            FROM   Incident__c
+            WHERE  Status__c NOT IN ('Resolved', 'Closed')
+            WITH USER_MODE
+            ORDER BY Severity__c ASC, CreatedDate DESC
+            LIMIT 200
+        ]) {
+            Decimal arpu = DEFAULT_ARPU.containsKey(inc.Severity__c)
+                ? DEFAULT_ARPU.get(inc.Severity__c)
+                : 20.00;
+            Integer users = inc.Users_Affected__c != null
+                ? Integer.valueOf(inc.Users_Affected__c)
+                : estimateUsers(inc.Severity__c);
+            ImpactResult result = calculate(users, arpu, inc.Description__c);
+            if (inc.Revenue_at_Risk__c != null) {
+                result.revenueAtRisk = inc.Revenue_at_Risk__c;
+                result.riskLevel = classifyRisk(inc.Revenue_at_Risk__c);
+                result.summary = users + ' users impacted across '
+                    + (String.isBlank(inc.Description__c) ? 'this incident' : inc.Description__c)
+                    + ', recorded $' + inc.Revenue_at_Risk__c.setScale(0).toPlainString()
+                    + ' revenue at risk - ' + result.riskLevel + ' priority.';
+            }
+            if (!String.isBlank(inc.AI_Impact_Level__c)) {
+                result.riskLevel = inc.AI_Impact_Level__c;
+            }
+            results.add(result);
+        }
         return results;
     }
 
@@ -122,6 +171,20 @@ public with sharing class BusinessImpactCalculator {
         if (severity == 'High')     return 500;
         if (severity == 'Medium')   return 100;
         return 25;
+    }
+
+    private static Boolean canUpdateIncidentImpact() {
+        return SecurityGate.isUpdateable('Incident__c')
+            && fieldUpdateable('Incident__c', 'Revenue_at_Risk__c')
+            && fieldUpdateable('Incident__c', 'AI_Impact_Level__c')
+            && fieldUpdateable('Incident__c', 'Users_Affected__c');
+    }
+
+    private static Boolean fieldUpdateable(String objectApiName, String fieldApiName) {
+        Map<String, Schema.SObjectField> fields =
+            Schema.getGlobalDescribe().get(objectApiName).getDescribe().fields.getMap();
+        return fields.containsKey(fieldApiName)
+            && fields.get(fieldApiName).getDescribe().isUpdateable();
     }
 
     public class ImpactCalculationException extends Exception {}

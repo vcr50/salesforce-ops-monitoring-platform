@@ -1,6 +1,7 @@
 :host {
     display: block;
     font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
     --bg-dark: #0b0f19;
     --card-dark: #111827;
     --primary: #6366f1;
@@ -9,21 +10,30 @@
     --text-muted: #9ca3af;
     --border-color: rgba(255, 255, 255, 0.1);
     
-    height: 100vh;
-    width: 100vw;
+    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100%;
     background-color: var(--bg-dark);
-    position: fixed;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-    z-index: 9999; /* Force it above Salesforce headers if any remain */
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 1;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
 }
 
 .root-container {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
     width: 100%;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 /* TOPBAR */
@@ -34,27 +44,37 @@
     height: 60px;
     background: rgba(11, 15, 25, 0.8);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border-color);
     padding: 0 24px;
     flex-shrink: 0;
+    gap: 16px;
+    min-width: 0;
 }
 
 .topbar-left {
     display: flex;
     align-items: center;
     gap: 32px;
+    min-width: 0;
 }
 
 .brand-container {
     display: flex;
     align-items: center;
     gap: 8px;
+    min-width: 0;
+    flex-shrink: 0;
 }
 
 .brand-logo {
-    width: 28px;
-    height: 28px;
+    width: 52px;
+    height: 34px;
     object-fit: contain;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 3px;
+    flex-shrink: 0;
 }
 
 .brand-name {
@@ -70,6 +90,7 @@
 .top-nav {
     display: flex;
     gap: 16px;
+    min-width: 0;
 }
 
 .top-nav .nav-item {
@@ -90,6 +111,8 @@
     display: flex;
     align-items: center;
     gap: 20px;
+    min-width: 0;
+    flex-shrink: 0;
 }
 
 .status-indicator {
@@ -146,6 +169,8 @@
 .main-wrapper {
     display: flex;
     flex-grow: 1;
+    min-height: 0;
+    min-width: 0;
     overflow: hidden;
 }
 
@@ -158,6 +183,7 @@
     flex-direction: column;
     padding: 24px 16px;
     flex-shrink: 0;
+    overflow-y: auto;
 }
 
 .side-nav {
@@ -234,7 +260,9 @@
 /* CONTENT AREA */
 .content-area {
     flex-grow: 1;
+    min-width: 0;
     overflow-y: auto;
+    overflow-x: hidden;
     background: var(--bg-dark);
     position: relative;
 }
@@ -242,4 +270,118 @@
 .content-inner {
     padding: 24px;
     min-height: 100%;
+    min-width: 0;
+    max-width: 1440px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+@media (max-width: 960px) {
+    .topbar {
+        min-height: 60px;
+        height: auto;
+        flex-wrap: wrap;
+        padding: 12px 16px;
+    }
+
+    .topbar-left {
+        width: 100%;
+        justify-content: space-between;
+        gap: 16px;
+    }
+
+    .top-nav {
+        gap: 12px;
+        overflow-x: auto;
+        padding-bottom: 2px;
+    }
+
+    .topbar-right {
+        width: 100%;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .sidebar {
+        width: 196px;
+        padding: 16px 12px;
+    }
+
+    .content-inner {
+        padding: 18px;
+    }
+}
+
+@media (max-width: 720px) {
+    .main-wrapper {
+        flex-direction: column;
+        overflow: visible;
+    }
+
+    .root-container {
+        overflow: visible;
+    }
+
+    .sidebar {
+        width: 100%;
+        max-height: none;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: 12px;
+    }
+
+    .side-nav {
+        flex-direction: row;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 2px;
+    }
+
+    .side-nav .nav-item {
+        width: auto;
+        white-space: nowrap;
+        flex-shrink: 0;
+        border-radius: 8px;
+    }
+
+    .side-nav .nav-item.active {
+        border-left: none;
+        border-bottom: 3px solid var(--primary);
+        border-radius: 8px;
+    }
+
+    .health-nav {
+        display: none;
+    }
+
+    .content-area {
+        overflow: visible;
+    }
+
+    .content-inner {
+        padding: 16px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand-name {
+        font-size: 1rem;
+    }
+
+    .brand-logo {
+        width: 44px;
+        height: 30px;
+    }
+
+    .top-nav {
+        display: none;
+    }
+
+    .status-indicator {
+        padding: 4px 10px;
+    }
+
+    .profile-icon {
+        display: none;
+    }
 }

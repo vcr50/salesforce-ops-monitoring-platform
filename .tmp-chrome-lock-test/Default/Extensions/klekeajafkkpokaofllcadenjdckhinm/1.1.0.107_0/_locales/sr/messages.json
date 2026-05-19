@@ -1,0 +1,162 @@
+{
+   "about_Brand_Copy_rights": {
+      "message": "© $YEAR$ McAfee, LLC",
+      "placeholders": {
+         "year": {
+            "content": "2025",
+            "example": "Copyright Year"
+         }
+      }
+   },
+   "about_License_Link": {
+      "message": "https://www.mcafee.com/consumer/en-gb/policy/legal.html?tab=license"
+   },
+   "about_License_Title": {
+      "message": "Ugovor o licenciranju"
+   },
+   "about_Privacy_Link": {
+      "message": "https://www.mcafee.com/consumer/en-gb/policy/legal.html?tab=privacy"
+   },
+   "about_Privacy_Title": {
+      "message": "Obaveštenje o privatnosti"
+   },
+   "autoPause_Active_SubTitle": {
+      "message": "videa zaustavljeno na ovoj Veb lokaciji"
+   },
+   "autoPause_Active_Title": {
+      "message": "Zaustavljeno je automatsko reprodukovanje videa"
+   },
+   "autoPause_Deactive_SubTitle": {
+      "message": "Da li želite da ih zaustavite? Samo"
+   },
+   "autoPause_Deactive_SubTitle_Link": {
+      "message": "uključite Web Boost"
+   },
+   "autoPause_Deactive_Title": {
+      "message": "Dopustili ste automatsko reprodukovanje videa"
+   },
+   "autoPause_Initial_Nolist_FirstLine": {
+      "message": "Još nema ničega za izveštaj."
+   },
+   "autoPause_Initial_Nolist_SecondLine": {
+      "message": "Proverite ponovo nakon pregledavanja Veba. "
+   },
+   "autoPause_Initial_SubTitle": {
+      "message": "Zaustavićemo automatsko reprodukovanje videa na web lokacijama "
+   },
+   "autoPause_Initial_Title": {
+      "message": "Dobili ste Web Boost!"
+   },
+   "autoPause_Table_Data_Total": {
+      "message": "Ukupno"
+   },
+   "autoPause_Table_Data_TotalVideosSaved": {
+      "message": "Podaci se ne koriste*:"
+   },
+   "autoPause_Table_Data_TotalVideosStopped": {
+      "message": "Zaustavljeno videa:"
+   },
+   "autoPause_Table_Header_DataSaved": {
+      "message": "Podaci se ne koriste*"
+   },
+   "autoPause_Table_Header_DataSaved_Message": {
+      "message": "* Podaci koji se ne koriste se procenjuju na osnovu veličine video zapisa."
+   },
+   "autoPause_Table_Header_VideosStopped": {
+      "message": "Zaustavljeno videa"
+   },
+   "autoPause_Table_Header_Website": {
+      "message": "Veb-lokacija"
+   },
+   "autoPause_Unit_Bytes": {
+      "message": "Bajtova"
+   },
+   "autoPause_Unit_GB": {
+      "message": "GB"
+   },
+   "autoPause_Unit_KB": {
+      "message": "KB"
+   },
+   "autoPause_Unit_MB": {
+      "message": "MB"
+   },
+   "autoPause_Unit_No_Info": {
+      "message": "Nema informacija"
+   },
+   "autoPause_Whitelist_Button_AllowAutoPlay": {
+      "message": "Automatsko reprodukovanje videa na ovoj Veb lokaciji"
+   },
+   "autoPause_Whitelist_Button_StopAutoPlay": {
+      "message": "Zaustavi automatsko reprodukovanje videa na ovoj Veb lokaciji"
+   },
+   "autoPause_Whitelisted_Title": {
+      "message": "Videi će se automatski reprodukovati na ovoj Veb lokaciji"
+   },
+   "banner_Text": {
+      "message": "Pauzirao McAfee® Web Boost"
+   },
+   "brand_Name": {
+      "description": "Naziv brenda",
+      "message": "$BRAND$",
+      "placeholders": {
+         "brand": {
+            "content": "McAfee®",
+            "example": "Naziv brenda"
+         }
+      }
+   },
+   "ext_Description": {
+      "message": "Sprečite automatsku reprodukciju videa i usporavanje vašeg pregledavanja interneta."
+   },
+   "ext_FullName": {
+      "message": "McAfee® Web Boost"
+   },
+   "ext_Name": {
+      "message": "Web Boost"
+   },
+   "faq_Answer_1": {
+      "message": "Svako ko želi da uštedi na podatkovnom prometu, ubrza pregledavanje Veba i zaustavi dosadne videe koji se automatski reprodukuju."
+   },
+   "faq_Answer_2": {
+      "message": "Web Boost je ekstenzija za Chrome koja treba da bude uključena da bi mogla da ubrza pregledavanje Veba."
+   },
+   "faq_Answer_3": {
+      "message": "Web Boost zaustavlja videe koji se automatski reprodukuju čak i ako je zvuk isklkučen. Takođe omogućuje personaliziranje postavki ako želite da se videozapisi automatski reprodukuju na određenim Veb lokacijama. Chromeova funkcija može otežano da se uključuje, ne može da pauzira video koji se automatski reprodukuje ako je isključen zvuk i ne omogućuje personaliziranje postavki izvan indeksa angažiranosti medija (MEI) u Chromeu."
+   },
+   "faq_Answer_4": {
+      "message": "Na osnovu veličine videa, što je veći, to je veća procena sačuvanih podataka. Ponekad smo tako brzi u zaustavljanju automatske reprodukcije videa, da ne možemo da procenimo sačuvane podatke. Ako se to dogodi, prikazaćemo „Nema informacija“."
+   },
+   "faq_Question_1": {
+      "message": "Ko treba koristiti Web Boost?"
+   },
+   "faq_Question_2": {
+      "message": "Zašto Web Boost treba da ostane uključen?"
+   },
+   "faq_Question_3": {
+      "message": "Kako je Web Boost drugačiji od podrške za automatsku reprodukciju u Google Chromeu?"
+   },
+   "faq_Question_4": {
+      "message": "Kako se procenjuju moji sačuvani podaci?"
+   },
+   "navigation_header_about": {
+      "message": "Osnovni podaci"
+   },
+   "navigation_header_faq": {
+      "message": "Najčešća pitanja"
+   },
+   "navigation_header_whitelist": {
+      "message": "Postavke automatske reprodukcije"
+   },
+   "whiteList_Empty_List_Message": {
+      "message": "Vaša lista je prazna"
+   },
+   "whiteList_Remove_Success_Message": {
+      "message": "uklonjen sa vaše bele liste"
+   },
+   "whiteList_Url_Listing_title": {
+      "message": "Dozvoli automatsko reprodukovanje videa na ovim Veb lokacijama"
+   },
+   "whitelist_Toggle_Text": {
+      "message": "Uključite da biste zaustavili automatsko reprodukovanje videa na Veb lokacijama"
+   }
+}

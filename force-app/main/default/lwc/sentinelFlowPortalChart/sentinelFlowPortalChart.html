@@ -1,0 +1,64 @@
+<template>
+    <div class="chart-card">
+        <h3 class="chart-title">Incidents Over Time</h3>
+        <div class="chart-container" onmousemove={handleMouseMove} onmouseleave={handleMouseLeave}>
+            <!-- SVG rendered purely via template -->
+            <svg viewBox="0 0 800 300" class="svg-chart" preserveAspectRatio="none">
+                <defs>
+                    <linearGradient id="colorIncidents" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stop-color="#7b52ff" stop-opacity="0.3"></stop>
+                        <stop offset="95%" stop-color="#7b52ff" stop-opacity="0"></stop>
+                    </linearGradient>
+                </defs>
+
+                <!-- Grid lines (simplified) -->
+                <line x1="0" y1="75" x2="800" y2="75" stroke="rgba(255,255,255,0.05)" stroke-width="1"></line>
+                <line x1="0" y1="150" x2="800" y2="150" stroke="rgba(255,255,255,0.05)" stroke-width="1"></line>
+                <line x1="0" y1="225" x2="800" y2="225" stroke="rgba(255,255,255,0.05)" stroke-width="1"></line>
+
+                <!-- Data Path -->
+                <path d={areaPath} fill="url(#colorIncidents)"></path>
+                <path d={linePath} fill="none" stroke="#7b52ff" stroke-width="2"></path>
+
+                <!-- Reference Line / Hover Tracker -->
+                <template if:true={isHovering}>
+                    <line x1={activePoint.x} y1="0" x2={activePoint.x} y2="300" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="3 3"></line>
+                    <g>
+                        <circle cx={activePoint.x} cy={activePoint.y} r="8" fill={activePoint.color} fill-opacity="0.2"></circle>
+                        <circle cx={activePoint.x} cy={activePoint.y} r="4" fill={activePoint.color} stroke="#fff" stroke-width="2" class="glow-dot"></circle>
+                    </g>
+                </template>
+            </svg>
+
+            <!-- X Axis Labels -->
+            <div class="x-axis">
+                <template for:each={chartData} for:item="item">
+                    <span key={item.time} style={item.labelStyle} class="x-axis-label">{item.time}</span>
+                </template>
+            </div>
+
+            <!-- Custom HTML Tooltip -->
+            <template if:true={isHovering}>
+                <div class="custom-tooltip" style={tooltipStyle}>
+                    <template if:true={activePoint.isAutoHeal}>
+                        <div class="tooltip-header" style="color: #10b981;">
+                            <lightning-icon icon-name="utility:lightning_extension" size="xx-small" class="icon-green"></lightning-icon>
+                            Auto-Heal
+                        </div>
+                        <div class="tooltip-body">Incident Resolved</div>
+                    </template>
+                    <template if:true={activePoint.isPeak}>
+                        <div class="tooltip-header" style="color: #ef4444;">
+                            <lightning-icon icon-name="utility:warning" size="xx-small" class="icon-red"></lightning-icon>
+                            High Volume
+                        </div>
+                        <div class="tooltip-body">{activePoint.time}: {activePoint.incidents} incidents</div>
+                    </template>
+                    <template if:false={activePoint.isSpecial}>
+                        <div class="tooltip-body">{activePoint.time}: {activePoint.incidents} incidents</div>
+                    </template>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>

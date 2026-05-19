@@ -1,0 +1,12 @@
+D:\New folder\VJ SFDC\.cargo-target-check\debug\deps\wry-97935463b318a5b3.d: C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\lib.rs C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\custom_protocol_workaround.rs C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\error.rs C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\proxy.rs C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\web_context.rs C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\webview2\mod.rs C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\webview2\drag_drop.rs C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\webview2\util.rs
+
+D:\New folder\VJ SFDC\.cargo-target-check\debug\deps\libwry-97935463b318a5b3.rmeta: C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\lib.rs C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\custom_protocol_workaround.rs C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\error.rs C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\proxy.rs C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\web_context.rs C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\webview2\mod.rs C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\webview2\drag_drop.rs C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\webview2\util.rs
+
+C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\lib.rs:
+C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\custom_protocol_workaround.rs:
+C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\error.rs:
+C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\proxy.rs:
+C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\web_context.rs:
+C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\webview2\mod.rs:
+C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\webview2\drag_drop.rs:
+C:\Users\vcr03\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wry-0.54.4\src\webview2\util.rs:

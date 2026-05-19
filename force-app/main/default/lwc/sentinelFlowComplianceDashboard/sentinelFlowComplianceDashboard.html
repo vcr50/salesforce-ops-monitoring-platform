@@ -1,0 +1,105 @@
+<template>
+    <div class="compliance-container">
+        <!-- Header -->
+        <div class="header-section">
+            <div class="header-content">
+                <lightning-icon icon-name="utility:shield" size="large" variant="inverse" class="header-icon"></lightning-icon>
+                <div>
+                    <h1 class="header-title">Security & Compliance Center</h1>
+                    <p class="header-subtitle">Continuous security posture and AppExchange compliance monitoring</p>
+                </div>
+            </div>
+            <lightning-button label="Run Audit" icon-name="utility:refresh" onclick={handleRefresh} disabled={isLoading} variant="brand"></lightning-button>
+        </div>
+
+        <template if:true={isLoading}>
+            <div class="spinner-container">
+                <lightning-spinner alternative-text="Auditing..." size="medium"></lightning-spinner>
+                <p>Running security audit...</p>
+            </div>
+        </template>
+
+        <template if:true={error}>
+            <div class="error-panel">
+                <lightning-icon icon-name="utility:error" size="small" variant="error"></lightning-icon>
+                <span class="error-text">Audit Failed: {error}</span>
+            </div>
+        </template>
+
+        <template if:true={scoreData}>
+            <div class="dashboard-grid">
+                
+                <!-- Score Card -->
+                <div class="card score-card">
+                    <h2 class="card-title">Overall Security Posture</h2>
+                    <div class="score-display">
+                        <div class="score-circle" data-grade={scoreData.grade}>
+                            <span class="score-number">{scoreData.overallScore}</span>
+                            <span class="score-grade">Grade {scoreData.grade}</span>
+                        </div>
+                        <div class="score-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Risk Level:</span>
+                                <span class="detail-value" data-risk={scoreData.riskLevel}>{scoreData.riskLevel}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Active Findings:</span>
+                                <span class="detail-value findings-count">{findingCount}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Breakdown -->
+                <div class="card categories-card">
+                    <h2 class="card-title">Compliance Dimensions</h2>
+                    <div class="categories-list">
+                        <template for:each={scoreData.categories} for:item="cat">
+                            <div key={cat.category} class="category-row">
+                                <div class="cat-header">
+                                    <span class="cat-name">{cat.category}</span>
+                                    <span class="cat-score">{cat.score}%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class={cat.progressClass} style={cat.widthStyle}></div>
+                                </div>
+                                <div class="cat-footer">
+                                    <span class="cat-status" data-status={cat.status}>{cat.status}</span>
+                                    <span class="cat-checks">{cat.checksPassed}/{cat.checksTotal} Checks Passed</span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Findings List -->
+                <div class="card findings-card">
+                    <h2 class="card-title">Actionable Findings</h2>
+                    <template if:true={scoreData.findings.length}>
+                        <div class="findings-list">
+                            <template for:each={scoreData.findings} for:item="finding">
+                                <div key={finding.title} class="finding-item" data-severity={finding.severity}>
+                                    <div class="finding-header">
+                                        <span class="finding-severity">{finding.severity}</span>
+                                        <span class="finding-category">{finding.category}</span>
+                                    </div>
+                                    <h3 class="finding-title">{finding.title}</h3>
+                                    <p class="finding-desc">{finding.description}</p>
+                                    <div class="finding-rec">
+                                        <strong>Recommendation:</strong> {finding.recommendation}
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                    <template if:false={scoreData.findings.length}>
+                        <div class="empty-state">
+                            <lightning-icon icon-name="utility:success" size="large" variant="success"></lightning-icon>
+                            <p>No security findings. Your platform is fully compliant!</p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

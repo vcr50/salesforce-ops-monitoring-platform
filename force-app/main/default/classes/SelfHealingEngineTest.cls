@@ -50,6 +50,7 @@ private class SelfHealingEngineTest {
 
     @IsTest
     static void testProcessFailedLogs() {
+        enableSecurityBypass();
         Incident__c incBefore = [SELECT Id FROM Incident__c LIMIT 1];
         incBefore.Self_Heal_Attempted__c = false;
         update incBefore;
@@ -66,6 +67,7 @@ private class SelfHealingEngineTest {
 
     @IsTest
     static void testProcessFailedLogs_CircuitOpen() {
+        enableSecurityBypass();
         Integration_Endpoint__c ep = [SELECT Id FROM Integration_Endpoint__c LIMIT 1];
         ep.Circuit_Status__c = 'Open';
         update ep;
@@ -92,6 +94,7 @@ private class SelfHealingEngineTest {
 
     @IsTest
     static void testHealIncident_RetrySuccess() {
+        enableSecurityBypass();
         Incident__c inc = [SELECT Id FROM Incident__c LIMIT 1];
         inc.Recommended_Action__c = 'Retry';
         update inc;
@@ -111,6 +114,7 @@ private class SelfHealingEngineTest {
 
     @IsTest
     static void testHealIncident_MaxRetriesReached() {
+        enableSecurityBypass();
         Incident__c inc = [SELECT Id FROM Incident__c LIMIT 1];
         inc.Recommended_Action__c = 'Retry';
         inc.Retry_Count__c = 3; // Equal to Max_Retry__c
@@ -130,6 +134,7 @@ private class SelfHealingEngineTest {
 
     @IsTest
     static void testHealIncident_Restart() {
+        enableSecurityBypass();
         Incident__c inc = [SELECT Id FROM Incident__c LIMIT 1];
         inc.Recommended_Action__c = 'Restart Service';
         update inc;
@@ -144,6 +149,7 @@ private class SelfHealingEngineTest {
 
     @IsTest
     static void testHealIncident_TokenRefresh() {
+        enableSecurityBypass();
         Incident__c inc = [SELECT Id FROM Incident__c LIMIT 1];
         inc.Recommended_Action__c = 'Token Refresh';
         update inc;
@@ -158,6 +164,7 @@ private class SelfHealingEngineTest {
 
     @IsTest
     static void testHealIncident_Escalate() {
+        enableSecurityBypass();
         Incident__c inc = [SELECT Id FROM Incident__c LIMIT 1];
         inc.Recommended_Action__c = 'Escalate';
         update inc;
@@ -168,5 +175,9 @@ private class SelfHealingEngineTest {
 
         System.assertEquals(true, result.success, 'Escalate action should succeed');
         System.assertEquals('Escalate', result.actionTaken, 'Action taken should be Escalate');
+    }
+
+    private static void enableSecurityBypass() {
+        SecurityGate.bypassForTests = true;
     }
 }

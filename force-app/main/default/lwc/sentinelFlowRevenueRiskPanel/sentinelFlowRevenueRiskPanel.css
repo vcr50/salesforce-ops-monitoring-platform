@@ -1,0 +1,241 @@
+:host {
+    display: block;
+}
+
+.risk-panel {
+    color: #0f172a;
+    border: 1px solid #d9e2f2;
+    border-radius: 0.85rem;
+    background: #ffffff;
+    padding: 0.85rem;
+}
+
+.risk-panel.theme-dark {
+    color: #f8fafc;
+    border-color: #263a5f;
+    background: #101b33;
+}
+
+.panel-head,
+.risk-summary,
+.row-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.eyebrow {
+    display: inline-block;
+    color: #4a5872;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.theme-dark .eyebrow {
+    color: #c4d0e5;
+}
+
+h2 {
+    margin: 0.12rem 0 0;
+    font-size: 1.05rem;
+    line-height: 1.2;
+    font-weight: 850;
+}
+
+.status-pill {
+    flex: none;
+    border-radius: 999px;
+    background: rgba(10, 107, 255, 0.1);
+    color: #0a6bff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.35rem 0.6rem;
+}
+
+.theme-dark .status-pill {
+    background: rgba(96, 165, 250, 0.16);
+    color: #bfdbfe;
+}
+
+.risk-summary {
+    margin-top: 0.75rem;
+    align-items: stretch;
+}
+
+.risk-total {
+    flex: 1;
+    min-width: 0;
+    border-radius: 0.75rem;
+    background: #f8fafc;
+    border: 1px solid #d9e2f2;
+    padding: 0.75rem;
+}
+
+.theme-dark .risk-total {
+    background: rgba(15, 23, 42, 0.42);
+    border-color: #263a5f;
+}
+
+.risk-total span,
+.risk-total small,
+.action-row p,
+.action-row small {
+    color: #4a5872;
+}
+
+.theme-dark .risk-total span,
+.theme-dark .risk-total small,
+.theme-dark .action-row p,
+.theme-dark .action-row small {
+    color: #c4d0e5;
+}
+
+.risk-total span {
+    display: block;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.risk-total strong {
+    display: block;
+    margin: 0.35rem 0 0.25rem;
+    color: inherit;
+    font-size: clamp(1.55rem, 2vw, 2rem);
+    line-height: 1;
+    font-weight: 850;
+}
+
+.risk-split {
+    width: 8rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+}
+
+.risk-split span {
+    border-radius: 0.7rem;
+    border: 1px solid #d9e2f2;
+    padding: 0.55rem;
+    color: #4a5872;
+    font-size: 0.74rem;
+    font-weight: 800;
+}
+
+.theme-dark .risk-split span {
+    border-color: #263a5f;
+    color: #c4d0e5;
+}
+
+.risk-split strong {
+    display: block;
+    color: inherit;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.action-list {
+    list-style: none;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+}
+
+.action-row {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.65rem;
+    border: 1px solid #d9e2f2;
+    border-radius: 0.75rem;
+    padding: 0.65rem;
+}
+
+.theme-dark .action-row {
+    border-color: #263a5f;
+}
+
+.rank {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.65rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #0a6bff;
+    color: #ffffff;
+    font-weight: 850;
+}
+
+.row-title {
+    justify-content: flex-start;
+    min-width: 0;
+}
+
+.row-title strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.risk-level {
+    flex: none;
+    border-radius: 999px;
+    color: #ffffff;
+    background: #f59e0b;
+    font-size: 0.68rem;
+    font-weight: 850;
+    padding: 0.18rem 0.45rem;
+    text-transform: uppercase;
+}
+
+.risk-level[data-level="Critical"] {
+    background: #dc2626;
+}
+
+.risk-level[data-level="High"] {
+    background: #f59e0b;
+}
+
+.action-row p {
+    margin: 0.35rem 0 0;
+    font-size: 0.83rem;
+    line-height: 1.35;
+}
+
+.action-row small {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.78rem;
+    line-height: 1.35;
+}
+
+.empty-state {
+    margin-top: 0.75rem;
+    min-height: 4rem;
+    border-radius: 0.75rem;
+    background: rgba(22, 163, 74, 0.1);
+    color: #15803d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    font-weight: 800;
+}
+
+@media (max-width: 480px) {
+    .panel-head,
+    .risk-summary {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .risk-split {
+        width: 100%;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

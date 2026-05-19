@@ -11,6 +11,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 16px;
     margin-bottom: 24px;
 }
 
@@ -52,7 +53,7 @@
 
 .content-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
     gap: 24px;
     margin-top: 24px;
 }
@@ -60,5 +61,17 @@
 @media (max-width: 1024px) {
     .content-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .btn-primary {
+        width: 100%;
+        justify-content: center;
     }
 }

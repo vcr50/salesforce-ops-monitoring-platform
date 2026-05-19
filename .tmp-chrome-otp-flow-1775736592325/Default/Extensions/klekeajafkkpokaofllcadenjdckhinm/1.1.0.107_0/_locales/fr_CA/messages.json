@@ -1,0 +1,162 @@
+{
+   "about_Brand_Copy_rights": {
+      "message": "© $YEAR$ McAfee, LLC",
+      "placeholders": {
+         "year": {
+            "content": "2025",
+            "example": "Copyright Year"
+         }
+      }
+   },
+   "about_License_Link": {
+      "message": "https://www.mcafee.com/consumer/fr-ca/policy/legal.html?tab=license"
+   },
+   "about_License_Title": {
+      "message": "Contrat de licence"
+   },
+   "about_Privacy_Link": {
+      "message": "https://www.mcafee.com/consumer/fr-ca/policy/legal.html?tab=privacy"
+   },
+   "about_Privacy_Title": {
+      "message": "Avis de confidentialité"
+   },
+   "autoPause_Active_SubTitle": {
+      "message": "vidéo(s) bloquée(s) sur ce site Web"
+   },
+   "autoPause_Active_Title": {
+      "message": "Lecture automatique des vidéos bloquée"
+   },
+   "autoPause_Deactive_SubTitle": {
+      "message": "Souhaitez-vous les bloquer? Il vous suffit"
+   },
+   "autoPause_Deactive_SubTitle_Link": {
+      "message": "d'activer Web Boost"
+   },
+   "autoPause_Deactive_Title": {
+      "message": "Vous avez autorisé la lecture automatique des vidéos"
+   },
+   "autoPause_Initial_Nolist_FirstLine": {
+      "message": "Rien à signaler jusqu'ici."
+   },
+   "autoPause_Initial_Nolist_SecondLine": {
+      "message": "Vérifiez à nouveau après avoir navigué sur le Web. "
+   },
+   "autoPause_Initial_SubTitle": {
+      "message": "Nous allons bloquer la lecture automatique des vidéos sur les sites Web. "
+   },
+   "autoPause_Initial_Title": {
+      "message": "Vous possédez Web Boost!"
+   },
+   "autoPause_Table_Data_Total": {
+      "message": "Totaux"
+   },
+   "autoPause_Table_Data_TotalVideosSaved": {
+      "message": "Données économisées* :"
+   },
+   "autoPause_Table_Data_TotalVideosStopped": {
+      "message": "Vidéos bloquées :"
+   },
+   "autoPause_Table_Header_DataSaved": {
+      "message": "de données économisées*"
+   },
+   "autoPause_Table_Header_DataSaved_Message": {
+      "message": "* Les données économisées sont estimées selon la taille du vidéo."
+   },
+   "autoPause_Table_Header_VideosStopped": {
+      "message": "Vidéos bloquées"
+   },
+   "autoPause_Table_Header_Website": {
+      "message": "Site Web"
+   },
+   "autoPause_Unit_Bytes": {
+      "message": "Octets"
+   },
+   "autoPause_Unit_GB": {
+      "message": "Go"
+   },
+   "autoPause_Unit_KB": {
+      "message": "Ko"
+   },
+   "autoPause_Unit_MB": {
+      "message": "Mo"
+   },
+   "autoPause_Unit_No_Info": {
+      "message": "Aucune information"
+   },
+   "autoPause_Whitelist_Button_AllowAutoPlay": {
+      "message": "Lire les vidéos automatiquement sur ce site Web"
+   },
+   "autoPause_Whitelist_Button_StopAutoPlay": {
+      "message": "Bloquer la lecture automatique des vidéos sur ce site Web"
+   },
+   "autoPause_Whitelisted_Title": {
+      "message": "Les vidéos se lanceront automatiquement sur ce site Web"
+   },
+   "banner_Text": {
+      "message": "Mis en attente par McAfee® Web Boost"
+   },
+   "brand_Name": {
+      "description": "Nom de la Marque.",
+      "message": "%MARQUE%",
+      "placeholders": {
+         "brand": {
+            "content": "McAfee®",
+            "example": "Nom de la Marque"
+         }
+      }
+   },
+   "ext_Description": {
+      "message": "Bloquez la lecture automatique des vidéos pour éviter un ralentissement de la navigation"
+   },
+   "ext_FullName": {
+      "message": "McAfee® Web Boost"
+   },
+   "ext_Name": {
+      "message": "Web Boost"
+   },
+   "faq_Answer_1": {
+      "message": "À toute personne souhaitant sauvegarder ses données, accélérer la navigation sur le Web et bloquer la lecture automatique des vidéos."
+   },
+   "faq_Answer_2": {
+      "message": "Web Boost est une extension de Chrome qui doit rester active pour accélérer votre navigation."
+   },
+   "faq_Answer_3": {
+      "message": "Web Boost bloque la lecture automatique des vidéos même si le son est coupé. Elle vous permet également de personnaliser facilement vos paramètres si vous souhaitez activer la lecture automatique des vidéos sur certains sites Web. La fonctionnalité de Chrome peut s'avérer difficile à activer : elle ne peut pas mettre en pause une vidéo en cours de lecture dont le son est coupé et ne vous permet pas de personnaliser les paramètres en dehors de l'indice d'engagement des médias (Media Engagement Index - MEI) de Chrome."
+   },
+   "faq_Answer_4": {
+      "message": "En fonction de la taille de la vidéo : plus la taille est grande, plus le calcul de sauvegardes des données est élevé. Parfois, nous sommes si rapides pour bloquer la lecture automatique des vidéos que nous ne pouvons pas déterminer la quantité de données sauvegardées. Dans ce cas, nous indiquons « Aucune information »."
+   },
+   "faq_Question_1": {
+      "message": "À qui s'adresse Web Boost?"
+   },
+   "faq_Question_2": {
+      "message": "Pourquoi dois-je garder Web Boost active?"
+   },
+   "faq_Question_3": {
+      "message": "En quoi Web Boost est-elle différente de l'extension de lecture automatique de Google Chrome?"
+   },
+   "faq_Question_4": {
+      "message": "Comment sont calculées les sauvegardes de mes données?"
+   },
+   "navigation_header_about": {
+      "message": "À propos de"
+   },
+   "navigation_header_faq": {
+      "message": "FAQ"
+   },
+   "navigation_header_whitelist": {
+      "message": "Paramètres de lecture automatique"
+   },
+   "whiteList_Empty_List_Message": {
+      "message": "Votre liste est vide"
+   },
+   "whiteList_Remove_Success_Message": {
+      "message": "a été supprimé de votre liste blanche"
+   },
+   "whiteList_Url_Listing_title": {
+      "message": "Autoriser la lecture automatique des vidéos sur ces sites Web"
+   },
+   "whitelist_Toggle_Text": {
+      "message": "Activer pour bloquer la lecture automatique des vidéos sur des sites Web"
+   }
+}

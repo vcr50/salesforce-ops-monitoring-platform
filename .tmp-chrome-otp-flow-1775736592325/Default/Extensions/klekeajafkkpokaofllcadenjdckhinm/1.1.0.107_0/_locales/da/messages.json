@@ -1,0 +1,162 @@
+{
+   "about_Brand_Copy_rights": {
+      "message": "© $YEAR$ McAfee, LLC",
+      "placeholders": {
+         "year": {
+            "content": "2025",
+            "example": "Copyrightår"
+         }
+      }
+   },
+   "about_License_Link": {
+      "message": "https://www.mcafee.com/consumer/da-dk/policy/legal.html?tab=license"
+   },
+   "about_License_Title": {
+      "message": "Licensaftale"
+   },
+   "about_Privacy_Link": {
+      "message": "https://www.mcafee.com/consumer/da-dk/policy/legal.html?tab=privacy"
+   },
+   "about_Privacy_Title": {
+      "message": "Meddelelse om beskyttelse af personlige oplysninger"
+   },
+   "autoPause_Active_SubTitle": {
+      "message": "video(er) stoppet på webstedet"
+   },
+   "autoPause_Active_Title": {
+      "message": "Automatisk afspilning af videoer stoppet"
+   },
+   "autoPause_Deactive_SubTitle": {
+      "message": "Vil du stoppe dem? Du skal bare"
+   },
+   "autoPause_Deactive_SubTitle_Link": {
+      "message": "slå Web Boost til"
+   },
+   "autoPause_Deactive_Title": {
+      "message": "Du har tilladt automatisk afspilning af videoer"
+   },
+   "autoPause_Initial_Nolist_FirstLine": {
+      "message": "Der er intet at rapportere endnu."
+   },
+   "autoPause_Initial_Nolist_SecondLine": {
+      "message": "Se efter igen, når du er færdig med at surfe på nettet. "
+   },
+   "autoPause_Initial_SubTitle": {
+      "message": "Vi stopper automatisk afspilning af videoer på websteder. "
+   },
+   "autoPause_Initial_Title": {
+      "message": "Du har fået Web Boost!"
+   },
+   "autoPause_Table_Data_Total": {
+      "message": "I alt"
+   },
+   "autoPause_Table_Data_TotalVideosSaved": {
+      "message": "Databesparelse*:"
+   },
+   "autoPause_Table_Data_TotalVideosStopped": {
+      "message": "Stoppede videoer:"
+   },
+   "autoPause_Table_Header_DataSaved": {
+      "message": "Databesparelse*"
+   },
+   "autoPause_Table_Header_DataSaved_Message": {
+      "message": "* Anslået databesparelse på basis af videoens størrelse."
+   },
+   "autoPause_Table_Header_VideosStopped": {
+      "message": "Stoppede videoer"
+   },
+   "autoPause_Table_Header_Website": {
+      "message": "Websted"
+   },
+   "autoPause_Unit_Bytes": {
+      "message": "Byte"
+   },
+   "autoPause_Unit_GB": {
+      "message": "GB"
+   },
+   "autoPause_Unit_KB": {
+      "message": "KB"
+   },
+   "autoPause_Unit_MB": {
+      "message": "MB"
+   },
+   "autoPause_Unit_No_Info": {
+      "message": "Ingen oplysninger"
+   },
+   "autoPause_Whitelist_Button_AllowAutoPlay": {
+      "message": "Automatisk afspilning af videoer på dette websted"
+   },
+   "autoPause_Whitelist_Button_StopAutoPlay": {
+      "message": "Stop automatisk afspilning af videoer på dette websted"
+   },
+   "autoPause_Whitelisted_Title": {
+      "message": "Videoer afspilles automatisk på dette websted"
+   },
+   "banner_Text": {
+      "message": "Standset af McAfee® Web Boost"
+   },
+   "brand_Name": {
+      "description": "Mærkenavn.",
+      "message": "$BRAND$",
+      "placeholders": {
+         "brand": {
+            "content": "McAfee®",
+            "example": "Mærkenavn"
+         }
+      }
+   },
+   "ext_Description": {
+      "message": "Stop automatisk afspilning af videoer, som sænker hastigheden, når du surfer på nettet"
+   },
+   "ext_FullName": {
+      "message": "McAfee® Web Boost"
+   },
+   "ext_Name": {
+      "message": "Web Boost"
+   },
+   "faq_Answer_1": {
+      "message": "Alle, som gerne vil spare på dataforbruget, surfe hurtigere og stoppe automatisk afspilning af irriterende videoer."
+   },
+   "faq_Answer_2": {
+      "message": "Web Boost er en Chrome-udvidelse, som skal aktiveres, hvis du vil have mulighed for at surfe hurtigere."
+   },
+   "faq_Answer_3": {
+      "message": "Web Boost stopper automatisk afspilning af videoer, selvom deres lyd er slået fra. Funktionen gør det også nemt for dig at tilpasse indstillingerne, hvis du vil se videoer, der afspilles automatisk, på nogle websteder. Det kan være svært at aktivere Chrome-funktionen, den kan ikke stoppe automatisk afspilning af en video, hvis lyden er slået fra, og du kan ikke tilpasse indstillingerne uden for Chromes Media Engagement Index (MEI)."
+   },
+   "faq_Answer_4": {
+      "message": "På grundlag af den integrerede videos størrelse: Jo større videoen er, jo større vurderes databesparelsen at være. Nogle gange stoppes den automatiske afspilning af videoer så hurtigt, at det ikke er muligt at beregne databesparelsen. I så fald vises meddelelsen \"Ingen oplysninger\"."
+   },
+   "faq_Question_1": {
+      "message": "Hvem skal bruge Web Boost?"
+   },
+   "faq_Question_2": {
+      "message": "Hvorfor skal Web Boost være aktiveret hele tiden?"
+   },
+   "faq_Question_3": {
+      "message": "Hvordan adskiller Web Boost sig fra Google Chromes understøttelse af automatisk afspilning?"
+   },
+   "faq_Question_4": {
+      "message": "Hvordan beregnes min databesparelse?"
+   },
+   "navigation_header_about": {
+      "message": "Om"
+   },
+   "navigation_header_faq": {
+      "message": "Ofte stillede spørgsmål"
+   },
+   "navigation_header_whitelist": {
+      "message": "Indstillinger for automatisk afspilning"
+   },
+   "whiteList_Empty_List_Message": {
+      "message": "Listen er tom"
+   },
+   "whiteList_Remove_Success_Message": {
+      "message": "er blevet fjernet fra din hvidliste"
+   },
+   "whiteList_Url_Listing_title": {
+      "message": "Tillad automatisk afspilning af videoer på disse websteder"
+   },
+   "whitelist_Toggle_Text": {
+      "message": "Aktivér for at stoppe automatisk afspilning af videoer på websteder"
+   }
+}

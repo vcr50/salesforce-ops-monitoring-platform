@@ -1,0 +1,162 @@
+{
+   "about_Brand_Copy_rights": {
+      "message": "© $YEAR$ McAfee, LLC",
+      "placeholders": {
+         "year": {
+            "content": "2025",
+            "example": "Copyright 연도"
+         }
+      }
+   },
+   "about_License_Link": {
+      "message": "https://www.mcafee.com/consumer/ko-kr/policy/legal.html?tab=license"
+   },
+   "about_License_Title": {
+      "message": "사용권 계약"
+   },
+   "about_Privacy_Link": {
+      "message": "https://www.mcafee.com/consumer/ko-kr/policy/legal.html?tab=privacy"
+   },
+   "about_Privacy_Title": {
+      "message": "개인 정보 보호 고지 사항"
+   },
+   "autoPause_Active_SubTitle": {
+      "message": "이 사이트에서 동영상 중지됨"
+   },
+   "autoPause_Active_Title": {
+      "message": "자동 재생 동영상이 중지됨"
+   },
+   "autoPause_Deactive_SubTitle": {
+      "message": "해당 동영상을 중지하시겠습니까? 단지"
+   },
+   "autoPause_Deactive_SubTitle_Link": {
+      "message": "웹 성능 개선을 켜기만 하세요"
+   },
+   "autoPause_Deactive_Title": {
+      "message": "자동 재생 동영상을 허용하셨습니다"
+   },
+   "autoPause_Initial_Nolist_FirstLine": {
+      "message": "보고할 항목이 없습니다."
+   },
+   "autoPause_Initial_Nolist_SecondLine": {
+      "message": "웹을 검색한 후 다시 확인하십시오. "
+   },
+   "autoPause_Initial_SubTitle": {
+      "message": "동영상이 웹 사이트에서 자동으로 재생되는 것을 차단합니다. "
+   },
+   "autoPause_Initial_Title": {
+      "message": "이제 웹 성능 개선을 사용하실 수 있습니다."
+   },
+   "autoPause_Table_Data_Total": {
+      "message": "총계"
+   },
+   "autoPause_Table_Data_TotalVideosSaved": {
+      "message": "절감된 데이터 사용량*:"
+   },
+   "autoPause_Table_Data_TotalVideosStopped": {
+      "message": "중지된 동영상 수:"
+   },
+   "autoPause_Table_Header_DataSaved": {
+      "message": "절감된 데이터 사용량*"
+   },
+   "autoPause_Table_Header_DataSaved_Message": {
+      "message": "* 절감된 데이터 사용량은 동영상 크기를 기반으로 추정됩니다."
+   },
+   "autoPause_Table_Header_VideosStopped": {
+      "message": "동영상 중지됨"
+   },
+   "autoPause_Table_Header_Website": {
+      "message": "웹 사이트"
+   },
+   "autoPause_Unit_Bytes": {
+      "message": "바이트"
+   },
+   "autoPause_Unit_GB": {
+      "message": "GB"
+   },
+   "autoPause_Unit_KB": {
+      "message": "KB"
+   },
+   "autoPause_Unit_MB": {
+      "message": "MB"
+   },
+   "autoPause_Unit_No_Info": {
+      "message": "정보 없음"
+   },
+   "autoPause_Whitelist_Button_AllowAutoPlay": {
+      "message": "이 사이트에서 동영상 자동 재생"
+   },
+   "autoPause_Whitelist_Button_StopAutoPlay": {
+      "message": "이 사이트에서 동영상 자동 재생을 중지합니다"
+   },
+   "autoPause_Whitelisted_Title": {
+      "message": "이 사이트에서는 동영상이 자동 재생됩니다."
+   },
+   "banner_Text": {
+      "message": "McAfee® 웹 성능 개선에 의해 일시 중지됨"
+   },
+   "brand_Name": {
+      "description": "브랜드 이름.",
+      "message": "$BRAND$",
+      "placeholders": {
+         "brand": {
+            "content": "McAfee®",
+            "example": "브랜드 이름"
+         }
+      }
+   },
+   "ext_Description": {
+      "message": "동영상이 자동 재생되지 않고 웹 검색 속도가 저하되지 않도록 합니다"
+   },
+   "ext_FullName": {
+      "message": "McAfee® 웹 성능 개선"
+   },
+   "ext_Name": {
+      "message": "웹 성능 개선"
+   },
+   "faq_Answer_1": {
+      "message": "데이터를 저장하고 웹 검색 속도를 높이고 성가신 자동 재생 동영상을 중지하려는 모든 사용자가 해당됩니다."
+   },
+   "faq_Answer_2": {
+      "message": "웹 성능 개선은 Chrome 확장 프로그램으로, 켜져 있어야 웹 검색 속도를 높일 수 있습니다."
+   },
+   "faq_Answer_3": {
+      "message": "웹 성능 개선은 동영상 오디오가 음소거된 경우에도 동영상의 자동 재생을 중지합니다. 또한 일부 웹 사이트에서 자동 재생 중인 동영상을 보고 싶다면 원하는 대로 쉽게 설정을 변경할 수 있습니다. Chrome 기능은 켜기가 어려울 수 있으며 오디오가 음소거된 자동 재생 동영상을 일시 중지할 수 없고 Chrome의 미디어 참여 지수(MEI) 이외의 설정을 개인화할 수 없습니다."
+   },
+   "faq_Answer_4": {
+      "message": "삽입된 동영상의 크기에 따라 해당 크기가 클수록 데이터 절감 예상치가 높아집니다. 때로는 너무 빨리 동영상의 자동 재생이 중지되므로 절감된 데이터의 양을 확인할 수 없습니다. 이 경우 '정보 없음'이 표시됩니다."
+   },
+   "faq_Question_1": {
+      "message": "웹 성능 개선의 사용 대상은 누구입니까?"
+   },
+   "faq_Question_2": {
+      "message": "웹 성능 개선이 켜져 있어야 하는 이유는 무엇입니까?"
+   },
+   "faq_Question_3": {
+      "message": "웹 성능 개선과 Google 크롬 자동 재생 지원의 차이점은 무엇입니까?"
+   },
+   "faq_Question_4": {
+      "message": "데이터 절감 효과는 어떻게 평가됩니까?"
+   },
+   "navigation_header_about": {
+      "message": "정보"
+   },
+   "navigation_header_faq": {
+      "message": "FAQ"
+   },
+   "navigation_header_whitelist": {
+      "message": "자동 재생 설정"
+   },
+   "whiteList_Empty_List_Message": {
+      "message": "목록이 비어 있습니다"
+   },
+   "whiteList_Remove_Success_Message": {
+      "message": "화이트리스트에서 삭제되었습니다"
+   },
+   "whiteList_Url_Listing_title": {
+      "message": "이 웹 사이트에서 동영상 자동 재생을 허용합니다"
+   },
+   "whitelist_Toggle_Text": {
+      "message": "웹 사이트에서 동영상 자동 재생을 중지하려면 해당 기능을 켜십시오"
+   }
+}

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Decision_Type__c</fullName>
+    <description>The type of AI assessment performed.</description>
+    <externalId>false</externalId>
+    <label>Decision Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Root Cause Analysis</fullName>
+                <default>true</default>
+                <label>Root Cause Analysis</label>
+            </value>
+            <value>
+                <fullName>Recommendation</fullName>
+                <default>false</default>
+                <label>Recommendation</label>
+            </value>
+            <value>
+                <fullName>Anomaly Detection</fullName>
+                <default>false</default>
+                <label>Anomaly Detection</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

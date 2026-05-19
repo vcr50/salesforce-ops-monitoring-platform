@@ -1,4 +1,4 @@
-import { LightningElement, track, wire } from 'lwc';
+import { LightningElement, track } from 'lwc';
 import getIntegrationLogs from '@salesforce/apex/SentinelFlowPortalController.getIntegrationLogs';
 
 export default class SentinelFlowPortalIntegrationsPage extends LightningElement {

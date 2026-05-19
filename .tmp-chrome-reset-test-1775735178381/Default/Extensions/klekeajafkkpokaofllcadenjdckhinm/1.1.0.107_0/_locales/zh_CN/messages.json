@@ -1,0 +1,162 @@
+{
+   "about_Brand_Copy_rights": {
+      "message": "版权所有 © $YEAR$ McAfee, LLC。",
+      "placeholders": {
+         "year": {
+            "content": "2025",
+            "example": "版权所有 Year"
+         }
+      }
+   },
+   "about_License_Link": {
+      "message": "http://www.mcafee.com/consumer/zh-cn/policy/legal/eula.html"
+   },
+   "about_License_Title": {
+      "message": "许可协议"
+   },
+   "about_Privacy_Link": {
+      "message": "https://www.mcafee.com/enterprise/zh-cn/about/legal/privacy.html"
+   },
+   "about_Privacy_Title": {
+      "message": "隐私声明"
+   },
+   "autoPause_Active_SubTitle": {
+      "message": "个视频在此站点中已被阻止"
+   },
+   "autoPause_Active_Title": {
+      "message": "已阻止自动播放视频"
+   },
+   "autoPause_Deactive_SubTitle": {
+      "message": "是否要阻止? 只需"
+   },
+   "autoPause_Deactive_SubTitle_Link": {
+      "message": "打开 Web 增强"
+   },
+   "autoPause_Deactive_Title": {
+      "message": "您已允许自动播放视频"
+   },
+   "autoPause_Initial_Nolist_FirstLine": {
+      "message": "尚无要报告的内容。"
+   },
+   "autoPause_Initial_Nolist_SecondLine": {
+      "message": "在您结束浏览后回来查看。 "
+   },
+   "autoPause_Initial_SubTitle": {
+      "message": "我们将阻止网站中的视频自动播放。 "
+   },
+   "autoPause_Initial_Title": {
+      "message": "您已安装 Web 增强!"
+   },
+   "autoPause_Table_Data_Total": {
+      "message": "总数"
+   },
+   "autoPause_Table_Data_TotalVideosSaved": {
+      "message": "已保存的数据*:"
+   },
+   "autoPause_Table_Data_TotalVideosStopped": {
+      "message": "已阻止的视频:"
+   },
+   "autoPause_Table_Header_DataSaved": {
+      "message": "已保存的数据*"
+   },
+   "autoPause_Table_Header_DataSaved_Message": {
+      "message": "*已保存的数据量基于视频大小估算得出。"
+   },
+   "autoPause_Table_Header_VideosStopped": {
+      "message": "已阻止的视频"
+   },
+   "autoPause_Table_Header_Website": {
+      "message": "网站"
+   },
+   "autoPause_Unit_Bytes": {
+      "message": "字节"
+   },
+   "autoPause_Unit_GB": {
+      "message": "GB"
+   },
+   "autoPause_Unit_KB": {
+      "message": "KB"
+   },
+   "autoPause_Unit_MB": {
+      "message": "MB"
+   },
+   "autoPause_Unit_No_Info": {
+      "message": "无信息"
+   },
+   "autoPause_Whitelist_Button_AllowAutoPlay": {
+      "message": "此站点中的自动播放视频"
+   },
+   "autoPause_Whitelist_Button_StopAutoPlay": {
+      "message": "阻止此站点中的自动播放视频"
+   },
+   "autoPause_Whitelisted_Title": {
+      "message": "此站点中的视频会自动播放"
+   },
+   "banner_Text": {
+      "message": "被迈克菲® Web 增强暂停"
+   },
+   "brand_Name": {
+      "description": "Brand Name.",
+      "message": "$BRAND$",
+      "placeholders": {
+         "brand": {
+            "content": "迈克菲®",
+            "example": "Brand Name"
+         }
+      }
+   },
+   "ext_Description": {
+      "message": "阻止视频自动播放，避免其拖慢您的网页浏览速度"
+   },
+   "ext_FullName": {
+      "message": "迈克菲® Web 增强"
+   },
+   "ext_Name": {
+      "message": "Web 增强"
+   },
+   "faq_Answer_1": {
+      "message": "该产品适用于任何想要节省数据流量、加快网页浏览速度、阻止烦人的自动播放视频的人士。"
+   },
+   "faq_Answer_2": {
+      "message": "Web 增强是一款 Chrome 扩展程序，需要处于启用状态才能帮助加快浏览速度。"
+   },
+   "faq_Answer_3": {
+      "message": "Web 增强会阻止任何视频自动播放，包括静音播放的视频。 如果想观看某些网站中的自动播放视频，Web 增强还可以帮您轻松进行个性化设置。 而 Chrome 自动播放支持功能可能难以启用，无法暂停静音播放的视频，且无法自定义 Chrome 媒体参与指数 (MEI) 之外的设置。"
+   },
+   "faq_Answer_4": {
+      "message": "根据嵌入视频的大小：视频越大，估算的流量节省就越多。 有时我们阻止视频自动播放的动作过快，可能无法确定所节省的数据量。 在这种情况下，我们会显示“无信息”。"
+   },
+   "faq_Question_1": {
+      "message": "Web 增强适用于哪些人?"
+   },
+   "faq_Question_2": {
+      "message": "为何应始终启用 Web 增强?"
+   },
+   "faq_Question_3": {
+      "message": "Web 增强与 Google Chrome 自动播放支持有何不同?"
+   },
+   "faq_Question_4": {
+      "message": "节省的数据流量是如何估算的?"
+   },
+   "navigation_header_about": {
+      "message": "关于"
+   },
+   "navigation_header_faq": {
+      "message": "常见问题解答"
+   },
+   "navigation_header_whitelist": {
+      "message": "自动播放设置"
+   },
+   "whiteList_Empty_List_Message": {
+      "message": "您的列表为空"
+   },
+   "whiteList_Remove_Success_Message": {
+      "message": "已从白名单中移除"
+   },
+   "whiteList_Url_Listing_title": {
+      "message": "允许这些网站中的视频自动播放"
+   },
+   "whitelist_Toggle_Text": {
+      "message": "启用以阻止网站中的自动播放视频"
+   }
+}

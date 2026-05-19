@@ -7,9 +7,21 @@ body {
 }
 
 html {
-    background: white;
+    background: #0b132b;
 }
 
 body {
     margin: 0;
+    background: #0b132b;
+    overflow-x: hidden;
+}
+
+.comm-page-custom-main,
+.comm-content-header,
+.siteforceContentArea,
+.cb-section,
+.cb-section_column,
+.experience-region,
+.dxp-content-layout {
+    background: #0b132b !important;
 }

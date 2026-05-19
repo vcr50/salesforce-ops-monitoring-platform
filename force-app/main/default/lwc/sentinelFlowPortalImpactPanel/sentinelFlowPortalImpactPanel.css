@@ -1,8 +1,8 @@
-:host { display: block; font-family: 'Inter', sans-serif; color: #e2e8f0; }
+:host { display: block; font-family: 'Inter', sans-serif; color: var(--text-primary, #e2e8f0); }
 
 .panel {
-    background: #13131a;
-    border: 1px solid #2a2a3a;
+    background: var(--sf-card, #13131a);
+    border: 1px solid var(--sf-card-border, #2a2a3a);
     border-radius: 12px;
     padding: 24px;
 }
@@ -15,7 +15,7 @@
 }
 
 .page-title { font-size: 1.5rem; font-weight: 700; margin: 0; }
-.page-sub { font-size: 0.82rem; color: #94a3b8; margin-top: 4px; }
+.page-sub { font-size: 0.82rem; color: var(--text-muted, #94a3b8); margin-top: 4px; }
 
 .header-actions { display: flex; align-items: center; gap: 12px; }
 
@@ -50,8 +50,8 @@
 }
 
 .impact-stat-card {
-    background: #1c1c27;
-    border: 1px solid #2a2a3a;
+    background: var(--sf-card-strong, #1c1c27);
+    border: 1px solid var(--sf-card-border, #2a2a3a);
     border-radius: 12px;
     padding: 20px;
     text-align: center;
@@ -62,7 +62,7 @@
 .val-warning { color: #f59e0b; }
 .val-accent { color: #8b5cf6; }
 
-.impact-stat-label { font-size: 0.78rem; color: #94a3b8; }
+.impact-stat-label { font-size: 0.78rem; color: var(--text-muted, #94a3b8); }
 
 .impact-stat-risk {
     font-size: 0.75rem; font-weight: 600; margin-top: 8px; padding: 3px 10px; border-radius: 5px; display: inline-block;
@@ -79,8 +79,8 @@
 }
 
 .impact-incident-card {
-    background: #1c1c27;
-    border: 1px solid #2a2a3a;
+    background: var(--sf-card-strong, #1c1c27);
+    border: 1px solid var(--sf-card-border, #2a2a3a);
     border-radius: 12px;
     padding: 16px;
 }
@@ -89,7 +89,7 @@
     display: flex;
     justify-content: space-between;
     font-size: 0.78rem;
-    color: #e2e8f0;
+    color: var(--text-primary, #e2e8f0);
     padding: 6px 0;
     border-bottom: 1px solid rgba(42,42,58,0.4);
 }
@@ -100,7 +100,7 @@
 .ai-summary {
     margin-top: 12px;
     font-size: 0.72rem;
-    color: #94a3b8;
+    color: var(--text-muted, #94a3b8);
     line-height: 1.4;
     padding-top: 8px;
     border-top: 1px solid rgba(99,102,241,0.2);
@@ -111,8 +111,8 @@
 
 /* Native Chart Styles */
 .chart-container {
-    background: #1c1c27;
-    border: 1px solid #2a2a3a;
+    background: var(--sf-card-strong, #1c1c27);
+    border: 1px solid var(--sf-card-border, #2a2a3a);
     border-radius: 12px;
     padding: 24px;
     margin-bottom: 24px;
@@ -121,7 +121,7 @@
 .chart-title {
     font-size: 0.95rem;
     font-weight: 600;
-    color: #e2e8f0;
+    color: var(--text-primary, #e2e8f0);
     margin: 0 0 16px 0;
 }
 
@@ -130,7 +130,7 @@
     height: 32px;
     border-radius: 6px;
     overflow: hidden;
-    background: #2a2a3a;
+    background: var(--sf-table-bg-strong, #2a2a3a);
     margin-bottom: 16px;
     position: relative;
 }
@@ -153,8 +153,8 @@
     bottom: calc(100% + 8px);
     left: 50%;
     transform: translateX(-50%);
-    background: #000;
-    color: #fff;
+    background: #0f172a;
+    color: #ffffff;
     padding: 6px 10px;
     border-radius: 6px;
     font-size: 0.75rem;
@@ -186,7 +186,7 @@
     align-items: center;
     gap: 6px;
     font-size: 0.8rem;
-    color: #94a3b8;
+    color: var(--text-muted, #94a3b8);
 }
 
 .legend-dot {
