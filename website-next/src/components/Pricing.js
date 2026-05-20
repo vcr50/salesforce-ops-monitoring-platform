@@ -32,7 +32,7 @@ export default function Pricing({ onOpenModal }) {
             <span className="sf-pricing__title-accent">every stage of growth</span>
           </h2>
           <p className="sf-pricing__subtitle">
-            Start free, scale when you&apos;re ready. Pricing shown in INR for India.
+            Start free, scale when you&apos;re ready. Pricing shown in INR.
           </p>
         </div>
 
