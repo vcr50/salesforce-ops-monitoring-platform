@@ -72,7 +72,7 @@ jobs:
     needs:
       - node-quality
       - salesforce-source-validation
-    if: ${{ secrets.SF_AUTH_URL != '' }}
+    if: ${{ secrets.TOMCODEX_SF != '' }}
 
     steps:
       - name: Checkout repository
@@ -84,7 +84,7 @@ jobs:
       - name: Authenticate to Salesforce
         shell: bash
         run: |
-          echo "${{ secrets.SF_AUTH_URL }}" > ./SF_AUTH_URL.txt
+          echo "${{ secrets.TOMCODEX_SF }}" > ./SF_AUTH_URL.txt
           sf org login sfdx-url --sfdx-url-file ./SF_AUTH_URL.txt --alias ci-org --set-default
 
       - name: Validate deployment against org

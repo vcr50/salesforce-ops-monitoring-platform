@@ -25,7 +25,7 @@ jobs:
 
       - name: Authenticate to Salesforce Hub
         run: |
-          echo "${{ secrets.SFDX_AUTH_URL }}" > auth_url.txt
+          echo "${{ secrets.TOMCODEX_SF }}" > auth_url.txt
           sf org login sfdx-url -f auth_url.txt -s -a DevHub
 
       - name: Run Apex Tests (Code Coverage)
