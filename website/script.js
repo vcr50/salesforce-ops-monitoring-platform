@@ -282,3 +282,12 @@ window.openTab = function(evt, tabName) {
         evt.currentTarget.className += " active";
     }
 };
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.tab-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const section = button.getAttribute('data-section');
+            window.openTab(event, section);
+        });
+    });
+});
