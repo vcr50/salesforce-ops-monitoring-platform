@@ -47,3 +47,4 @@ private class ZentomExecutionControllerTest {
         System.assert(exceptionThrown, 'Non-autonomous policy should throw AuraHandledException');
     }
 }
+

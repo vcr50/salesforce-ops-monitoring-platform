@@ -75,3 +75,4 @@ private class ScheduledMonitoringJobTest {
         System.assertEquals(1, triggers.size(), 'Scheduled job should exist');
     }
 }
+

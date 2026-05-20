@@ -174,3 +174,4 @@ private class LicenseServiceTest {
         System.assertEquals(30, info.daysRemaining, 'Days remaining should be 30');
     }
 }
+

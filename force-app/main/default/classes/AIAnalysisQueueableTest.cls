@@ -97,3 +97,4 @@ private class AIAnalysisQueueableTest {
         SecurityGate.bypassForTests = true;
     }
 }
+

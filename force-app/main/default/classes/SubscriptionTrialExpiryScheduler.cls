@@ -6,3 +6,4 @@ global with sharing class SubscriptionTrialExpiryScheduler implements Schedulabl
         SubscriptionService.expireTrials();
     }
 }
+

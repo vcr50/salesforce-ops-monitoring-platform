@@ -98,3 +98,4 @@ public with sharing class ExecutiveIntelligenceController {
         return metrics;
     }
 }
+

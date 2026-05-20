@@ -84,3 +84,4 @@ private class SubscriptionServiceTest {
         System.assertNotEquals(null, jobId);
     }
 }
+

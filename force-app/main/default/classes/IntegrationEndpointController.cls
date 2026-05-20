@@ -7,7 +7,7 @@
  * @author  Tomcodex
  * @version 1.0
  */
-@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class IntegrationEndpointController {
 
     public class EndpointRow {
@@ -32,9 +32,6 @@ public with sharing class IntegrationEndpointController {
             'Retry_Policy__c', 'Max_Retries__c', 'Failure_Count__c',
             'Circuit_Status__c', 'Tenant__c'
         });
-
-        Id tenantId = TenantContext.getCurrentTenantId();
-        List<EndpointRow> rows = new List<EndpointRow>();
 
         Id tenantId = TenantContext.getCurrentTenantId();
         Boolean canFilterTenant = tenantId != null && fieldAccessible('Integration_Endpoint__c', 'Tenant__c');
@@ -83,11 +80,11 @@ public with sharing class IntegrationEndpointController {
         Integer maxRetries
     ) {
         // -- Security Gate: CRUD/FLS enforcement --
-        SecurityGate.requireCreateAccess('Integration_Endpoint__c', new Set<String>{
+        Set<String> createFields = new Set<String>{
             'Name', 'Endpoint_URL__c', 'Auth_Type__c', 'Retry_Policy__c',
             'Max_Retries__c', 'Active__c', 'Circuit_Status__c',
-            'Failure_Count__c', 'Tenant__c'
-        });
+            'Failure_Count__c'
+        };
 
         Id tenantId = TenantContext.getCurrentTenantId();
         Boolean canSetTenant = tenantId != null && fieldCreateable('Integration_Endpoint__c', 'Tenant__c');
@@ -189,3 +186,4 @@ public with sharing class IntegrationEndpointController {
             && fields.get(fieldApiName).getDescribe().isCreateable();
     }
 }
+

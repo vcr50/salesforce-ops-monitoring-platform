@@ -16,7 +16,7 @@
  * @author   Tomcodex
  * @version  3.0 (FINAL)
  */
-@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class SelfHealingEngine {
 
     // ── Constants ──────────────────────────────────────────────────────────────
@@ -536,3 +536,4 @@ public with sharing class SelfHealingEngine {
     // ── Exception ──────────────────────────────────────────────────────────────
     public class SelfHealException extends Exception {}
 }
+

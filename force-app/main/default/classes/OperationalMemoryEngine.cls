@@ -24,8 +24,8 @@ public inherited sharing class OperationalMemoryEngine {
             SELECT Id, Name, Severity__c, Status__c, Revenue_at_Risk__c, Users_Affected__c,
                    Root_Cause__c, Recommended_Action__c, AI_Confidence__c,
                    Integration_Endpoint__c, CreatedDate, LastModifiedDate,
-                   (SELECT Id, Confidence_Score__c, Recommended_Action__c, Auto_Executed__c, Matched_Rule__c FROM AI_Decisions_Main__r ORDER BY CreatedDate DESC),
-                   (SELECT Id, Action_Taken__c, Result__c, Retry_Attempt__c FROM Auto_Heal_Runs_Sentinel__r ORDER BY CreatedDate ASC)
+                   (SELECT Id, Confidence_Score__c, Recommended_Action__c, Auto_Executed__c, Matched_Rule__c FROM AI_Decisions__r ORDER BY CreatedDate DESC),
+                   (SELECT Id, Action_Taken__c, Result__c, Retry_Attempt__c FROM Auto_Heal_Runs__r ORDER BY CreatedDate ASC)
             FROM Incident__c
             WHERE Id IN :closedIncidentIds
         ];
@@ -53,7 +53,7 @@ public inherited sharing class OperationalMemoryEngine {
             // AI Decisions
             List<Map<String, Object>> aiDecisions = new List<Map<String, Object>>();
             Boolean governedByPolicy = false;
-            for (AI_Decision__c aid : inc.AI_Decisions_Main__r) {
+            for (AI_Decision__c aid : inc.AI_Decisions__r) {
                 aiDecisions.add(new Map<String, Object>{
                     'confidence' => aid.Confidence_Score__c,
                     'action' => aid.Recommended_Action__c,
@@ -69,7 +69,7 @@ public inherited sharing class OperationalMemoryEngine {
             // Recovery Operations
             List<Map<String, Object>> recoveryPath = new List<Map<String, Object>>();
             Boolean recoverySuccess = false;
-            for (Auto_Heal_Run__c ahr : inc.Auto_Heal_Runs_Sentinel__r) {
+            for (Auto_Heal_Run__c ahr : inc.Auto_Heal_Runs__r) {
                 recoveryPath.add(new Map<String, Object>{
                     'action' => ahr.Action_Taken__c,
                     'result' => ahr.Result__c,
@@ -101,3 +101,4 @@ public inherited sharing class OperationalMemoryEngine {
         }
     }
 }
+

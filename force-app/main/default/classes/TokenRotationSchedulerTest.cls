@@ -25,3 +25,4 @@ private class TokenRotationSchedulerTest {
         System.assertEquals(true, foundTokenExpiry, 'An incident should be created for expiring token');
     }
 }
+

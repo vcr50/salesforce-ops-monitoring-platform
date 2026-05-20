@@ -86,3 +86,4 @@ private class SSORegHandlerTest {
         System.assert(true, 'Update user executed successfully');
     }
 }
+

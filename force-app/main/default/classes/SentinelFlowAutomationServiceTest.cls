@@ -144,3 +144,4 @@ private class SentinelFlowAutomationServiceTest {
         System.assertNotEquals(null, closedIncident.Resolved_Time__c);
     }
 }
+

@@ -24,3 +24,4 @@ public with sharing class ShopifyConnector extends ConnectorBase {
         // Handle Shopify-specific response validation and parsing
     }
 }
+

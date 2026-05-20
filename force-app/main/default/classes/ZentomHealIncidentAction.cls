@@ -37,3 +37,4 @@ public with sharing class ZentomHealIncidentAction {
         public String actionTaken;
     }
 }
+

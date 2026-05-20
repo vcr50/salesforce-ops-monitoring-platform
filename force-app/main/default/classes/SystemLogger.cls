@@ -6,7 +6,7 @@
  * @author Tomcodex
  * @version 2.0
  */
-@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public without sharing class SystemLogger {
     
     public enum ErrorType { TRANSIENT_ERROR, PERMANENT_ERROR }
@@ -54,3 +54,4 @@ public without sharing class SystemLogger {
         }
     }
 }
+

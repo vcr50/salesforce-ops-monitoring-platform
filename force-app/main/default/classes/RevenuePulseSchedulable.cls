@@ -119,3 +119,4 @@ public with sharing class RevenuePulseSchedulable implements Schedulable {
         return result;
     }
 }
+

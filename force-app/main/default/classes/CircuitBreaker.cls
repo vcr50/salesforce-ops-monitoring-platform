@@ -62,3 +62,4 @@ public with sharing class CircuitBreaker {
         }
     }
 }
+

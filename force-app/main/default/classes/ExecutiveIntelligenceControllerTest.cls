@@ -84,3 +84,4 @@ private class ExecutiveIntelligenceControllerTest {
         System.assertEquals(1, metrics.topWorkflowRisks[1].failureCount);
     }
 }
+

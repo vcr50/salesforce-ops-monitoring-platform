@@ -51,3 +51,4 @@ public with sharing class HubSpotConnector extends ConnectorBase {
         }
     }
 }
+

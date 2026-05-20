@@ -1,7 +1,7 @@
 /**
  * Org-level subscription service for SentinelFlow AppExchange packaging.
  */
-@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class SubscriptionService {
     public static final String PLAN_STARTER = 'Starter';
     public static final String PLAN_PROFESSIONAL = 'Professional';
@@ -304,3 +304,4 @@ public with sharing class SubscriptionService {
         }
     }
 }
+

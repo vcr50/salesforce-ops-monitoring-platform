@@ -13,7 +13,7 @@
  * @author   Tomcodex
  * @version  1.0
  */
-@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 global with sharing class ScheduledMonitoringJob implements Schedulable {
 
     // ── Thresholds ──────────────────────────────────────────────────────────
@@ -183,3 +183,4 @@ global with sharing class ScheduledMonitoringJob implements Schedulable {
         }
     }
 }
+

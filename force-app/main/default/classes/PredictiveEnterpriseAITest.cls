@@ -41,3 +41,4 @@ private class PredictiveEnterpriseAITest {
         System.assert(result.forecastMessage.contains('CRITICAL FORECAST'));
     }
 }
+

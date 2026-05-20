@@ -102,7 +102,7 @@ public with sharing class BusinessImpactCalculator {
             Integer users = inc.Users_Affected__c != null ? Integer.valueOf(inc.Users_Affected__c) : estimateUsers(inc.Severity__c);
             ImpactResult r = calculate(users, arpu, inc.Description__c);
             results.add(r);
-            if (canPersistImpact) {
+            if (canUpdateIncidentImpact()) {
                 inc.Revenue_at_Risk__c = r.revenueAtRisk;
                 inc.AI_Impact_Level__c = r.riskLevel;
                 if (inc.Users_Affected__c == null) { inc.Users_Affected__c = users; }
@@ -189,3 +189,4 @@ public with sharing class BusinessImpactCalculator {
 
     public class ImpactCalculationException extends Exception {}
 }
+

@@ -43,3 +43,4 @@ private class NetSuiteConnectorTest {
         System.assert(result.errorMessage.contains('Circuit Breaker is OPEN'));
     }
 }
+

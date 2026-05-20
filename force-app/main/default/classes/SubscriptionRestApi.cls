@@ -3,7 +3,7 @@
  *
  * Endpoint: POST /services/apexrest/subscription/update
  */
-@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 @RestResource(urlMapping='/subscription/update/*')
 global with sharing class SubscriptionRestApi {
     global class UpdateRequest {
@@ -71,3 +71,4 @@ global with sharing class SubscriptionRestApi {
         }
     }
 }
+

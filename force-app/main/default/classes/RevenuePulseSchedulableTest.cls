@@ -75,3 +75,4 @@ private class RevenuePulseSchedulableTest {
         Assert.isNotNull(status.get('jobId'), 'Job ID should be present.');
     }
 }
+

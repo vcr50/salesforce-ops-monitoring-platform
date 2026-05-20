@@ -131,3 +131,4 @@ private class LicenseValidatorTest {
         System.assertEquals(true, caught, 'Should throw when subscription is expired');
     }
 }
+

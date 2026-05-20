@@ -29,3 +29,4 @@ public with sharing class ZentomGetIncidentsAction {
         public List<Incident__c> incidents;
     }
 }
+

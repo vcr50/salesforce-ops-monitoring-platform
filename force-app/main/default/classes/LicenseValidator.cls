@@ -152,3 +152,4 @@ public with sharing class LicenseValidator {
         featurePlanMap = null;
     }
 }
+

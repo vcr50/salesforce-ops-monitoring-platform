@@ -1,4 +1,4 @@
-@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class SentinelFlowAutomationService {
     private static final Set<String> RESOLVED_STATUSES = new Set<String>{ 'Resolved', 'Closed' };
     private static final String FAILED_LOG_STATUS = 'Failed';
@@ -182,3 +182,4 @@ public with sharing class SentinelFlowAutomationService {
         return 'High';
     }
 }
+

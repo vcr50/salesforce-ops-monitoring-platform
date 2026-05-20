@@ -95,3 +95,4 @@ private class BusinessImpactCalculatorTest {
         System.assert(threw, 'Expected exception for null Id');
     }
 }
+

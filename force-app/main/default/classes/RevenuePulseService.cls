@@ -147,3 +147,4 @@ public with sharing class RevenuePulseService {
         return summary;
     }
 }
+

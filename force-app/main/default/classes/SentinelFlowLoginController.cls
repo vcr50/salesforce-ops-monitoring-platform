@@ -3,7 +3,7 @@
  *              Handles username/password login and forgot-password flows
  *              for the Experience Cloud site.
  */
-@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public without sharing class SentinelFlowLoginController {
     @TestVisible
     private static final String SENTINEL_FLOW_LIGHTNING_APP_URL =
@@ -129,3 +129,4 @@ public without sharing class SentinelFlowLoginController {
         return new Map<String, String>();
     }
 }
+

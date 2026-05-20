@@ -1,4 +1,4 @@
-@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class SentinelFlowCopilotController {
     @AuraEnabled
     public static String handleChatMessage(String userMessage) {
@@ -207,3 +207,4 @@ public with sharing class SentinelFlowCopilotController {
             'Or try one of the quick actions below.';
     }
 }
+

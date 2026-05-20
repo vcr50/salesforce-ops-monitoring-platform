@@ -10,7 +10,7 @@
  * @author  Tomcodex
  * @version 1.0
  */
-@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class TenantContext {
 
     private static Id cachedTenantId;
@@ -100,3 +100,4 @@ public with sharing class TenantContext {
         cachedTenantId = null;
     }
 }
+

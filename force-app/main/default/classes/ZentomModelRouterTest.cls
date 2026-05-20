@@ -68,3 +68,4 @@ private class ZentomModelRouterTest {
         System.assertEquals(ZentomModelRouter.AIModel.LLAMA_3, model, 'Low risk + low ARR should default to Llama 3');
     }
 }
+

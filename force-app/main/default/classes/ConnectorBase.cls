@@ -108,3 +108,4 @@ public abstract with sharing class ConnectorBase {
         insert as user inc;
     }
 }
+

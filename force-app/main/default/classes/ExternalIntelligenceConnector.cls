@@ -115,3 +115,4 @@ public abstract with sharing class ExternalIntelligenceConnector extends Connect
         return logRecord;
     }
 }
+

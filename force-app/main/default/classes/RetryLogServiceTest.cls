@@ -114,3 +114,4 @@ private class RetryLogServiceTest {
         System.assertEquals(5, logs.size(), 'Should insert 5 retry logs');
     }
 }
+

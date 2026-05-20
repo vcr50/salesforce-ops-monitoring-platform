@@ -47,3 +47,4 @@ public with sharing class FeatureFlag {
         return isEnabled(featureName, TenantContext.getCurrentTenantId());
     }
 }
+

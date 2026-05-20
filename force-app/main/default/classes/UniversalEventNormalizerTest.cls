@@ -303,3 +303,4 @@ private class UniversalEventNormalizerTest {
         System.assert(events[0].Business_Impact__c.contains('Lead_Assignment_Flow'));
     }
 }
+

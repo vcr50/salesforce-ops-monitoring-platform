@@ -66,3 +66,4 @@ public with sharing class SendGridConnector extends ConnectorBase {
         }
     }
 }
+

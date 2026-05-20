@@ -22,7 +22,7 @@
  * @version 2.1 (Hardened Bulkified + Partial Success Processing)
  */
 @RestResource(urlMapping='/sentinelflow/incidents/*')
-@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 global with sharing class IncidentRestApi {
 
     // ── Response wrapper ──────────────────────────────────────────────────
@@ -299,3 +299,4 @@ global with sharing class IncidentRestApi {
         }
     }
 }
+

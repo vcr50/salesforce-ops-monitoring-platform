@@ -6,7 +6,7 @@
  * @author  Tomcodex
  * @version 2.1 — Real-Time Fix (cacheable=false on all live-data methods)
  */
-@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class SentinelFlowPortalController {
 
     // ── Inner types ───────────────────────────────────────────────────────────
@@ -364,7 +364,7 @@ public with sharing class SentinelFlowPortalController {
             'Environment__c', 'Integration_Log__c', 'SLA_Policy__c'
         });
 
-        Incident__c incidentRecord = [
+        Incident__c inc = [
             SELECT Id, Name, Severity__c, Status__c, Description__c,
                    Resolved_Time__c, Environment__r.Name,
                    Integration_Log__r.Name, SLA_Policy__r.Name,
@@ -451,6 +451,8 @@ public with sharing class SentinelFlowPortalController {
         }
 
         Id tenantId = TenantContext.getCurrentTenantId();
+        Boolean canUseLogTenant = tenantId != null && fieldExists('Integration_Log__c', 'Tenant__c');
+        Boolean canUseIncidentTenant = tenantId != null && fieldExists('Incident__c', 'Tenant__c');
 
         // -- Security Gate: CRUD/FLS enforcement for create --
         SecurityGate.requireCreateAccess('Integration_Log__c', new Set<String>{
@@ -817,3 +819,4 @@ public with sharing class SentinelFlowPortalController {
         return HealTelemetryService.getHealMetrics();
     }
 }
+

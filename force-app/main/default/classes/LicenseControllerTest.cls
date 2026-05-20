@@ -98,3 +98,4 @@ private class LicenseControllerTest {
         System.assertNotEquals(null, data.currentMonthIncidents);
     }
 }
+

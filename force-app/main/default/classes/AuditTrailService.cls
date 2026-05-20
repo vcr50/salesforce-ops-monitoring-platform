@@ -86,3 +86,4 @@ public with sharing class AuditTrailService {
         insert entries;
     }
 }
+

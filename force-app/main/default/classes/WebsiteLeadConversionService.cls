@@ -1,4 +1,4 @@
-@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class WebsiteLeadConversionService {
     @TestVisible private static Boolean isRunning = false;
     @TestVisible private static String convertedStatusOverride;
@@ -146,3 +146,4 @@ public with sharing class WebsiteLeadConversionService {
         return String.isBlank(value) ? null : value.trim();
     }
 }
+

@@ -279,3 +279,4 @@ private class SentinelFlowPortalControllerTest {
         SecurityGate.bypassForTests = true;
     }
 }
+

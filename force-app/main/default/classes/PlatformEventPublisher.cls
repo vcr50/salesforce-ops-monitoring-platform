@@ -42,3 +42,4 @@ public with sharing class PlatformEventPublisher {
         }
     }
 }
+

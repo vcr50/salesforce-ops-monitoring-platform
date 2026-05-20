@@ -58,3 +58,4 @@ public with sharing class TokenRotationScheduler implements Schedulable {
         return (Math.random() > 0.8); // 20% chance of throwing an alert for demonstration
     }
 }
+

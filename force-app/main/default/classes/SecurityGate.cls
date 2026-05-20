@@ -15,7 +15,7 @@
  * @author  Tomcodex
  * @version 1.0 (AppExchange Compliance - Sprint 3.2)
  */
-@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public inherited sharing class SecurityGate {
 
     // -- Exceptions ---------------------------------------------------------------
@@ -110,6 +110,13 @@ public inherited sharing class SecurityGate {
     }
 
     // -- Boolean (non-throwing) Methods --------------------------------------------
+
+    @TestVisible
+    public static Boolean bypassForTests = false;
+
+    public static Boolean isTestBypassEnabled() {
+        return bypassForTests;
+    }
 
     public static Boolean isAccessible(String objectApiName) {
         return Schema.getGlobalDescribe().containsKey(objectApiName)

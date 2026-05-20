@@ -5,7 +5,7 @@
  * @author Tomcodex
  * @version 1.0
  */
-@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class SystemMonitorController {
 
     public class SystemHealth {
@@ -205,3 +205,4 @@ public with sharing class SystemMonitorController {
         ];
     }
 }
+

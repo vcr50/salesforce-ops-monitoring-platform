@@ -1,4 +1,4 @@
-@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class SubscriptionEmailService {
     @TestVisible private static Integer installationEmailSendAttempts = 0;
 
@@ -78,3 +78,4 @@ public with sharing class SubscriptionEmailService {
         return String.isBlank(value) ? '' : value.escapeHtml4();
     }
 }
+

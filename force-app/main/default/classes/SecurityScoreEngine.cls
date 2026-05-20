@@ -392,3 +392,4 @@ public with sharing class SecurityScoreEngine {
         return 'Critical';
     }
 }
+

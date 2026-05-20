@@ -17,3 +17,4 @@ public class Square {
         System.debug('Perimeter =' + peri);
     }
 }
+

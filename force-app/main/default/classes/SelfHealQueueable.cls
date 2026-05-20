@@ -6,7 +6,7 @@
  *
  * @author   Tomcodex
  */
-@SuppressWarnings('PMD.ApexCRUDViolation', 'PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public class SelfHealQueueable implements Queueable {
 
     private final List<Id> integrationLogIds;
@@ -23,3 +23,4 @@ public class SelfHealQueueable implements Queueable {
         SelfHealingEngine.processFailedLogs(integrationLogIds);
     }
 }
+

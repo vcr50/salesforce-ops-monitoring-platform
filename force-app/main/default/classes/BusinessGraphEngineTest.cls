@@ -72,3 +72,4 @@ private class BusinessGraphEngineTest {
         System.assert(true, 'Executed without exceptions');
     }
 }
+

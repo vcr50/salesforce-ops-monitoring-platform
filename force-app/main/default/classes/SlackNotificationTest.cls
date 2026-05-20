@@ -97,3 +97,4 @@ private class SlackNotificationTest {
         System.assert(true, 'Null/blank inputs should not throw exceptions');
     }
 }
+
