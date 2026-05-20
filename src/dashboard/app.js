@@ -1,4 +1,5 @@
 /* eslint-env browser */
+/* eslint-disable no-unused-vars */
 'use strict';
 // ── DATA ──────────────────────────────────────────────────────────────────────
 const INCIDENTS = [
@@ -65,7 +66,6 @@ setInterval(updateClock,1000);updateClock();
 function el(id){return document.getElementById(id);}
 
 // ── NAVIGATION ────────────────────────────────────────────────────────────────
-let currentPage='home';
 function switchPage(page,navEl){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   const target=el('page-'+page);
@@ -75,7 +75,6 @@ function switchPage(page,navEl){
   else{const n=document.querySelector(`.nav-item[data-page="${page}"]`);if(n)n.classList.add('active');}
   document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));
   const sb=el('sb-'+page);if(sb)sb.classList.add('active');
-  currentPage=page;
   if(page==='incidents')renderFullIncidents(INCIDENTS);
   if(page==='integrations')renderIntegrations();
   if(page==='impact')renderImpact();
@@ -167,7 +166,6 @@ function healIncident(id){
 }
 
 // ── FULL INCIDENTS ────────────────────────────────────────────────────────────
-let incidentFilter={sev:'all',status:'all',search:''};
 function renderFullIncidents(data){
   const tbody=el('incidentsFullBody');
   if(!tbody)return;
