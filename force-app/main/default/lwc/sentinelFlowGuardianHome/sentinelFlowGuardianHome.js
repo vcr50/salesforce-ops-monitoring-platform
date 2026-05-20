@@ -3,6 +3,7 @@ import getSummary from '@salesforce/apex/SentinelFlowPortalController.getSummary
 import getOpenIncidents from '@salesforce/apex/SentinelFlowPortalController.getOpenIncidents';
 import getSystemHealth from '@salesforce/apex/SystemMonitorController.getSystemHealth';
 import healIncident from '@salesforce/apex/SentinelFlowPortalController.healIncident';
+import getCurrencyConfig from '@salesforce/apex/SettingsController.getCurrencyConfig';
 
 const CONFIDENCE_THRESHOLD = 85;
 
@@ -14,6 +15,10 @@ export default class SentinelFlowGuardianHome extends LightningElement {
     @track failedJobs = 0;
     @track activeIncidents = 0;
     @track revenueAtRisk = '0';
+    @track rawRevenueAtRisk = 0;
+    @track currencyCode = 'USD';
+    @track currencySymbol = '$';
+    @track currencyRate = 1.0;
     @track usersAffected = 0;
     @track openIncidents = 0;
     @track autoHealedToday = 0;
@@ -28,6 +33,7 @@ export default class SentinelFlowGuardianHome extends LightningElement {
     _chartTick = 0;
 
     connectedCallback() {
+        this.loadCurrency();
         this._chartTimer = setInterval(() => {
             this.updateChartSample();
         }, 2500);
@@ -86,6 +92,30 @@ export default class SentinelFlowGuardianHome extends LightningElement {
         return this.chartLatest + this.errorCount1H + this.failedJobs;
     }
 
+    get formattedRevenueAtRisk() {
+        const converted = Number(this.rawRevenueAtRisk || 0) * Number(this.currencyRate || 1);
+        const locale = this.currencyCode === 'INR' ? 'en-IN' : 'en-US';
+        return converted.toLocaleString(locale, {
+            style: 'currency',
+            currency: this.currencyCode || 'USD',
+            maximumFractionDigits: 0
+        });
+    }
+
+    loadCurrency() {
+        getCurrencyConfig()
+            .then(config => {
+                if (config) {
+                    this.currencyCode = config.code || 'USD';
+                    this.currencySymbol = config.symbol || '$';
+                    this.currencyRate = config.rate || 1.0;
+                }
+            })
+            .catch(error => {
+                console.error('Guardian Home: Failed to load currency config', error);
+            });
+    }
+
     updateChartSample() {
         this._chartTick += 1;
         const nextValue = Math.round(
@@ -114,6 +144,7 @@ export default class SentinelFlowGuardianHome extends LightningElement {
     @wire(getSummary)
     wiredSummary({ error, data }) {
         if (data) {
+            this.rawRevenueAtRisk = data.totalRevenueAtRisk || 0;
             this.revenueAtRisk = data.totalRevenueAtRisk
                 ? Number(data.totalRevenueAtRisk).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
                 : '0';
