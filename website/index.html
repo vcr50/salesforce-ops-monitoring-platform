@@ -1,170 +1,372 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SentinelFlow — AI-Powered Incident Intelligence Platform</title>
     <meta name="description" content="SentinelFlow is an enterprise-grade AI incident intelligence platform. Detect, analyze, and auto-heal production incidents in real-time.">
     <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        jarvis: {
+                            bg: '#020610',
+                            deep: '#040b18',
+                            panel: '#061225',
+                            card: '#0a1a35',
+                            border: '#0d3868',
+                            cyan: '#00d4ff',
+                            blue: '#0066ff',
+                            glow: 'rgba(0,212,255,0.15)',
+                            accent: '#00ffcc',
+                            warm: '#ff6b35',
+                            red: '#ff2d55',
+                        }
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'scan': 'scan 4s linear infinite',
+                        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'grid-move': 'gridMove 20s linear infinite',
+                        'border-glow': 'borderGlow 3s ease-in-out infinite',
+                        'typing': 'typing 3s steps(30) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* ═══ JARVIS Core Animations ═══ */
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.4; filter: blur(60px); }
+            50% { opacity: 0.8; filter: blur(80px); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+        @keyframes borderGlow {
+            0%, 100% { border-color: rgba(0,212,255,0.2); box-shadow: 0 0 15px rgba(0,212,255,0.05); }
+            50% { border-color: rgba(0,212,255,0.5); box-shadow: 0 0 30px rgba(0,212,255,0.15); }
+        }
+        @keyframes typing {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes arcReactor {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ═══ HUD Grid Background ═══ */
+        .jarvis-grid {
+            background-image:
+                linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        /* ═══ Scan Line Effect ═══ */
+        .scan-line::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0,212,255,0.6), transparent);
+            animation: scan 4s linear infinite;
+            pointer-events: none;
+        }
+
+        /* ═══ HUD Corner Decorations ═══ */
+        .hud-corners {
+            position: relative;
+        }
+        .hud-corners::before, .hud-corners::after {
+            content: '';
+            position: absolute;
+            width: 20px; height: 20px;
+            border-color: rgba(0,212,255,0.5);
+            pointer-events: none;
+        }
+        .hud-corners::before {
+            top: -1px; left: -1px;
+            border-top: 2px solid; border-left: 2px solid;
+        }
+        .hud-corners::after {
+            bottom: -1px; right: -1px;
+            border-bottom: 2px solid; border-right: 2px solid;
+        }
+
+        /* ═══ Glowing Text ═══ */
+        .jarvis-text {
+            background: linear-gradient(135deg, #00d4ff, #00ffcc, #0066ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(0,212,255,0.3));
+        }
+
+        /* ═══ Card Hover Glow ═══ */
+        .jarvis-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .jarvis-card:hover {
+            border-color: rgba(0,212,255,0.5);
+            box-shadow: 0 0 40px rgba(0,212,255,0.1), inset 0 0 40px rgba(0,212,255,0.02);
+            transform: translateY(-4px);
+        }
+
+        /* ═══ Fade In Up Animation ═══ */
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        /* ═══ Navbar Scroll State ═══ */
+        #navbar.scrolled {
+            background: rgba(2,6,16,0.95) !important;
+            backdrop-filter: blur(20px) !important;
+            border-bottom-color: rgba(0,212,255,0.2) !important;
+        }
+
+        /* ═══ Arc Reactor Spinner ═══ */
+        .arc-reactor {
+            animation: arcReactor 8s linear infinite;
+        }
+
+        /* ═══ Scrollbar ═══ */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #020610; }
+        ::-webkit-scrollbar-thumb { background: #0d3868; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00d4ff; }
+
+        /* ═══ Mobile Nav ═══ */
+        @media (max-width: 768px) {
+            .nav-links-desktop { display: none !important; }
+            .nav-actions-desktop { display: none !important; }
+            .nav-toggle-btn { display: flex !important; }
+            #navLinks.nav-open {
+                display: flex !important;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0; right: 0;
+                background: rgba(4,11,24,0.98);
+                border-bottom: 1px solid rgba(0,212,255,0.2);
+                padding: 24px;
+                gap: 16px;
+                backdrop-filter: blur(20px);
+            }
+            .nav-actions.nav-open {
+                display: flex !important;
+                flex-direction: column;
+                position: absolute;
+                top: calc(100% + 200px);
+                left: 0; right: 0;
+                background: rgba(4,11,24,0.98);
+                padding: 16px 24px;
+                gap: 12px;
+            }
+        }
+        @media (min-width: 769px) {
+            .nav-toggle-btn { display: none !important; }
+        }
+
+        /* ═══ Modal Styles ═══ */
+        .modal-overlay {
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1; pointer-events: all;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-jarvis-bg text-gray-200 font-inter overflow-x-hidden">
 
     <!-- ═══════════════════ NAVBAR ═══════════════════ -->
-    <nav class="navbar" id="navbar">
-        <div class="nav-container">
-            <a href="#" class="nav-brand">
-                <img src="assets/logo.svg" alt="SentinelFlow Logo" class="nav-logo">
-                <span class="nav-brand-text">SentinelFlow</span>
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 border-b border-transparent transition-all duration-500" style="background: rgba(2,6,16,0.6); backdrop-filter: blur(12px);">
+        <div class="max-w-7xl mx-auto px-6 flex items-center justify-between h-16 relative">
+            <a href="#" class="flex items-center gap-3 group">
+                <img src="assets/logo.svg" alt="SentinelFlow Logo" class="w-8 h-8 transition-transform group-hover:scale-110">
+                <span class="font-orbitron font-bold text-lg tracking-wider text-white">SENTINEL<span class="text-jarvis-cyan">FLOW</span></span>
             </a>
-            <div class="nav-links" id="navLinks">
-                <a href="products.html">Products</a>
-                <a href="#features">Features</a>
-                <a href="#how-it-works">How It Works</a>
-                <a href="architecture.html">Architecture</a>
-                <a href="#pricing">Pricing</a>
+            <div id="navLinks" class="nav-links-desktop flex items-center gap-8">
+                <a href="products.html" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors font-mono tracking-wide uppercase">Products</a>
+                <a href="#features" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors font-mono tracking-wide uppercase">Features</a>
+                <a href="#how-it-works" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors font-mono tracking-wide uppercase">Workflow</a>
+                <a href="#architecture" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors font-mono tracking-wide uppercase">Architecture</a>
+                <a href="#pricing" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors font-mono tracking-wide uppercase">Pricing</a>
             </div>
-            <div class="nav-actions">
-                <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000aQVRQA2" target="_blank" class="btn btn-ghost" title="Package ID: 04tdL000000aQVRQA2">Install Package</a>
-                <a href="#pricing" class="btn btn-ghost">Start Free Trial</a>
-                <a href="#demo" class="btn btn-primary">Book a Demo</a>
+            <div class="nav-actions nav-actions-desktop flex items-center gap-3">
+                <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000aLnVQAU" target="_blank" class="px-4 py-2 text-xs font-mono tracking-wider text-jarvis-cyan border border-jarvis-border rounded hover:border-jarvis-cyan hover:bg-jarvis-cyan/5 transition-all uppercase">Install Package</a>
+                <a href="#demo" class="px-5 py-2 text-xs font-mono tracking-wider text-jarvis-bg bg-jarvis-cyan rounded font-bold hover:shadow-[0_0_20px_rgba(0,212,255,0.4)] transition-all uppercase" data-modal="demo">Book Demo</a>
             </div>
-            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
-                <span></span><span></span><span></span>
+            <button id="navToggle" class="nav-toggle-btn flex-col gap-1.5 items-center justify-center hidden" aria-label="Toggle menu">
+                <span class="w-6 h-0.5 bg-jarvis-cyan transition-all"></span>
+                <span class="w-6 h-0.5 bg-jarvis-cyan transition-all"></span>
+                <span class="w-4 h-0.5 bg-jarvis-cyan transition-all"></span>
             </button>
         </div>
     </nav>
 
     <!-- ═══════════════════ HERO ═══════════════════ -->
-    <section class="hero" id="hero">
-        <div class="hero-bg-effects">
-            <div class="hero-orb hero-orb-1"></div>
-            <div class="hero-orb hero-orb-2"></div>
-            <div class="hero-orb hero-orb-3"></div>
-            <div class="hero-grid"></div>
+    <section id="hero" class="relative min-h-screen flex flex-col items-center justify-center pt-20 pb-16 overflow-hidden jarvis-grid">
+        <!-- Background Effects -->
+        <div class="absolute inset-0 pointer-events-none">
+            <div class="hero-orb absolute top-1/4 left-1/4 w-96 h-96 bg-jarvis-cyan/10 rounded-full blur-[120px] animate-pulse-glow"></div>
+            <div class="hero-orb absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-600/10 rounded-full blur-[100px] animate-pulse-glow" style="animation-delay: 1.5s;"></div>
+            <div class="hero-orb absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-jarvis-accent/5 rounded-full blur-[80px] animate-pulse-glow" style="animation-delay: 3s;"></div>
         </div>
-        <div class="container hero-content">
-            <div class="hero-badge">
-                <span class="badge-dot"></span>
-                AppExchange v3.0 - Published by Tomcodex
+        <!-- Scan Line -->
+        <div class="absolute inset-0 scan-line pointer-events-none overflow-hidden"></div>
+
+        <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-jarvis-border bg-jarvis-panel/60 backdrop-blur-sm mb-8">
+                <span class="w-2 h-2 rounded-full bg-jarvis-cyan animate-pulse"></span>
+                <span class="text-xs font-mono text-jarvis-cyan tracking-wider uppercase">AppExchange v2.6 — Published by Tomcodex</span>
             </div>
-            <h1 class="hero-title">
-                Detect. Analyze.<br>
-                <span class="gradient-text">Auto-Heal.</span>
+
+            <!-- Title -->
+            <h1 class="font-orbitron text-5xl md:text-7xl lg:text-8xl font-black leading-tight mb-6">
+                <span class="text-white">Detect. Analyze.</span><br>
+                <span class="jarvis-text">Auto-Heal.</span>
             </h1>
-            <p class="hero-subtitle">
+
+            <!-- Subtitle -->
+            <p class="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed mb-10 font-light">
                 SentinelFlow is an AI-powered Salesforce operations platform that detects incidents,
                 predicts risk, recommends runbooks, auto-heals approved failures, and learns from
                 every recovery outcome.
             </p>
-            <div class="hero-cta">
-                <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000aQVRQA2" target="_blank" class="btn btn-primary btn-lg">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+                <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000aLnVQAU" target="_blank" class="group flex items-center gap-2 px-8 py-4 bg-jarvis-cyan text-jarvis-bg font-orbitron font-bold text-sm tracking-wider rounded-lg hover:shadow-[0_0_40px_rgba(0,212,255,0.3)] transition-all uppercase">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
                     Install in Salesforce
                 </a>
-                <a href="#demo" class="btn btn-outline btn-lg">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <a href="#demo" class="flex items-center gap-2 px-8 py-4 border border-jarvis-border text-jarvis-cyan font-orbitron font-semibold text-sm tracking-wider rounded-lg hover:border-jarvis-cyan hover:bg-jarvis-cyan/5 transition-all uppercase" data-modal="demo">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                     Watch Demo
                 </a>
             </div>
-            <div class="hero-install-info" style="margin-top: 16px; font-size: 0.9rem; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; gap: 8px;">
-                <span>v3.0 Package ID:</span>
-                <code style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; font-family: monospace;">04tdL000000aQVRQA2</code>
+
+            <!-- Package Info -->
+            <div class="flex items-center justify-center gap-2 text-xs text-gray-500 font-mono mb-12">
+                <span>v2.6 Package ID:</span>
+                <code class="px-2 py-1 bg-jarvis-panel border border-jarvis-border rounded text-jarvis-cyan">04tdL000000aLnVQAU</code>
             </div>
-            <div class="hero-stats">
-                <div class="hero-stat">
-                    <span class="hero-stat-value" data-count="99.9">0</span><span class="hero-stat-suffix">%</span>
-                    <span class="hero-stat-label">Uptime SLA</span>
+
+            <!-- Stats -->
+            <div class="hero-stats flex items-center justify-center gap-8 md:gap-16">
+                <div class="text-center">
+                    <div class="flex items-baseline justify-center">
+                        <span class="hero-stat-value font-orbitron text-3xl md:text-4xl font-black text-white" data-count="99.9">0</span>
+                        <span class="font-orbitron text-xl text-jarvis-cyan ml-1">%</span>
+                    </div>
+                    <span class="text-xs text-gray-500 font-mono uppercase tracking-widest mt-1 block">Uptime SLA</span>
                 </div>
-                <div class="hero-stat-divider"></div>
-                <div class="hero-stat">
-                    <span class="hero-stat-value" data-count="85">0</span><span class="hero-stat-suffix">%</span>
-                    <span class="hero-stat-label">Faster Resolution</span>
+                <div class="w-px h-12 bg-jarvis-border"></div>
+                <div class="text-center">
+                    <div class="flex items-baseline justify-center">
+                        <span class="hero-stat-value font-orbitron text-3xl md:text-4xl font-black text-white" data-count="85">0</span>
+                        <span class="font-orbitron text-xl text-jarvis-cyan ml-1">%</span>
+                    </div>
+                    <span class="text-xs text-gray-500 font-mono uppercase tracking-widest mt-1 block">Faster Resolution</span>
                 </div>
-                <div class="hero-stat-divider"></div>
-                <div class="hero-stat">
-                    <span class="hero-stat-value" data-count="10">0</span><span class="hero-stat-suffix">+</span>
-                    <span class="hero-stat-label">Early Adopters</span>
+                <div class="w-px h-12 bg-jarvis-border"></div>
+                <div class="text-center">
+                    <div class="flex items-baseline justify-center">
+                        <span class="hero-stat-value font-orbitron text-3xl md:text-4xl font-black text-white" data-count="10">0</span>
+                        <span class="font-orbitron text-xl text-jarvis-cyan ml-1">+</span>
+                    </div>
+                    <span class="text-xs text-gray-500 font-mono uppercase tracking-widest mt-1 block">Early Adopters</span>
                 </div>
             </div>
         </div>
-        <div class="hero-dashboard-preview">
-            <div class="dashboard-glow"></div>
-            <img src="assets/dashboard-preview.png" alt="SentinelFlow Dashboard" class="dashboard-img">
+
+        <!-- Dashboard Preview -->
+        <div class="relative mt-16 max-w-5xl mx-auto px-6">
+            <div class="absolute inset-0 bg-jarvis-cyan/10 blur-[80px] rounded-full"></div>
+            <div class="relative border border-jarvis-border rounded-xl overflow-hidden hud-corners" style="box-shadow: 0 0 60px rgba(0,212,255,0.08);">
+                <img src="assets/dashboard-preview.png" alt="SentinelFlow Dashboard" class="w-full rounded-xl">
+            </div>
         </div>
     </section>
 
     <!-- ═══════════════════ AGENTEXCHANGE PROMO ═══════════════════ -->
-    <section class="agentexchange-promo" id="agentexchange">
-        <div class="container">
-            <div class="promo-grid">
-                <div class="promo-content">
-                    <div class="promo-badge-tag">
-                        <span class="badge-dot"></span>
-                        AgentExchange Live
+    <section id="agentexchange" class="relative py-24 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-jarvis-cyan/30 bg-jarvis-cyan/5 mb-6">
+                        <span class="w-2 h-2 rounded-full bg-jarvis-accent animate-pulse"></span>
+                        <span class="text-xs font-mono text-jarvis-accent tracking-wider uppercase">AgentExchange Live</span>
                     </div>
-                    <h2 class="promo-heading">
-                        SentinelFlow is <span class="gradient-text">AgentExchange</span> Ready
+                    <h2 class="font-orbitron text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
+                        SentinelFlow is <span class="jarvis-text">AgentExchange</span> Ready
                     </h2>
-                    <p class="promo-desc">
-                        Now available on Salesforce AgentExchange — the next evolution of AppExchange. 
-                        Install SentinelFlow v3.0 directly into your Sandbox or Production org with
-                        Zentom AI orchestration, incident memory, prediction intelligence, adaptive runbooks, and enterprise-grade isolation.
+                    <p class="text-gray-400 leading-relaxed mb-8">
+                        Now available on Salesforce AgentExchange — the next evolution of AppExchange.
+                        Install SentinelFlow v2.6 directly into your Sandbox or Production org with
+                        incident memory, prediction intelligence, adaptive runbooks, and enterprise-grade isolation.
                     </p>
-                    <div class="promo-cta-group">
-                        <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000aQVRQA2" target="_blank" class="btn btn-primary btn-lg">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000aLnVQAU" target="_blank" class="flex items-center gap-2 px-6 py-3 bg-jarvis-cyan text-jarvis-bg font-orbitron font-bold text-xs tracking-wider rounded-lg hover:shadow-[0_0_30px_rgba(0,212,255,0.3)] transition-all uppercase">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
                             Install Package
                         </a>
-                        <a href="javascript:void(0)" class="btn btn-outline btn-lg" data-modal="trial" data-plan="Professional">Start Free Trial</a>
+                        <a href="javascript:void(0)" class="px-6 py-3 border border-jarvis-border text-jarvis-cyan font-orbitron font-semibold text-xs tracking-wider rounded-lg hover:border-jarvis-cyan transition-all uppercase" data-modal="trial" data-plan="Professional">Start Free Trial</a>
                     </div>
                 </div>
-                <div class="promo-visual-card">
-                    <div class="promo-card-glow"></div>
-                    <div class="promo-card-inner">
-                        <div class="promo-card-header">
-                            <div class="promo-sf-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="url(#promoGrad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="promoGrad" x1="2" y1="2" x2="22" y2="22"><stop stop-color="#7b52ff"/><stop offset="1" stop-color="#00d2ff"/></linearGradient></defs></svg>
+                <!-- Promo Card -->
+                <div class="relative">
+                    <div class="absolute inset-0 bg-jarvis-cyan/5 blur-[60px] rounded-full"></div>
+                    <div class="relative bg-jarvis-panel/80 border border-jarvis-border rounded-xl p-8 backdrop-blur-sm hud-corners animate-border-glow">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-12 h-12 rounded-lg bg-jarvis-cyan/10 border border-jarvis-cyan/30 flex items-center justify-center">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
                             </div>
                             <div>
-                                <div class="promo-card-name">SentinelFlow</div>
-                                <div class="promo-card-publisher">Published by Tomcodex</div>
+                                <div class="font-orbitron font-bold text-white tracking-wide">SentinelFlow</div>
+                                <div class="text-xs text-gray-500 font-mono">Published by Tomcodex</div>
                             </div>
                         </div>
-                        <div class="promo-card-divider"></div>
-                        <div class="promo-card-stats">
-                            <div class="promo-stat-item">
-                                <span class="promo-stat-val">v3.0</span>
-                                <span class="promo-stat-lbl">Version</span>
-                            </div>
-                            <div class="promo-stat-item">
-                                <span class="promo-stat-val">2GP</span>
-                                <span class="promo-stat-lbl">Package</span>
-                            </div>
-                            <div class="promo-stat-item">
-                                <span class="promo-stat-val">SSO</span>
-                                <span class="promo-stat-lbl">Enabled</span>
-                            </div>
+                        <div class="h-px bg-jarvis-border mb-6"></div>
+                        <div class="grid grid-cols-3 gap-4 mb-6">
+                            <div class="text-center"><span class="block font-orbitron font-bold text-jarvis-cyan">v2.6</span><span class="text-[10px] text-gray-500 font-mono uppercase">Version</span></div>
+                            <div class="text-center"><span class="block font-orbitron font-bold text-jarvis-cyan">2GP</span><span class="text-[10px] text-gray-500 font-mono uppercase">Package</span></div>
+                            <div class="text-center"><span class="block font-orbitron font-bold text-jarvis-cyan">SSO</span><span class="text-[10px] text-gray-500 font-mono uppercase">Enabled</span></div>
                         </div>
-                        <div class="promo-card-divider"></div>
-                        <div class="promo-card-features">
-                            <div class="promo-feature-row">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                                Multi-Tenant Isolation
-                            </div>
-                            <div class="promo-feature-row">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                                AI-Powered Classification
-                            </div>
-                            <div class="promo-feature-row">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                                Memory + Auto-Heal Engine
-                            </div>
-                            <div class="promo-feature-row">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                                Prediction + Learning Loop
-                            </div>
+                        <div class="h-px bg-jarvis-border mb-6"></div>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 text-sm text-gray-300"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Multi-Tenant Isolation</div>
+                            <div class="flex items-center gap-3 text-sm text-gray-300"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>AI-Powered Classification</div>
+                            <div class="flex items-center gap-3 text-sm text-gray-300"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Memory + Auto-Heal Engine</div>
+                            <div class="flex items-center gap-3 text-sm text-gray-300"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Prediction + Learning Loop</div>
                         </div>
                     </div>
                 </div>
@@ -173,211 +375,208 @@
     </section>
 
     <!-- ═══════════════════ INTEGRATIONS ═══════════════════ -->
-    <section class="integrations-section" id="integrations">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">INTEGRATES WITH</span>
-                <h2 class="section-title">Powered by <span class="gradient-text">Enterprise-Grade Integrations</span></h2>
-                <p class="section-subtitle">Seamlessly integrates with the tools and platforms you already use.</p>
+    <section id="integrations" class="relative py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="inline-block text-[10px] font-mono font-bold tracking-[0.3em] text-jarvis-cyan uppercase border border-jarvis-border px-4 py-1.5 rounded-full mb-4 bg-jarvis-cyan/5">Integrates With</span>
+                <h2 class="font-orbitron text-3xl md:text-4xl font-bold text-white mb-4">Powered by <span class="jarvis-text">Enterprise-Grade Integrations</span></h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Seamlessly integrates with the tools and platforms you already use.</p>
             </div>
-            <div class="integrations-grid">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <!-- Salesforce -->
-                <div class="integration-card">
-                    <div class="integration-logo">
-                        <svg viewBox="0 0 100 70" width="72" height="50" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M72,24 c-2,-10 -15,-15 -25,-6 c-5,-6 -15,-7 -20,-2 c-8,-2 -15,4 -15,12 c-8,2 -12,12 -5,20 c2,3 6,4 10,4 h50 c6,0 12,-3 14,-8 c3,-6 1,-15 -6,-17 c0,-2 -1,-2 -3,-3 z" fill="#00a1e0" />
-                        </svg>
+                <div class="jarvis-card bg-jarvis-panel/60 border border-jarvis-border rounded-xl p-6 text-center backdrop-blur-sm cursor-default">
+                    <div class="mb-4 flex justify-center">
+                        <svg viewBox="0 0 100 70" width="56" height="40"><path d="M72,24 c-2,-10 -15,-15 -25,-6 c-5,-6 -15,-7 -20,-2 c-8,-2 -15,4 -15,12 c-8,2 -12,12 -5,20 c2,3 6,4 10,4 h50 c6,0 12,-3 14,-8 c3,-6 1,-15 -6,-17 c0,-2 -1,-2 -3,-3 z" fill="#00a1e0"/></svg>
                     </div>
-                    <h4 class="integration-name">Salesforce</h4>
-                    <p class="integration-desc">CRM Platform</p>
+                    <h4 class="font-orbitron text-xs font-bold text-white mb-1">Salesforce</h4>
+                    <p class="text-[10px] text-gray-500 font-mono uppercase">CRM Platform</p>
                 </div>
                 <!-- Stripe -->
-                <div class="integration-card">
-                    <div class="integration-logo">
-                        <svg viewBox="0 0 100 40" width="76" height="30" xmlns="http://www.w3.org/2000/svg">
-                            <text x="0" y="32" font-family="Arial, sans-serif" font-weight="900" font-size="34" fill="#635bff" letter-spacing="-1">stripe</text>
-                        </svg>
+                <div class="jarvis-card bg-jarvis-panel/60 border border-jarvis-border rounded-xl p-6 text-center backdrop-blur-sm cursor-default">
+                    <div class="mb-4 flex justify-center">
+                        <svg viewBox="0 0 100 40" width="60" height="24"><text x="0" y="32" font-family="Arial, sans-serif" font-weight="900" font-size="34" fill="#635bff" letter-spacing="-1">stripe</text></svg>
                     </div>
-                    <h4 class="integration-name">Stripe</h4>
-                    <p class="integration-desc">Payment Processing</p>
+                    <h4 class="font-orbitron text-xs font-bold text-white mb-1">Stripe</h4>
+                    <p class="text-[10px] text-gray-500 font-mono uppercase">Payment Processing</p>
                 </div>
                 <!-- SAP -->
-                <div class="integration-card">
-                    <div class="integration-logo">
-                        <svg viewBox="0 0 100 50" width="64" height="32" xmlns="http://www.w3.org/2000/svg">
-                            <polygon points="10,0 90,0 100,50 0,50" fill="#008fd3" />
-                            <text x="50" y="36" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="28" fill="#ffffff">SAP</text>
-                        </svg>
+                <div class="jarvis-card bg-jarvis-panel/60 border border-jarvis-border rounded-xl p-6 text-center backdrop-blur-sm cursor-default">
+                    <div class="mb-4 flex justify-center">
+                        <svg viewBox="0 0 100 50" width="50" height="25"><polygon points="10,0 90,0 100,50 0,50" fill="#008fd3"/><text x="50" y="36" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="28" fill="#fff">SAP</text></svg>
                     </div>
-                    <h4 class="integration-name">SAP</h4>
-                    <p class="integration-desc">Enterprise Systems</p>
+                    <h4 class="font-orbitron text-xs font-bold text-white mb-1">SAP</h4>
+                    <p class="text-[10px] text-gray-500 font-mono uppercase">Enterprise Systems</p>
                 </div>
                 <!-- Auth0 -->
-                <div class="integration-card">
-                    <div class="integration-logo">
-                        <svg viewBox="0 0 160 40" width="110" height="28" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Orange Shield -->
-                            <path d="M 16 0 L 48 0 L 56 24 L 32 40 L 8 24 Z" fill="#eb5424" />
-                            <!-- Cutout Star (using the background color to fake the cutout) -->
-                            <polygon points="32,8 36,20 48,20 38,26 42,36 32,28 22,36 26,26 16,20 28,20" fill="var(--bg-card)"/>
-                            <!-- Text -->
-                            <text x="64" y="28" font-family="Arial, sans-serif" font-weight="800" font-size="28" fill="white" letter-spacing="-0.5">Auth0</text>
-                        </svg>
+                <div class="jarvis-card bg-jarvis-panel/60 border border-jarvis-border rounded-xl p-6 text-center backdrop-blur-sm cursor-default">
+                    <div class="mb-4 flex justify-center">
+                        <svg viewBox="0 0 60 40" width="48" height="32"><path d="M16 0L48 0L56 24L32 40L8 24Z" fill="#eb5424" transform="scale(0.6) translate(10,0)"/><text x="30" y="32" text-anchor="middle" font-family="Arial" font-weight="800" font-size="16" fill="#eb5424">Auth0</text></svg>
                     </div>
-                    <h4 class="integration-name">Auth0</h4>
-                    <p class="integration-desc">Authentication</p>
+                    <h4 class="font-orbitron text-xs font-bold text-white mb-1">Auth0</h4>
+                    <p class="text-[10px] text-gray-500 font-mono uppercase">Authentication</p>
                 </div>
                 <!-- REST API -->
-                <div class="integration-card">
-                    <div class="integration-logo">
-                        <svg viewBox="0 0 100 100" width="70" height="70" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Cloud path -->
-                            <path d="M 30 65 A 15 15 0 0 1 30 35 A 20 20 0 0 1 65 25 A 22 22 0 0 1 85 55 A 12 12 0 0 1 75 65 Z" fill="none" stroke="#24d48a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <!-- Braces -->
-                            <text x="52" y="56" text-anchor="middle" font-family="monospace" font-weight="800" font-size="28" fill="#24d48a">{}</text>
-                        </svg>
+                <div class="jarvis-card bg-jarvis-panel/60 border border-jarvis-border rounded-xl p-6 text-center backdrop-blur-sm cursor-default">
+                    <div class="mb-4 flex justify-center">
+                        <svg viewBox="0 0 100 100" width="44" height="44"><path d="M30 65A15 15 0 0 1 30 35A20 20 0 0 1 65 25A22 22 0 0 1 85 55A12 12 0 0 1 75 65Z" fill="none" stroke="#00d4ff" stroke-width="5" stroke-linecap="round"/><text x="52" y="56" text-anchor="middle" font-family="monospace" font-weight="800" font-size="28" fill="#00d4ff">{}</text></svg>
                     </div>
-                    <h4 class="integration-name">REST API</h4>
-                    <p class="integration-desc">API Integration</p>
+                    <h4 class="font-orbitron text-xs font-bold text-white mb-1">REST API</h4>
+                    <p class="text-[10px] text-gray-500 font-mono uppercase">API Integration</p>
                 </div>
                 <!-- Webhooks -->
-                <div class="integration-card">
-                    <div class="integration-logo">
-                        <svg viewBox="0 0 100 100" width="64" height="64" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Lines connecting the circles -->
-                            <line x1="50" y1="20" x2="25" y2="65" stroke="#a855f7" stroke-width="6"/>
-                            <line x1="25" y1="65" x2="75" y2="65" stroke="#a855f7" stroke-width="6"/>
-                            <line x1="75" y1="65" x2="50" y2="20" stroke="#a855f7" stroke-width="6"/>
-                            
-                            <!-- Circles with background fill to cover lines -->
-                            <circle cx="50" cy="20" r="12" fill="var(--bg-card)" stroke="#a855f7" stroke-width="6" />
-                            <circle cx="25" cy="65" r="12" fill="var(--bg-card)" stroke="#a855f7" stroke-width="6" />
-                            <circle cx="75" cy="65" r="12" fill="var(--bg-card)" stroke="#a855f7" stroke-width="6" />
-                            
-                            <!-- Inner dots -->
-                            <circle cx="50" cy="20" r="4" fill="#a855f7" />
-                            <circle cx="25" cy="65" r="4" fill="#a855f7" />
-                            <circle cx="75" cy="65" r="4" fill="#a855f7" />
-                        </svg>
+                <div class="jarvis-card bg-jarvis-panel/60 border border-jarvis-border rounded-xl p-6 text-center backdrop-blur-sm cursor-default">
+                    <div class="mb-4 flex justify-center">
+                        <svg viewBox="0 0 100 100" width="44" height="44"><line x1="50" y1="20" x2="25" y2="65" stroke="#a855f7" stroke-width="5"/><line x1="25" y1="65" x2="75" y2="65" stroke="#a855f7" stroke-width="5"/><line x1="75" y1="65" x2="50" y2="20" stroke="#a855f7" stroke-width="5"/><circle cx="50" cy="20" r="10" fill="#0a1a35" stroke="#a855f7" stroke-width="5"/><circle cx="25" cy="65" r="10" fill="#0a1a35" stroke="#a855f7" stroke-width="5"/><circle cx="75" cy="65" r="10" fill="#0a1a35" stroke="#a855f7" stroke-width="5"/><circle cx="50" cy="20" r="3" fill="#a855f7"/><circle cx="25" cy="65" r="3" fill="#a855f7"/><circle cx="75" cy="65" r="3" fill="#a855f7"/></svg>
                     </div>
-                    <h4 class="integration-name">Webhooks</h4>
-                    <p class="integration-desc">Event Notifications</p>
+                    <h4 class="font-orbitron text-xs font-bold text-white mb-1">Webhooks</h4>
+                    <p class="text-[10px] text-gray-500 font-mono uppercase">Event Notifications</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- ═══════════════════ FEATURES ═══════════════════ -->
-    <section class="features" id="features">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">PLATFORM CAPABILITIES</span>
-                <h2 class="section-title">Everything You Need for<br><span class="gradient-text">Autonomous Salesforce Ops</span></h2>
-                <p class="section-subtitle">Version 3.0 (Zentom AI Orchestration Moat Edition) introduces 5-gate intelligence, Universal Event Layer, FLS/CRUD SecurityGate compliance, and real-time Revenue Pulse monitoring.</p>
+    <section id="features" class="relative py-24 jarvis-grid">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="inline-block text-[10px] font-mono font-bold tracking-[0.3em] text-jarvis-cyan uppercase border border-jarvis-border px-4 py-1.5 rounded-full mb-4 bg-jarvis-cyan/5">Platform Capabilities</span>
+                <h2 class="font-orbitron text-3xl md:text-4xl font-bold text-white mb-4">Everything You Need for<br><span class="jarvis-text">Autonomous Salesforce Ops</span></h2>
+                <p class="text-gray-400 max-w-3xl mx-auto">Version 2.6 adds operational memory, prediction V2, adaptive runbooks, learning loops, and reliability simulation.</p>
             </div>
-            <div class="features-grid">
-                <div class="feature-card" data-aos="fade-up">
-                    <div class="feature-icon feature-icon-purple">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 14a1 1 0 1 1 1-1 1 1 0 0 1-1 1zm1-5a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0z"/></svg>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Feature 1 -->
+                <div class="feature-card jarvis-card bg-jarvis-panel/40 border border-jarvis-border rounded-xl p-8 backdrop-blur-sm relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-jarvis-cyan/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="w-12 h-12 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center mb-5">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
                     </div>
-                    <h3>AI Incident Detection</h3>
-                    <p>Real-time monitoring across integrations, Apex jobs, Flows, and API limits — 24/7. Auto-refreshes every 10 seconds with zero polling overhead.</p>
+                    <h3 class="font-orbitron text-sm font-bold text-white mb-3 tracking-wide">Real-Time Detection</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Platform Events and triggers detect integration failures the instant they occur. Zero delay, zero blind spots.</p>
                 </div>
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="feature-icon feature-icon-blue">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                <!-- Feature 2 -->
+                <div class="feature-card jarvis-card bg-jarvis-panel/40 border border-jarvis-border rounded-xl p-8 backdrop-blur-sm relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-jarvis-cyan/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="w-12 h-12 rounded-lg bg-jarvis-cyan/10 border border-jarvis-cyan/30 flex items-center justify-center mb-5">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
                     </div>
-                    <h3>Zentom AI Classification</h3>
-                    <p>Root cause analysis + severity scoring in &lt; 10 seconds. Structured output: cause, recommended action, confidence score. Powered by the Zentom GenAI v1 engine.</p>
+                    <h3 class="font-orbitron text-sm font-bold text-white mb-3 tracking-wide">AI Classification</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">AI classifies incident type, severity, root cause, memory matches, and business impact automatically.</p>
                 </div>
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="feature-icon feature-icon-green">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <!-- Feature 3 -->
+                <div class="feature-card jarvis-card bg-jarvis-panel/40 border border-jarvis-border rounded-xl p-8 backdrop-blur-sm relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-jarvis-cyan/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="w-12 h-12 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mb-5">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                     </div>
-                    <h3>Auto-Heal Orchestrator</h3>
-                    <p>Autonomous runbook execution with validation. OAuth refresh, batch retry, Flow restart — resolved before your team wakes up. MTTR: 18 seconds.</p>
+                    <h3 class="font-orbitron text-sm font-bold text-white mb-3 tracking-wide">Self-Healing Runbooks</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Approved runbooks refresh OAuth, retry failed calls, pause batches, and requeue jobs with validation and audit trails.</p>
                 </div>
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="feature-icon feature-icon-orange">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                <!-- Feature 4 -->
+                <div class="feature-card jarvis-card bg-jarvis-panel/40 border border-jarvis-border rounded-xl p-8 backdrop-blur-sm relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-jarvis-cyan/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="w-12 h-12 rounded-lg bg-orange-500/10 border border-orange-500/30 flex items-center justify-center mb-5">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
                     </div>
-                    <h3>Operational Memory</h3>
-                    <p>Every incident is indexed and remembered — forever. Semantic matching against thousands of known fixes with 96% success rate.</p>
+                    <h3 class="font-orbitron text-sm font-bold text-white mb-3 tracking-wide">Operational Memory</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Every incident becomes searchable memory with root cause, remediation, success rate, MTTR, and tenant-isolated embeddings.</p>
                 </div>
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
-                    <div class="feature-icon feature-icon-pink">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                <!-- Feature 5 -->
+                <div class="feature-card jarvis-card bg-jarvis-panel/40 border border-jarvis-border rounded-xl p-8 backdrop-blur-sm relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-jarvis-cyan/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="w-12 h-12 rounded-lg bg-pink-500/10 border border-pink-500/30 flex items-center justify-center mb-5">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
                     </div>
-                    <h3>Predictive Risk Scoring</h3>
-                    <p>Failure probability scoring 12–72 hours in advance based on deployment risk, flow instability, and latency trends. Never be surprised by a P1 again.</p>
+                    <h3 class="font-orbitron text-sm font-bold text-white mb-3 tracking-wide">Prediction V2</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Failure probability, deployment risk, flow instability, latency trends, and org stability scoring help teams act before impact.</p>
                 </div>
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
-                    <div class="feature-icon feature-icon-cyan">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <!-- Feature 6 -->
+                <div class="feature-card jarvis-card bg-jarvis-panel/40 border border-jarvis-border rounded-xl p-8 backdrop-blur-sm relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-jarvis-cyan/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="w-12 h-12 rounded-lg bg-jarvis-cyan/10 border border-jarvis-cyan/30 flex items-center justify-center mb-5">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                     </div>
-                    <h3>Revenue Pulse Engine</h3>
-                    <p>Real-time revenue-at-risk per incident. Formatted intelligently ($84K, $1.2M). Business impact visibility that CxOs actually use.</p>
+                    <h3 class="font-orbitron text-sm font-bold text-white mb-3 tracking-wide">Learning Loop</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Successful and failed recoveries adjust runbook confidence, suppress false positives, and improve future recommendations.</p>
                 </div>
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="600">
-                    <div class="feature-icon feature-icon-cyan">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19h16"/><path d="M7 16l3-6 4 4 3-8"/></svg>
+                <!-- Feature 7 -->
+                <div class="feature-card jarvis-card bg-jarvis-panel/40 border border-jarvis-border rounded-xl p-8 backdrop-blur-sm relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-jarvis-cyan/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="w-12 h-12 rounded-lg bg-jarvis-cyan/10 border border-jarvis-cyan/30 flex items-center justify-center mb-5">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="2"><path d="M4 19h16"/><path d="M7 16l3-6 4 4 3-8"/></svg>
                     </div>
-                    <h3>Universal Event Layer</h3>
-                    <p>Real-time event-driven monitoring replacing batch polling for instant reliability insights across the entire Salesforce org.</p>
+                    <h3 class="font-orbitron text-sm font-bold text-white mb-3 tracking-wide">Dashboard V2</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Executive AI Ops views show org health, confidence, deployment risk, heatmaps, recovery timelines, and auto-heal analytics.</p>
                 </div>
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="700">
-                    <div class="feature-icon feature-icon-purple">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18"/><path d="M3 12h18"/><path d="M5 5l14 14"/><path d="M19 5L5 19"/></svg>
+                <!-- Feature 8 -->
+                <div class="feature-card jarvis-card bg-jarvis-panel/40 border border-jarvis-border rounded-xl p-8 backdrop-blur-sm relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-jarvis-cyan/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="w-12 h-12 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center mb-5">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><path d="M12 3v18"/><path d="M3 12h18"/><path d="M5 5l14 14"/><path d="M19 5L5 19"/></svg>
                     </div>
-                    <h3>Enterprise SecurityGate</h3>
-                    <p>100% AppExchange compliance with strict FLS/CRUD enforcement and zero-trust tenant-isolated embeddings.</p>
+                    <h3 class="font-orbitron text-sm font-bold text-white mb-3 tracking-wide">Reliability Simulation</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Chaos scenarios test governor limits, retry storms, event spikes, failover, rollback, and integration timeouts.</p>
                 </div>
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="800">
-                    <div class="feature-icon feature-icon-green">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <!-- Feature 9 -->
+                <div class="feature-card jarvis-card bg-jarvis-panel/40 border border-jarvis-border rounded-xl p-8 backdrop-blur-sm relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-jarvis-cyan/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="w-12 h-12 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mb-5">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                     </div>
-                    <h3>AI Observability Dashboard</h3>
-                    <p>Executive views showing org health, confidence scores, deployment risk, and autonomous auto-heal analytics in a modern Next.js UI.</p>
+                    <h3 class="font-orbitron text-sm font-bold text-white mb-3 tracking-wide">AppExchange Readiness</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Versioned Salesforce package metadata, publisher copy, security review packet planning, and packaging checklist are tracked.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- ═══════════════════ HOW IT WORKS ═══════════════════ -->
-    <section class="how-it-works" id="how-it-works">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">WORKFLOW</span>
-                <h2 class="section-title">How SentinelFlow <span class="gradient-text">Protects You</span></h2>
-                <p class="section-subtitle">From the moment an integration fails to prediction, recovery, validation, and learning.</p>
+    <section id="how-it-works" class="relative py-24">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="inline-block text-[10px] font-mono font-bold tracking-[0.3em] text-jarvis-cyan uppercase border border-jarvis-border px-4 py-1.5 rounded-full mb-4 bg-jarvis-cyan/5">Workflow</span>
+                <h2 class="font-orbitron text-3xl md:text-4xl font-bold text-white mb-4">How SentinelFlow <span class="jarvis-text">Protects You</span></h2>
+                <p class="text-gray-400">From the moment an integration fails to prediction, recovery, validation, and learning.</p>
             </div>
-            <div class="steps-timeline">
-                <div class="step">
-                    <div class="step-number">01</div>
-                    <div class="step-content">
-                        <h3>Detect</h3>
-                        <p>Integration logs are monitored in real-time via Apex triggers. Failed transactions are instantly captured and queued for analysis.</p>
+            <div class="relative">
+                <!-- Timeline Line -->
+                <div class="absolute left-8 md:left-12 top-0 bottom-0 w-px bg-gradient-to-b from-jarvis-cyan/50 via-jarvis-border to-transparent"></div>
+                <!-- Steps -->
+                <div class="space-y-12">
+                    <div class="step flex gap-6 md:gap-8 items-start">
+                        <div class="relative z-10 w-16 h-16 md:w-24 md:h-16 flex-shrink-0 flex items-center justify-center rounded-lg bg-jarvis-panel border border-jarvis-cyan/40" style="box-shadow: 0 0 20px rgba(0,212,255,0.1);">
+                            <span class="font-orbitron font-black text-jarvis-cyan text-lg">01</span>
+                        </div>
+                        <div>
+                            <h3 class="font-orbitron text-lg font-bold text-white mb-2">Detect</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Integration logs are monitored in real-time via Apex triggers. Failed transactions are instantly captured and queued for analysis.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="step">
-                    <div class="step-number">02</div>
-                    <div class="step-content">
-                        <h3>Classify + Remember</h3>
-                        <p>The AI engine assigns severity and root cause, then checks operational memory for similar incidents and proven fixes.</p>
+                    <div class="step flex gap-6 md:gap-8 items-start">
+                        <div class="relative z-10 w-16 h-16 md:w-24 md:h-16 flex-shrink-0 flex items-center justify-center rounded-lg bg-jarvis-panel border border-jarvis-cyan/40" style="box-shadow: 0 0 20px rgba(0,212,255,0.1);">
+                            <span class="font-orbitron font-black text-jarvis-cyan text-lg">02</span>
+                        </div>
+                        <div>
+                            <h3 class="font-orbitron text-lg font-bold text-white mb-2">Classify + Remember</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">The AI engine assigns severity and root cause, then checks operational memory for similar incidents and proven fixes.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="step">
-                    <div class="step-number">03</div>
-                    <div class="step-content">
-                        <h3>Predict</h3>
-                        <p>Prediction V2 scores failure probability, deployment risk, and org stability so teams can prevent the next outage.</p>
+                    <div class="step flex gap-6 md:gap-8 items-start">
+                        <div class="relative z-10 w-16 h-16 md:w-24 md:h-16 flex-shrink-0 flex items-center justify-center rounded-lg bg-jarvis-panel border border-jarvis-cyan/40" style="box-shadow: 0 0 20px rgba(0,212,255,0.1);">
+                            <span class="font-orbitron font-black text-jarvis-cyan text-lg">03</span>
+                        </div>
+                        <div>
+                            <h3 class="font-orbitron text-lg font-bold text-white mb-2">Predict</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Prediction V2 scores failure probability, deployment risk, and org stability so teams can prevent the next outage.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="step">
-                    <div class="step-number">04</div>
-                    <div class="step-content">
-                        <h3>Heal + Learn</h3>
-                        <p>Approved runbooks execute recovery actions, validate outcomes, and feed the learning loop to improve future confidence.</p>
+                    <div class="step flex gap-6 md:gap-8 items-start">
+                        <div class="relative z-10 w-16 h-16 md:w-24 md:h-16 flex-shrink-0 flex items-center justify-center rounded-lg bg-jarvis-panel border border-jarvis-cyan/40" style="box-shadow: 0 0 20px rgba(0,212,255,0.1);">
+                            <span class="font-orbitron font-black text-jarvis-cyan text-lg">04</span>
+                        </div>
+                        <div>
+                            <h3 class="font-orbitron text-lg font-bold text-white mb-2">Heal + Learn</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Approved runbooks execute recovery actions, validate outcomes, and feed the learning loop to improve future confidence.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -385,366 +584,256 @@
     </section>
 
     <!-- ═══════════════════ ARCHITECTURE ═══════════════════ -->
-    <section class="architecture" id="architecture">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">BUILT FOR SCALE</span>
-                <h2 class="section-title">Enterprise-Grade <span class="gradient-text">Architecture</span></h2>
-                <p class="section-subtitle">Built natively on Salesforce Platform with zero external dependencies.</p>
+    <section id="architecture" class="relative py-24 jarvis-grid">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="inline-block text-[10px] font-mono font-bold tracking-[0.3em] text-jarvis-cyan uppercase border border-jarvis-border px-4 py-1.5 rounded-full mb-4 bg-jarvis-cyan/5">Built For Scale</span>
+                <h2 class="font-orbitron text-3xl md:text-4xl font-bold text-white mb-4">Enterprise-Grade <span class="jarvis-text">Architecture</span></h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Built natively on Salesforce Platform with zero external dependencies.</p>
             </div>
-            <div class="arch-grid">
-                <div class="arch-card">
-                    <div class="arch-icon">
-                        <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /><circle cx="12" cy="14" r="1.5" /><path d="M9 18c0-1.5 1.5-2.5 3-2.5s3 1 3 2.5" /></svg>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="arch-card jarvis-card bg-jarvis-deep/80 border border-jarvis-border rounded-xl p-7 backdrop-blur-sm hud-corners">
+                    <div class="w-10 h-10 rounded bg-jarvis-cyan/10 flex items-center justify-center mb-5">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.5"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="14" r="1.5"/></svg>
                     </div>
-                    <h4>Multi-Tenant Isolation</h4>
-                    <p>Each tenant's data is fully isolated via Tenant__c lookups and WITH USER_MODE enforcement.</p>
+                    <h4 class="font-orbitron text-xs font-bold text-white mb-2 tracking-wide uppercase">Multi-Tenant Isolation</h4>
+                    <p class="text-xs text-gray-400 leading-relaxed">Each tenant's data is fully isolated via Tenant__c lookups and WITH USER_MODE enforcement.</p>
                 </div>
-                <div class="arch-card">
-                    <div class="arch-icon">
-                        <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2" /><polyline points="2 12 12 17 22 12" /><polyline points="2 17 12 22 22 17" /></svg>
+                <div class="arch-card jarvis-card bg-jarvis-deep/80 border border-jarvis-border rounded-xl p-7 backdrop-blur-sm hud-corners">
+                    <div class="w-10 h-10 rounded bg-jarvis-cyan/10 flex items-center justify-center mb-5">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 12 12 17 22 12"/><polyline points="2 17 12 22 22 17"/></svg>
                     </div>
-                    <h4>Async Processing</h4>
-                    <p>Bulkified Queueables handle 200+ incidents per transaction without hitting governor limits.</p>
+                    <h4 class="font-orbitron text-xs font-bold text-white mb-2 tracking-wide uppercase">Async Processing</h4>
+                    <p class="text-xs text-gray-400 leading-relaxed">Bulkified Queueables handle 200+ incidents per transaction without hitting governor limits.</p>
                 </div>
-                <div class="arch-card">
-                    <div class="arch-icon">
-                        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+                <div class="arch-card jarvis-card bg-jarvis-deep/80 border border-jarvis-border rounded-xl p-7 backdrop-blur-sm hud-corners">
+                    <div class="w-10 h-10 rounded bg-jarvis-cyan/10 flex items-center justify-center mb-5">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                     </div>
-                    <h4>API Rate Limiting</h4>
-                    <p>Platform Cache-backed fixed-window rate limiter protects endpoints with HTTP 429 responses.</p>
+                    <h4 class="font-orbitron text-xs font-bold text-white mb-2 tracking-wide uppercase">API Rate Limiting</h4>
+                    <p class="text-xs text-gray-400 leading-relaxed">Platform Cache-backed fixed-window rate limiter protects endpoints with HTTP 429 responses.</p>
                 </div>
-                <div class="arch-card">
-                    <div class="arch-icon">
-                        <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" /><path d="M16 21v-5h5" /></svg>
+                <div class="arch-card jarvis-card bg-jarvis-deep/80 border border-jarvis-border rounded-xl p-7 backdrop-blur-sm hud-corners">
+                    <div class="w-10 h-10 rounded bg-jarvis-cyan/10 flex items-center justify-center mb-5">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.5"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21v-5h5"/></svg>
                     </div>
-                    <h4>Intelligent Retries</h4>
-                    <p>Transient vs. permanent failure classification prevents wasted retries on unrecoverable errors.</p>
+                    <h4 class="font-orbitron text-xs font-bold text-white mb-2 tracking-wide uppercase">Intelligent Retries</h4>
+                    <p class="text-xs text-gray-400 leading-relaxed">Transient vs. permanent failure classification prevents wasted retries on unrecoverable errors.</p>
                 </div>
-                <div class="arch-card">
-                    <div class="arch-icon">
-                        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6" /><circle cx="8" cy="6" r="2" /><line x1="3" y1="12" x2="21" y2="12" /><circle cx="16" cy="12" r="2" /><line x1="3" y1="18" x2="21" y2="18" /><circle cx="10" cy="18" r="2" /></svg>
+                <div class="arch-card jarvis-card bg-jarvis-deep/80 border border-jarvis-border rounded-xl p-7 backdrop-blur-sm hud-corners">
+                    <div class="w-10 h-10 rounded bg-jarvis-cyan/10 flex items-center justify-center mb-5">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><circle cx="8" cy="6" r="2"/><line x1="3" y1="12" x2="21" y2="12"/><circle cx="16" cy="12" r="2"/><line x1="3" y1="18" x2="21" y2="18"/><circle cx="10" cy="18" r="2"/></svg>
                     </div>
-                    <h4>Feature Flags</h4>
-                    <p>Custom Metadata-driven toggles let admins enable/disable AI, Auto-Heal, or Alerting per tenant.</p>
+                    <h4 class="font-orbitron text-xs font-bold text-white mb-2 tracking-wide uppercase">Feature Flags</h4>
+                    <p class="text-xs text-gray-400 leading-relaxed">Custom Metadata-driven toggles let admins enable/disable AI, Auto-Heal, or Alerting per tenant.</p>
                 </div>
-                <div class="arch-card">
-                    <div class="arch-icon">
-                        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="8" y1="13" x2="16" y2="13" /><line x1="8" y1="17" x2="16" y2="17" /><line x1="8" y1="9" x2="10" y2="9" /></svg>
+                <div class="arch-card jarvis-card bg-jarvis-deep/80 border border-jarvis-border rounded-xl p-7 backdrop-blur-sm hud-corners">
+                    <div class="w-10 h-10 rounded bg-jarvis-cyan/10 flex items-center justify-center mb-5">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
                     </div>
-                    <h4>Dead-Letter Logging</h4>
-                    <p>Every failed operation is captured in System_Log__c with full stack traces for post-mortem analysis.</p>
+                    <h4 class="font-orbitron text-xs font-bold text-white mb-2 tracking-wide uppercase">Dead-Letter Logging</h4>
+                    <p class="text-xs text-gray-400 leading-relaxed">Every failed operation is captured in System_Log__c with full stack traces for post-mortem analysis.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- ═══════════════════ PRICING ═══════════════════ -->
-    <section class="sf-pricing" id="pricing">
-        <div class="container">
-            <!-- ── Header ── -->
-            <header class="sf-pricing__header">
-                <span class="sf-pricing__eyebrow">Pricing</span>
-                <h2 class="sf-pricing__title">
-                    Plans built for<br /><span>every stage of growth</span>
-                </h2>
-                <p class="sf-pricing__subtitle">
-                    Start free, scale when you're ready. No hidden fees, no lock-in.
-                </p>
-            </header>
-
-            <!-- ── Cards ── -->
-            <div class="sf-pricing__grid" role="list">
-                <!-- ── Starter ── -->
-                <article class="sf-card" role="listitem" aria-label="Starter plan">
-                    <p class="sf-card__tier">Starter</p>
-                    <div class="sf-card__price-row">
-                        <span class="sf-card__price">$0</span>
-                        <span class="sf-card__period">/ month</span>
+    <section id="pricing" class="relative py-24">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="inline-block text-[10px] font-mono font-bold tracking-[0.3em] text-jarvis-cyan uppercase border border-jarvis-border px-4 py-1.5 rounded-full mb-4 bg-jarvis-cyan/5">Pricing</span>
+                <h2 class="font-orbitron text-3xl md:text-4xl font-bold text-white mb-4">Plans built for<br><span class="jarvis-text">every stage of growth</span></h2>
+                <p class="text-gray-400 max-w-xl mx-auto">Start free, scale when you're ready. No hidden fees, no lock-in.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6 items-start">
+                <!-- Starter -->
+                <article class="pricing-card jarvis-card bg-jarvis-panel/60 border border-jarvis-border rounded-xl p-8 backdrop-blur-sm">
+                    <p class="font-orbitron text-xs font-bold text-gray-400 tracking-widest uppercase mb-4">Starter</p>
+                    <div class="flex items-baseline gap-1 mb-2">
+                        <span class="font-orbitron text-4xl font-black text-white">$0</span>
+                        <span class="text-sm text-gray-500 font-mono">/ month</span>
                     </div>
-                    <p class="sf-card__desc">
-                        Perfect for individuals and small teams getting started.
-                    </p>
-                    <div class="sf-card__divider" role="separator"></div>
-                    <p class="sf-card__feature-label">What's included</p>
-                    <ul class="sf-card__features">
-                        <li>
-                            <svg class="sf-check-icon sf-check-icon--default" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
-                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
-                            </svg>
-                            Up to 100 incidents / month
-                        </li>
-                        <li>
-                            <svg class="sf-check-icon sf-check-icon--default" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
-                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
-                            </svg>
-                            Real-time detection
-                        </li>
-                        <li>
-                            <svg class="sf-check-icon sf-check-icon--default" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
-                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
-                            </svg>
-                            Basic alerting
-                        </li>
-                        <li>
-                            <svg class="sf-check-icon sf-check-icon--default" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
-                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
-                            </svg>
-                            Community support
-                        </li>
+                    <p class="text-sm text-gray-400 mb-6">Perfect for individuals and small teams getting started.</p>
+                    <div class="h-px bg-jarvis-border mb-6"></div>
+                    <p class="text-[10px] font-mono text-gray-500 uppercase tracking-wider mb-4">What's included</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center gap-3 text-sm text-gray-300"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Up to 100 incidents / month</li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Real-time detection</li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Basic alerting</li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Community support</li>
                     </ul>
-                    <a href="javascript:void(0)" class="sf-btn sf-btn--outline" data-modal="trial" data-plan="Starter">Get Started Free</a>
+                    <a href="javascript:void(0)" class="block w-full text-center px-6 py-3 border border-jarvis-border text-jarvis-cyan font-orbitron font-bold text-xs tracking-wider rounded-lg hover:border-jarvis-cyan hover:bg-jarvis-cyan/5 transition-all uppercase" data-modal="trial" data-plan="Starter">Get Started Free</a>
                 </article>
 
-                <!-- ── Professional (highlighted) ── -->
-                <article class="sf-card sf-card--highlight" role="listitem" aria-label="Professional plan, most popular">
-                    <span class="sf-card__badge" role="note">
-                        <span class="sf-card__badge-dot" aria-hidden="true"></span>
+                <!-- Professional (Featured) -->
+                <article class="pricing-card relative bg-jarvis-panel/80 border-2 border-jarvis-cyan/40 rounded-xl p-8 backdrop-blur-sm" style="box-shadow: 0 0 50px rgba(0,212,255,0.1);">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-jarvis-cyan text-jarvis-bg text-[10px] font-mono font-bold tracking-widest uppercase">
+                        <span class="w-1.5 h-1.5 rounded-full bg-jarvis-bg animate-pulse"></span>
                         Most Popular
-                    </span>
-                    <p class="sf-card__tier">Professional</p>
-                    <div class="sf-card__price-row">
-                        <span class="sf-card__price">$29</span>
-                        <span class="sf-card__period">/ month</span>
-                        <span class="sf-card__strike" aria-label="Regular price $149">$149</span>
                     </div>
-                    <span class="sf-card__price-label">Early Access Pricing</span>
-                    <p class="sf-card__desc">
-                        For growing teams that need AppExchange v3.0 Zentom AI orchestration, memory, prediction, and self-healing.
-                    </p>
-                    <div class="sf-card__divider" role="separator"></div>
-                    <p class="sf-card__feature-label">Everything in Starter, plus</p>
-                    <ul class="sf-card__features">
-                        <li>
-                            <svg class="sf-check-icon sf-check-icon--blue" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
-                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
-                            </svg>
-                            Unlimited incidents
-                        </li>
-                        <li>
-                            <svg class="sf-check-icon sf-check-icon--blue" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
-                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
-                            </svg>
-                            AI classification + incident memory
-                        </li>
-                        <li>
-                            <svg class="sf-check-icon sf-check-icon--blue" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
-                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
-                            </svg>
-                            Adaptive auto-heal runbooks
-                        </li>
-                        <li>
-                            <svg class="sf-check-icon sf-check-icon--blue" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
-                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
-                            </svg>
-                            Prediction V2 risk scoring
-                        </li>
-                        <li>
-                            <svg class="sf-check-icon sf-check-icon--blue" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
-                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
-                            </svg>
-                            Dashboard V2 + learning quality
-                        </li>
+                    <p class="font-orbitron text-xs font-bold text-jarvis-cyan tracking-widest uppercase mb-4">Professional</p>
+                    <div class="flex items-baseline gap-2 mb-1">
+                        <span class="font-orbitron text-4xl font-black text-white">$29</span>
+                        <span class="text-sm text-gray-500 font-mono">/ month</span>
+                        <span class="text-sm text-gray-600 line-through font-mono">$149</span>
+                    </div>
+                    <span class="inline-block text-[10px] font-mono text-jarvis-accent tracking-wider uppercase mb-4">Early Access Pricing</span>
+                    <p class="text-sm text-gray-400 mb-6">For growing teams needing AppExchange v2.6 automation, memory, prediction, and self-healing.</p>
+                    <div class="h-px bg-jarvis-border mb-6"></div>
+                    <p class="text-[10px] font-mono text-gray-500 uppercase tracking-wider mb-4">Everything in Starter, plus</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center gap-3 text-sm text-gray-300"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Unlimited incidents</li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>AI classification + incident memory</li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Adaptive auto-heal runbooks</li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Prediction V2 risk scoring</li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Dashboard V2 + learning quality</li>
                     </ul>
-                    <a href="javascript:void(0)" class="sf-btn sf-btn--primary" data-modal="trial" data-plan="Professional">Start 14-Day Trial</a>
+                    <a href="javascript:void(0)" class="block w-full text-center px-6 py-3 bg-jarvis-cyan text-jarvis-bg font-orbitron font-bold text-xs tracking-wider rounded-lg hover:shadow-[0_0_30px_rgba(0,212,255,0.4)] transition-all uppercase" data-modal="trial" data-plan="Professional">Start 14-Day Trial</a>
                 </article>
 
-                <!-- ── Enterprise ── -->
-                <article class="sf-card" role="listitem" aria-label="Enterprise plan">
-                    <p class="sf-card__tier">Enterprise</p>
-                    <div class="sf-card__price-row">
-                        <span class="sf-card__price" style="font-size: 36px; margin-bottom: 6px;">Custom</span>
+                <!-- Enterprise -->
+                <article class="pricing-card jarvis-card bg-jarvis-panel/60 border border-jarvis-border rounded-xl p-8 backdrop-blur-sm">
+                    <p class="font-orbitron text-xs font-bold text-gray-400 tracking-widest uppercase mb-4">Enterprise</p>
+                    <div class="flex items-baseline gap-1 mb-2">
+                        <span class="font-orbitron text-3xl font-black text-white">Custom</span>
                     </div>
-                    <p class="sf-card__desc">
-                        For organizations needing full control, security review support, and enterprise scale.
-                    </p>
-                    <div class="sf-card__divider" role="separator"></div>
-                    <p class="sf-card__feature-label">Everything in Professional, plus</p>
-                    <ul class="sf-card__features">
-                        <li>
-                            <svg class="sf-check-icon sf-check-icon--default" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
-                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
-                            </svg>
-                            Tenant-isolated memory and RLS
-                        </li>
-                        <li>
-                            <svg class="sf-check-icon sf-check-icon--default" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
-                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
-                            </svg>
-                            Reliability simulation suite
-                        </li>
-                        <li>
-                            <svg class="sf-check-icon sf-check-icon--default" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
-                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
-                            </svg>
-                            API rate limits and circuit breakers
-                        </li>
-                        <li>
-                            <svg class="sf-check-icon sf-check-icon--default" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                                <circle cx="9" cy="9" r="8" class="sf-check-circle"/>
-                                <polyline points="5.5,9.5 7.5,11.5 12.5,6.5" class="sf-check-mark"/>
-                            </svg>
-                            Security review and packaging support
-                        </li>
+                    <p class="text-sm text-gray-400 mb-6">For organizations needing full control, security review support, and enterprise scale.</p>
+                    <div class="h-px bg-jarvis-border mb-6"></div>
+                    <p class="text-[10px] font-mono text-gray-500 uppercase tracking-wider mb-4">Everything in Professional, plus</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center gap-3 text-sm text-gray-300"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Tenant-isolated memory and RLS</li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Reliability simulation suite</li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>API rate limits and circuit breakers</li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Security review and packaging support</li>
                     </ul>
-                    <a href="javascript:void(0)" class="sf-btn sf-btn--ghost" data-modal="demo" data-plan="Enterprise">Contact Sales</a>
+                    <a href="javascript:void(0)" class="block w-full text-center px-6 py-3 border border-jarvis-border text-gray-300 font-orbitron font-bold text-xs tracking-wider rounded-lg hover:border-jarvis-cyan hover:text-jarvis-cyan transition-all uppercase" data-modal="demo" data-plan="Enterprise">Contact Sales</a>
                 </article>
-            </div><!-- /pricing-grid -->
-
-            <p class="sf-pricing__footnote">
-                All plans include AppExchange v3.0 package metadata, Tomcodex publisher support, SOC 2-ready logging design, and 99.9% uptime SLA targets.
-            </p>
+            </div>
+            <p class="text-center text-xs text-gray-500 font-mono mt-8 max-w-3xl mx-auto">All plans include AppExchange v2.6 package metadata, Tomcodex publisher support, SOC 2-ready logging design, and 99.9% uptime SLA targets.</p>
         </div>
     </section>
 
     <!-- ═══════════════════ CTA ═══════════════════ -->
-    <section class="cta" id="demo">
-        <div class="cta-glow"></div>
-        <div class="container">
-            <h2 class="cta-title">Ready to Eliminate Downtime?</h2>
-            <p class="cta-subtitle">Be among the first teams to experience AI-powered incident resolution on Salesforce.</p>
-            <div class="cta-actions">
-                <a href="javascript:void(0)" class="btn btn-primary btn-lg" data-modal="trial" data-plan="Professional">Start Your Free Trial</a>
-                <a href="javascript:void(0)" class="btn btn-ghost btn-lg" data-modal="demo">Schedule a Demo →</a>
+    <section id="demo" class="relative py-24 overflow-hidden">
+        <div class="absolute inset-0 bg-jarvis-cyan/3 blur-[100px] rounded-full mx-auto w-3/4 h-3/4"></div>
+        <div class="relative z-10 max-w-3xl mx-auto px-6 text-center">
+            <div class="bg-jarvis-panel/60 border border-jarvis-border rounded-2xl p-12 md:p-16 backdrop-blur-sm hud-corners" style="box-shadow: 0 0 60px rgba(0,212,255,0.06);">
+                <h2 class="font-orbitron text-3xl md:text-4xl font-bold text-white mb-4">Ready to Eliminate <span class="jarvis-text">Downtime</span>?</h2>
+                <p class="text-gray-400 mb-8 max-w-xl mx-auto">Be among the first teams to experience AI-powered incident resolution on Salesforce.</p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="javascript:void(0)" class="px-8 py-4 bg-jarvis-cyan text-jarvis-bg font-orbitron font-bold text-xs tracking-wider rounded-lg hover:shadow-[0_0_40px_rgba(0,212,255,0.3)] transition-all uppercase" data-modal="trial" data-plan="Professional">Start Your Free Trial</a>
+                    <a href="javascript:void(0)" class="px-8 py-4 border border-jarvis-border text-jarvis-cyan font-orbitron font-semibold text-xs tracking-wider rounded-lg hover:border-jarvis-cyan transition-all uppercase" data-modal="demo">Schedule a Demo →</a>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- ═══════════════════ FOOTER ═══════════════════ -->
-    <footer class="footer" style="border-top: 1px solid var(--border-color); padding: 24px 0; background: var(--bg-primary); margin-top: auto;">
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; font-size: 0.8rem; color: var(--text-secondary);">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                <img src="assets/logo.svg" alt="SentinelFlow Logo" style="width: 20px; height: 20px;">
+    <footer class="border-t border-jarvis-border py-6 bg-jarvis-bg">
+        <div class="max-w-7xl mx-auto px-6 flex flex-wrap items-center justify-between gap-4 text-xs text-gray-500 font-mono">
+            <div class="flex items-center gap-2">
+                <img src="assets/logo.svg" alt="SentinelFlow" class="w-4 h-4">
                 <span>Copyright © 2026 TomCodeX Inc. All rights reserved.</span>
             </div>
-            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px; flex-wrap: wrap;">
-                <a href="about.html" style="color: var(--text-secondary); text-decoration: none;">About Us</a>
-                <span>|</span>
-                <a href="careers.html" style="color: var(--text-secondary); text-decoration: none;">Careers</a>
-                <span>|</span>
-                <a href="blog.html" style="color: var(--text-secondary); text-decoration: none;">Blog</a>
-                <span>|</span>
-                <a href="contact.html" style="color: var(--text-secondary); text-decoration: none;">Contact</a>
-                <span>|</span>
-                <a href="privacy-policy.html" style="color: var(--text-secondary); text-decoration: none;">Privacy Policy</a>
-                <span>|</span>
-                <a href="terms.html" style="color: var(--text-secondary); text-decoration: none;">Terms of Use</a>
-                <span>|</span>
-                <a href="shipping-policy.html" style="color: var(--text-secondary); text-decoration: none;">Shipping Policy</a>
-                <span>|</span>
-                <a href="cancellation-refund-policy.html" style="color: var(--text-secondary); text-decoration: none;">Cancellation & Refunds</a>
-                <span>|</span>
-                <a href="#" onclick="openInfoModal(event)" style="color: #00d2ff; text-decoration: none; font-weight: 600;">All Topics <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg></a>
+            <div class="flex flex-wrap items-center gap-3">
+                <a href="about.html" class="hover:text-jarvis-cyan transition-colors">About Us</a><span class="text-jarvis-border">|</span>
+                <a href="careers.html" class="hover:text-jarvis-cyan transition-colors">Careers</a><span class="text-jarvis-border">|</span>
+                <a href="blog.html" class="hover:text-jarvis-cyan transition-colors">Blog</a><span class="text-jarvis-border">|</span>
+                <a href="contact.html" class="hover:text-jarvis-cyan transition-colors">Contact</a><span class="text-jarvis-border">|</span>
+                <a href="privacy-policy.html" class="hover:text-jarvis-cyan transition-colors">Privacy</a><span class="text-jarvis-border">|</span>
+                <a href="terms.html" class="hover:text-jarvis-cyan transition-colors">Terms</a><span class="text-jarvis-border">|</span>
+                <a href="shipping-policy.html" class="hover:text-jarvis-cyan transition-colors">Shipping</a><span class="text-jarvis-border">|</span>
+                <a href="cancellation-refund-policy.html" class="hover:text-jarvis-cyan transition-colors">Refunds</a><span class="text-jarvis-border">|</span>
+                <a href="javascript:void(0)" id="infoModalTrigger" class="text-jarvis-cyan font-semibold hover:underline">All Topics ↗</a>
             </div>
-            <div style="margin-bottom: 8px;">
-                United States
-            </div>
+            <div>United States</div>
         </div>
     </footer>
 
-    <!-- ═══════════════════ MODAL ═══════════════════ -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal" id="modal">
-            <button class="modal-close" id="modalClose" aria-label="Close modal">&times;</button>
-            <div class="modal-icon" id="modalIcon">⚡</div>
-            <h2 class="modal-title" id="modalTitle">Start Your Free Trial</h2>
-            <p class="modal-desc" id="modalDesc">Enter your details and we'll get you set up in under 2 minutes.</p>
-            <form class="modal-form" id="modalForm" action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8" method="POST" target="w2l_iframe">
+    <!-- ═══════════════════ MODAL (Salesforce Web-to-Lead) ═══════════════════ -->
+    <div class="modal-overlay fixed inset-0 z-[1000] flex items-center justify-center bg-black/70 backdrop-blur-sm" id="modalOverlay">
+        <div class="relative bg-jarvis-panel border border-jarvis-border rounded-xl p-8 w-[90%] max-w-lg hud-corners" id="modal" style="box-shadow: 0 0 60px rgba(0,212,255,0.1);">
+            <button class="absolute top-4 right-4 text-2xl text-gray-500 hover:text-jarvis-cyan transition-colors" id="modalClose" aria-label="Close modal">&times;</button>
+            <div class="text-3xl mb-2" id="modalIcon">⚡</div>
+            <h2 class="font-orbitron text-xl font-bold text-white mb-2" id="modalTitle">Start Your Free Trial</h2>
+            <p class="text-sm text-gray-400 mb-6" id="modalDesc">Enter your details and we'll get you set up in under 2 minutes.</p>
+            <form class="flex flex-col gap-4" id="modalForm" action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8" method="POST" target="w2l_iframe">
                 <input type="hidden" name="oid" value="00DdL0000053505">
                 <input type="hidden" name="retURL" value="http://localhost:3500">
                 <input type="hidden" name="lead_source" value="Website">
                 <input type="hidden" id="selectedPlan" name="description" value="">
-                
-                <div class="form-row" style="display:flex; gap:16px;">
-                    <div class="form-group" style="flex:1;">
-                        <label for="first_name">First Name</label>
-                        <input type="text" id="first_name" name="first_name" placeholder="John" required>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-1.5">
+                        <label for="first_name" class="text-[10px] font-mono text-gray-400 uppercase tracking-wider">First Name</label>
+                        <input type="text" id="first_name" name="first_name" placeholder="John" required class="bg-jarvis-deep border border-jarvis-border rounded-lg px-4 py-3 text-sm text-white placeholder-gray-600 focus:border-jarvis-cyan focus:outline-none transition-colors font-mono">
                     </div>
-                    <div class="form-group" style="flex:1;">
-                        <label for="last_name">Last Name</label>
-                        <input type="text" id="last_name" name="last_name" placeholder="Doe" required>
+                    <div class="flex flex-col gap-1.5">
+                        <label for="last_name" class="text-[10px] font-mono text-gray-400 uppercase tracking-wider">Last Name</label>
+                        <input type="text" id="last_name" name="last_name" placeholder="Doe" required class="bg-jarvis-deep border border-jarvis-border rounded-lg px-4 py-3 text-sm text-white placeholder-gray-600 focus:border-jarvis-cyan focus:outline-none transition-colors font-mono">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="email">Work Email</label>
-                    <input type="email" id="email" name="email" placeholder="john@company.com" required>
+                <div class="flex flex-col gap-1.5">
+                    <label for="email" class="text-[10px] font-mono text-gray-400 uppercase tracking-wider">Work Email</label>
+                    <input type="email" id="email" name="email" placeholder="john@company.com" required class="bg-jarvis-deep border border-jarvis-border rounded-lg px-4 py-3 text-sm text-white placeholder-gray-600 focus:border-jarvis-cyan focus:outline-none transition-colors font-mono">
                 </div>
-                <div class="form-group">
-                    <label for="company">Company</label>
-                    <input type="text" id="company" name="company" placeholder="Acme Inc." required>
+                <div class="flex flex-col gap-1.5">
+                    <label for="company" class="text-[10px] font-mono text-gray-400 uppercase tracking-wider">Company</label>
+                    <input type="text" id="company" name="company" placeholder="Acme Inc." required class="bg-jarvis-deep border border-jarvis-border rounded-lg px-4 py-3 text-sm text-white placeholder-gray-600 focus:border-jarvis-cyan focus:outline-none transition-colors font-mono">
                 </div>
-                <div class="form-group" id="messageGroup" style="display:none;">
-                    <label for="message">Message</label>
-                    <!-- Append to description via JS or map to a custom field. For now using title -->
-                    <textarea id="message" name="title" rows="3" placeholder="Tell us about your requirements..."></textarea>
+                <div class="flex-col gap-1.5 hidden" id="messageGroup">
+                    <label for="message" class="text-[10px] font-mono text-gray-400 uppercase tracking-wider">Message</label>
+                    <textarea id="message" name="title" rows="3" placeholder="Tell us about your requirements..." class="bg-jarvis-deep border border-jarvis-border rounded-lg px-4 py-3 text-sm text-white placeholder-gray-600 focus:border-jarvis-cyan focus:outline-none transition-colors font-mono resize-none"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block" id="modalSubmitBtn">Get Started</button>
+                <button type="submit" class="w-full py-3 bg-jarvis-cyan text-jarvis-bg font-orbitron font-bold text-xs tracking-wider rounded-lg hover:shadow-[0_0_20px_rgba(0,212,255,0.4)] transition-all uppercase mt-2" id="modalSubmitBtn">Get Started</button>
             </form>
-            <iframe name="w2l_iframe" id="w2l_iframe" style="display:none;"></iframe>
-            <div class="modal-success" id="modalSuccess" style="display:none;">
-                <div class="success-icon">✓</div>
-                <h3>You're All Set!</h3>
-                <p>We've received your request. Our team will reach out within 24 hours.</p>
+            <iframe name="w2l_iframe" id="w2l_iframe" class="hidden"></iframe>
+            <div class="text-center hidden" id="modalSuccess">
+                <div class="text-5xl text-jarvis-cyan mb-4">✓</div>
+                <h3 class="font-orbitron text-lg font-bold text-white mb-2">You're All Set!</h3>
+                <p class="text-sm text-gray-400">We've received your request. Our team will reach out within 24 hours.</p>
             </div>
         </div>
     </div>
 
     <!-- ═══════════════════ INFO TOPICS MODAL ═══════════════════ -->
-    <div class="modal-overlay" id="infoModalOverlay" style="display:none; align-items:center; justify-content:center; z-index: 2000;">
-        <div class="modal" id="infoModal" style="max-width: 800px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; position: relative; max-height: 90vh; overflow-y: auto;">
-            <button class="modal-close" onclick="closeInfoModal()" aria-label="Close modal" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:28px; color:var(--text-secondary); cursor:pointer;">&times;</button>
-            <h2 class="modal-title" style="margin-bottom: 32px; font-size: 1.8rem; text-align:center; background: linear-gradient(90deg, #fff, #a8a8a8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Information & Topics</h2>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px;">
-                <!-- Product Column -->
+    <div class="fixed inset-0 z-[2000] flex items-center justify-center bg-black/70 backdrop-blur-sm hidden" id="infoModalOverlay">
+        <div class="relative bg-jarvis-panel border border-jarvis-border rounded-xl p-8 w-[90%] max-w-3xl max-h-[90vh] overflow-y-auto hud-corners" id="infoModal" style="box-shadow: 0 0 60px rgba(0,212,255,0.1);">
+            <button id="infoModalClose" aria-label="Close modal" class="absolute top-4 right-4 text-2xl text-gray-500 hover:text-jarvis-cyan transition-colors">&times;</button>
+            <h2 class="font-orbitron text-xl font-bold text-white text-center mb-8">Information & Topics</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
                 <div>
-                    <h4 style="color: var(--text-primary); margin-bottom: 16px; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">Product</h4>
-                    <ul style="list-style: none; padding: 0; margin: 0; display:flex; flex-direction:column; gap:12px;">
-                        <li><a href="#features" onclick="closeInfoModal()" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Features</a></li>
-                        <li><a href="#pricing" onclick="closeInfoModal()" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Pricing</a></li>
-                        <li><a href="architecture.html" onclick="closeInfoModal()" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Architecture</a></li>
-                        <li><a href="#" onclick="closeInfoModal()" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Changelog</a></li>
+                    <h4 class="font-orbitron text-xs font-bold text-jarvis-cyan mb-4 pb-2 border-b border-jarvis-border uppercase tracking-wider">Product</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#features" class="info-modal-link text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">Features</a></li>
+                        <li><a href="#pricing" class="info-modal-link text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">Pricing</a></li>
+                        <li><a href="#architecture" class="info-modal-link text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">Architecture</a></li>
+                        <li><a href="#" class="info-modal-link text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">Changelog</a></li>
                     </ul>
                 </div>
-                
-                <!-- Company Column -->
                 <div>
-                    <h4 style="color: var(--text-primary); margin-bottom: 16px; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">Company</h4>
-                    <ul style="list-style: none; padding: 0; margin: 0; display:flex; flex-direction:column; gap:12px;">
-                        <li><a href="about.html" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">About Us</a></li>
-                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Our Mission</a></li>
-                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Leadership</a></li>
-                        <li><a href="careers.html" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Careers</a></li>
-                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Customers</a></li>
-                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Partners</a></li>
-                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Newsroom</a></li>
-                        <li><a href="blog.html" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Blog</a></li>
-                        <li><a href="contact.html" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Contact</a></li>
+                    <h4 class="font-orbitron text-xs font-bold text-jarvis-cyan mb-4 pb-2 border-b border-jarvis-border uppercase tracking-wider">Company</h4>
+                    <ul class="space-y-3">
+                        <li><a href="about.html" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">About Us</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">Our Mission</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">Leadership</a></li>
+                        <li><a href="careers.html" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">Careers</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">Customers</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">Partners</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">Newsroom</a></li>
+                        <li><a href="blog.html" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">Blog</a></li>
+                        <li><a href="contact.html" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">Contact</a></li>
                     </ul>
                 </div>
-
-                <!-- Legal Column -->
                 <div>
-                    <h4 style="color: var(--text-primary); margin-bottom: 16px; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">Legal</h4>
-                    <ul style="list-style: none; padding: 0; margin: 0; display:flex; flex-direction:column; gap:12px;">
-                        <li><a href="privacy-policy.html" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Privacy Policy</a></li>
-                        <li><a href="terms.html" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Terms of Service</a></li>
-                        <li><a href="shipping-policy.html" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Shipping Policy</a></li>
-                        <li><a href="cancellation-refund-policy.html" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Cancellation & Refunds</a></li>
-                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">Security</a></li>
-                        <li><a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">GDPR</a></li>
+                    <h4 class="font-orbitron text-xs font-bold text-jarvis-cyan mb-4 pb-2 border-b border-jarvis-border uppercase tracking-wider">Legal</h4>
+                    <ul class="space-y-3">
+                        <li><a href="privacy-policy.html" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">Terms of Service</a></li>
+                        <li><a href="shipping-policy.html" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">Shipping Policy</a></li>
+                        <li><a href="cancellation-refund-policy.html" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">Cancellation & Refunds</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">Security</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-jarvis-cyan transition-colors">GDPR</a></li>
                     </ul>
                 </div>
             </div>
@@ -752,24 +841,5 @@
     </div>
 
     <script src="script.js"></script>
-    <script>
-        function openInfoModal(event) {
-            if(event) event.preventDefault();
-            const modal = document.getElementById('infoModalOverlay');
-            if(modal) modal.style.display = 'flex';
-        }
-        function closeInfoModal() {
-            const modal = document.getElementById('infoModalOverlay');
-            if(modal) modal.style.display = 'none';
-        }
-        // Close if clicked outside
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('infoModalOverlay');
-            if (event.target == modal) {
-                closeInfoModal();
-            }
-        });
-    </script>
 </body>
 </html>
-

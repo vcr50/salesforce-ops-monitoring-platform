@@ -290,3 +290,38 @@ document.querySelectorAll('.tab-btn').forEach(button => {
         window.openTab(event, section);
     });
 });
+
+// ── Info Topics Modal ────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    const infoModalTrigger = document.getElementById('infoModalTrigger');
+    const infoModalOverlay = document.getElementById('infoModalOverlay');
+    const infoModalClose = document.getElementById('infoModalClose');
+    const infoModalLinks = document.querySelectorAll('.info-modal-link');
+
+    function openInfoModal(event) {
+        if(event) event.preventDefault();
+        if(infoModalOverlay) infoModalOverlay.classList.remove('hidden');
+    }
+
+    function closeInfoModal() {
+        if(infoModalOverlay) infoModalOverlay.classList.add('hidden');
+    }
+
+    if(infoModalTrigger) {
+        infoModalTrigger.addEventListener('click', openInfoModal);
+    }
+
+    if(infoModalClose) {
+        infoModalClose.addEventListener('click', closeInfoModal);
+    }
+
+    infoModalLinks.forEach(link => {
+        link.addEventListener('click', closeInfoModal);
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target == infoModalOverlay) {
+            closeInfoModal();
+        }
+    });
+});
