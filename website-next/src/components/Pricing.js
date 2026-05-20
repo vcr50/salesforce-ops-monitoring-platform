@@ -32,7 +32,7 @@ export default function Pricing({ onOpenModal }) {
             <span className="sf-pricing__title-accent">every stage of growth</span>
           </h2>
           <p className="sf-pricing__subtitle">
-            Start free, scale when you&apos;re ready. No hidden fees, no lock-in.
+            Start free, scale when you&apos;re ready. Pricing shown in INR for India.
           </p>
         </div>
 
@@ -43,7 +43,7 @@ export default function Pricing({ onOpenModal }) {
           <article className="sf-card">
             <p className="sf-card__tier">Starter</p>
             <div className="sf-card__price-row">
-              <span className="sf-card__price">$0</span>
+              <span className="sf-card__price">₹0</span>
               <span className="sf-card__period">/ month</span>
             </div>
             <p className="sf-card__desc">
@@ -74,13 +74,13 @@ export default function Pricing({ onOpenModal }) {
             </span>
             <p className="sf-card__tier">Professional</p>
             <div className="sf-card__price-row">
-              <span className="sf-card__price">$29</span>
+              <span className="sf-card__price">₹2,499</span>
               <span className="sf-card__period">/ month</span>
-              <span className="sf-card__strike" aria-label="Regular price $149">$149</span>
+              <span className="sf-card__strike" aria-label="Regular price ₹12,499">₹12,499</span>
             </div>
             <span className="sf-card__price-label">Early Access Pricing</span>
             <p className="sf-card__desc">
-              For growing teams that need AppExchange v2.6 automation, memory, prediction, and self-healing.
+              For growing teams that need AgentExchange v3.0 automation, memory, prediction, and self-healing.
             </p>
             <hr className="sf-card__divider" />
             <p className="sf-card__feature-label">Everything in Starter, plus</p>
@@ -129,7 +129,7 @@ export default function Pricing({ onOpenModal }) {
         </div>{/* /grid */}
 
         <p className="sf-pricing__footnote">
-          All plans include AppExchange v2.6 package metadata, Tomcodex publisher support, SOC 2-ready logging design, and 99.9% uptime SLA targets.
+          All plans include AgentExchange v3.0 package metadata, Tomcodex publisher support, SOC 2-ready logging design, and 99.9% uptime SLA targets.
         </p>
       </div>
 

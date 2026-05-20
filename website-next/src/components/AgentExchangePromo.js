@@ -10,12 +10,12 @@ export default function AgentExchangePromo({ onOpenModal }) {
           </div>
           <h2 className="promo-title">SentinelFlow is AgentExchange Ready</h2>
           <p className="promo-subtitle">
-            Experience the full power of SentinelFlow 2.6, published by Tomcodex, with our 2GP package.
-            Install memory, prediction intelligence, adaptive runbooks, learning loops, and enterprise isolation.
+            Experience the full power of SentinelFlow 3.0, published by Tomcodex, with our 2GP package.
+            Install AI classification, incident memory, prediction intelligence, adaptive runbooks, learning loops, reliability simulation, and enterprise isolation.
           </p>
           <div className="promo-actions">
             <button className="btn btn-primary btn-lg" onClick={() => onOpenModal('Free Trial')}>Start Free Trial</button>
-            <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000aQVRQA2" target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-lg">Get Package (2GP)</a>
+            <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000aLnVQAU" target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-lg">Get Package (2GP)</a>
           </div>
         </div>
         <div className="promo-visual">
@@ -24,7 +24,7 @@ export default function AgentExchangePromo({ onOpenModal }) {
             <img src="/agentexchange-logo.png" alt="Salesforce AgentExchange" className="promo-logo" onError={(e) => e.target.style.display = 'none'} />
             <div className="promo-stats">
               <div className="promo-stat">
-                <span className="promo-stat-val">v2.6.1</span>
+                <span className="promo-stat-val">v3.0</span>
                 <span className="promo-stat-label">Version</span>
               </div>
               <div className="promo-stat">

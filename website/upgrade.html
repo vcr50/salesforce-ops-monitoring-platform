@@ -351,7 +351,7 @@
         </div>
         <input class="field" id="billingEmail" type="email" autocomplete="email" placeholder="Billing email" />
         <p class="secure-note">
-          Visa and other card payments are authorized securely on Stripe Checkout. SentinelFlow never stores card numbers or security codes.
+          Visa, UPI, and other supported payments are authorized securely at checkout. SentinelFlow never stores card numbers, UPI handles, or security codes.
         </p>
       </div>
     </section>
@@ -382,15 +382,15 @@
 
       <div class="row">
         <span>Monthly subscription</span>
-        <strong id="monthlyPrice">$29.00</strong>
+        <strong id="monthlyPrice">₹2,499.00</strong>
       </div>
       <div class="row">
         <span>Estimated tax</span>
-        <strong id="taxPrice">$0.00</strong>
+        <strong id="taxPrice">Calculated at checkout</strong>
       </div>
       <div class="row total">
         <span>Due today</span>
-        <strong id="dueToday">$29.00</strong>
+        <strong id="dueToday">₹2,499.00</strong>
       </div>
 
       <button class="subscribe" type="button" id="subscribeButton">Subscribe</button>
@@ -399,7 +399,7 @@
   </main>
 
   <p class="fine-print">
-    Renews monthly until canceled. <span id="renewalText">$29.00/month will be charged.</span>
+    Renews monthly until canceled. <span id="renewalText">₹2,499.00/month will be charged.</span>
     <a href="pricing.html">Cancel</a>
   </p>
 
@@ -414,8 +414,8 @@
 
     const plan = selectedPlan === 'Enterprise' ? 'Enterprise' : 'Professional';
     const prices = {
-      Professional: { label: 'Professional plan', monthly: '$29.00', tax: 'Calculated at checkout', due: '$29.00' },
-      Enterprise: { label: 'Enterprise plan', monthly: 'Custom', tax: '$0.00', due: 'Contact sales' }
+      Professional: { label: 'Professional plan', monthly: '₹2,499.00', tax: 'Calculated at checkout', due: '₹2,499.00' },
+      Enterprise: { label: 'Enterprise plan', monthly: 'Custom', tax: 'Calculated by contract', due: 'Contact sales' }
     };
 
     function showStatus(message, isError = false) {

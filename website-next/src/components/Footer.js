@@ -39,7 +39,7 @@ export default function Footer() {
           </div>
 
           <div style={{ marginBottom: '8px' }}>
-            United States
+            India
           </div>
 
         </div>
