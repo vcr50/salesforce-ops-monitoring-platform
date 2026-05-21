@@ -844,13 +844,13 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 ---
 
 <p align="center">
-  <strong>Built with 🛡️ by <a href="https://sentinelflow.io">Tomcodex</a></strong><br/>
+  <strong>Built with 🛡️ by <a href="https://sftx.vercel.app/">SENTINELFLOW</a></strong><br/>
   <sub>Salesforce Architects · AI Engineers · Operations Veterans</sub><br/>
   <sub>We've lived on-call. We built SentinelFlow so no one else has to.</sub>
 </p>
 
 <p align="center">
-  <a href="https://sentinelflow.io">Website</a> •
+  <a href="https://sftx.vercel.app/">Website</a> •
   <a href="mailto:hello@sentinelflow.io">Contact</a> •
   <a href="https://appexchange.salesforce.com">AppExchange</a> •
   <a href="docs/USER_GUIDE.md">Documentation</a>
