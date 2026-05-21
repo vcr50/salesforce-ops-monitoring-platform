@@ -191,73 +191,110 @@
 
 .theme-toggle {
     position: relative;
-    width: 6.8rem;
-    height: 2.25rem;
-    border: 1px solid #d9e2f2;
+    width: 3.5rem;
+    height: 1.8rem;
     border-radius: 999px;
-    background: #ffffff;
-    color: var(--shell-muted);
-    display: inline-grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    padding: 0.2rem;
+    background: #e2e8f0;
+    border: none;
     cursor: pointer;
     overflow: hidden;
-    box-shadow: none;
-    transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    transition: background 300ms ease;
+    padding: 0;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .theme-toggle:hover {
-    border-color: var(--shell-blue);
+    background: #cbd5e1;
 }
 
-.theme-option {
-    position: relative;
-    z-index: 2;
-    font-size: 0.72rem;
-    font-weight: 800;
-    line-height: 1;
-    transition: color 180ms ease;
+.theme-track {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0.35rem;
     pointer-events: none;
+}
+
+.theme-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    color: #64748b;
+    transition: color 300ms ease, transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-icon.sun {
+    color: #f59e0b;
+    transform: scale(1);
+}
+
+.theme-icon.moon {
+    color: #94a3b8;
+    transform: scale(0.6);
 }
 
 .theme-thumb {
     position: absolute;
-    z-index: 1;
-    left: 0.22rem;
-    top: 0.22rem;
-    width: calc(50% - 0.22rem);
-    height: calc(100% - 0.44rem);
-    border-radius: 999px;
+    z-index: 2;
+    top: 0.15rem;
+    left: 0.15rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
     background: #ffffff;
-    color: #f59e0b;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.14);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     transform: translateX(0);
-    transition: transform 190ms ease, background 190ms ease, color 190ms ease;
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .theme-toggle.is-dark {
-    background: #071024;
-    border-color: #263a5f;
+    background: #1e293b;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.theme-toggle.is-dark:hover {
+    background: #334155;
 }
 
 .theme-toggle.is-dark .theme-thumb {
-    transform: translateX(3.08rem);
-    background: #0f172a;
-    color: #93c5fd;
+    transform: translateX(1.7rem);
 }
 
-.theme-toggle.is-light .day-label,
-.theme-toggle.is-dark .dark-label {
-    color: transparent;
+.theme-toggle.is-dark .theme-icon.sun {
+    color: #475569;
+    transform: scale(0.6);
 }
 
-.theme-toggle.is-light .dark-label,
-.theme-toggle.is-dark .day-label {
-    color: var(--shell-muted);
+.theme-toggle.is-dark .theme-icon.moon {
+    color: #a78bfa;
+    transform: scale(1);
+}
+
+.custom-refresh-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    border: 1px solid #d9e2f2;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 200ms ease;
+}
+
+.custom-refresh-btn:hover {
+    color: var(--shell-blue);
+    border-color: var(--shell-blue);
+    background: #f8fafc;
+}
+
+.custom-refresh-btn:active {
+    transform: scale(0.95);
 }
 
 .status-dot,
@@ -349,6 +386,21 @@
     font-size: 0.6875rem;
 }
 
+.zai-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.8rem;
+    height: 1.4rem;
+    border-radius: 0.35rem;
+    background: linear-gradient(135deg, #4f46e5 0%, #a855f7 100%);
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    box-shadow: 0 2px 5px rgba(79, 70, 229, 0.3);
+}
+
 .sidebar-card {
     margin-top: 1rem;
     padding: 1rem;
@@ -432,6 +484,18 @@
     background: #f2f4f7;
     border-color: #d9e2f2;
     color: #41506a;
+}
+
+.app-shell.theme-dark .custom-refresh-btn {
+    background: #1e293b;
+    border-color: #334155;
+    color: #94a3b8;
+}
+
+.app-shell.theme-dark .custom-refresh-btn:hover {
+    background: #334155;
+    border-color: #475569;
+    color: #e2e8f0;
 }
 
 .app-shell.theme-dark .theme-toggle {

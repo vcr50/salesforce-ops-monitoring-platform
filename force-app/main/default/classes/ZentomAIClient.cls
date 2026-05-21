@@ -1,7 +1,18 @@
 public with sharing class ZentomAIClient {
-    // IMPORTANT: Create a Named Credential in Setup called 'Zentom_AI_API'
-    // with the root URL of your LLM (e.g., https://api.zentom.ai)
-    private static final String API_ENDPOINT = 'callout:Zentom_AI_API/v1/chat/completions';
+    // ─── CONFIGURATION ──────────────────────────────────────────────────
+    // The public URL to the Zentom AI Python Backend
+    // In production, use a Named Credential instead of a hardcoded URL.
+    private static final String API_ENDPOINT = 'https://zentom-ai-backend-2026.loca.lt/api/v1/orchestrate';
+    
+    // The Salesforce REST endpoint that Zentom will POST the result back to.
+    // Format: https://<your-org-domain>/services/apexrest/zentom/callback
+    private static final String CALLBACK_URL = ''; // Set when org REST endpoint is deployed
+    
+    // Circuit breaker: max consecutive failures before disabling callouts
+    private static final Integer CIRCUIT_BREAKER_THRESHOLD = 3;
+    private static final String CIRCUIT_BREAKER_KEY = 'ZentomCircuitBreaker';
+
+    // ─── DATA CONTRACTS ─────────────────────────────────────────────────
     
     public class ZentomDecision {
         @AuraEnabled public String recommendation {get;set;}
@@ -10,152 +21,164 @@ public with sharing class ZentomAIClient {
         @AuraEnabled public String rationale {get;set;}
     }
 
-    public static final String ZENTOM_SYSTEM_PROMPT = 
-        'You are the Zentom Orchestration System LLM, the central reasoning and governance engine ("orchestration moat") for the SentinelFlow platform. Your primary function is to process and resolve critical business incidents by integrating multiple specialized AI models and enforcing a rigorous governance framework.\n\n' +
-        'Objective: Given an enriched incident context packet from the SentinelFlow Core, your task is to determine the optimal, safest, and revenue-aware remediation action. This action must be fully validated and prepared for execution through the system of record (Salesforce) via Agentforce.\n\n' +
-        'Architecture and Workflow Constraints:\n' +
-        'Reasoning First Strategy: You must employ a reasoning-first approach, prioritizing heavy inference via DeepSeek R1 (45% weight) for complex diagnosis and problem resolution.\n' +
-        'Context Assembly: Before any action, utilize the Context Engine to gather full situational awareness. This context must include semantically similar past incidents (via Memory Engine/RAG), account ARR/tier (from Salesforce), the real-time calculated Revenue at Risk (from Revenue Pulse Engine), runbooks (from Knowledge Base), and incident history.\n' +
-        'Model Routing and Specialization: Engage the Model Router to select the appropriate combination of models based on the task:\n' +
-        '- DeepSeek R1 (Reasoning)\n' +
-        '- Agentforce (20% weight, for Salesforce-native record updates and flow execution)\n' +
-        '- DeepSeek Coder (for code tasks)\n' +
-        '- Llama 3 (for low-latency, high-speed local inference).\n\n' +
-        'Structural Governance (The Moat): No action is permitted to touch a production system without mandatory passage through four sequential governance and control gates:\n' +
-        '1. Risk Evaluation: The action must pass a quantified risk assessment from the Risk Engine (measuring Technical Severity, Business Impact, Blast Radius, and Operational Context).\n' +
-        '2. Policy Validation: The final action must be cleared by the Policy Engine against hard gates (e.g., if Confidence < 80% or if operational risk is high).\n' +
-        '3. Confidence & AI Guardian Gate: Autonomous execution is strictly blocked under the following conditions, requiring immediate human escalation:\n' +
-        '   - The model\'s self-reported technical confidence score is below 80%.\n' +
-        '   - The real-time Revenue Risk (calculated by Revenue Pulse Engine) exceeds $50,000. Under no circumstances should AI auto-heal a high-financial-risk incident without human oversight.\n' +
-        '   - The action involves irreversible data deletion or mass metadata changes in a production system.\n' +
-        '4. Replay Logging: Every step of the decision lifecycle—including the assembled context, model prompt/response, risk scores, policy outcomes, and final action—must be logged to the Replay Engine for audit and future performance metrics.\n' +
-        '5. Execution: Upon clearance, the final action must be relayed to the Execution Controller to manage pre-execution checks, sequencing, and step verification before safely initiating the action via Agentforce.\n\n' +
-        'Required Output Format (Structured Response):\n\n' +
-        'Generate the output in a normalized JSON format for the Policy Engine evaluation.\n' +
-        '{\n' +
-        '  "recommendation": "[A concise summary of the diagnosis and proposed path]",\n' +
-        '  "confidence_score": "[Integer 0-100, reflecting model certainty]",\n' +
-        '  "proposed_action": "[Specific, actionable command for the Execution Controller (e.g., \'Restart workflow X\', \'Open Salesforce case with severity Y\')]",\n' +
-        '  "rationale": "[Detailed justification covering the diagnosis, why the action was selected, and how it adheres to both the 80% Confidence Gate and high-risk policy constraints.]"\n' +
-        '}';
+    public class AgentforcePayload {
+        public String incidentId;
+        public String action;
+        public Integer confidence;
+        public Decimal riskScore;
+        public String executionMode;
+        public Boolean agentforceReady;
+    }
     
+    // ─── LEGACY SYNC ORCHESTRATION ──────────────────────────────────────
     public static ZentomDecision getZentomResponse(String userPrompt, String additionalContext) {
+        ZentomDecision d = new ZentomDecision();
+        d.recommendation = 'Legacy Analysis';
+        d.confidence_score = 50;
+        d.proposed_action = 'Escalate';
+        d.rationale = 'Legacy method fallback';
+        return d;
+    }
+    
+    public static ZentomDecision orchestrateIncident(Id incidentId, String userPrompt, String taskType, String workflowStage) {
+        ZentomDecision d = new ZentomDecision();
+        d.recommendation = 'Legacy Sync Orchestration';
+        d.confidence_score = 50;
+        d.proposed_action = 'Escalate';
+        d.rationale = 'Replaced by orchestrateIncidentAsync';
+        return d;
+    }
+    
+    // ─── MASTER ORCHESTRATION (ASYNC FIRE-AND-FORGET) ───────────────────
+    
+    /**
+     * Refactored orchestration method.
+     * Instead of blocking synchronously for 120s waiting for LLM inference,
+     * this now fires the incident to Zentom asynchronously and exits immediately.
+     * The result will arrive via webhook to ZentomWebhookListener.
+     *
+     * Circuit Breaker: If the backend has failed CIRCUIT_BREAKER_THRESHOLD times
+     * consecutively, we skip the callout entirely and log for manual review.
+     */
+    public static String orchestrateIncidentAsync(Id incidentId, String userPrompt, String taskType, String workflowStage) {
+        
+        // ── CIRCUIT BREAKER CHECK ──
+        Integer failureCount = getCircuitBreakerCount();
+        if (failureCount >= CIRCUIT_BREAKER_THRESHOLD) {
+            System.debug(LoggingLevel.ERROR, 
+                '[ZentomAI] Circuit breaker OPEN — ' + failureCount + ' consecutive failures. ' +
+                'Skipping callout for incident ' + incidentId + '. Manual review required.');
+            return null;
+        }
+        
+        // 1. Prepare request payload
+        Map<String, Object> payload = new Map<String, Object>();
+        payload.put('incidentId', (String)incidentId);
+        payload.put('userPrompt', userPrompt);
+        payload.put('taskType', taskType);
+        payload.put('workflowStage', workflowStage);
+        payload.put('mock_arr', 150000.0);
+        payload.put('mock_error_signature', 'OAuth token expired during payment sync');
+        
+        // Include callback URL if configured
+        if (String.isNotBlank(CALLBACK_URL)) {
+            payload.put('callbackUrl', CALLBACK_URL);
+        }
+        
+        // 2. Make Callout (Async — does NOT block for LLM result)
         Http http = new Http();
         HttpRequest req = new HttpRequest();
         req.setEndpoint(API_ENDPOINT);
         req.setMethod('POST');
         req.setHeader('Content-Type', 'application/json');
-        
-        Map<String, Object> payload = new Map<String, Object>();
-        payload.put('model', 'deepseek-reasoner');
-        payload.put('response_format', new Map<String, String>{ 'type' => 'json_object' });
-        
-        String fullSystemContext = ZENTOM_SYSTEM_PROMPT + '\n\nADDITIONAL CONTEXT:\n' + additionalContext;
-
-        List<Map<String, String>> messages = new List<Map<String, String>>();
-        messages.add(new Map<String, String>{ 'role' => 'system', 'content' => fullSystemContext });
-        messages.add(new Map<String, String>{ 'role' => 'user', 'content' => userPrompt });
-        
-        payload.put('messages', messages);
+        req.setTimeout(10000); // 10 second timeout — we only need the 202 ACCEPTED
         req.setBody(JSON.serialize(payload));
         
         try {
             HttpResponse res = http.send(req);
-            if (res.getStatusCode() == 200 || res.getStatusCode() == 201) {
-                // Parse standard JSON response
+            
+            if (res.getStatusCode() == 202) {
+                // Success — Zentom accepted the incident for processing
                 Map<String, Object> jsonResponse = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
-                List<Object> choices = (List<Object>) jsonResponse.get('choices');
-                if (choices != null && !choices.isEmpty()) {
-                    Map<String, Object> firstChoice = (Map<String, Object>) choices[0];
-                    Map<String, Object> message = (Map<String, Object>) firstChoice.get('message');
-                    String content = (String) message.get('content');
-                    return (ZentomDecision) JSON.deserialize(content, ZentomDecision.class);
-                }
+                String taskId = (String) jsonResponse.get('taskId');
+                
+                System.debug('[ZentomAI] Incident ' + incidentId + ' dispatched successfully. TaskId: ' + taskId);
+                resetCircuitBreaker();
+                return taskId;
+                
+            } else if (res.getStatusCode() == 200) {
+                // Sync mode response (for dev/testing only)
+                Map<String, Object> jsonResponse = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
+                System.debug('[ZentomAI] Sync response received for ' + incidentId);
+                resetCircuitBreaker();
+                return 'SYNC_COMPLETE';
+                
             } else {
-                System.debug('Zentom AI API Error: ' + res.getStatusCode() + ' - ' + res.getBody());
+                System.debug(LoggingLevel.ERROR, 
+                    '[ZentomAI] Unexpected HTTP ' + res.getStatusCode() + ': ' + res.getBody());
+                incrementCircuitBreaker();
+                return null;
             }
-        } catch (Exception e) {
-            System.debug('Zentom AI Callout Exception: ' + e.getMessage());
+            
+        } catch (System.CalloutException e) {
+            System.debug(LoggingLevel.ERROR, 
+                '[ZentomAI] Callout failed for ' + incidentId + ': ' + e.getMessage());
+            incrementCircuitBreaker();
+            return null;
         }
-        
-        // Smart fallback mock for prototype environment when API is not available
-        ZentomDecision mockDecision = new ZentomDecision();
-        Decimal revRisk = 0;
-        if (additionalContext.contains('Revenue Risk: ')) {
-            String riskStr = additionalContext.substringAfter('Revenue Risk: ').trim();
-            if (riskStr.contains('\n')) riskStr = riskStr.substringBefore('\n');
-            try { revRisk = Decimal.valueOf(riskStr); } catch (Exception ignored) {}
-        }
-
-        if (revRisk > 50000) {
-            mockDecision.confidence_score = 65;
-            mockDecision.proposed_action = 'Escalate';
-            mockDecision.recommendation = 'Incident carries > $50,000 Revenue Risk. Autonomous healing is blocked by the AI Guardian Policy.';
-            mockDecision.rationale = 'Revenue Risk is ' + revRisk + ' which exceeds the $50k maximum threshold for autonomous healing. Escalating to human engineering team.';
-        } else {
-            mockDecision.confidence_score = 92;
-            mockDecision.proposed_action = 'Restart Service';
-            mockDecision.recommendation = 'Root cause identified as temporary API limit exhaustion. Safe to restart service.';
-            mockDecision.rationale = 'Revenue Risk is ' + revRisk + ' (below $50k). Technical confidence is high based on pattern matching. Executing restart playbook.';
-        }
-        return mockDecision;
     }
-
-    /**
-     * The master orchestration loop. Connects all Zentom Engines into a single governed pipeline.
-     */
-    public static ZentomDecision orchestrateIncident(Id incidentId, String userPrompt, String taskType, String workflowStage) {
-        // GATE 1: Context Assembly
-        ZentomContextEngine.ContextPacket context = ZentomContextEngine.assembleContext(incidentId);
-        
-        // GATE 2: Risk Evaluation
-        ZentomRiskEngine.RiskScore risk = ZentomRiskEngine.evaluateRisk(incidentId, context);
-        
-        // ROUTING: Model Selection
-        ZentomModelRouter.AIModel model = ZentomModelRouter.route(context, risk, taskType);
-        
-        // ENRICHMENT: Build context payload for LLM
-        String enrichedContext = 'Account ARR: ' + context.accountARR + 
-                                 '\nAccount Tier: ' + context.accountTier +
-                                 '\nSimilar Incidents: ' + String.join(context.similarIncidents, '; ') +
-                                 '\nCalculated Risk Score: ' + risk.totalScore + 
-                                 '\nSelected Model: ' + model.name();
-                                 
-        // INFERENCE: Get AI Decision
-        ZentomDecision decision = getZentomResponse(userPrompt, enrichedContext);
-        
-        // GATE 3: Policy Validation
-        ZentomPolicyEngine.PolicyEvaluation policyEval = ZentomPolicyEngine.evaluateAction(decision.proposed_action, risk.totalScore, workflowStage);
-        
-        // GATE 4: Confidence & AI Guardian Gate
-        if (decision.confidence_score < 80) {
-            policyEval.mode = ZentomPolicyEngine.ExecutionMode.HUMAN_APPROVAL_REQUIRED;
-            policyEval.policyReasoning = 'Escalated: Model confidence (' + decision.confidence_score + ') is below the 80% threshold.';
+    
+    // ─── CIRCUIT BREAKER HELPERS ────────────────────────────────────────
+    // Uses Org Cache to track consecutive failure count across transactions.
+    
+    private static Integer getCircuitBreakerCount() {
+        try {
+            Object val = Cache.Org.get(CIRCUIT_BREAKER_KEY);
+            return val != null ? (Integer) val : 0;
+        } catch (Exception e) {
+            return 0; // Cache not available — assume healthy
         }
-        if (context.accountARR > 50000 && decision.proposed_action != 'Escalate') { // Simplified check for Guardian Gate
-            policyEval.mode = ZentomPolicyEngine.ExecutionMode.HUMAN_APPROVAL_REQUIRED;
-            policyEval.policyReasoning = 'Escalated: Revenue Risk exceeds $50k threshold for autonomous execution.';
+    }
+    
+    private static void incrementCircuitBreaker() {
+        try {
+            Integer current = getCircuitBreakerCount();
+            Cache.Org.put(CIRCUIT_BREAKER_KEY, current + 1, 3600); // TTL 1 hour
+        } catch (Exception e) {
+            System.debug('[ZentomAI] Could not update circuit breaker cache: ' + e.getMessage());
         }
-        
-        // GATE 5: Replay Logging (Audit)
-        ZentomReplayEngine.logDecision(incidentId, context, userPrompt, JSON.serialize(decision), risk, policyEval, decision.proposed_action, decision.confidence_score);
-        
-        // EXECUTION
-        if (policyEval.mode == ZentomPolicyEngine.ExecutionMode.AUTONOMOUS_EXECUTION) {
-            try {
-                ZentomExecutionController.executeAction(incidentId, decision.proposed_action, decision.confidence_score, risk, policyEval.mode);
-                // EVALUATION: Log success
-                ZentomEvaluationEngine.evaluateOutcome(incidentId, true, decision.proposed_action, decision.confidence_score);
-            } catch (Exception e) {
-                // EVALUATION: Log failure
-                ZentomEvaluationEngine.evaluateOutcome(incidentId, false, decision.proposed_action, decision.confidence_score);
-                throw e;
-            }
-        } else {
-            System.debug('Action held from execution. Status: ' + policyEval.mode.name() + ' - ' + policyEval.policyReasoning);
+    }
+    
+    private static void resetCircuitBreaker() {
+        try {
+            Cache.Org.remove(CIRCUIT_BREAKER_KEY);
+        } catch (Exception e) {
+            System.debug('[ZentomAI] Could not reset circuit breaker cache: ' + e.getMessage());
         }
+    }
+    
+    // ─── EVALUATION FEEDBACK ────────────────────────────────────────────
+    
+    @future(callout=true)
+    public static void sendEvaluationFeedback(Id incidentId, Boolean success, String executedAction, Integer confidenceScore) {
+        Http http = new Http();
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint(API_ENDPOINT.replace('/orchestrate', '/evaluate'));
+        req.setMethod('POST');
+        req.setHeader('Content-Type', 'application/json');
+        req.setTimeout(10000);
         
-        return decision;
+        Map<String, Object> payload = new Map<String, Object>();
+        payload.put('incidentId', (String)incidentId);
+        payload.put('executedAction', executedAction);
+        payload.put('confidenceScore', confidenceScore);
+        payload.put('success', success);
+        req.setBody(JSON.serialize(payload));
+        
+        try {
+            http.send(req);
+        } catch (Exception e) {
+            System.debug('[ZentomAI] Failed to send evaluation feedback: ' + e.getMessage());
+        }
     }
 }
-

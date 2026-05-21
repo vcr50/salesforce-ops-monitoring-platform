@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: zentom-pgvector
+    environment:
+      POSTGRES_USER: zentom_user
+      POSTGRES_PASSWORD: zentom_password
+      POSTGRES_DB: zentom_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - zentom_pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:alpine
+    container_name: zentom-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+volumes:
+  zentom_pgdata:

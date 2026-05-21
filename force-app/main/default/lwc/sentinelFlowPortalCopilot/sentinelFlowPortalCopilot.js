@@ -14,7 +14,7 @@ export default class SentinelFlowPortalCopilot extends LightningElement {
     ];
 
     @track isTyping = false;
-    @track activeView = 'chat';
+    @track activeView = 'mission';
     currentInput = '';
 
     quickActions = [
@@ -25,11 +25,15 @@ export default class SentinelFlowPortalCopilot extends LightningElement {
     ];
 
     // View switching
+    get isMissionView() { return this.activeView === 'mission'; }
     get isChatView() { return this.activeView === 'chat'; }
     get isArchView() { return this.activeView === 'arch'; }
+    
+    get missionTabClass() { return this.activeView === 'mission' ? 'view-tab active' : 'view-tab'; }
     get chatTabClass() { return this.activeView === 'chat' ? 'view-tab active' : 'view-tab'; }
     get archTabClass() { return this.activeView === 'arch' ? 'view-tab active' : 'view-tab'; }
 
+    showMission() { this.activeView = 'mission'; }
     showChat() { this.activeView = 'chat'; }
     showArch() { this.activeView = 'arch'; }
 

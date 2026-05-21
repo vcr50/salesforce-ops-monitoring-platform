@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Zentom AI Live Chat</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f4f5; display: flex; justify-content: center; padding: 20px; }
+        .chat-container { width: 400px; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; height: 600px; }
+        .header { background: #2563eb; color: white; padding: 15px; font-weight: bold; text-align: center; }
+        .messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .message { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 14px; line-height: 1.4; }
+        .msg-user { background: #2563eb; color: white; align-self: flex-end; border-bottom-right-radius: 5px; }
+        .msg-agent { background: #e5e7eb; color: #1f2937; align-self: flex-start; border-bottom-left-radius: 5px; }
+        .msg-system { background: #fef08a; color: #854d0e; align-self: center; font-size: 12px; border-radius: 5px; padding: 5px 10px; }
+        .input-area { display: flex; padding: 10px; border-top: 1px solid #e5e7eb; background: #f9fafb; }
+        input[type="text"] { flex: 1; padding: 10px; border: 1px solid #d1d5db; border-radius: 20px; outline: none; margin-right: 10px; }
+        button { background: #2563eb; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        button:hover { background: #1d4ed8; }
+        audio { display: none; }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="header">Zentom AI Voice Assistant</div>
+        <div class="messages" id="messages"></div>
+        <div class="input-area">
+            <input type="text" id="messageInput" placeholder="Type a message or use voice..." autocomplete="off" onkeypress="handleKeyPress(event)">
+            <!-- Fake Voice Button for PoC -->
+            <button onclick="sendVoice()" style="background:#10b981; margin-right:5px;" title="Send Voice">🎤</button>
+            <button onclick="sendMessage()" title="Send Text">➤</button>
+        </div>
+    </div>
+    <audio id="audioPlayer" controls autoplay></audio>
+
+    <script>
+        const incidentId = 'INC-' + Math.floor(Math.random() * 1000);
+        const ws = new WebSocket(`ws://localhost:8000/api/v1/chat/${incidentId}`);
+        const messagesDiv = document.getElementById('messages');
+        const audioPlayer = document.getElementById('audioPlayer');
+
+        ws.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            appendMessage(data.text, data.type);
+            
+            // If the AI sent audio (TTS), play it!
+            if (data.audio) {
+                audioPlayer.src = 'data:audio/mp3;base64,' + data.audio;
+                audioPlayer.play();
+            }
+        };
+
+        function appendMessage(text, sender) {
+            const div = document.createElement('div');
+            div.className = `message msg-${sender}`;
+            div.textContent = text;
+            messagesDiv.appendChild(div);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            if (text) {
+                appendMessage(text, 'user');
+                ws.send(JSON.stringify({ type: 'text', text: text }));
+                input.value = '';
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // For the PoC, instead of actually recording the mic (which requires HTTPS and permissions),
+        // we will simulate a Voice payload by sending a text that the backend will treat as voice.
+        // Wait, the backend expects base64 audio. To keep the HTML simple, we will just send a mock
+        // base64 payload that represents an empty wav, and rely on our STT fallback string.
+        function sendVoice() {
+            appendMessage("🎙️ Recording sent...", "user");
+            
+            // A tiny, invalid base64 string so the Python STT crashes and uses the fallback string
+            // "I am unable to connect to the database right now."
+            ws.send(JSON.stringify({ 
+                type: 'voice', 
+                audio: 'UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=' 
+            }));
+        }
+    </script>
+</body>
+</html>

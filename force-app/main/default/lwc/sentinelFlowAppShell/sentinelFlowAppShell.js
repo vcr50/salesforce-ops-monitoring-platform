@@ -24,8 +24,8 @@ const PAGE_META = {
         summary: 'Quantified incident impact'
     },
     copilot: {
-        title: 'Agentforce',
-        eyebrow: 'Salesforce AI agent',
+        title: 'Zentom Mission Control',
+        eyebrow: 'Zentom AI Engine',
         summary: 'Ask, analyze, remediate, and summarize'
     },
     settings: {

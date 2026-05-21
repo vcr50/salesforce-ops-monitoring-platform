@@ -1,0 +1,264 @@
+<template>
+    <div class="mission-control">
+
+        <!-- ── Header ── -->
+        <header class="mc-header">
+            <div class="header-left">
+                <div class="logo-icon">Z</div>
+                <h1 class="title">Zentom Mission Control</h1>
+            </div>
+            <div class="header-right">
+                <span class="version-tag">v2.1.0</span>
+                <div class="status-badge">
+                    <span class="pulse-dot"></span>
+                    <span>{overallStatus}</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ── Metrics Row ── -->
+        <div class="metrics-row">
+            <div class="glass m-card">
+                <div class="label">Workflows</div>
+                <div class="value grad-indigo">{totalWorkflows}</div>
+            </div>
+            <div class="glass m-card">
+                <div class="label">Success Rate</div>
+                <div class="value grad-green">{successRate}</div>
+            </div>
+            <div class="glass m-card">
+                <div class="label">Avg Confidence</div>
+                <div class="value grad-cyan">{avgConfidence}</div>
+            </div>
+            <div class="glass m-card">
+                <div class="label">Drift Alerts</div>
+                <div class="value grad-red">{driftAlerts}</div>
+            </div>
+            <div class="glass m-card">
+                <div class="label">Pending</div>
+                <div class="value grad-amber">{pendingCount}</div>
+            </div>
+            <div class="glass m-card">
+                <div class="label">MTTR</div>
+                <div class="value grad-indigo">{mttr}</div>
+            </div>
+            <div class="glass m-card">
+                <div class="label">Health</div>
+                <div class="value health-grade">{healthGrade}</div>
+            </div>
+        </div>
+
+        <!-- ── Row: Health + Trend + Subsystems ── -->
+        <div class="row-3">
+            <!-- Org Health Gauge -->
+            <div class="glass">
+                <div class="sec-title">Org Health</div>
+                <div class="health-gauge">
+                    <div class="gauge-ring" style={gaugeStyle}>
+                        <div class="gauge-center">
+                            <div class="gauge-score" style={scoreColorStyle}>{healthScore}</div>
+                            <div class="gauge-grade">Grade {healthGrade}</div>
+                        </div>
+                    </div>
+                    <div class="health-factors">
+                        <template if:true={hasHealthFactors}>
+                            <template for:each={healthFactors} for:item="factor">
+                                <div key={factor.key} class="factor">{factor.text}</div>
+                            </template>
+                        </template>
+                        <template if:false={hasHealthFactors}>
+                            <div class="factor factor-ok">No degradation factors</div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Trend -->
+            <div class="glass">
+                <div class="sec-title">Risk Trend</div>
+                <div class="trend-display">
+                    <div class={trendColorClass}>
+                        <div class="trend-arrow">{trendDirection}</div>
+                        <div class="trend-label">{trendLabel}</div>
+                    </div>
+                    <div class="trend-detail">{trendDetail}</div>
+                </div>
+            </div>
+
+            <!-- Subsystems -->
+            <div class="glass">
+                <div class="sec-title">Subsystems</div>
+                <template if:true={hasSubsystems}>
+                    <div class="subsys-grid">
+                        <template for:each={subsystems} for:item="sub">
+                            <div key={sub.key} class="subsys-item">
+                                <span class={sub.dotClass}></span>
+                                <span class="subsys-name">{sub.name}</span>
+                                <span class="subsys-detail">{sub.detail}</span>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- ── Row: Patterns + Remediation ── -->
+        <div class="row-2">
+            <div class="glass">
+                <div class="sec-title">
+                    Recurring Patterns
+                    <span class="badge badge-warn">{patternCount}</span>
+                </div>
+                <template if:true={hasPatterns}>
+                    <template for:each={patterns} for:item="pat">
+                        <div key={pat.key} class="pattern-row">
+                            <span class="pattern-name" title={pat.name}>{pat.name}</span>
+                            <div class="pattern-bar-track">
+                                <div class={pat.barClass} style={pat.barWidth}></div>
+                            </div>
+                            <span class="pattern-count">{pat.count}</span>
+                        </div>
+                    </template>
+                </template>
+                <template if:false={hasPatterns}>
+                    <div class="empty-state">No recurring patterns detected</div>
+                </template>
+            </div>
+
+            <div class="glass">
+                <div class="sec-title">Remediation Effectiveness</div>
+                <template if:true={hasRemediations}>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Action</th>
+                                <th>Runs</th>
+                                <th>Success</th>
+                                <th>Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={remediations} for:item="rem">
+                                <tr key={rem.key}>
+                                    <td class="bold">{rem.action}</td>
+                                    <td>{rem.total}</td>
+                                    <td>{rem.rate}</td>
+                                    <td><span class={rem.reliabilityClass}>{rem.reliability}</span></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
+                <template if:false={hasRemediations}>
+                    <div class="empty-state">No data yet</div>
+                </template>
+            </div>
+        </div>
+
+        <!-- ── Approval Queue ── -->
+        <div class="glass section-gap">
+            <div class="sec-title">
+                Human Approval Queue
+                <span class="badge badge-warn">{approvalCount}</span>
+            </div>
+            <template if:true={hasApprovals}>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Incident</th>
+                            <th>Action</th>
+                            <th>Conf.</th>
+                            <th>Risk</th>
+                            <th>Policy</th>
+                            <th>TTL</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={approvals} for:item="wf">
+                            <tr key={wf.key}>
+                                <td class="mono">{wf.incidentId}</td>
+                                <td class="bold">{wf.proposedAction}</td>
+                                <td class={wf.confidenceClass}>{wf.confidence}</td>
+                                <td>{wf.riskScore}</td>
+                                <td class="policy-cell">{wf.policyReasoning}</td>
+                                <td><span class="pill pill-warn">{wf.ttl}</span></td>
+                                <td>
+                                    <button class="btn btn-approve" data-id={wf.workflowId} onclick={handleApprove}>Approve</button>
+                                    <button class="btn btn-reject" data-id={wf.workflowId} onclick={handleReject}>Reject</button>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+            <template if:false={hasApprovals}>
+                <div class="empty-state">No approvals pending.</div>
+            </template>
+        </div>
+
+        <!-- ── Row: Logs + Audit ── -->
+        <div class="row-2">
+            <div class="glass">
+                <div class="sec-title">Orchestration Log</div>
+                <template if:true={hasLogs}>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Incident</th>
+                                <th>Time</th>
+                                <th>Action</th>
+                                <th>Conf.</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={orchestrationLogs} for:item="log">
+                                <tr key={log.key}>
+                                    <td class="mono">{log.incidentId}</td>
+                                    <td>{log.time}</td>
+                                    <td class="bold">{log.action}</td>
+                                    <td class={log.confidenceClass}>{log.confidence}</td>
+                                    <td><span class={log.statusPill}>{log.statusText}</span></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
+                <template if:false={hasLogs}>
+                    <div class="empty-state">No incidents yet.</div>
+                </template>
+            </div>
+
+            <div class="glass">
+                <div class="sec-title">Audit Trail</div>
+                <template if:true={hasAuditLogs}>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Event</th>
+                                <th>Actor</th>
+                                <th>Resource</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={auditLogs} for:item="al">
+                                <tr key={al.key}>
+                                    <td>{al.time}</td>
+                                    <td><span class={al.eventClass}>{al.eventType}</span></td>
+                                    <td>{al.actor} <span class="role-tag">{al.role}</span></td>
+                                    <td class="mono">{al.resource}</td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
+                <template if:false={hasAuditLogs}>
+                    <div class="empty-state">No audit events.</div>
+                </template>
+            </div>
+        </div>
+
+    </div>
+</template>

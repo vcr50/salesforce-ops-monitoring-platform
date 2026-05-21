@@ -7,12 +7,18 @@
             </div>
             <div class="header-right">
                 <div class="view-tabs">
+                    <button class={missionTabClass} onclick={showMission}>Mission Control</button>
                     <button class={chatTabClass} onclick={showChat}>Chat</button>
                     <button class={archTabClass} onclick={showArch}>Architecture</button>
                 </div>
                 <span class="agentforce-badge">Zentom Gen AI + Agentforce</span>
             </div>
         </div>
+
+        <!-- Mission Control View -->
+        <template if:true={isMissionView}>
+            <c-zentom-mission-control></c-zentom-mission-control>
+        </template>
 
         <!-- Chat View -->
         <template if:true={isChatView}>

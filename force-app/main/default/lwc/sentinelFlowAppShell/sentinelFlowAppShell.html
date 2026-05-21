@@ -20,19 +20,19 @@
                 </div>
                 <div class="time-pill">{currentTime}</div>
                 <button class={themeToggleClass} type="button" onclick={toggleTheme} title={themeToggleTitle} aria-label={themeToggleTitle}>
-                    <span class="theme-thumb">
-                        <lightning-icon icon-name={themeIcon} size="xx-small"></lightning-icon>
+                    <span class="theme-track">
+                        <span class="theme-icon sun">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                        </span>
+                        <span class="theme-icon moon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                        </span>
                     </span>
-                    <span class="theme-option day-label">Day</span>
-                    <span class="theme-option dark-label">Dark</span>
+                    <span class="theme-thumb"></span>
                 </button>
-                <lightning-button-icon
-                    icon-name="utility:refresh"
-                    variant="bare"
-                    alternative-text="Refresh view"
-                    title="Refresh view"
-                    onclick={refreshView}>
-                </lightning-button-icon>
+                <button class="custom-refresh-btn" type="button" onclick={refreshView} title="Refresh view" aria-label="Refresh view">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                </button>
             </div>
         </header>
 
@@ -57,8 +57,8 @@
                         <span>Impact</span>
                     </button>
                     <button class={copilotNavClass} data-page="copilot" onclick={navigate}>
-                        <lightning-icon icon-name="utility:einstein" size="x-small"></lightning-icon>
-                        <span>Agentforce</span>
+                        <span class="zai-icon">Zai</span>
+                        <span>Zentom</span>
                     </button>
                     <button class={settingsNavClass} data-page="settings" onclick={navigate}>
                         <lightning-icon icon-name="utility:settings" size="x-small"></lightning-icon>
@@ -77,7 +77,7 @@
                         <span class="mini-status ok"></span>
                     </div>
                     <div class="runtime-row">
-                        <span>Agentforce</span>
+                        <span>Zentom AI</span>
                         <span class="mini-status warn"></span>
                     </div>
                 </div>
