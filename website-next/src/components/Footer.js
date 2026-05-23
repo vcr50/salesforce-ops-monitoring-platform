@@ -17,7 +17,7 @@ export default function Footer() {
           </div>
 
           <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap' }}>
-            <Link href="/about" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>About Us</Link>
+            <a href="https://tomcodex.vercel.app/about.html" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>About Us</a>
             <span>|</span>
             <Link href="/careers" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Careers</Link>
             <span>|</span>
@@ -65,7 +65,7 @@ export default function Footer() {
               <div>
                 <h4 style={{ color: 'var(--text-primary)', marginBottom: '16px', fontSize: '1.1rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>Company</h4>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <li><Link href="/about" onClick={() => setIsModalOpen(false)} style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>About Us</Link></li>
+                  <li><a href="https://tomcodex.vercel.app/about.html" onClick={() => setIsModalOpen(false)} style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>About Us</a></li>
                   <li><Link href="#" onClick={() => setIsModalOpen(false)} style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Our Mission</Link></li>
                   <li><Link href="#" onClick={() => setIsModalOpen(false)} style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Leadership</Link></li>
                   <li><Link href="/careers" onClick={() => setIsModalOpen(false)} style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Careers</Link></li>
