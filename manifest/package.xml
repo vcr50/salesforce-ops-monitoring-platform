@@ -68,6 +68,8 @@
         <members>SentinelFlowLoginControllerTest</members>
         <members>SentinelFlowAutomationService</members>
         <members>SentinelFlowAutomationServiceTest</members>
+        <members>SentinelFlowSlackAlertService</members>
+        <members>SentinelFlowSlackAlertServiceTest</members>
         <members>SentinelFlowPortalController</members>
         <members>SentinelFlowPortalControllerTest</members>
         <members>MemoryIndexQueueable</members>
