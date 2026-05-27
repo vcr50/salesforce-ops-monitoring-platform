@@ -115,4 +115,3 @@ private class MemoryIndexQueueableTest {
         System.assert(true, 'MemoryIndexQueueable ran requeue_job heal action path.');
     }
 }
-

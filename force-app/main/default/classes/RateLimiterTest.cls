@@ -40,4 +40,3 @@ private class RateLimiterTest {
         System.assertNotEquals(null, isLimited);
     }
 }
-

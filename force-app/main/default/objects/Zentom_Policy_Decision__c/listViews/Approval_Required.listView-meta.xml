@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Approval_Required</fullName>
+    <columns>NAME</columns>
+    <columns>Incident__c</columns>
+    <columns>Decision__c</columns>
+    <columns>Requires_Approval__c</columns>
+    <columns>Risk_Score__c</columns>
+    <columns>Action_Type__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Requires_Approval__c</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <label>Approval Required</label>
+</ListView>

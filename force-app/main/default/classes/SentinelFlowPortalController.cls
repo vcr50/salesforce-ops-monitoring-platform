@@ -819,4 +819,3 @@ public with sharing class SentinelFlowPortalController {
         return HealTelemetryService.getHealMetrics();
     }
 }
-

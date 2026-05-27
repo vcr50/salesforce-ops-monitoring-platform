@@ -48,8 +48,10 @@ public with sharing class ZentomReplayEngine {
             insert log;
         } catch (Exception e) {
             System.debug('Failed to write Replay Log: ' + e.getMessage());
+            if (Test.isRunningTest()) {
+                throw e;
+            }
             // Do not throw; logging should not crash the orchestration pipeline.
         }
     }
 }
-

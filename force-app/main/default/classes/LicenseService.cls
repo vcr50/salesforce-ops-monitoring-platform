@@ -318,4 +318,3 @@ public with sharing class LicenseService {
         return null;
     }
 }
-

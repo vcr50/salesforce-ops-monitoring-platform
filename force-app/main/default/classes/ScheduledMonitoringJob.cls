@@ -183,4 +183,3 @@ global with sharing class ScheduledMonitoringJob implements Schedulable {
         }
     }
 }
-

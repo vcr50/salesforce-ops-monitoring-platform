@@ -178,4 +178,3 @@ public with sharing class AIAnalysisService {
 
     public class AIAnalysisException extends Exception {}
 }
-

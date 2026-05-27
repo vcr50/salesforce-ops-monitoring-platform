@@ -59,7 +59,6 @@ private class SentinelFlowAutomationServiceTest {
 
     @IsTest
     static void failedIntegrationLogCreatesIncident() {
-        Test.startTest();
         Integration_Log__c logRecord = new Integration_Log__c(
             API_Name__c = 'Orders API',
             Status__c = 'Failed',
@@ -67,7 +66,6 @@ private class SentinelFlowAutomationServiceTest {
             Error_Message__c = 'Timeout'
         );
         insert logRecord;
-        Test.stopTest();
 
         List<Incident__c> incidents = [
             SELECT Severity__c, Status__c, Integration_Log__c, Description__c
@@ -90,14 +88,12 @@ private class SentinelFlowAutomationServiceTest {
         );
         insert logRecord;
 
-        Test.startTest();
         logRecord.Status__c = 'Failed';
         logRecord.Error_Message__c = 'Initial failure';
         update logRecord;
 
         logRecord.Error_Message__c = 'Still failing';
         update logRecord;
-        Test.stopTest();
 
         Integer incidentCount = [
             SELECT COUNT()
@@ -128,11 +124,9 @@ private class SentinelFlowAutomationServiceTest {
         incidentRecord.Status__c = 'In Progress';
         update incidentRecord;
 
-        Test.startTest();
         logRecord.Status__c = 'Success';
         logRecord.Error_Message__c = null;
         update logRecord;
-        Test.stopTest();
 
         Incident__c closedIncident = [
             SELECT Status__c, Resolved_Time__c
@@ -144,4 +138,3 @@ private class SentinelFlowAutomationServiceTest {
         System.assertNotEquals(null, closedIncident.Resolved_Time__c);
     }
 }
-

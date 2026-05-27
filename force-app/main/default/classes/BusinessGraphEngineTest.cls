@@ -15,6 +15,9 @@ private class BusinessGraphEngineTest {
         opps.add(new Opportunity(Name='Enterprise Deal A', StageName='Prospecting', Amount=250000, CloseDate=System.today().addDays(30)));
         opps.add(new Opportunity(Name='Mid-Market Deal B', StageName='Qualification', Amount=50000, CloseDate=System.today().addDays(15)));
         insert opps;
+
+        Tenant__c tenant = new Tenant__c(Name = 'Test Corp', Status__c = 'Active', API_Key__c = 'test-key-bg-123');
+        insert tenant;
     }
 
     @IsTest
@@ -26,7 +29,8 @@ private class BusinessGraphEngineTest {
             Workflow_Stage__c = 'Payment',
             Revenue_Risk__c = 0,
             Recovery_Possible__c = true,
-            Status__c = 'New'
+            Status__c = 'New',
+            Tenant__c = [SELECT Id FROM Tenant__c LIMIT 1].Id
         );
         events.add(ev);
 
@@ -48,7 +52,8 @@ private class BusinessGraphEngineTest {
             Workflow_Stage__c = 'Lead Capture',
             Revenue_Risk__c = 0,
             Recovery_Possible__c = true,
-            Status__c = 'New'
+            Status__c = 'New',
+            Tenant__c = [SELECT Id FROM Tenant__c LIMIT 1].Id
         );
         events.add(ev);
 
@@ -72,4 +77,3 @@ private class BusinessGraphEngineTest {
         System.assert(true, 'Executed without exceptions');
     }
 }
-

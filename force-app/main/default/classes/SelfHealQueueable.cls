@@ -23,4 +23,3 @@ public class SelfHealQueueable implements Queueable {
         SelfHealingEngine.processFailedLogs(integrationLogIds);
     }
 }
-

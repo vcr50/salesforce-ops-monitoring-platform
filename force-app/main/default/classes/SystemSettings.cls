@@ -35,4 +35,3 @@ public with sharing class SystemSettings {
         return Integer.valueOf(get(settingName, defaultValue));
     }
 }
-

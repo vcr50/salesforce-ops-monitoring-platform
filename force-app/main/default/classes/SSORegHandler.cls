@@ -103,4 +103,3 @@ global class SSORegHandler implements Auth.RegistrationHandler {
         }
     }
 }
-

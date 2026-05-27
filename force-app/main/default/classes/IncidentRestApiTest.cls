@@ -210,4 +210,3 @@ private class IncidentRestApiTest {
         System.assertEquals(200, res.statusCode, 'Should return 200 OK');
     }
 }
-

@@ -24,6 +24,7 @@ private class PredictiveEnterpriseAITest {
         List<Universal_Event__c> events = new List<Universal_Event__c>();
         for (Integer i = 0; i < 10; i++) {
             events.add(new Universal_Event__c(
+                Event_Key__c = 'TEST-SPIKE-' + i,
                 Workflow_Stage__c = 'Payment',
                 Revenue_Risk__c = 100,
                 Status__c = 'New'
@@ -41,4 +42,3 @@ private class PredictiveEnterpriseAITest {
         System.assert(result.forecastMessage.contains('CRITICAL FORECAST'));
     }
 }
-

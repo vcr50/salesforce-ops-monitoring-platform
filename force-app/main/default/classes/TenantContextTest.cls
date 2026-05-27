@@ -51,4 +51,3 @@ private class TenantContextTest {
         System.assertNotEquals(null, resolvedId, 'Should fallback to active tenant');
     }
 }
-

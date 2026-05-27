@@ -82,4 +82,3 @@ public with sharing class ZentomGetIncidentDetailsAction {
         public Decimal revenueRisk;
     }
 }
-

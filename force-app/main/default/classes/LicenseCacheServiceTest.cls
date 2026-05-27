@@ -67,4 +67,3 @@ private class LicenseCacheServiceTest {
         System.assert(available == true || available == false);
     }
 }
-

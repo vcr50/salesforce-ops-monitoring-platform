@@ -299,4 +299,3 @@ global with sharing class IncidentRestApi {
         }
     }
 }
-

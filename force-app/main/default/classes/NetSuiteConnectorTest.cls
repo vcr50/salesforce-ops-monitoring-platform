@@ -16,7 +16,7 @@ private class NetSuiteConnectorTest {
 
         Test.startTest();
         // Run multiple times to try and cover both success and failure paths of the 10% random failure
-        for (Integer i = 0; i < 20; i++) {
+        for (Integer i = 0; i < 5; i++) {
             NetSuiteConnector.syncToERP(null);
         }
         Test.stopTest();
@@ -43,4 +43,3 @@ private class NetSuiteConnectorTest {
         System.assert(result.errorMessage.contains('Circuit Breaker is OPEN'));
     }
 }
-

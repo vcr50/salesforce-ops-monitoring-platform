@@ -97,6 +97,7 @@ private class SelfHealingEngineTest {
         enableSecurityBypass();
         Incident__c inc = [SELECT Id FROM Incident__c LIMIT 1];
         inc.Recommended_Action__c = 'Retry';
+        inc.Retry_Count__c = 0;
         update inc;
 
         Test.startTest();
@@ -181,4 +182,3 @@ private class SelfHealingEngineTest {
         SecurityGate.bypassForTests = true;
     }
 }
-

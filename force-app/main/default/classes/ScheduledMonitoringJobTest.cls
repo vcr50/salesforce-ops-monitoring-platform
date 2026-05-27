@@ -37,7 +37,7 @@ private class ScheduledMonitoringJobTest {
             WHERE Error_Type__c = 'Silent Failure'
         ];
         System.assertEquals(1, incidents.size(), 'Should have created 1 incident for stale failed log');
-        System.assertEquals('Analyzing', incidents[0].Status__c, 'Incident status should be Analyzing');
+        System.assertEquals('Investigating', incidents[0].Status__c, 'Incident status should be Investigating');
     }
 
     @IsTest
@@ -75,4 +75,3 @@ private class ScheduledMonitoringJobTest {
         System.assertEquals(1, triggers.size(), 'Scheduled job should exist');
     }
 }
-

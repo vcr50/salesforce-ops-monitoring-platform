@@ -281,4 +281,3 @@ public with sharing class AgentforceActionRegistry {
         }
     }
 }
-

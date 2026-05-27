@@ -28,4 +28,3 @@ private class ZentomMemoryEngineTest {
         System.assertEquals(95.0, context.confidenceScore, 'Confidence score should match');
     }
 }
-

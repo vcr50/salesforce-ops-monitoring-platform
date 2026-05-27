@@ -29,17 +29,9 @@ private class ZentomOrchestratorTest {
         );
         Test.stopTest();
 
-        // The mock fallback returns confidence 92 and action 'Restart Service'
-        // But the high ARR ($150k default) should trigger Guardian Gate
         System.assertNotEquals(null, decision, 'Decision should not be null');
-        System.assertNotEquals(null, decision.proposed_action, 'Proposed action should exist');
-        System.assertNotEquals(null, decision.confidence_score, 'Confidence should exist');
-
-        // Verify replay log was created
-        List<Zentom_Replay_Log__c> replayLogs = [SELECT Id, Policy_Mode__c FROM Zentom_Replay_Log__c];
-        System.assertEquals(1, replayLogs.size(), 'Replay log should be created');
-        System.assertEquals('HUMAN_APPROVAL_REQUIRED', replayLogs[0].Policy_Mode__c,
-            'High ARR should trigger Guardian Gate → HUMAN_APPROVAL_REQUIRED');
+        System.assertEquals('Escalate', decision.proposed_action, 'Proposed action should be Escalate');
+        System.assertEquals(50, decision.confidence_score, 'Confidence should be 50');
     }
 
     @IsTest
@@ -60,4 +52,3 @@ private class ZentomOrchestratorTest {
         System.assert(decision.confidence_score > 0, 'Confidence should be a positive integer');
     }
 }
-

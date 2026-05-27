@@ -2,6 +2,15 @@ public with sharing class ZentomDashboardController {
     @AuraEnabled(cacheable=true)
     public static DashboardData getDashboardData(String dateRange) {
         DashboardData data = new DashboardData();
+        
+        List<Sentinel_Incident__c> recentForAi = [SELECT AI_Reasoning_Status__c, AI_Confidence__c FROM Sentinel_Incident__c WHERE AI_Reasoning_Status__c != null ORDER BY CreatedDate DESC LIMIT 1];
+        if (!recentForAi.isEmpty()) {
+            AiSignal signal = new AiSignal();
+            signal.aiStatus = recentForAi[0].AI_Reasoning_Status__c;
+            signal.confidenceScore = recentForAi[0].AI_Confidence__c != null ? Integer.valueOf(recentForAi[0].AI_Confidence__c) : null;
+            data.latestAiSignal = signal;
+        }
+
         data.summary = getDashboardSummary(dateRange);
         data.recentIncidents = getRecentIncidents(dateRange);
         data.riskDistribution = getRiskDistribution(dateRange);
@@ -18,6 +27,10 @@ public with sharing class ZentomDashboardController {
         DashboardSummary summary = new DashboardSummary();
         summary.totalIncidents = incidents.size();
         summary.recentReplayEvents = getReplayEventCount(dateRange);
+        Integer criticalOpen = 0;
+        Integer pendingApp = 0;
+        Integer rejectedRec = 0;
+        Integer failedExec = 0;
 
         Map<String, Integer> runbookCounts = new Map<String, Integer>();
         for (Sentinel_Incident__c incident : incidents) {
@@ -26,12 +39,14 @@ public with sharing class ZentomDashboardController {
             }
             if (incident.Approval_Status__c == 'Pending Approval') {
                 summary.pendingApprovals++;
+                pendingApp++;
             }
             if (incident.Execution_Status__c == 'Executed') {
                 summary.executedActions++;
             }
             if (incident.Recommendation_Status__c == 'Rejected') {
                 summary.rejectedRecommendations++;
+                rejectedRec++;
             }
             if (incident.Created_Case__c != null) {
                 summary.recentCasesCreated++;
@@ -45,6 +60,14 @@ public with sharing class ZentomDashboardController {
                     : 0;
                 runbookCounts.put(incident.Runbook_Key__c, current + 1);
             }
+
+            // Health Score data gathering
+            if (incident.Risk_Level__c == 'CRITICAL' && incident.Status__c != 'Closed' && incident.Status__c != 'Action Created' && incident.Status__c != 'Resolved') {
+                criticalOpen++;
+            }
+            if (incident.Execution_Status__c == 'Failed') {
+                failedExec++;
+            }
         }
 
         Integer topCount = 0;
@@ -53,6 +76,40 @@ public with sharing class ZentomDashboardController {
                 topCount = runbookCounts.get(runbookKey);
                 summary.topRunbook = runbookKey;
             }
+        }
+
+        // Calculate orgHealthScore
+        Integer score = 100;
+        List<String> reasons = new List<String>();
+
+        if (criticalOpen > 0) {
+            score -= (criticalOpen * 10);
+            reasons.add(criticalOpen + (criticalOpen == 1 ? ' critical open incident' : ' critical open incidents'));
+        }
+        if (pendingApp > 0) {
+            score -= (pendingApp * 8);
+            reasons.add(pendingApp + (pendingApp == 1 ? ' pending approval' : ' pending approvals'));
+        }
+        if (failedExec > 0) {
+            score -= (failedExec * 12);
+            reasons.add(failedExec + (failedExec == 1 ? ' failed execution' : ' failed executions'));
+        }
+        if (rejectedRec > 0) {
+            score -= (rejectedRec * 5);
+            reasons.add(rejectedRec + (rejectedRec == 1 ? ' rejected recommendation' : ' rejected recommendations'));
+        }
+
+        if (score < 0) score = 0;
+        summary.orgHealthScore = score;
+
+        if (score >= 90) summary.orgHealthStatus = 'Healthy';
+        else if (score >= 70) summary.orgHealthStatus = 'Stable';
+        else summary.orgHealthStatus = 'Critical';
+
+        if (reasons.isEmpty()) {
+            summary.orgHealthReason = 'No active incidents are reducing the org health score.';
+        } else {
+            summary.orgHealthReason = 'Reduced by: ' + String.join(reasons, ', ');
         }
 
         return summary;
@@ -274,6 +331,12 @@ public with sharing class ZentomDashboardController {
         @AuraEnabled public List<IncidentRow> recentExecutions;
         @AuraEnabled public List<ReplayEventRow> recentReplayEvents;
         @AuraEnabled public List<IncidentRow> recentCasesCreated;
+        @AuraEnabled public AiSignal latestAiSignal;
+    }
+
+    public class AiSignal {
+        @AuraEnabled public String aiStatus;
+        @AuraEnabled public Integer confidenceScore;
     }
 
     public class DashboardSummary {
@@ -286,6 +349,9 @@ public with sharing class ZentomDashboardController {
         @AuraEnabled public Integer approvalRequired = 0;
         @AuraEnabled public Integer recentCasesCreated = 0;
         @AuraEnabled public String topRunbook;
+        @AuraEnabled public Integer orgHealthScore = 100;
+        @AuraEnabled public String orgHealthStatus = 'Healthy';
+        @AuraEnabled public String orgHealthReason = 'No active incidents are reducing the org health score.';
     }
 
     public class IncidentRow {

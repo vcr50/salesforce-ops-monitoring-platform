@@ -38,4 +38,3 @@ private class SentinelFlowPostInstallHandlerTest {
         );
     }
 }
-

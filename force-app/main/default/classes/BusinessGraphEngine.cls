@@ -120,4 +120,3 @@ public inherited sharing class BusinessGraphEngine {
         return result;
     }
 }
-

@@ -27,14 +27,15 @@ private class AgentforceActionRegistryTest {
         );
         insert log;
 
-        Incident__c inc = new Incident__c(
-            Severity__c = 'Critical',
-            Status__c = 'New',
-            Description__c = 'Agentforce registry test incident',
-            Environment__c = env.Id,
-            Integration_Log__c = log.Id
-        );
-        insert inc;
+        // The IntegrationLogTrigger auto-creates an Incident. Update it instead of deleting
+        // and recreating, which prevents @future methods from querying deleted records.
+        Incident__c inc = [SELECT Id, Severity__c, Status__c, Description__c, Environment__c, Integration_Log__c, Self_Heal_Attempted__c FROM Incident__c LIMIT 1];
+        inc.Severity__c = 'Critical';
+        inc.Status__c = 'New';
+        inc.Description__c = 'Agentforce registry test incident';
+        inc.Environment__c = env.Id;
+        inc.Self_Heal_Attempted__c = true;
+        update inc;
 
         // Create an AI Decision for telemetry tests
         AI_Decision__c decision = new AI_Decision__c(
@@ -292,4 +293,3 @@ private class AgentforceActionRegistryTest {
         ].Id;
     }
 }
-

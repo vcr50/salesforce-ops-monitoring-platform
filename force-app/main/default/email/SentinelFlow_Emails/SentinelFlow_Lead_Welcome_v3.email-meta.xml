@@ -3,7 +3,7 @@
     <available>true</available>
     <description>Automated welcome email sent to new web leads with pricing plan details.</description>
     <encodingKey>UTF-8</encodingKey>
-    <name>SentinelFlow Lead Welcome Email</name>
+    <name>SentinelFlow Lead Welcome Email v3</name>
     <style>none</style>
     <subject>Welcome to SentinelFlow - Your Incident Intelligence Journey Begins!</subject>
     <type>custom</type>

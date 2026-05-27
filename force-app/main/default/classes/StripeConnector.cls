@@ -38,4 +38,3 @@ public with sharing class StripeConnector extends ConnectorBase {
         */
     }
 }
-

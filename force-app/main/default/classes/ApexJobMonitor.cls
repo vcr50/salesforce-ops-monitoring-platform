@@ -44,4 +44,3 @@ public with sharing class ApexJobMonitor implements Schedulable {
         }
     }
 }
-

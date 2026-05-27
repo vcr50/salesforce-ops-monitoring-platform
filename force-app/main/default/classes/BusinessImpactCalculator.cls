@@ -189,4 +189,3 @@ public with sharing class BusinessImpactCalculator {
 
     public class ImpactCalculationException extends Exception {}
 }
-

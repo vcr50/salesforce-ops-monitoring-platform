@@ -128,4 +128,3 @@ public without sharing class SentinelFlowLoginController {
         return new Map<String, String>();
     }
 }
-

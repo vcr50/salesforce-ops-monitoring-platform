@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Approved_Actions</fullName>
+    <columns>NAME</columns>
+    <columns>Incident__c</columns>
+    <columns>Decision__c</columns>
+    <columns>Risk_Score__c</columns>
+    <columns>Action_Type__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Decision__c</field>
+        <operation>equals</operation>
+        <value>APPROVED</value>
+    </filters>
+    <label>Approved Actions</label>
+</ListView>

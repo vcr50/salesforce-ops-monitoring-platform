@@ -54,4 +54,3 @@ public without sharing class SystemLogger {
         }
     }
 }
-

@@ -22,4 +22,3 @@ private class LegacyOrgCoverageTest {
         System.assertEquals(false, stringCheckController.keywordExist('   '));
     }
 }
-

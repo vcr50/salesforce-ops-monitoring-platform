@@ -43,4 +43,3 @@ private class ZentomContextEngineTest {
         System.assert(validTiers.contains(packet.accountTier), 'Tier should be a valid classification');
     }
 }
-

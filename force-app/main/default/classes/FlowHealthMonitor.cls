@@ -53,7 +53,7 @@ public with sharing class FlowHealthMonitor implements Schedulable {
         if (!healthLogs.isEmpty()) {
             insert as user healthLogs;
             insert as user incidents;
-            AuditTrailService.log('FlowHealthMonitor', 'System', 'Created', null, String.valueOf(incidents.size()) + ' new Flow incidents detected.');
+            AuditTrailService.log(null, 'FlowHealthMonitor', 'Created', null, String.valueOf(incidents.size()) + ' new Flow incidents detected.');
             UniversalEventNormalizer.normalizeFlowHealth(healthLogs);
         }
     }
@@ -104,7 +104,6 @@ public with sharing class FlowHealthMonitor implements Schedulable {
         );
         insert as user inc;
 
-        AuditTrailService.log('FlowHealthMonitor', 'Flow', 'Created', inc.Id, 'Flow failure logged for ' + apiName);
+        AuditTrailService.log(inc.Id, 'FlowHealthMonitor', 'Created', null, 'Flow failure logged for ' + apiName);
     }
 }
-

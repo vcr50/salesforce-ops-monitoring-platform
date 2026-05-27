@@ -6,4 +6,3 @@ public class Rectangle {
         System.debug('Area of rectangle is: ' + area);
     }
 }
-

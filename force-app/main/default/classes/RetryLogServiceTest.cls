@@ -17,14 +17,18 @@ private class RetryLogServiceTest {
         );
         insert log;
 
-        Incident__c inc = new Incident__c(
-            Severity__c        = 'High',
-            Status__c          = 'Open',
-            Integration_Log__c = log.Id,
-            Tenant__c          = tenant.Id,
-            Description__c     = 'Test incident for retry logging'
-        );
-        insert inc;
+        // IntegrationLogTrigger creates an Incident__c and enqueues SelfHealQueueable.
+        // Update the auto-created incident to prevent side effects.
+        Incident__c inc = [SELECT Id, Severity__c, Status__c, Description__c, Tenant__c, Integration_Log__c, Self_Heal_Attempted__c FROM Incident__c LIMIT 1];
+        inc.Severity__c        = 'High';
+        inc.Status__c          = 'Open';
+        inc.Tenant__c          = tenant.Id;
+        inc.Self_Heal_Attempted__c = true;
+        inc.Description__c     = 'Test incident for retry logging';
+        update inc;
+        
+        // Just in case, delete any retry logs
+        delete [SELECT Id FROM Retry_Log__c];
     }
 
     @IsTest
@@ -114,4 +118,3 @@ private class RetryLogServiceTest {
         System.assertEquals(5, logs.size(), 'Should insert 5 retry logs');
     }
 }
-
