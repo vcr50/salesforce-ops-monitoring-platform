@@ -4,8 +4,8 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentName>c:sentinelFlowAppShell</componentName>
-                <identifier>c_sentinelFlowAppShell</identifier>
+                <componentName>c:sentinelFlowBetaAppShell</componentName>
+                <identifier>c_sentinelFlowBetaAppShell</identifier>
             </componentInstance>
         </itemInstances>
         <name>main</name>

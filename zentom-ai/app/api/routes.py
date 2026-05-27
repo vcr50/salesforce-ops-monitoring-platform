@@ -17,14 +17,15 @@ class MemoryIndexRequest(BaseModel):
     wasSuccessful: bool = True
 
 @api_router.post("/memory/index")
-async def index_memory(request: MemoryIndexRequest):
+async def index_memory(request: MemoryIndexRequest, req: Request):
     """Index a resolved incident into the Memory Engine for future RAG retrieval."""
     result = memory.index_incident(
         incident_id=request.incidentId,
         error_signature=request.errorSignature,
         resolution=request.resolution,
         confidence_score=request.confidenceScore,
-        was_successful=request.wasSuccessful
+        was_successful=request.wasSuccessful,
+        org_id=getattr(req.state, "org_id", "default"),
     )
     return result
 
@@ -34,9 +35,13 @@ class MemorySearchRequest(BaseModel):
     topK: int = 3
 
 @api_router.post("/memory/search")
-async def search_memory(request: MemorySearchRequest):
+async def search_memory(request: MemorySearchRequest, req: Request):
     """Search the Memory Engine for similar past incidents."""
-    result = memory.retrieve_memory(request.errorSignature, top_k=request.topK)
+    result = memory.retrieve_memory(
+        request.errorSignature,
+        top_k=request.topK,
+        org_id=getattr(req.state, "org_id", "default"),
+    )
     return result
 
 
@@ -49,13 +54,14 @@ class EvaluateRequest(BaseModel):
     success: bool
 
 @api_router.post("/evaluate")
-async def evaluate_outcome(request: EvaluateRequest):
+async def evaluate_outcome(request: EvaluateRequest, req: Request):
     """Receive execution outcome feedback from Salesforce to track AI performance."""
     evaluation.evaluate_outcome(
         incident_id=request.incidentId,
         success=request.success,
         executed_action=request.executedAction,
-        confidence_score=request.confidenceScore
+        confidence_score=request.confidenceScore,
+        org_id=getattr(req.state, "org_id", "default"),
     )
     return {"status": "evaluated", "incidentId": request.incidentId}
 
@@ -73,9 +79,11 @@ async def orchestrate_incident(request: OrchestrateRequest, req: Request, sync: 
     - sync=True: Runs the pipeline inline and returns the full result (for dev/testing).
     """
     from app.engines.celery_tasks import run_orchestration_task, _run_pipeline_async
+    payload = request.model_dump()
+    payload["org_id"] = getattr(req.state, "org_id", "default")
     
     if sync:
-        result = await _run_pipeline_async("sync-task", request.model_dump())
+        result = await _run_pipeline_async("sync-task", payload)
         if result.get("status") == "SUCCESS":
             from fastapi.responses import JSONResponse
             return JSONResponse(status_code=200, content={"status": "SUCCESS", "data": result})
@@ -84,8 +92,15 @@ async def orchestrate_incident(request: OrchestrateRequest, req: Request, sync: 
             return JSONResponse(status_code=500, content={"status": "FAILED", "error": result.get("error", "Unknown")})
             
     # Fire via Celery
-    task = run_orchestration_task.delay(request.model_dump())
-    log_event("ORCHESTRATE", actor=getattr(req.state, 'api_key_name', 'unknown'), actor_role=getattr(req.state, 'api_key_role', ''), resource=request.incidentId, detail=f"taskId={task.id}")
+    task = run_orchestration_task.delay(payload)
+    log_event(
+        "ORCHESTRATE",
+        actor=getattr(req.state, 'api_key_name', 'unknown'),
+        actor_role=getattr(req.state, 'api_key_role', ''),
+        resource=request.incidentId,
+        detail=f"taskId={task.id}",
+        org_id=getattr(req.state, "org_id", "default"),
+    )
     return {"status": "ACCEPTED", "taskId": task.id}
 
 
@@ -115,10 +130,10 @@ async def get_orchestration_status(task_id: str):
 # ─── Dashboard Metrics ────────────────────────────────────────────
 
 @api_router.get("/metrics")
-async def get_metrics():
+async def get_metrics(req: Request):
     """Returns dashboard metrics and recent orchestration logs."""
     from app.engines.replay import get_recent_logs
-    logs = get_recent_logs(50)
+    logs = get_recent_logs(50, org_id=getattr(req.state, "org_id", "default"))
     
     total_incidents = len(logs)
     successes = sum(1 for log in logs if log["success"])
@@ -134,17 +149,19 @@ async def get_metrics():
 # ─── Human Approval Queue ─────────────────────────────────────────
 
 @api_router.get("/approvals/pending")
-async def get_pending_approvals():
+async def get_pending_approvals(req: Request):
     """Returns all workflows awaiting human approval. Expired ones are auto-marked."""
     from datetime import datetime
     from app.models.database import SessionLocal, RecoveryWorkflow
     
     db = SessionLocal()
     try:
+        org_id = getattr(req.state, "org_id", "default")
         # First, expire any overdue PENDING workflows
         now = datetime.utcnow().isoformat()
         expired = (
             db.query(RecoveryWorkflow)
+            .filter(RecoveryWorkflow.org_id == org_id)
             .filter(RecoveryWorkflow.status == "PENDING")
             .filter(RecoveryWorkflow.expires_at != None)
             .filter(RecoveryWorkflow.expires_at < now)
@@ -158,6 +175,7 @@ async def get_pending_approvals():
         # Now fetch remaining PENDING workflows
         pending = (
             db.query(RecoveryWorkflow)
+            .filter(RecoveryWorkflow.org_id == org_id)
             .filter(RecoveryWorkflow.status == "PENDING")
             .order_by(RecoveryWorkflow.created_at.desc())
             .all()
@@ -196,7 +214,13 @@ async def approve_workflow(workflow_id: int, action: ApprovalAction, req: Reques
     
     db = SessionLocal()
     try:
-        wf = db.query(RecoveryWorkflow).filter(RecoveryWorkflow.id == workflow_id).first()
+        org_id = getattr(req.state, "org_id", "default")
+        wf = (
+            db.query(RecoveryWorkflow)
+            .filter(RecoveryWorkflow.id == workflow_id)
+            .filter(RecoveryWorkflow.org_id == org_id)
+            .first()
+        )
         
         if not wf:
             raise HTTPException(status_code=404, detail=f"Workflow #{workflow_id} not found")
@@ -219,7 +243,7 @@ async def approve_workflow(workflow_id: int, action: ApprovalAction, req: Reques
         wf.approved_by = action.approved_by
         db.commit()
         
-        log_event("APPROVE", actor=action.approved_by, actor_role=getattr(req.state, 'api_key_role', ''), resource=str(workflow_id), detail=f"incident={wf.incident_id} action={wf.proposed_action}")
+        log_event("APPROVE", actor=action.approved_by, actor_role=getattr(req.state, 'api_key_role', ''), resource=str(workflow_id), detail=f"incident={wf.incident_id} action={wf.proposed_action}", org_id=org_id)
         return {
             "workflowId": workflow_id,
             "status": "APPROVED",
@@ -243,7 +267,13 @@ async def reject_workflow(workflow_id: int, action: RejectAction, req: Request):
     
     db = SessionLocal()
     try:
-        wf = db.query(RecoveryWorkflow).filter(RecoveryWorkflow.id == workflow_id).first()
+        org_id = getattr(req.state, "org_id", "default")
+        wf = (
+            db.query(RecoveryWorkflow)
+            .filter(RecoveryWorkflow.id == workflow_id)
+            .filter(RecoveryWorkflow.org_id == org_id)
+            .first()
+        )
         
         if not wf:
             raise HTTPException(status_code=404, detail=f"Workflow #{workflow_id} not found")
@@ -258,7 +288,7 @@ async def reject_workflow(workflow_id: int, action: RejectAction, req: Request):
         wf.rejected_reason = action.reason
         db.commit()
         
-        log_event("REJECT", actor=getattr(req.state, 'api_key_name', 'unknown'), actor_role=getattr(req.state, 'api_key_role', ''), resource=str(workflow_id), detail=f"reason={action.reason}")
+        log_event("REJECT", actor=getattr(req.state, 'api_key_name', 'unknown'), actor_role=getattr(req.state, 'api_key_role', ''), resource=str(workflow_id), detail=f"reason={action.reason}", org_id=org_id)
         return {
             "workflowId": workflow_id,
             "status": "REJECTED",
@@ -276,7 +306,7 @@ class VerifyRequest(BaseModel):
 
 
 @api_router.post("/verify/{workflow_id}")
-async def verify_workflow(workflow_id: int, request: VerifyRequest):
+async def verify_workflow(workflow_id: int, request: VerifyRequest, req: Request):
     """Post-execution verification. Closes the recovery loop."""
     from app.engines.verification import verify_execution
     
@@ -284,6 +314,7 @@ async def verify_workflow(workflow_id: int, request: VerifyRequest):
         workflow_id=workflow_id,
         success=request.success,
         details=request.details,
+        org_id=getattr(req.state, "org_id", "default"),
     )
     
     if not result.get("verified"):
@@ -295,7 +326,7 @@ async def verify_workflow(workflow_id: int, request: VerifyRequest):
 # ─── Operational Analytics ─────────────────────────────────────────
 
 @api_router.get("/analytics/summary")
-async def get_analytics_summary():
+async def get_analytics_summary(req: Request):
     """
     Returns computed operational analytics:
     - Total incidents, success rate, avg confidence
@@ -310,12 +341,14 @@ async def get_analytics_summary():
     
     db = SessionLocal()
     try:
+        org_id = getattr(req.state, "org_id", "default")
         # ── Total workflows ──
-        total_workflows = db.query(func.count(RecoveryWorkflow.id)).scalar() or 0
+        total_workflows = db.query(func.count(RecoveryWorkflow.id)).filter(RecoveryWorkflow.org_id == org_id).scalar() or 0
         
         # ── Status breakdown ──
         status_counts = dict(
             db.query(RecoveryWorkflow.status, func.count(RecoveryWorkflow.id))
+            .filter(RecoveryWorkflow.org_id == org_id)
             .group_by(RecoveryWorkflow.status)
             .all()
         )
@@ -323,29 +356,35 @@ async def get_analytics_summary():
         # ── Execution mode breakdown ──
         mode_counts = dict(
             db.query(RecoveryWorkflow.execution_mode, func.count(RecoveryWorkflow.id))
+            .filter(RecoveryWorkflow.org_id == org_id)
             .group_by(RecoveryWorkflow.execution_mode)
             .all()
         )
         
         # ── Evaluation metrics ──
-        total_evaluated = db.query(func.count(EvaluationLog.id)).scalar() or 0
+        total_evaluated = db.query(func.count(EvaluationLog.id)).filter(EvaluationLog.org_id == org_id).scalar() or 0
         total_successes = (
             db.query(func.count(EvaluationLog.id))
+            .filter(EvaluationLog.org_id == org_id)
             .filter(EvaluationLog.success == True)
             .scalar() or 0
         )
         drift_count = (
             db.query(func.count(EvaluationLog.id))
+            .filter(EvaluationLog.org_id == org_id)
             .filter(EvaluationLog.drift_detected == True)
             .scalar() or 0
         )
         avg_confidence = (
-            db.query(func.avg(ReplayLog.confidence_score)).scalar() or 0
+            db.query(func.avg(ReplayLog.confidence_score))
+            .filter(ReplayLog.org_id == org_id)
+            .scalar() or 0
         )
         
         # ── Approval queue depth ──
         pending_approvals = (
             db.query(func.count(RecoveryWorkflow.id))
+            .filter(RecoveryWorkflow.org_id == org_id)
             .filter(RecoveryWorkflow.status == "PENDING")
             .scalar() or 0
         )
@@ -353,6 +392,7 @@ async def get_analytics_summary():
         # ── MTTR (Mean Time To Resolution) ──
         resolved = (
             db.query(RecoveryWorkflow)
+            .filter(RecoveryWorkflow.org_id == org_id)
             .filter(RecoveryWorkflow.status == "RESOLVED")
             .filter(RecoveryWorkflow.verified_at != None)
             .all()
@@ -389,10 +429,10 @@ async def get_analytics_summary():
 # ─── Audit Logs ───────────────────────────────────────────────────
 
 @api_router.get("/audit/logs")
-async def get_audit_logs(limit: int = 100):
+async def get_audit_logs(req: Request, limit: int = 100):
     """Returns recent audit log entries. Requires ADMIN role."""
     from app.core.audit import get_recent_audit_logs
-    return {"logs": get_recent_audit_logs(limit)}
+    return {"logs": get_recent_audit_logs(limit, org_id=getattr(req.state, "org_id", "default"))}
 
 
 # ─── Predictive Intelligence ─────────────────────────────────────

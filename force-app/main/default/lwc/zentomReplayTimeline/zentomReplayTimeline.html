@@ -1,0 +1,58 @@
+<template>
+    <lightning-card title="Zentom Replay Timeline" icon-name="utility:timeline">
+        <div class="timeline">
+            <template if:true={timeline.length}>
+                <template for:each={timeline} for:item="item">
+                    <article key={item.id} class={item.itemClass}>
+                        <div class="step-header">
+                            <div class="step-title">
+                                <lightning-icon
+                                    icon-name={item.iconName}
+                                    size="small"
+                                    class="step-icon"
+                                ></lightning-icon>
+                                <strong>Step {item.stepNumber}: {item.eventType}</strong>
+                            </div>
+                            <lightning-formatted-date-time
+                                value={item.createdDate}
+                                year="numeric"
+                                month="short"
+                                day="2-digit"
+                                hour="2-digit"
+                                minute="2-digit"
+                            ></lightning-formatted-date-time>
+                        </div>
+
+                        <div class="detail-grid">
+                            <p><span>Decision</span>{item.decision}</p>
+                            <p><span>Trace Id</span>{item.traceId}</p>
+                            <p><span>Created By</span>{item.createdByName}</p>
+                        </div>
+
+                        <template if:true={item.responsePayload}>
+                            <div class="payload">
+                                <span>Response</span>
+                                <pre>{item.responsePayload}</pre>
+                            </div>
+                        </template>
+
+                        <template if:true={item.requestPayload}>
+                            <div class="payload">
+                                <span>Request</span>
+                                <pre>{item.requestPayload}</pre>
+                            </div>
+                        </template>
+                    </article>
+                </template>
+            </template>
+
+            <template if:true={isEmpty}>
+                <p class="empty">No replay events have been recorded yet.</p>
+            </template>
+
+            <template if:true={error}>
+                <p class="error">Unable to load replay timeline.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

@@ -4,13 +4,15 @@
   "features": [
     "API",
     "Communities",
-    "ExperienceBundle"
+    "ExperienceBundle",
+    "Sites"
   ],
   "settings": {
-    "orgPreferenceSettings": {
-      "s1DesktopEnabled": true,
-      "networksEnabled": true,
-      "pathAssistantEnabled": true
+    "communitiesSettings": {
+      "enableNetworksEnabled": true
+    },
+    "experienceBundleSettings": {
+      "enableExperienceBundleMetadata": true
     }
   }
 }

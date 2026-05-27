@@ -4,17 +4,17 @@
     <allowMembersToFlag>false</allowMembersToFlag>
     <changePasswordTemplate>unfiled$public/CommunityChangePasswordEmailTemplate</changePasswordTemplate>
     <communityRoles/>
-    <disableReputationRecordConversations>true</disableReputationRecordConversations>
+    <disableReputationRecordConversations>false</disableReputationRecordConversations>
     <emailSenderAddress>vjsf316@gmail.com</emailSenderAddress>
     <emailSenderName>SentinelFlow</emailSenderName>
     <embeddedLoginEnabled>false</embeddedLoginEnabled>
     <enableApexCDNCaching>true</enableApexCDNCaching>
     <enableCustomVFErrorPageOverrides>false</enableCustomVFErrorPageOverrides>
-    <enableDirectMessages>true</enableDirectMessages>
+    <enableDirectMessages>false</enableDirectMessages>
     <enableExpFriendlyUrlsAsDefault>false</enableExpFriendlyUrlsAsDefault>
     <enableExperienceBundleBasedSnaOverrideEnabled>true</enableExperienceBundleBasedSnaOverrideEnabled>
-    <enableGuestChatter>false</enableGuestChatter>
-    <enableGuestFileAccess>false</enableGuestFileAccess>
+    <enableGuestChatter>true</enableGuestChatter>
+    <enableGuestFileAccess>true</enableGuestFileAccess>
     <enableGuestMemberVisibility>false</enableGuestMemberVisibility>
     <enableImageOptimizationCDN>false</enableImageOptimizationCDN>
     <enableInvitation>false</enableInvitation>
@@ -26,7 +26,7 @@
     <enableReputation>false</enableReputation>
     <enableShowAllNetworkSettings>false</enableShowAllNetworkSettings>
     <enableSiteAsContainer>true</enableSiteAsContainer>
-    <enableTalkingAboutStats>true</enableTalkingAboutStats>
+    <enableTalkingAboutStats>false</enableTalkingAboutStats>
     <enableTopicAssignmentRules>true</enableTopicAssignmentRules>
     <enableTopicSuggestions>false</enableTopicSuggestions>
     <enableUpDownVote>false</enableUpDownVote>
@@ -41,7 +41,7 @@
     <networkPageOverrides>
         <changePasswordPageOverrideSetting>Standard</changePasswordPageOverrideSetting>
         <forgotPasswordPageOverrideSetting>Designer</forgotPasswordPageOverrideSetting>
-        <homePageOverrideSetting>Designer</homePageOverrideSetting>
+        <homePageOverrideSetting>Standard</homePageOverrideSetting>
         <loginPageOverrideSetting>Designer</loginPageOverrideSetting>
         <selfRegProfilePageOverrideSetting>Designer</selfRegProfilePageOverrideSetting>
     </networkPageOverrides>
@@ -50,7 +50,7 @@
     <sendWelcomeEmail>true</sendWelcomeEmail>
     <site>SentinelFlow</site>
     <siteArchiveStatus>NotArchived</siteArchiveStatus>
-    <status>Live</status>
+    <status>DownForMaintenance</status>
     <tabs>
         <defaultTab>home</defaultTab>
         <standardTab>Chatter</standardTab>

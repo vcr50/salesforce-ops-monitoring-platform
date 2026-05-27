@@ -4,8 +4,8 @@
   "contentBody" : {
     "component" : {
       "attributes" : {
-        "hideThemeFooter" : false,
-        "showThemeFooterAtBottom" : true,
+        "hideThemeFooter" : true,
+        "showThemeFooterAtBottom" : false,
         "stickyThemeHeader" : false
       },
       "children" : [ {
@@ -25,14 +25,6 @@
             "sectionVerticalAlign" : "flex-start"
           },
           "children" : [ {
-            "children" : [ {
-              "attributes" : {
-                "dxpStyle" : { }
-              },
-              "definition" : "c:sentinelFlowPortalLogin",
-              "id" : "4b3e924e-1503-41ca-9698-84b9999034ae",
-              "type" : "component"
-            } ],
             "id" : "b0928ae9-c3c0-4437-a9d4-2756ef06902d",
             "name" : "headerSection",
             "title" : "Theme Header",

@@ -6,7 +6,8 @@
       "path": "force-app",
       "default": true,
       "package": "SentinelFlow",
-      "versionDescription": "SentinelFlow 3.0.0 - Zentom AI Orchestration Moat Edition"
+      "versionDescription": "SentinelFlow 3.0.0 - Zentom AI Orchestration Moat Edition",
+      "definitionFile": "config/project-scratch-def.json"
     }
   ],
   "name": "SentinelFlow",
@@ -18,6 +19,7 @@
     "SentinelFlow@1.0.0-1": "04tdL000000YR5pQAG",
     "SentinelFlow@1.0.0-2": "04tdL000000YSWXQA4",
     "SentinelFlow@1.0.0-3": "04tdL000000YiJZQA0",
-    "SentinelFlow@2.6.1-1": "04tdL000000aQVRQA2"
+    "SentinelFlow@2.6.1-1": "04tdL000000aQVRQA2",
+    "SentinelFlow@3.0.0-1": "04tdL000000c4aTQAQ"
   }
 }

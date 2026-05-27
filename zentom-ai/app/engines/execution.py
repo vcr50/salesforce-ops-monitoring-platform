@@ -16,7 +16,8 @@ def prepare_execution_payload(
     confidence_score: int,
     risk: RiskScore,
     mode: ExecutionMode,
-    policy_reasoning: str = ""
+    policy_reasoning: str = "",
+    org_id: str = "default",
 ) -> Dict[str, Any]:
     """
     Prepares the execution payload AND persists a RecoveryWorkflow record.
@@ -50,6 +51,7 @@ def prepare_execution_payload(
     workflow_id = None
     try:
         workflow = RecoveryWorkflow(
+            org_id=org_id,
             incident_id=incident_id,
             proposed_action=proposed_action,
             confidence=confidence_score,

@@ -1,6 +1,12 @@
 from app.models.database import SessionLocal, EvaluationLog
 
-def evaluate_outcome(incident_id: str, success: bool, executed_action: str, confidence_score: int):
+def evaluate_outcome(
+    incident_id: str,
+    success: bool,
+    executed_action: str,
+    confidence_score: int,
+    org_id: str = "default",
+):
     """
     Quality measurement system that judges AI performance.
     Persists evaluation results and detects model drift.
@@ -10,6 +16,7 @@ def evaluate_outcome(incident_id: str, success: bool, executed_action: str, conf
     db = SessionLocal()
     try:
         new_eval = EvaluationLog(
+            org_id=org_id,
             incident_id=incident_id,
             executed_action=executed_action,
             confidence_score=confidence_score,

@@ -1,8 +1,21 @@
 /* eslint-env browser */
 /* eslint-disable no-unused-vars */
 'use strict';
-// ── DATA ──────────────────────────────────────────────────────────────────────
-const INCIDENTS = [
+// ── AUTO-SYNC DATA ──────────────────────────────────────────────────────────────
+// Data is auto-synced from the centralized dashboard-data.json
+// Fallback defaults are provided for offline / first-load
+
+const DATA_SOURCE = '../../dashboard/dashboard-data.json';
+const SYNC_INTERVAL = 30000;
+
+let INCIDENTS = [];
+let INTEGRATIONS = [];
+let LOGS = [];
+let AI_INSIGHTS = [];
+let IMPACT_DATA = [];
+
+// Fallback data (used when fetch fails)
+const FALLBACK_INCIDENTS = [
   {id:'INC-0041',desc:'API Gateway timeout — Payment Service',sev:'Critical',status:'Open',integration:'Payment API',env:'Production',affected:1240,sla:'Breached',time:'4m ago',rootCause:'Connection pool exhausted due to spike in transaction volume',action:'Restart Service',confidence:92,impact:'High'},
   {id:'INC-0040',desc:'Salesforce Apex CPU limit breach',sev:'Critical',status:'Investigating',integration:'SF Core',env:'Production',affected:580,sla:'At Risk',time:'11m ago',rootCause:'Recursive trigger loop detected on Opportunity object',action:'Escalate',confidence:87,impact:'High'},
   {id:'INC-0039',desc:'Order Management sync failure',sev:'High',status:'Healing',integration:'ERP Sync',env:'Production',affected:310,sla:'OK',time:'18m ago',rootCause:'Schema mismatch in v2.1 payload — field Order_Priority__c missing',action:'Retry',confidence:95,impact:'Medium'},
@@ -12,7 +25,7 @@ const INCIDENTS = [
   {id:'INC-0035',desc:'Dashboard report timeout',sev:'Low',status:'Resolved',integration:'Reports API',env:'Sandbox',affected:12,sla:'OK',time:'2h ago',rootCause:'Missing index on Incident__c.CreatedDate causing full table scan',action:'Retry',confidence:98,impact:'Low'},
 ];
 
-const INTEGRATIONS = [
+const FALLBACK_INTEGRATIONS = [
   {name:'Payment API',status:'Failed',resp:'8,420ms',uptime:'94.2%',lastOk:'4m ago',errors:14,color:'#ef4444'},
   {name:'Salesforce Core',status:'Warning',resp:'1,230ms',uptime:'98.1%',lastOk:'2m ago',errors:3,color:'#f59e0b'},
   {name:'ERP Sync',status:'Warning',resp:'2,800ms',uptime:'97.4%',lastOk:'18m ago',errors:7,color:'#f59e0b'},
@@ -24,7 +37,7 @@ const INTEGRATIONS = [
   {name:'Platform Events',status:'OK',resp:'90ms',uptime:'100%',lastOk:'0s ago',errors:0,color:'#10b981'},
 ];
 
-const LOGS = [
+const FALLBACK_LOGS = [
   {api:'Payment API',status:'Failed',resp:'8420ms',error:'Connection pool exhausted',ts:'04:12:33'},
   {api:'ERP Sync',status:'Failed',resp:'2800ms',error:'Schema mismatch v2.1',ts:'03:58:10'},
   {api:'SMTP Gateway',status:'Warning',resp:'4100ms',error:'Latency threshold exceeded',ts:'03:44:22'},
@@ -33,18 +46,68 @@ const LOGS = [
   {api:'Reports API',status:'Success',resp:'320ms',error:'—',ts:'03:35:18'},
 ];
 
-const AI_INSIGHTS = [
+const FALLBACK_AI_INSIGHTS = [
   {id:'INC-0041',title:'Payment API — Connection Pool Exhaustion',cause:'Traffic spike caused all 100 connections to be consumed. No circuit breaker configured.',action:'Restart Service',confidence:92,actionType:'restart'},
   {id:'INC-0040',title:'Apex CPU Limit — Recursive Trigger Loop',cause:'Trigger on Opportunity fires before_update and calls a Flow that re-saves the record.',action:'Escalate to Dev Team',confidence:87,actionType:'escalate'},
   {id:'INC-0039',title:'ERP Sync — Schema Field Missing',cause:'v2.1 payload schema removed Order_Priority__c. Receiver still expects it.',action:'Retry with v2.0 Schema',confidence:95,actionType:'retry'},
 ];
 
-const IMPACT_DATA = [
+const FALLBACK_IMPACT_DATA = [
   {id:'INC-0041',title:'Payment API Outage',users:1240,arpu:42,type:'Payment Integration',risk:'Critical'},
   {id:'INC-0040',title:'Apex CPU Breach',users:580,arpu:38,type:'Platform Health',risk:'High'},
   {id:'INC-0039',title:'ERP Sync Failure',users:310,arpu:25,type:'Data Integration',risk:'Medium'},
   {id:'INC-0037',title:'CRM Import Failure',users:430,arpu:30,type:'Data Import',risk:'High'},
 ];
+
+// ── SYNC ENGINE ────────────────────────────────────────────────────────────────
+let _syncTimer = null;
+let _lastSync = null;
+let _syncCount = 0;
+
+async function syncDashboardData() {
+  try {
+    const res = await fetch(DATA_SOURCE + '?t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+
+    if (data.incidents && data.incidents.length) INCIDENTS = data.incidents;
+    if (data.integrations && data.integrations.length) INTEGRATIONS = data.integrations;
+    if (data.logs && data.logs.length) LOGS = data.logs;
+    if (data.aiInsights && data.aiInsights.length) AI_INSIGHTS = data.aiInsights;
+    if (data.impactData && data.impactData.length) IMPACT_DATA = data.impactData;
+
+    _lastSync = new Date();
+    _syncCount++;
+    console.log('[sync] Data synced at', _lastSync.toLocaleTimeString(), '(#' + _syncCount + ')');
+
+    // Re-render active page with new data
+    const activePage = document.querySelector('.page.active');
+    if (activePage) {
+      const pageId = activePage.id.replace('page-', '');
+      if (pageId === 'incidents') renderFullIncidents(INCIDENTS);
+      if (pageId === 'integrations') renderIntegrations();
+    }
+    return true;
+  } catch (err) {
+    console.warn('[sync] Fetch failed, using fallback data:', err.message);
+    if (!INCIDENTS.length) INCIDENTS = FALLBACK_INCIDENTS;
+    if (!INTEGRATIONS.length) INTEGRATIONS = FALLBACK_INTEGRATIONS;
+    if (!LOGS.length) LOGS = FALLBACK_LOGS;
+    if (!AI_INSIGHTS.length) AI_INSIGHTS = FALLBACK_AI_INSIGHTS;
+    if (!IMPACT_DATA.length) IMPACT_DATA = FALLBACK_IMPACT_DATA;
+    return false;
+  }
+}
+
+function startAutoSync() {
+  if (_syncTimer) clearInterval(_syncTimer);
+  _syncTimer = setInterval(syncDashboardData, SYNC_INTERVAL);
+}
+
+function stopAutoSync() {
+  clearInterval(_syncTimer);
+  _syncTimer = null;
+}
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 function sevClass(s){return{Critical:'sev-critical',High:'sev-high',Medium:'sev-medium',Low:'sev-low'}[s]||'sev-low';}
@@ -395,5 +458,10 @@ function showToast(msg, type = 'brand') {
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
-renderHomeIncidents(INCIDENTS.slice(0,5));
+// Boot: fetch centralized data, then render, then start auto-sync
+(async function init() {
+  await syncDashboardData();
+  renderHomeIncidents(INCIDENTS.slice(0,5));
+  startAutoSync();
+})();
 renderAIInsights();

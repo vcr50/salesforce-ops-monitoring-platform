@@ -46,6 +46,14 @@
         <name>Network</name>
     </types>
     <types>
+        <members>SentinelFlow</members>
+        <name>CustomSite</name>
+    </types>
+    <types>
+        <members>SentinelFlow1</members>
+        <name>DigitalExperienceBundle</name>
+    </types>
+    <types>
         <members>SentinelFlow_Home</members>
         <members>Incident_Record_Page</members>
         <members>Integration_Log_Record_Page</members>
@@ -132,12 +140,12 @@
         <name>DashboardFolder</name>
     </types>
     <types>
+        <members>sentinelFlowBetaAppShell</members>
         <members>sentinelFlowPortalSummary</members>
         <members>sentinelFlowPortalIncidentTable</members>
         <members>sentinelFlowPortalIntegrationTable</members>
         <members>sentinelFlowPortalIncidentDetail</members>
         <members>sentinelFlowPortalIntegrationDetail</members>
-        <members>sentinelFlowPortalLogin</members>
         <members>tomcodexServicePage</members>
         <members>sentinelFlowSubscriptionUpgrade</members>
         <name>LightningComponentBundle</name>

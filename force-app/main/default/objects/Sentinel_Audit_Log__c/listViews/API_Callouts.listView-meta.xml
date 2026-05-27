@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>API_Callouts</fullName>
+    <columns>NAME</columns>
+    <columns>Incident__c</columns>
+    <columns>Event_Type__c</columns>
+    <columns>Decision__c</columns>
+    <columns>Trace_Id__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Event_Type__c</field>
+        <operation>contains</operation>
+        <value>ZENTOM</value>
+    </filters>
+    <label>API Callouts</label>
+</ListView>

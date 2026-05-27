@@ -6,6 +6,7 @@ import uuid
 from app.engines import chat_memory
 from app.services import voice
 from app.services import groq
+from app.core.security import get_api_key_info, has_role
 
 ws_router = APIRouter()
 
@@ -29,6 +30,12 @@ manager = ConnectionManager()
 
 @ws_router.websocket("/chat/{incident_id}")
 async def websocket_endpoint(websocket: WebSocket, incident_id: str):
+    api_key = websocket.query_params.get("api_key") or websocket.headers.get("X-API-Key")
+    key_info = get_api_key_info(api_key)
+    if not key_info or not has_role(key_info["role"], "OPERATOR"):
+        await websocket.close(code=1008, reason="Unauthorized")
+        return
+
     await manager.connect(websocket, incident_id)
     
     # Send a welcome message

@@ -28,6 +28,21 @@ const PAGE_META = {
         eyebrow: 'Zentom AI Engine',
         summary: 'Ask, analyze, remediate, and summarize'
     },
+    workflow: {
+        title: 'Workflow Map',
+        eyebrow: 'Operations Flow',
+        summary: 'Visualizing system processes'
+    },
+    compliance: {
+        title: 'Compliance Dashboard',
+        eyebrow: 'Governance',
+        summary: 'Security and compliance checks'
+    },
+    founder: {
+        title: 'Founder Mode',
+        eyebrow: 'Executive Overview',
+        summary: 'High-level business metrics'
+    },
     settings: {
         title: 'Settings',
         eyebrow: 'Configuration',
@@ -149,6 +164,18 @@ export default class SentinelFlowAppShell extends LightningElement {
         return this.currentPage === 'copilot';
     }
 
+    get isWorkflow() {
+        return this.currentPage === 'workflow';
+    }
+
+    get isCompliance() {
+        return this.currentPage === 'compliance';
+    }
+
+    get isFounder() {
+        return this.currentPage === 'founder';
+    }
+
     get isSettings() {
         return this.currentPage === 'settings';
     }
@@ -171,6 +198,18 @@ export default class SentinelFlowAppShell extends LightningElement {
 
     get copilotNavClass() {
         return this.currentPage === 'copilot' ? 'nav-item active' : 'nav-item';
+    }
+
+    get workflowNavClass() {
+        return this.currentPage === 'workflow' ? 'nav-item active' : 'nav-item';
+    }
+
+    get complianceNavClass() {
+        return this.currentPage === 'compliance' ? 'nav-item active' : 'nav-item';
+    }
+
+    get founderNavClass() {
+        return this.currentPage === 'founder' ? 'nav-item active' : 'nav-item';
     }
 
     get settingsNavClass() {

@@ -58,11 +58,6 @@
     color: var(--shell-text);
 }
 
-.app-shell.theme-dark .brand-mark {
-    background: #ffffff;
-    color: #0b132b;
-}
-
 .app-shell.theme-dark .nav-item:hover {
     background: #101b33;
 }
@@ -124,21 +119,16 @@
 }
 
 .brand-mark {
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 0.85rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: #ffffff;
-    border: 1px solid #d9e2f2;
     flex: 0 0 auto;
     overflow: hidden;
 }
 
 .brand-mark img {
-    width: 2rem;
-    height: 2rem;
+    height: 3.5rem;
+    width: auto;
     object-fit: contain;
 }
 
@@ -386,6 +376,18 @@
     font-size: 0.6875rem;
 }
 
+@keyframes zaiGradientAnim {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes zaiGlow {
+    0% { box-shadow: 0 0 5px rgba(168, 85, 247, 0.4), 0 0 10px rgba(79, 70, 229, 0.3); }
+    50% { box-shadow: 0 0 12px rgba(168, 85, 247, 0.7), 0 0 20px rgba(79, 70, 229, 0.5); }
+    100% { box-shadow: 0 0 5px rgba(168, 85, 247, 0.4), 0 0 10px rgba(79, 70, 229, 0.3); }
+}
+
 .zai-icon {
     display: inline-flex;
     align-items: center;
@@ -393,12 +395,19 @@
     width: 1.8rem;
     height: 1.4rem;
     border-radius: 0.35rem;
-    background: linear-gradient(135deg, #4f46e5 0%, #a855f7 100%);
+    background: linear-gradient(270deg, #4f46e5, #a855f7, #ec4899, #4f46e5);
+    background-size: 300% 300%;
     color: #ffffff;
     font-size: 0.7rem;
     font-weight: 800;
     letter-spacing: 0.05em;
-    box-shadow: 0 2px 5px rgba(79, 70, 229, 0.3);
+    animation: zaiGradientAnim 4s ease infinite, zaiGlow 3s ease-in-out infinite;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-item:hover .zai-icon {
+    transform: scale(1.1) rotate(3deg);
+    animation: zaiGradientAnim 2s ease infinite, zaiGlow 1.5s ease-in-out infinite;
 }
 
 .sidebar-card {

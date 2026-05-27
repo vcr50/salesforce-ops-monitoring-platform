@@ -13,6 +13,8 @@ import {
   Settings, 
   Zap 
 } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
+import ZentomMascot from '@/components/ZentomMascot';
 import styles from './layout.module.css';
 
 const navItems = [
@@ -68,6 +70,8 @@ export default function DashboardLayout({ children }) {
             <Bell size={20} />
           </button>
           
+          <ThemeToggle />
+          
           <div className={styles.avatar}>
             A
           </div>
@@ -80,6 +84,9 @@ export default function DashboardLayout({ children }) {
           {children}
         </div>
       </main>
+      
+      {/* Global Zentom Mascot */}
+      <ZentomMascot />
     </div>
   );
 }

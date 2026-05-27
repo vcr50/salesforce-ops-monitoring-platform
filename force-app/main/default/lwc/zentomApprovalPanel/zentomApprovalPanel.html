@@ -1,0 +1,80 @@
+<template>
+    <lightning-card title="Zentom Approval" icon-name="utility:approval">
+        <div class="panel">
+            <template if:true={incident}>
+                <div class="summary">
+                    <div>
+                        <span class="label">Risk</span>
+                        <strong>{incident.riskScore} / {incident.riskLevel}</strong>
+                    </div>
+                    <div>
+                        <span class="label">Policy</span>
+                        <strong>{incident.policyDecision}</strong>
+                    </div>
+                    <div>
+                        <span class="label">Approval</span>
+                        <strong>{incident.approvalStatus}</strong>
+                    </div>
+                    <div>
+                        <span class="label">Execution</span>
+                        <strong>{incident.executionStatus}</strong>
+                    </div>
+                </div>
+
+                <div class="recommendation">
+                    <span class="label">Recommended Action</span>
+                    <p>{incident.recommendedAction}</p>
+                </div>
+
+                <template if:true={incident.nextAction}>
+                    <div class="next-action">
+                        <span class="label">Next Action</span>
+                        <p>{incident.nextAction}</p>
+                    </div>
+                </template>
+
+                <template if:true={showRejectReason}>
+                    <lightning-textarea
+                        label="Rejection Reason"
+                        value={rejectionReason}
+                        onchange={handleReasonChange}
+                    ></lightning-textarea>
+                </template>
+
+                <div class="actions">
+                    <lightning-button
+                        label="Approve"
+                        variant="brand"
+                        icon-name="utility:check"
+                        onclick={handleApprove}
+                        disabled={actionsDisabled}
+                    ></lightning-button>
+                    <lightning-button
+                        label={rejectLabel}
+                        variant="destructive-text"
+                        icon-name="utility:close"
+                        onclick={handleReject}
+                        disabled={rejectDisabled}
+                    ></lightning-button>
+                    <template if:true={showExecuteAction}>
+                        <lightning-button
+                            label="Execute Approved Action"
+                            variant="brand-outline"
+                            icon-name="utility:case"
+                            onclick={handleExecute}
+                            disabled={isSaving}
+                        ></lightning-button>
+                    </template>
+                </div>
+            </template>
+
+            <template if:true={errorMessage}>
+                <div class="slds-text-color_error">{errorMessage}</div>
+            </template>
+
+            <template if:false={incident}>
+                <lightning-spinner alternative-text="Loading approval details" size="small"></lightning-spinner>
+            </template>
+        </div>
+    </lightning-card>
+</template>

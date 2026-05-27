@@ -12,6 +12,8 @@
     <tabs>Environment__c</tabs>
     <tabs>Deployment_Record__c</tabs>
     <tabs>Audit_Trail__c</tabs>
+    <tabs>Zentom_Approvals</tabs>
+    <tabs>Zentom_Analytics</tabs>
     <uiType>Lightning</uiType>
     <utilityBar>SentinelFlow_Console_UtilityBar</utilityBar>
 </CustomApplication>

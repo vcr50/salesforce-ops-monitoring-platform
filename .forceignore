@@ -19,5 +19,8 @@ Thumbs.db
 force-app/main/default/approvalProcesses/
 force-app/main/default/digitalExperiences/
 force-app/main/default/experiences/
-force-app/main/default/networks/
+# force-app/main/default/networks/
+# force-app/main/default/sites/
+
 force-app/main/default/sites/
+force-app/main/default/networks/

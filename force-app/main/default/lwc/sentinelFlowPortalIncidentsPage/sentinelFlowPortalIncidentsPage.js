@@ -73,11 +73,11 @@ export default class SentinelFlowPortalIncidentsPage extends LightningElement {
     _timelines = {};
 
     @track filters = [
-        { label: 'All',         value: 'all',      cssClass: 'filter-chip active' },
-        { label: '🔴 Critical', value: 'Critical',  cssClass: 'filter-chip' },
-        { label: '🟠 High',     value: 'High',      cssClass: 'filter-chip' },
-        { label: '🟡 Medium',   value: 'Medium',    cssClass: 'filter-chip' },
-        { label: '🟢 Low',      value: 'Low',       cssClass: 'filter-chip' }
+        { label: 'All',      value: 'all',      cssClass: 'filter-chip active' },
+        { label: 'Critical', value: 'Critical',  cssClass: 'filter-chip' },
+        { label: 'High',     value: 'High',      cssClass: 'filter-chip' },
+        { label: 'Medium',   value: 'Medium',    cssClass: 'filter-chip' },
+        { label: 'Low',      value: 'Low',       cssClass: 'filter-chip' }
     ];
 
     _autoRefreshInterval;
@@ -414,6 +414,11 @@ export default class SentinelFlowPortalIncidentsPage extends LightningElement {
     get hasIncidents()    { return this.filteredIncidents.length > 0; }
     get splitClass()      { return this.selectedIncident ? 'split-pane has-detail' : 'split-pane'; }
     get hasNewSimulated() { return this._simulatedIds.size > 0; }
+
+    get totalCount()    { return this.allIncidents.length; }
+    get criticalCount() { return this.allIncidents.filter(i => i.severity === 'Critical').length; }
+    get activeCount()   { return this.allIncidents.filter(i => i.status !== 'Resolved').length; }
+    get resolvedCount() { return this.allIncidents.filter(i => i.status === 'Resolved').length; }
 
     get incidentTimeline() {
         if (!this.selectedIncident) return [];

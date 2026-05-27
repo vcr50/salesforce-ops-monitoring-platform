@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Todays_Incidents</fullName>
+    <columns>NAME</columns>
+    <columns>Incident_Type__c</columns>
+    <columns>Environment__c</columns>
+    <columns>Risk_Score__c</columns>
+    <columns>Risk_Level__c</columns>
+    <columns>Policy_Decision__c</columns>
+    <columns>Status__c</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>CREATED_DATE</field>
+        <operation>equals</operation>
+        <value>TODAY</value>
+    </filters>
+    <label>Today&apos;s Incidents</label>
+</ListView>

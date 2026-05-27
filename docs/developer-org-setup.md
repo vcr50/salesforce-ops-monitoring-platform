@@ -19,28 +19,22 @@ This project is designed to work with a single Salesforce Developer Edition org.
 6. Add the scopes needed for API access and refresh tokens.
 7. Copy the client ID and client secret into `.env`.
 
-## Experience Cloud Login
+## Experience Cloud Access
 
-For a single Developer Edition org, use the custom Experience Cloud username/password login flow. Do not configure the portal's Salesforce Auth Provider to point back to the same org as an SSO identity provider; Salesforce rejects that loop with `SAME_ORG_SSO: Cannot sign on into same org`.
-
-The login page intentionally hides SSO buttons by default. Only enable an SSO button after configuring a real external identity provider, such as SAML, OpenID Connect, Google with real OAuth credentials, or a different Salesforce org.
+The SentinelFlow Digital Experience site no longer uses a separate custom login page. Internal Salesforce users can open the site directly while logged into the org.
 
 For the developer org, use:
 
-- Login URL: `https://astrosoft2-dev-ed.develop.my.site.com/SentinelFlow/login`
-- Username: `sentinelflow.portal.00ddl0000053505uaa@example.com`
-- Password: `SentinelFlow#2026May!`
+- Site home: `https://astrosoft2-dev-ed.develop.my.site.com/SentinelFlow/`
+- Internal Lightning app: `https://astrosoft2-dev-ed.develop.lightning.force.com/lightning/n/SentinelFlow_Home`
 
-If the password is stuck, reset the known developer password from the org:
+`allowInternalUserLogin` is enabled on the SentinelFlow network, so admins and internal users should not need a separate portal username/password for day-to-day development.
 
-```bash
-sf apex run --file scripts/apex/resetPassword.apex --target-org sentinelFlow-dev-edition
-```
-
-If the portal user does not exist yet, create it with:
+If you still need an external community user for testing, create one with:
 
 ```bash
-sf apex run --file scripts/apex/createPortalLoginUser.apex --target-org sentinelFlow-dev-edition
+sf apex run --file scripts/apex/createPortalLoginUser.apex --target-org astrosoft2-dev-ed
+sf apex run --file scripts/apex/resetPassword.apex --target-org astrosoft2-dev-ed
 ```
 
 ## Local Environment

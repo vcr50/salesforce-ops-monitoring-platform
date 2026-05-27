@@ -1,0 +1,87 @@
+<template>
+    <div class="analytics-dashboard">
+        
+        <header class="dash-header">
+            <div class="icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+            </div>
+            <div>
+                <h2>Zentom Analytics & Insights</h2>
+                <p>Deep-dive telemetry into autonomous remediation performance.</p>
+            </div>
+        </header>
+
+        <div class="charts-grid">
+            
+            <!-- Donut Chart: Risk Distribution -->
+            <div class="chart-card">
+                <h3>Risk Distribution</h3>
+                <div class="donut-container">
+                    <svg viewBox="0 0 36 36" class="donut-chart">
+                        <!-- High Risk (Red) -->
+                        <path class="donut-segment segment-high"
+                              stroke-dasharray={highRiskStroke}
+                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        
+                        <!-- Medium Risk (Yellow) -->
+                        <path class="donut-segment segment-med"
+                              stroke-dasharray={medRiskStroke}
+                              style={medRiskOffset}
+                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                              
+                        <!-- Low Risk (Green) -->
+                        <path class="donut-segment segment-low"
+                              stroke-dasharray={lowRiskStroke}
+                              style={lowRiskOffset}
+                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    </svg>
+                    <div class="donut-center">
+                        <span class="donut-total">{totalRiskEvents}</span>
+                        <span class="donut-label">Events</span>
+                    </div>
+                </div>
+                
+                <div class="chart-legend">
+                    <div class="legend-item"><span class="dot dot-high"></span> High Risk ({highRiskPct}%)</div>
+                    <div class="legend-item"><span class="dot dot-med"></span> Medium Risk ({medRiskPct}%)</div>
+                    <div class="legend-item"><span class="dot dot-low"></span> Low Risk ({lowRiskPct}%)</div>
+                </div>
+            </div>
+
+            <!-- Bar Chart: Resolution Methods -->
+            <div class="chart-card">
+                <h3>Resolution Efficacy</h3>
+                <div class="bar-chart-container">
+                    <div class="bar-row">
+                        <div class="bar-label">Autonomous</div>
+                        <div class="bar-track">
+                            <div class="bar-fill fill-auto" style={autoWidth}></div>
+                        </div>
+                        <div class="bar-value">{autoPct}%</div>
+                    </div>
+                    
+                    <div class="bar-row">
+                        <div class="bar-label">Human Guardian</div>
+                        <div class="bar-track">
+                            <div class="bar-fill fill-human" style={humanWidth}></div>
+                        </div>
+                        <div class="bar-value">{humanPct}%</div>
+                    </div>
+                    
+                    <div class="bar-row">
+                        <div class="bar-label">Escalated</div>
+                        <div class="bar-track">
+                            <div class="bar-fill fill-escalated" style={escWidth}></div>
+                        </div>
+                        <div class="bar-value">{escPct}%</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</template>

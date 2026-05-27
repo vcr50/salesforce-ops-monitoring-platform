@@ -45,6 +45,12 @@ def has_role(user_role: str, required_role: str) -> bool:
     """Check if user_role meets or exceeds required_role."""
     return ROLE_HIERARCHY.get(user_role, 0) >= ROLE_HIERARCHY.get(required_role, 99)
 
+def get_api_key_info(api_key: str | None) -> dict | None:
+    """Return registered API key metadata, if the key is valid."""
+    if not api_key:
+        return None
+    return API_KEYS.get(api_key)
+
 # ─── Route-level RBAC ────────────────────────────────────────────
 # Maps route path prefixes to minimum required roles.
 ROUTE_PERMISSIONS = {

@@ -12,6 +12,7 @@
         <members>seompPortalIntegrationsPage</members>
         <members>seompPortalIntegrationTable</members>
         <members>seompPortalLogin</members>
+        <members>sentinelFlowPortalLogin</members>
         <members>seompPortalSettings</members>
         <members>seompPortalSummary</members>
         <members>seompPortalTimeline</members>

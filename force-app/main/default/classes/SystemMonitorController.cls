@@ -15,6 +15,12 @@ public with sharing class SystemMonitorController {
         @AuraEnabled public Integer activeIncidents;
     }
 
+    public class UserContext {
+        @AuraEnabled public String userName;
+        @AuraEnabled public String userProfile;
+        @AuraEnabled public String organizationName;
+    }
+
     public class RuntimeFabricStatus {
         @AuraEnabled public String name;
         @AuraEnabled public String status; // ok, warn, critical
@@ -203,6 +209,28 @@ public with sharing class SystemMonitorController {
             ORDER BY CreatedDate DESC
             LIMIT 20
         ];
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static UserContext getUserContext() {
+        UserContext ctx = new UserContext();
+        ctx.userName = UserInfo.getName();
+        
+        List<Profile> profiles = [SELECT Name FROM Profile WHERE Id = :UserInfo.getProfileId() LIMIT 1];
+        if (!profiles.isEmpty()) {
+            ctx.userProfile = profiles[0].Name;
+        } else {
+            ctx.userProfile = 'User';
+        }
+
+        List<Organization> orgs = [SELECT Name FROM Organization LIMIT 1];
+        if (!orgs.isEmpty()) {
+            ctx.organizationName = orgs[0].Name;
+        } else {
+            ctx.organizationName = 'Tomcodex Labs';
+        }
+        
+        return ctx;
     }
 }
 

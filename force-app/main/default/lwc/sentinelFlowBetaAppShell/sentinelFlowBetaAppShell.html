@@ -1,0 +1,407 @@
+<template>
+    <section class={shellClass} aria-label="SentinelFlow Beta 2.0">
+        <header class="topbar">
+            <div class="topbar-left-group">
+                <div class="brand-lockup">
+                    <button class="icon-button mobile-menu-btn" type="button" onclick={toggleSidebar} title="Menu" aria-label="Menu">
+                        <lightning-icon icon-name="utility:rows" size="x-small"></lightning-icon>
+                    </button>
+                    <span class="brand-mark">
+                        <img src={logoUrl} alt="SentinelFlow" />
+                    </span>
+                    <div>
+                        <p class="eyebrow">SentinelFlow Beta 2.0</p>
+                        <h1>Command Center</h1>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="global-search">
+                <lightning-icon icon-name="utility:search" size="x-small"></lightning-icon>
+                <span>Search incidents, actions, cases, runbooks...</span>
+                <kbd>/</kbd>
+            </div>
+
+            <div class="topbar-actions">
+                <button class="theme-toggle-pill" type="button" onclick={toggleTheme} title={themeToggleTitle} aria-label={themeToggleTitle}>
+                    <span class="theme-toggle-track">
+                        <span class="theme-toggle-thumb">
+                            <lightning-icon icon-name={themeIcon} size="xx-small"></lightning-icon>
+                        </span>
+                    </span>
+                </button>
+                <div class="powered-chip">
+                    <lightning-icon icon-name="utility:sparkles" size="x-small"></lightning-icon>
+                    <span>Powered by Zentom AI</span>
+                </div>
+                <div class={healthClass}>
+                    <span class="status-dot"></span>
+                    <span>{healthLabel}</span>
+                </div>
+                <div class="time-chip">{currentTime}</div>
+                <button class="icon-button" type="button" onclick={refreshView} title="Refresh" aria-label="Refresh">
+                    <lightning-icon icon-name="utility:refresh" size="x-small"></lightning-icon>
+                </button>
+                
+                <div class="glass-user-dropdown" onclick={toggleOrgMenu}>
+                    <div class="glass-user-trigger">
+                        <div class="user-avatar">{userInitials}</div>
+                        <div class="user-info">
+                            <strong>{userName}</strong>
+                            <span>{orgName}</span>
+                        </div>
+                        <lightning-icon icon-name={orgMenuIcon} size="xx-small"></lightning-icon>
+                    </div>
+                    <template if:true={isOrgMenuOpen}>
+                        <div class="glass-menu fade-in">
+                            <div class="glass-menu-item" data-action="switch_org" onclick={handleMenuItemClick}>
+                                <lightning-icon icon-name="utility:switch" size="x-small"></lightning-icon>
+                                <span>Switch Org</span>
+                            </div>
+                            <div class="glass-menu-item" data-action="settings" onclick={handleMenuItemClick}>
+                                <lightning-icon icon-name="utility:setup" size="x-small"></lightning-icon>
+                                <span>Org Settings</span>
+                            </div>
+                            <div class="menu-divider"></div>
+                            <div class="glass-menu-item danger" data-action="logout" onclick={handleMenuItemClick}>
+                                <lightning-icon icon-name="utility:logout" size="x-small"></lightning-icon>
+                                <span>Log Out</span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </header>
+
+        <div class="workspace">
+            <aside class={sidebarClass} aria-label="SentinelFlow Beta 2.0 navigation">
+                <nav class="nav-list">
+                    <button class={commandNavClass} data-page="command" onclick={navigate}>
+                        <lightning-icon icon-name="standard:dashboard" size="small"></lightning-icon>
+                        <span>Dashboard</span>
+                    </button>
+                    <button class={incidentsNavClass} data-page="incidents" onclick={navigate}>
+                        <lightning-icon icon-name="standard:incident" size="small"></lightning-icon>
+                        <span>Incidents</span>
+                    </button>
+                    <button class={approvalsNavClass} data-page="approvals" onclick={navigate}>
+                        <lightning-icon icon-name="standard:approval" size="small"></lightning-icon>
+                        <span>Approvals</span>
+                        <span class="nav-count">{pendingApprovalCount}</span>
+                    </button>
+                    <button class={actionsNavClass} data-page="actions" onclick={navigate}>
+                        <lightning-icon icon-name="standard:action_list_component" size="small"></lightning-icon>
+                        <span>Actions</span>
+                    </button>
+                    <button class={runbooksNavClass} data-page="runbooks" onclick={navigate}>
+                        <lightning-icon icon-name="standard:article" size="small"></lightning-icon>
+                        <span>Runbooks</span>
+                    </button>
+                    <button class={policiesNavClass} data-page="policies" onclick={navigate}>
+                        <lightning-icon icon-name="standard:contract" size="small"></lightning-icon>
+                        <span>Policies</span>
+                    </button>
+                    <button class={casesNavClass} data-page="cases" onclick={navigate}>
+                        <lightning-icon icon-name="standard:case" size="small"></lightning-icon>
+                        <span>Cases</span>
+                    </button>
+                    <button class={reportsNavClass} data-page="reports" onclick={navigate}>
+                        <lightning-icon icon-name="standard:report" size="small"></lightning-icon>
+                        <span>Reports</span>
+                    </button>
+                    <button class={integrationsNavClass} data-page="integrations" onclick={navigate}>
+                        <lightning-icon icon-name="standard:connected_apps" size="small"></lightning-icon>
+                        <span>Integrations</span>
+                    </button>
+                    <button class={settingsNavClass} data-page="settings" onclick={navigate}>
+                        <lightning-icon icon-name="standard:setup" size="small"></lightning-icon>
+                        <span>Settings</span>
+                    </button>
+                </nav>
+
+                <div class="sidebar-mascot-container">
+                    <div class="mascot-glow-bg"></div>
+                    <c-zentom-copilot-mascot></c-zentom-copilot-mascot>
+                    <div class="mascot-tooltip">Ask Zentom AI <lightning-icon icon-name="utility:sparkles" size="xx-small"></lightning-icon></div>
+                </div>
+
+                <div class="side-brand" style="margin-top: 1.5rem; padding-bottom: 0;">
+                    <span class="side-logo">
+                        <img src={logoUrl} alt="SentinelFlow" />
+                    </span>
+                    <div>
+                        <strong>SentinelFlow</strong>
+                        <small>Powered by Zentom AI</small>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="content">
+                <section class="hero-panel">
+                    <div>
+                        <p class="eyebrow">{pageEyebrow}</p>
+                        <h2>{pageTitle}</h2>
+                        <p>{pageSummary}</p>
+                    </div>
+                    <div class="hero-metric">
+                        <span>{criticalCount}</span>
+                        <small>Active critical</small>
+                    </div>
+                </section>
+
+                <section class="surface">
+                    <template if:true={isCommand}>
+                        <div class="dashboard">
+                            <section class="health-hero dashboard-card">
+                                <div class="health-left">
+                                    <div class="shield-orb">
+                                        <lightning-icon icon-name="utility:shield" size="large"></lightning-icon>
+                                    </div>
+                                    <div>
+                                        <p class="card-eyebrow">Overall Health Score</p>
+                                        <div class="health-score">
+                                            <span>{orgHealthScore}</span>
+                                            <small>/100</small>
+                                            <strong>{orgHealthLabel}</strong>
+                                        </div>
+                                        <p class="health-copy">{orgHealthCopy}</p>
+                                    </div>
+                                </div>
+                                <div class="health-meter">
+                                    <div class="meter-scale">
+                                        <span>0</span>
+                                        <span>25</span>
+                                        <span>50</span>
+                                        <span>75</span>
+                                        <span>100</span>
+                                    </div>
+                                    <div class="meter-track">
+                                        <span class="meter-fill"></span>
+                                        <span class="meter-pin"></span>
+                                    </div>
+                                    <div class="score-factors">
+                                        <div><span class="dot green"></span>System Health <strong>90/100</strong></div>
+                                        <div><span class="dot blue"></span>Incident Impact <strong>70/100</strong></div>
+                                        <div><span class="dot teal"></span>Response Efficiency <strong>85/100</strong></div>
+                                        <div><span class="dot amber"></span>Approval Backlog <strong>80/100</strong></div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="kpi-grid">
+                                <template for:each={kpiCards} for:item="kpi">
+                                    <article key={kpi.label} class="kpi-card dashboard-card">
+                                        <div class={kpi.iconClass}>
+                                            <lightning-icon icon-name={kpi.icon} size="small"></lightning-icon>
+                                        </div>
+                                        <div>
+                                            <p>{kpi.label}</p>
+                                            <strong>{kpi.value}</strong>
+                                            <small class={kpi.trendClass}>{kpi.trend}</small>
+                                        </div>
+                                    </article>
+                                </template>
+                            </section>
+
+                            <section class="main-grid">
+                                <article class="dashboard-card table-card pending-card">
+                                    <header class="card-header-row">
+                                        <div>
+                                            <p class="card-eyebrow">Human Governance</p>
+                                            <h3>Pending Approval Queue <span>{pendingApprovalCount}</span></h3>
+                                        </div>
+                                        <button type="button" data-page="approvals" onclick={navigate}>View all</button>
+                                    </header>
+                                    <table class="beta-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Request ID</th>
+                                                <th>Type</th>
+                                                <th>Runbook / Action</th>
+                                                <th>Risk</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template for:each={pendingApprovalRows} for:item="row">
+                                                <tr key={row.id}>
+                                                    <td><a class="link-id" data-page="approvals" onclick={navigate}>{row.id}</a></td>
+                                                    <td>{row.type}</td>
+                                                    <td>{row.action}</td>
+                                                    <td><span class={row.riskClass}>{row.risk}</span></td>
+                                                    <td><button class="review-button" type="button" data-page="approvals" onclick={navigate}>Review</button></td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </article>
+
+                                <article class="dashboard-card critical-card">
+                                    <header class="card-header-row">
+                                        <div>
+                                            <p class="card-eyebrow">Latest Critical Incident</p>
+                                            <h3>Payment Gateway Timeout</h3>
+                                        </div>
+                                        <span class="risk-pill critical">Critical</span>
+                                    </header>
+                                    <div class="incident-brief">
+                                        <div>
+                                            <lightning-icon icon-name="utility:sparkles" size="x-small"></lightning-icon>
+                                            <span>AI Summary</span>
+                                            <p>Multiple payment transactions are timing out and need operator review.</p>
+                                        </div>
+                                        <div>
+                                            <lightning-icon icon-name="utility:strategy" size="x-small"></lightning-icon>
+                                            <span>Recommended Action</span>
+                                            <p>Restart payment service, scale DB connections, and clear stuck jobs.</p>
+                                        </div>
+                                        <div>
+                                            <lightning-icon icon-name="utility:book" size="x-small"></lightning-icon>
+                                            <span>Runbook Key</span>
+                                            <p>RB-PAY-007</p>
+                                        </div>
+                                    </div>
+                                    <footer class="incident-actions">
+                                        <button type="button" data-page="incidents" onclick={navigate}>View Incident</button>
+                                        <button class="primary" type="button" data-page="runbooks" onclick={navigate}>Open Runbook</button>
+                                    </footer>
+                                </article>
+                            </section>
+
+                            <section class="lower-grid">
+                                <article class="dashboard-card table-card">
+                                    <header class="card-header-row">
+                                        <h3>Recent Incidents</h3>
+                                        <button type="button" data-page="incidents" onclick={navigate}>View all</button>
+                                    </header>
+                                    <table class="beta-table compact">
+                                        <thead>
+                                            <tr>
+                                                <th>Incident</th>
+                                                <th>Type</th>
+                                                <th>Environment</th>
+                                                <th>Risk</th>
+                                                <th>Status</th>
+                                                <th>Runbook</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template for:each={recentIncidentRows} for:item="row">
+                                                <tr key={row.id}>
+                                                    <td><a class="link-id" data-page="incidents" onclick={navigate}>{row.id}</a></td>
+                                                    <td>{row.type}</td>
+                                                    <td><span class="env-pill">{row.env}</span></td>
+                                                    <td><span class={row.riskClass}>{row.risk}</span></td>
+                                                    <td><span class={row.statusClass}>{row.status}</span></td>
+                                                    <td><a class="link-id" data-page="runbooks" onclick={navigate}>{row.runbook}</a></td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </article>
+
+                                <aside class="side-stack">
+                                    <article class="dashboard-card timeline-card">
+                                        <header class="card-header-row">
+                                            <h3>Replay Timeline</h3>
+                                            <button type="button" data-page="actions" onclick={navigate}>Full timeline</button>
+                                        </header>
+                                        <div class="timeline">
+                                            <template for:each={timelineEvents} for:item="event">
+                                                <div key={event.name} class="timeline-row">
+                                                    <span class="timeline-node"></span>
+                                                    <div>
+                                                        <strong>{event.name}</strong>
+                                                        <small>{event.time}</small>
+                                                    </div>
+                                                    <lightning-icon icon-name="utility:success" size="xx-small"></lightning-icon>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </article>
+
+                                    <article class="dashboard-card system-card">
+                                        <header class="card-header-row">
+                                            <h3>System Health</h3>
+                                            <button type="button">View details</button>
+                                        </header>
+                                        <template for:each={systemHealthRows} for:item="row">
+                                            <div key={row.name} class="system-row">
+                                                <lightning-icon icon-name={row.icon} size="small"></lightning-icon>
+                                                <span>{row.name}</span>
+                                                <small>{row.status}</small>
+                                                <strong>{row.value}</strong>
+                                            </div>
+                                        </template>
+                                    </article>
+                                </aside>
+                            </section>
+                        </div>
+                    </template>
+                    <template if:true={isApprovals}>
+                        <c-zentom-approval-queue></c-zentom-approval-queue>
+                    </template>
+                    <template if:true={isAnalytics}>
+                        <c-zentom-analytics-charts></c-zentom-analytics-charts>
+                    </template>
+
+                    <template if:true={isIncidents}>
+                        <c-sentinel-flow-portal-incidents-page></c-sentinel-flow-portal-incidents-page>
+                    </template>
+                    <template if:true={isSettings}>
+                        <c-sentinel-flow-portal-settings></c-sentinel-flow-portal-settings>
+                    </template>
+                    <template if:true={isActions}>
+                        <div class="coming-soon-page">
+                            <lightning-icon icon-name="standard:action_list_component" size="large"></lightning-icon>
+                            <h2>Actions</h2>
+                            <p>View and manage all automated and manual actions executed by Zentom AI across your org.</p>
+                            <span class="coming-badge">Coming Soon</span>
+                        </div>
+                    </template>
+                    <template if:true={isRunbooks}>
+                        <div class="coming-soon-page">
+                            <lightning-icon icon-name="standard:article" size="large"></lightning-icon>
+                            <h2>Runbooks</h2>
+                            <p>Create, manage, and execute operational runbooks for incident response and automation workflows.</p>
+                            <span class="coming-badge">Coming Soon</span>
+                        </div>
+                    </template>
+                    <template if:true={isPolicies}>
+                        <div class="coming-soon-page">
+                            <lightning-icon icon-name="standard:contract" size="large"></lightning-icon>
+                            <h2>Policies</h2>
+                            <p>Define governance policies, approval thresholds, and risk evaluation rules for your org.</p>
+                            <span class="coming-badge">Coming Soon</span>
+                        </div>
+                    </template>
+                    <template if:true={isCases}>
+                        <div class="coming-soon-page">
+                            <lightning-icon icon-name="standard:case" size="large"></lightning-icon>
+                            <h2>Cases</h2>
+                            <p>Track all Salesforce Cases created by SentinelFlow incidents and AI-driven recommendations.</p>
+                            <span class="coming-badge">Coming Soon</span>
+                        </div>
+                    </template>
+                    <template if:true={isReports}>
+                        <div class="coming-soon-page">
+                            <lightning-icon icon-name="standard:report" size="large"></lightning-icon>
+                            <h2>Reports</h2>
+                            <p>Generate operational reports on incident trends, response times, and system reliability metrics.</p>
+                            <span class="coming-badge">Coming Soon</span>
+                        </div>
+                    </template>
+                    <template if:true={isIntegrations}>
+                        <div class="coming-soon-page">
+                            <lightning-icon icon-name="standard:connected_apps" size="large"></lightning-icon>
+                            <h2>Integrations</h2>
+                            <p>Connect external monitoring tools, CI/CD pipelines, and notification channels to SentinelFlow.</p>
+                            <span class="coming-badge">Coming Soon</span>
+                        </div>
+                    </template>
+                </section>
+            </main>
+        </div>
+    </section>
+</template>

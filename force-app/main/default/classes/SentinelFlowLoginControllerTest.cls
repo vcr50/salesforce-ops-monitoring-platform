@@ -173,11 +173,11 @@ private class SentinelFlowLoginControllerTest {
     }
 
     @IsTest
-    static void testLightningAppRedirectConstant() {
+    static void testCommunityHomeRedirectConstant() {
         System.assertEquals(
-            'https://astrosoft2-dev-ed.develop.lightning.force.com/lightning/n/Sentinel_Flow',
-            SentinelFlowLoginController.SENTINEL_FLOW_LIGHTNING_APP_URL,
-            'Successful login should target the SentinelFlow Lightning app'
+            '/SentinelFlow/',
+            SentinelFlowLoginController.SENTINEL_FLOW_COMMUNITY_HOME_URL,
+            'Successful login should target the SentinelFlow community home'
         );
     }
 }

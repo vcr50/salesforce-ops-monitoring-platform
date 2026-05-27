@@ -6,8 +6,7 @@
 @SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public without sharing class SentinelFlowLoginController {
     @TestVisible
-    private static final String SENTINEL_FLOW_LIGHTNING_APP_URL =
-        'https://astrosoft2-dev-ed.develop.lightning.force.com/lightning/n/Sentinel_Flow';
+    private static final String SENTINEL_FLOW_COMMUNITY_HOME_URL = '/SentinelFlow/';
 
     /**
      * @description Authenticates a user with username + password and returns
@@ -26,7 +25,7 @@ public without sharing class SentinelFlowLoginController {
                 String.isBlank(startUrl) ? null : startUrl
             );
             if (pageRef != null) {
-                return SENTINEL_FLOW_LIGHTNING_APP_URL;
+                return normalizeLoginRedirect(startUrl);
             }
             return null;
         } catch (Exception e) {

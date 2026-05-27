@@ -1,147 +1,125 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { RefreshCw, ShieldAlert, CheckCircle2, AlertTriangle, PlayCircle } from 'lucide-react';
 import styles from './page.module.css';
 
 export default function ZentomReplayDashboard() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  // In a real application, this would fetch from a Next.js API route that connects to Salesforce.
-  // For the prototype, we simulate the data payload.
-  useEffect(() => {
-    const mockLogs = [
-      {
-        id: 'ZRL-0000001',
-        incidentId: 'INC-2093',
-        policyMode: 'AUTONOMOUS_EXECUTION',
-        confidenceScore: 92,
-        riskScore: 25.5,
-        contextArr: 15000,
-        proposedAction: 'Restart Service',
-        timestamp: new Date(Date.now() - 1000 * 60 * 5).toISOString()
-      },
-      {
-        id: 'ZRL-0000002',
-        incidentId: 'INC-2094',
-        policyMode: 'HUMAN_APPROVAL_REQUIRED',
-        confidenceScore: 65,
-        riskScore: 82.0,
-        contextArr: 250000,
-        proposedAction: 'Escalate',
-        timestamp: new Date(Date.now() - 1000 * 60 * 45).toISOString()
-      },
-      {
-        id: 'ZRL-0000003',
-        incidentId: 'INC-2095',
-        policyMode: 'AUTONOMOUS_EXECUTION',
-        confidenceScore: 88,
-        riskScore: 40.0,
-        contextArr: 45000,
-        proposedAction: 'Retry Integration',
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString()
-      },
-      {
-        id: 'ZRL-0000004',
-        incidentId: 'INC-2096',
-        policyMode: 'BLOCKED_BY_POLICY',
-        confidenceScore: 95,
-        riskScore: 95.0,
-        contextArr: 500000,
-        proposedAction: 'Drop Metadata Table',
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString()
+  const fetchLogs = async () => {
+    setRefreshing(true);
+    try {
+      const res = await fetch('/api/zentom/logs');
+      if (res.ok) {
+        const data = await res.json();
+        // metrics returns { recent_logs: [...] }
+        if (data.recent_logs) {
+          setLogs(data.recent_logs);
+        }
       }
-    ];
-
-    setTimeout(() => {
-      setLogs(mockLogs);
+    } catch (error) {
+      console.error('Failed to fetch logs:', error);
+    } finally {
       setLoading(false);
-    }, 800);
+      setTimeout(() => setRefreshing(false), 500); // UI feedback
+    }
+  };
+
+  useEffect(() => {
+    fetchLogs();
   }, []);
 
-  const getBadgeClass = (mode) => {
-    switch(mode) {
-      case 'AUTONOMOUS_EXECUTION': return styles.badgeAutonomous;
-      case 'HUMAN_APPROVAL_REQUIRED': return styles.badgeHuman;
-      case 'BLOCKED_BY_POLICY': return styles.badgeBlocked;
-      default: return '';
-    }
-  };
-
-  const getBadgeText = (mode) => {
-    switch(mode) {
-      case 'AUTONOMOUS_EXECUTION': return 'Auto Executed';
-      case 'HUMAN_APPROVAL_REQUIRED': return 'Guardian Gate: Blocked';
-      case 'BLOCKED_BY_POLICY': return 'Policy Violation';
-      default: return mode;
-    }
-  };
-
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      maximumFractionDigits: 0
-    }).format(value);
+  const getBadgeStyle = (confidence) => {
+    if (confidence >= 80) return "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+    if (confidence >= 60) return "bg-amber-500/10 text-amber-400 border border-amber-500/20";
+    return "bg-rose-500/10 text-rose-400 border border-rose-500/20";
   };
 
   if (loading) {
     return (
       <div className={styles.container}>
-        <div className={styles.header}>
-          <h1 className={styles.title}>Zentom Orchestration Logs</h1>
-          <p className={styles.subtitle}>Loading secure audit trail...</p>
+        <div className="flex flex-col items-center justify-center h-64 space-y-4">
+          <RefreshCw className="animate-spin text-purple-500" size={32} />
+          <p className="text-gray-400 text-lg">Loading secure audit trail...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Zentom Orchestration Logs</h1>
-        <p className={styles.subtitle}>Immutable audit trace of all AI decisions, governance gates, and risk scores.</p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-in fade-in duration-500">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+        <div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-white mb-2 flex items-center gap-3">
+            <PlayCircle className="text-purple-500" size={32} />
+            Zentom Orchestration Logs
+          </h1>
+          <p className="text-gray-400 text-lg max-w-2xl">
+            Immutable audit trace of all AI decisions, governance gates, and risk scores.
+          </p>
+        </div>
+        
+        <button 
+          onClick={fetchLogs}
+          disabled={refreshing}
+          className="group relative inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white transition-all duration-300 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:border-purple-500/50 hover:shadow-[0_0_20px_rgba(123,82,255,0.2)] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <RefreshCw size={18} className={`relative z-10 ${refreshing ? 'animate-spin text-purple-400' : 'text-gray-400 group-hover:text-white transition-colors'}`} />
+          <span className="relative z-10">{refreshing ? 'Syncing...' : 'Live Refresh'}</span>
+        </button>
       </div>
 
       {logs.length === 0 ? (
-        <div className={styles.emptyState}>
-          <p>No replay logs found.</p>
+        <div className="flex flex-col items-center justify-center p-16 rounded-2xl bg-[#16161f] border border-white/5">
+          <ShieldAlert className="text-gray-600 mb-4" size={48} />
+          <p className="text-gray-400 text-lg font-medium">No replay logs found.</p>
+          <p className="text-gray-500 text-sm mt-2">Any autonomous or human-approved actions will appear here.</p>
         </div>
       ) : (
-        <div className={styles.logGrid}>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {logs.map((log) => (
-            <div key={log.id} className={styles.logCard}>
-              <div className={styles.cardHeader}>
+            <div 
+              key={log.id} 
+              className="flex flex-col bg-[#16161f] border border-white/5 hover:border-purple-500/30 rounded-2xl p-6 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] hover:-translate-y-1 group"
+            >
+              <div className="flex justify-between items-start mb-6">
                 <div>
-                  <span className={styles.incidentId}>{log.id} • {log.incidentId}</span>
-                  <div style={{fontSize: '0.8rem', color: '#6b7280', marginTop: '0.25rem'}}>
-                    {new Date(log.timestamp).toLocaleString()}
+                  <div className="text-xs font-bold tracking-wider text-purple-400 uppercase mb-1">
+                    ZRL-{String(log.id).padStart(7, '0')}
+                  </div>
+                  <div className="font-semibold text-gray-200">
+                    {log.incident_id}
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    {new Date(log.timestamp).toLocaleString(undefined, { 
+                      month: 'short', day: 'numeric', 
+                      hour: '2-digit', minute: '2-digit', second: '2-digit'
+                    })}
                   </div>
                 </div>
-                <div className={`${styles.badge} ${getBadgeClass(log.policyMode)}`}>
-                  {getBadgeText(log.policyMode)}
+                
+                <div className={`px-3 py-1 text-xs font-bold rounded-full ${log.success ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}`}>
+                  {log.success ? 'Success' : 'Failed'}
                 </div>
               </div>
               
-              <div className={styles.metricsGrid}>
-                <div className={styles.metric}>
-                  <span className={styles.metricLabel}>Model Confidence</span>
-                  <span className={`${styles.metricValue} ${log.confidenceScore >= 80 ? styles.confidenceHigh : styles.confidenceLow}`}>
-                    {log.confidenceScore}%
+              <div className="flex-grow space-y-4">
+                <div className="flex justify-between items-center p-3 rounded-lg bg-black/20 border border-white/5">
+                  <span className="text-sm text-gray-400">Model Confidence</span>
+                  <span className={`text-sm font-bold px-2 py-0.5 rounded ${getBadgeStyle(log.confidence)}`}>
+                    {log.confidence}%
                   </span>
                 </div>
-                <div className={styles.metric}>
-                  <span className={styles.metricLabel}>Risk Score</span>
-                  <span className={styles.metricValue}>{log.riskScore.toFixed(1)}</span>
+                
+                <div className="pt-4 border-t border-white/5">
+                  <div className="text-xs text-gray-500 uppercase font-semibold tracking-wider mb-2">Proposed Action</div>
+                  <div className="font-medium text-gray-200 group-hover:text-purple-300 transition-colors">
+                    {log.action}
+                  </div>
                 </div>
-                <div className={styles.metric}>
-                  <span className={styles.metricLabel}>Context ARR</span>
-                  <span className={styles.metricValue}>{formatCurrency(log.contextArr)}</span>
-                </div>
-              </div>
-
-              <div className={styles.actionSection}>
-                <div className={styles.actionLabel}>Proposed Action</div>
-                <div className={styles.actionValue}>{log.proposedAction}</div>
               </div>
             </div>
           ))}
