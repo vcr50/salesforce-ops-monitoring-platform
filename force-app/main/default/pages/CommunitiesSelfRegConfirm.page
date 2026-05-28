@@ -1,9 +1,3 @@
-<apex:page id="communitiesSelfRegConfirm" showHeader="true" title="{!$Label.site.user_registration}">
-  <apex:define name="body">
-    <center>
-      <apex:panelGrid bgcolor="white" columns="1">
-        <br/>
-      </apex:panelGrid>
-    </center>
-  </apex:define>
+<apex:page controller="CommunitiesSelfRegConfirmController">
+    <h1>Self Registration Confirmation</h1>
 </apex:page>

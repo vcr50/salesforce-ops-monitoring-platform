@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>Operational app home page for the SentinelFlow Lightning app.</description>
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentName>c:sentinelFlowBetaAppShell</componentName>
+                <componentName>sentinelFlowBetaAppShell</componentName>
                 <identifier>c_sentinelFlowBetaAppShell</identifier>
             </componentInstance>
         </itemInstances>
         <name>main</name>
         <type>Region</type>
     </flexiPageRegions>
-    <masterLabel>SentinelFlow App Home</masterLabel>
+    <masterLabel>SentinelFlow Command Center</masterLabel>
     <template>
         <name>flexipage:defaultAppHomeTemplate</name>
     </template>

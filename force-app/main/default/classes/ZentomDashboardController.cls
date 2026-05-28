@@ -486,6 +486,8 @@ public with sharing class ZentomDashboardController {
             inc.Approval_Status__c = 'Approved';
             inc.Status__c = 'Approved';
             inc.Execution_Status__c = 'Ready for Execution';
+            inc.Approved_By__c = UserInfo.getUserId();
+            inc.Approved_At__c = System.now();
             update inc;
             
             Zentom_Policy_Decision__c decision = new Zentom_Policy_Decision__c();
@@ -537,6 +539,116 @@ public with sharing class ZentomDashboardController {
             insert decision;
             
             return '{"success": true, "incidentId": "' + inc.Name + '"}';
+        } catch (Exception e) {
+            return '{"error": "' + e.getMessage().replaceAll('"', '') + '"}';
+        }
+    }
+
+    // ─── NATIVE ACTION CENTER QUEUE (EXECUTION GATE) ─────────────────────────────
+
+    @AuraEnabled(cacheable=true)
+    public static List<ZentomActionRow> getPendingActions() {
+        if (!Schema.sObjectType.Sentinel_Incident__c.isAccessible()) {
+            return new List<ZentomActionRow>();
+        }
+        
+        List<Sentinel_Incident__c> incidents = [
+            SELECT Id, Name, Incident_Type__c, Risk_Level__c, Risk_Score__c, 
+                   AI_Confidence__c, Runbook_Key__c, Execution_Action__c, Approved_By__r.Name
+            FROM Sentinel_Incident__c
+            WHERE Approval_Status__c = 'Approved' 
+              AND Execution_Status__c = 'Ready for Execution'
+            ORDER BY CreatedDate ASC
+        ];
+        
+        List<ZentomActionRow> rows = new List<ZentomActionRow>();
+        for (Sentinel_Incident__c inc : incidents) {
+            ZentomActionRow row = new ZentomActionRow();
+            row.id = inc.Id;
+            row.incidentId = inc.Name;
+            row.incidentType = inc.Incident_Type__c;
+            row.action = String.isNotBlank(inc.Execution_Action__c) ? inc.Execution_Action__c : 'Execute Runbook';
+            row.runbook = inc.Runbook_Key__c;
+            row.confidence = inc.AI_Confidence__c != null ? Integer.valueOf(inc.AI_Confidence__c) : 85;
+            row.riskScore = inc.Risk_Score__c != null ? inc.Risk_Score__c : 7.5;
+            row.approvedBy = inc.Approved_By__r != null ? inc.Approved_By__r.Name : 'System Admin';
+            rows.add(row);
+        }
+        return rows;
+    }
+
+    public class ZentomActionRow {
+        @AuraEnabled public String id;
+        @AuraEnabled public String incidentId;
+        @AuraEnabled public String incidentType;
+        @AuraEnabled public String action;
+        @AuraEnabled public String runbook;
+        @AuraEnabled public Integer confidence;
+        @AuraEnabled public Decimal riskScore;
+        @AuraEnabled public String approvedBy;
+    }
+
+    @AuraEnabled
+    public static String executeApprovedAction(String incidentId, String executedBy) {
+        try {
+            if (!Schema.sObjectType.Sentinel_Incident__c.isUpdateable() || 
+                !Schema.sObjectType.Case.isCreateable() ||
+                !Schema.sObjectType.Zentom_Policy_Decision__c.isCreateable()) {
+                return '{"error": "Insufficient permissions to execute action."}';
+            }
+            
+            List<Sentinel_Incident__c> incidents = [
+                SELECT Id, Status__c, Approval_Status__c, Execution_Status__c, Name, Runbook_Key__c 
+                FROM Sentinel_Incident__c 
+                WHERE Id = :incidentId
+            ];
+            
+            if (incidents.isEmpty()) {
+                return '{"error": "Incident not found."}';
+            }
+            
+            Sentinel_Incident__c inc = incidents[0];
+            
+            if (inc.Approval_Status__c != 'Approved') {
+                return '{"error": "Incident must be approved before execution."}';
+            }
+            
+            if (inc.Execution_Status__c == 'Executed') {
+                return '{"error": "Incident has already been executed."}';
+            }
+            
+            if (inc.Execution_Status__c != 'Ready for Execution') {
+                return '{"error": "Incident is not ready for execution."}';
+            }
+            
+            // Create Case
+            Case c = new Case(
+                Subject = 'SentinelFlow Execution: ' + inc.Name + (String.isNotBlank(inc.Runbook_Key__c) ? ' - ' + inc.Runbook_Key__c : ''),
+                Status = 'New',
+                Origin = 'Web'
+            );
+            insert c;
+            
+            // Fetch case number
+            Case createdCase = [SELECT CaseNumber FROM Case WHERE Id = :c.Id LIMIT 1];
+            
+            // Update Incident
+            inc.Execution_Status__c = 'Executed';
+            inc.Status__c = 'Closed';
+            inc.Execution_Result__c = 'Case created';
+            inc.Executed_At__c = System.now();
+            inc.Created_Case__c = c.Id;
+            update inc;
+            
+            // Audit Log
+            Zentom_Policy_Decision__c decision = new Zentom_Policy_Decision__c();
+            decision.Incident__c = inc.Id;
+            decision.Decision__c = 'Executed';
+            decision.Reason__c = 'Executed by ' + executedBy + '. Case ' + createdCase.CaseNumber + ' created.';
+            decision.Action_Type__c = 'Runbook Execution Completed';
+            insert decision;
+            
+            return '{"success": true, "incidentId": "' + inc.Name + '", "caseNumber": "' + createdCase.CaseNumber + '"}';
         } catch (Exception e) {
             return '{"error": "' + e.getMessage().replaceAll('"', '') + '"}';
         }

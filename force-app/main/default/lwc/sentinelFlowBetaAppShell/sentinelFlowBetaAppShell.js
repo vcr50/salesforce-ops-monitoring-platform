@@ -1,7 +1,7 @@
 import { LightningElement, track, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import basePath from '@salesforce/community/basePath';
+import getDashboardData from '@salesforce/apex/ZentomDashboardController.getDashboardData';
 import getSystemHealth from '@salesforce/apex/SystemMonitorController.getSystemHealth';
 import getUserContext from '@salesforce/apex/SystemMonitorController.getUserContext';
 import sentinelFlowPulseLogo from '@salesforce/resourceUrl/sentinelFlowPulseLogo';
@@ -107,6 +107,21 @@ export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningE
         }
     }
 
+    dashboardData;
+    dashboardDataError;
+
+    @wire(getDashboardData)
+    wiredDashboardData({ data, error }) {
+        if (data) {
+            this.dashboardData = data;
+            this.dashboardDataError = undefined;
+        } else if (error) {
+            this.dashboardDataError = error;
+            this.dashboardData = undefined;
+            console.error('Error fetching dashboard data:', error);
+        }
+    }
+
     @wire(getSystemHealth)
     wiredHealth({ data, error }) {
         if (data) {
@@ -169,7 +184,7 @@ export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningE
     }
 
     get isCommunityEmbed() {
-        return Boolean(basePath);
+        return false;
     }
 
     get shellClass() {
@@ -227,25 +242,16 @@ export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningE
         const actionName = event.currentTarget.dataset.action;
 
         if (actionName === 'logout') {
-            const logoutUrl = basePath ? `${basePath}/secur/logout.jsp` : '/secur/logout.jsp';
+            const logoutUrl = '/secur/logout.jsp';
             window.location.href = logoutUrl;
         } else if (actionName === 'settings') {
             try {
-                if (basePath) {
-                    // We are in a community, so we need to guess the internal lightning URL
-                    let host = window.location.hostname;
-                    if (host.includes('.my.site.com')) {
-                        host = host.replace('.my.site.com', '.lightning.force.com');
+                this[NavigationMixin.Navigate]({
+                    type: 'standard__setup',
+                    attributes: {
+                        name: 'home'
                     }
-                    window.open(`https://${host}/lightning/setup/SetupOneHome/home`, '_blank');
-                } else {
-                    this[NavigationMixin.Navigate]({
-                        type: 'standard__setup',
-                        attributes: {
-                            name: 'home'
-                        }
-                    });
-                }
+                });
             } catch (e) {
                 console.error(e);
             }
@@ -283,112 +289,46 @@ export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningE
     }
 
     get kpiCards() {
-        const critical = this.criticalCount || 4;
+        const d = this.dashboardData;
+        if (!d) return [];
         return [
-            {
-                label: 'Open Incidents',
-                value: critical + 12,
-                trend: '12% vs last 7 days',
-                icon: 'utility:warning',
-                iconClass: 'kpi-icon blue',
-                trendClass: 'trend up'
-            },
-            {
-                label: 'Critical Incidents',
-                value: critical,
-                trend: 'Needs attention',
-                icon: 'utility:error',
-                iconClass: 'kpi-icon red',
-                trendClass: 'trend down'
-            },
-            {
-                label: 'Pending Approvals',
-                value: this.pendingApprovalCount,
-                trend: 'Human review',
-                icon: 'utility:approval',
-                iconClass: 'kpi-icon amber',
-                trendClass: 'trend down'
-            },
-            {
-                label: 'Executed Actions',
-                value: 42,
-                trend: '18% vs last 7 days',
-                icon: 'utility:bolt',
-                iconClass: 'kpi-icon green',
-                trendClass: 'trend up'
-            },
-            {
-                label: 'Cases Created',
-                value: 19,
-                trend: '5 vs last 7 days',
-                icon: 'utility:case',
-                iconClass: 'kpi-icon purple',
-                trendClass: 'trend up'
-            }
+            { label: 'Open Incidents', value: d.openIncidentsCount, trend: '12% vs last 7 days', icon: 'utility:warning', iconClass: 'kpi-icon blue', trendClass: 'trend up' },
+            { label: 'Critical Incidents', value: d.criticalIncidentsCount, trend: 'Needs attention', icon: 'utility:error', iconClass: 'kpi-icon red', trendClass: 'trend down' },
+            { label: 'Pending Approvals', value: d.pendingApprovalsCount, trend: 'Human review', icon: 'utility:approval', iconClass: 'kpi-icon amber', trendClass: 'trend down' },
+            { label: 'Executed Actions', value: d.executedActionsCount, trend: '18% vs last 7 days', icon: 'utility:bolt', iconClass: 'kpi-icon green', trendClass: 'trend up' },
+            { label: 'Cases Created', value: d.casesCreatedCount, trend: '5 vs last 7 days', icon: 'utility:case', iconClass: 'kpi-icon purple', trendClass: 'trend up' }
         ];
     }
 
     get pendingApprovalRows() {
-        return [
-            {
-                id: 'APR-2025-000231',
-                type: 'Runbook',
-                action: 'RB-PAY-007 - Restart Payment Service',
-                risk: 'High',
-                riskClass: 'risk-pill high'
-            },
-            {
-                id: 'APR-2025-000230',
-                type: 'Action',
-                action: 'Scale APP-SVC-02',
-                risk: 'Medium',
-                riskClass: 'risk-pill medium'
-            },
-            {
-                id: 'APR-2025-000229',
-                type: 'Runbook',
-                action: 'RB-CACHE-003 - Clear Redis Cache',
-                risk: 'Low',
-                riskClass: 'risk-pill low'
-            }
-        ];
+        if (!this.dashboardData || !this.dashboardData.pendingApprovals) return [];
+        return this.dashboardData.pendingApprovals.map(inc => ({
+            id: inc.Name,
+            type: 'Action',
+            action: inc.Runbook_Title__c || inc.Recommended_Action__c,
+            risk: inc.Risk_Level__c,
+            riskClass: 'risk-pill ' + (inc.Risk_Level__c ? inc.Risk_Level__c.toLowerCase() : 'low')
+        }));
     }
 
     get recentIncidentRows() {
-        return [
-            {
-                id: 'INC-2025-00123',
-                type: 'API Rate Limit',
-                env: 'Production',
-                risk: 'Medium',
-                riskClass: 'risk-pill medium',
-                status: 'In Progress',
-                statusClass: 'status-pill progress',
-                runbook: 'API Rate Limit Runbook'
-            },
-            {
-                id: 'INC-2025-00122',
-                type: 'Workflow Failure',
-                env: 'Production',
-                risk: 'Low',
-                riskClass: 'risk-pill low',
-                status: 'Resolved',
-                statusClass: 'status-pill resolved',
-                runbook: 'Workflow Failure Runbook'
-            },
-            {
-                id: 'INC-2025-00120',
-                type: 'Login Anomaly',
-                env: 'Sandbox',
-                risk: 'High',
-                riskClass: 'risk-pill high',
-                status: 'Resolved',
-                statusClass: 'status-pill resolved',
-                runbook: 'Login Anomaly Runbook'
-            }
-        ];
+        if (!this.dashboardData || !this.dashboardData.recentIncidents) return [];
+        return this.dashboardData.recentIncidents.map(inc => ({
+            id: inc.Name,
+            type: inc.Incident_Type__c,
+            env: inc.Environment__c,
+            risk: inc.Risk_Level__c,
+            riskClass: 'risk-pill ' + (inc.Risk_Level__c ? inc.Risk_Level__c.toLowerCase() : 'low'),
+            status: inc.Status__c,
+            statusClass: 'status-pill ' + (inc.Status__c === 'Resolved' ? 'resolved' : 'progress'),
+            runbook: inc.Runbook_Title__c
+        }));
     }
 
+
+    get latestCriticalIncident() {
+        return this.dashboardData ? this.dashboardData.latestCriticalIncident : null;
+    }
     get timelineEvents() {
         return [
             { name: 'Incident Received', time: '10:14 AM' },

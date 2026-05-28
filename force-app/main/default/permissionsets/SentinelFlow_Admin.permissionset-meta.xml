@@ -275,4 +275,16 @@
         <visibility>Visible</visibility>
     </tabSettings>
     <tabSettings><tab>Universal_Event__c</tab><visibility>Visible</visibility></tabSettings>
+    <tabSettings>
+        <tab>SentinelFlow_Command_Center</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>Zentom_Approvals</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>Zentom_Analytics</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
 </PermissionSet>

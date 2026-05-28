@@ -3,9 +3,12 @@
     <description>Lightning app shell for the Salesforce Enterprise Operations Monitoring Platform.</description>
     <formFactors>Large</formFactors>
     <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <isOmniPinnedViewEnabled>false</isOmniPinnedViewEnabled>
     <label>SentinelFlow Console</label>
     <navType>Standard</navType>
-    <tabs>standard-home</tabs>
+            <tabs>SentinelFlow_Command_Center</tabs>
     <tabs>Incident__c</tabs>
     <tabs>Integration_Log__c</tabs>
     <tabs>SLA_Policy__c</tabs>

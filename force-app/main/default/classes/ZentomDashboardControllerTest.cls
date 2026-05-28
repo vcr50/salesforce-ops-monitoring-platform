@@ -268,6 +268,86 @@ private class ZentomDashboardControllerTest {
         System.assertEquals('Runbook Execution Cancelled', decisions[0].Action_Type__c);
     }
 
+    @IsTest
+    static void getPendingActions_returnsRows() {
+        insert createIncident(
+            'CRITICAL',
+            'Approved',
+            'Ready for Execution',
+            'Approved',
+            'FLOW_FAILURE_BASIC_RECOVERY'
+        );
+
+        Test.startTest();
+        List<ZentomDashboardController.ZentomActionRow> rows = ZentomDashboardController.getPendingActions();
+        Test.stopTest();
+
+        System.assertEquals(1, rows.size(), 'Should return 1 pending action');
+        System.assertNotEquals(null, rows[0].id);
+        System.assertEquals(87, rows[0].confidence); // populated by createIncident
+    }
+
+    @IsTest
+    static void executeApprovedAction_createsCaseAndUpdateIncident() {
+        Sentinel_Incident__c inc = createIncident(
+            'CRITICAL',
+            'Approved',
+            'Ready for Execution',
+            'Approved',
+            'FLOW_FAILURE_BASIC_RECOVERY'
+        );
+        insert inc;
+
+        Test.startTest();
+        String result = ZentomDashboardController.executeApprovedAction(inc.Id, 'Test Executor');
+        Test.stopTest();
+
+        System.assert(result.contains('"success": true'), 'Result should be successful: ' + result);
+        System.assert(result.contains('"caseNumber"'), 'Result should contain a caseNumber: ' + result);
+
+        Sentinel_Incident__c updatedInc = [SELECT Execution_Status__c, Status__c, Created_Case__c FROM Sentinel_Incident__c WHERE Id = :inc.Id];
+        System.assertEquals('Executed', updatedInc.Execution_Status__c);
+        System.assertEquals('Closed', updatedInc.Status__c);
+        System.assertNotEquals(null, updatedInc.Created_Case__c);
+
+        Case createdCase = [SELECT Subject, Origin FROM Case WHERE Id = :updatedInc.Created_Case__c];
+        System.assert(createdCase.Subject.contains('SentinelFlow Execution'));
+
+        List<Zentom_Policy_Decision__c> decisions = [SELECT Decision__c, Reason__c FROM Zentom_Policy_Decision__c WHERE Incident__c = :inc.Id];
+        System.assertEquals(1, decisions.size(), 'Should insert 1 decision record for execution');
+        System.assertEquals('Executed', decisions[0].Decision__c);
+    }
+
+    @IsTest
+    static void executeApprovedAction_rejectsUnapprovedOrAlreadyExecuted() {
+        Sentinel_Incident__c unapproved = createIncident(
+            'CRITICAL',
+            'Pending Approval',
+            'Not Started',
+            'Approval Required',
+            'FLOW_FAILURE_BASIC_RECOVERY'
+        );
+        Sentinel_Incident__c executed = createIncident(
+            'CRITICAL',
+            'Approved',
+            'Executed',
+            'Closed',
+            'FLOW_FAILURE_BASIC_RECOVERY'
+        );
+        insert new List<Sentinel_Incident__c>{ unapproved, executed };
+
+        Test.startTest();
+        String unapprovedResult = ZentomDashboardController.executeApprovedAction(unapproved.Id, 'Test Executor');
+        String executedResult = ZentomDashboardController.executeApprovedAction(executed.Id, 'Test Executor');
+        Test.stopTest();
+
+        System.assert(unapprovedResult.contains('error'), 'Should return error for unapproved incident');
+        System.assert(unapprovedResult.contains('must be approved'));
+        
+        System.assert(executedResult.contains('error'), 'Should return error for already executed incident');
+        System.assert(executedResult.contains('already been executed'));
+    }
+
     private static Sentinel_Incident__c createIncident(
         String riskLevel,
         String approvalStatus,

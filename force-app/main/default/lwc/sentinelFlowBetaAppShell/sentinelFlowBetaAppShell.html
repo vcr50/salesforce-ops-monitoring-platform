@@ -238,30 +238,38 @@
                                 </article>
 
                                 <article class="dashboard-card critical-card">
-                                    <header class="card-header-row">
-                                        <div>
-                                            <p class="card-eyebrow">Latest Critical Incident</p>
-                                            <h3>Payment Gateway Timeout</h3>
-                                        </div>
-                                        <span class="risk-pill critical">Critical</span>
-                                    </header>
-                                    <div class="incident-brief">
-                                        <div>
-                                            <lightning-icon icon-name="utility:sparkles" size="x-small"></lightning-icon>
-                                            <span>AI Summary</span>
-                                            <p>Multiple payment transactions are timing out and need operator review.</p>
-                                        </div>
-                                        <div>
-                                            <lightning-icon icon-name="utility:strategy" size="x-small"></lightning-icon>
-                                            <span>Recommended Action</span>
-                                            <p>Restart payment service, scale DB connections, and clear stuck jobs.</p>
-                                        </div>
-                                        <div>
-                                            <lightning-icon icon-name="utility:book" size="x-small"></lightning-icon>
-                                            <span>Runbook Key</span>
-                                            <p>RB-PAY-007</p>
-                                        </div>
-                                    </div>
+                                  <template if:true={latestCriticalIncident}>
+                                      <header class="card-header-row">
+                                          <div>
+                                              <p class="card-eyebrow">Latest Critical Incident</p>
+                                              <h3>{latestCriticalIncident.Incident_Type__c}</h3>
+                                          </div>
+                                          <span class="risk-pill critical">Critical</span>
+                                      </header>
+                                      <div class="incident-brief">
+                                          <div>
+                                              <lightning-icon icon-name="utility:sparkles" size="x-small"></lightning-icon>
+                                              <span>AI Summary</span>
+                                              <p>{latestCriticalIncident.AI_Summary__c}</p>
+                                          </div>
+                                          <div>
+                                              <lightning-icon icon-name="utility:strategy" size="x-small"></lightning-icon>
+                                              <span>Recommended Action</span>
+                                              <p>{latestCriticalIncident.Recommended_Action__c}</p>
+                                          </div>
+                                          <div>
+                                              <lightning-icon icon-name="utility:notebook" size="x-small"></lightning-icon>
+                                              <span>Runbook Key</span>
+                                              <p class="mono">{latestCriticalIncident.Runbook_Key__c}</p>
+                                          </div>
+                                      </div>
+                                  </template>
+                                  <template if:false={latestCriticalIncident}>
+                                      <div class="empty-state" style="padding: 2rem; text-align: center; color: #a1a1aa;">
+                                          <lightning-icon icon-name="utility:check" size="large" variant="success"></lightning-icon>
+                                          <p style="margin-top: 1rem;">No critical incidents at this time.</p>
+                                      </div>
+                                  </template>
                                     <footer class="incident-actions">
                                         <button type="button" data-page="incidents" onclick={navigate}>View Incident</button>
                                         <button class="primary" type="button" data-page="runbooks" onclick={navigate}>Open Runbook</button>
@@ -353,12 +361,7 @@
                         <c-sentinel-flow-portal-settings></c-sentinel-flow-portal-settings>
                     </template>
                     <template if:true={isActions}>
-                        <div class="coming-soon-page">
-                            <lightning-icon icon-name="standard:action_list_component" size="large"></lightning-icon>
-                            <h2>Actions</h2>
-                            <p>View and manage all automated and manual actions executed by Zentom AI across your org.</p>
-                            <span class="coming-badge">Coming Soon</span>
-                        </div>
+                        <c-zentom-action-center></c-zentom-action-center>
                     </template>
                     <template if:true={isRunbooks}>
                         <div class="coming-soon-page">

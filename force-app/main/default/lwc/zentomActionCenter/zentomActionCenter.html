@@ -1,0 +1,105 @@
+<template>
+    <article class="action-center-container">
+        <!-- Header -->
+        <header class="queue-header">
+            <div class="header-content">
+                <div class="title-group">
+                    <lightning-icon icon-name="standard:action_list_component" size="medium"></lightning-icon>
+                    <div>
+                        <h2>Action Center Queue</h2>
+                        <p>Governed executions ready for deployment</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <div class="metric-pill">
+                        <span>Pending Executions</span>
+                        <strong>{actionCount}</strong>
+                    </div>
+                    <button class={refreshButtonClass} onclick={handleRefresh} disabled={isRefreshing} title="Refresh Queue">
+                        <lightning-icon icon-name="utility:refresh" size="x-small"></lightning-icon>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Loading State -->
+        <template if:true={isLoading}>
+            <div class="loading-state">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                <p>Retrieving approved actions...</p>
+            </div>
+        </template>
+
+        <!-- Queue Content -->
+        <div class="queue-body">
+            <template if:false={isLoading}>
+                <!-- Empty State -->
+                <template if:false={hasActions}>
+                    <div class="empty-state">
+                        <div class="empty-illustration">
+                            <lightning-icon icon-name="utility:success" size="large"></lightning-icon>
+                        </div>
+                        <h3>All clear!</h3>
+                        <p>There are no approved actions pending execution.</p>
+                    </div>
+                </template>
+
+                <!-- Cards Grid -->
+                <template if:true={hasActions}>
+                    <div class="card-grid">
+                        <template for:each={actions} for:item="a">
+                            <div key={a.id} class="action-card">
+                                
+                                <!-- Card Header -->
+                                <div class="card-header">
+                                    <div class="incident-id">
+                                        <lightning-icon icon-name="utility:settings" size="xx-small"></lightning-icon>
+                                        <span>{a.paddedId}</span>
+                                    </div>
+                                    <div class="risk-badge">
+                                        Risk: {a.riskScore}
+                                    </div>
+                                </div>
+                                
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <h3 class="proposed-action">{a.action}</h3>
+                                    
+                                    <div class="action-metrics">
+                                        <div class="metric-row">
+                                            <span class="metric-label">Type:</span>
+                                            <span class="metric-value">{a.incidentType}</span>
+                                        </div>
+                                        <div class="metric-row">
+                                            <span class="metric-label">Runbook:</span>
+                                            <span class="metric-value">{a.runbook}</span>
+                                        </div>
+                                        <div class="metric-row">
+                                            <span class="metric-label">Approved By:</span>
+                                            <span class="metric-value highlight-blue">{a.approvedBy}</span>
+                                        </div>
+                                        <div class="metric-row">
+                                            <span class="metric-label">AI Confidence:</span>
+                                            <span class={a.confidenceClass}>{a.confidence}%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Actions -->
+                                <div class="card-actions">
+                                    <button class="btn btn-execute" data-id={a.id} onclick={handleExecute}>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                        </svg>
+                                        Execute Action
+                                    </button>
+                                </div>
+                                
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </template>
+        </div>
+    </article>
+</template>
