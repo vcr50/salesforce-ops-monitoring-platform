@@ -3,6 +3,8 @@ import { NavigationMixin } from 'lightning/navigation';
 import { refreshApex } from '@salesforce/apex';
 
 import getDashboardData from '@salesforce/apex/ZentomDashboardController.getDashboardData';
+import getReplayExportData from '@salesforce/apex/ZentomDashboardController.getReplayExportData';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const POLL_INTERVAL_MS = 30000; // 30 seconds near-realtime polling
 
@@ -425,6 +427,61 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
                 actionName: 'view'
             }
         });
+    }
+
+    // ── Milestone 43E: Replay Export & Share ─────────────────────────────
+    async handleExportCsv(event) {
+        const incidentId = event.currentTarget.dataset.id;
+        try {
+            const data = await getReplayExportData({ incidentId });
+            let csv = 'Event Name,Event Time,Event Details,Actor\n';
+            if (data.events) {
+                data.events.forEach(ev => {
+                    const safeDetails = ev.eventDetails ? ev.eventDetails.replace(/"/g, '""') : '';
+                    csv += `"${ev.eventName}","${ev.eventTime}","${safeDetails}","${ev.actor}"\n`;
+                });
+            }
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `Sentinel_Incident_${data.incidentName}_Timeline.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            this.showToast('Success', 'CSV exported successfully.', 'success');
+        } catch (error) {
+            this.showToast('Export Error', this.reduceError(error), 'error');
+        }
+    }
+
+    async handleCopySummary(event) {
+        const incidentId = event.currentTarget.dataset.id;
+        try {
+            const data = await getReplayExportData({ incidentId });
+            const summary = `Incident: ${data.incidentName}
+Risk: ${data.riskLevel}
+Policy: ${data.policyDecision}
+Approval: ${data.approvalStatus}
+Execution: ${data.executionStatus}
+Replay Events: ${data.events ? data.events.length : 0}
+AI Explanation: ${data.events && data.events.length > 0 ? data.events[data.events.length - 1].eventDetails : 'N/A'}`;
+            
+            await navigator.clipboard.writeText(summary);
+            this.showToast('Success', 'Summary copied to clipboard', 'success');
+        } catch (error) {
+            this.showToast('Copy Error', this.reduceError(error), 'error');
+        }
+    }
+
+    showToast(title, message, variant) {
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title,
+                message,
+                variant
+            })
+        );
     }
 
     // ── Helpers ─────────────────────────────────────────────────────────

@@ -348,6 +348,40 @@ private class ZentomDashboardControllerTest {
         System.assert(executedResult.contains('already been executed'));
     }
 
+    @IsTest
+    static void getReplayExportData_returnsValidExportData() {
+        Sentinel_Incident__c inc = createIncident(
+            'CRITICAL',
+            'Approved',
+            'Ready for Execution',
+            'Approved',
+            'FLOW_FAILURE_BASIC_RECOVERY'
+        );
+        insert inc;
+
+        Sentinel_Audit_Log__c log1 = new Sentinel_Audit_Log__c(
+            Incident__c = inc.Id,
+            Event_Type__c = 'DETECTION',
+            Decision__c = 'Anomaly detected'
+        );
+        Sentinel_Audit_Log__c log2 = new Sentinel_Audit_Log__c(
+            Incident__c = inc.Id,
+            Event_Type__c = 'POLICY_EVALUATION',
+            Decision__c = 'Human approval required'
+        );
+        insert new List<Sentinel_Audit_Log__c>{ log1, log2 };
+
+        Test.startTest();
+        ZentomDashboardController.ReplayExportData data = ZentomDashboardController.getReplayExportData(inc.Id);
+        Test.stopTest();
+
+        System.assertNotEquals(null, data, 'Export data should not be null');
+        System.assertEquals(inc.Incident_Type__c, data.incidentType, 'Incident type should match');
+        System.assertEquals('CRITICAL', data.riskLevel, 'Risk level should match');
+        System.assertEquals(2, data.events.size(), 'Should return 2 events');
+        System.assertEquals('DETECTION', data.events[0].eventName, 'First event should be DETECTION');
+    }
+
     private static Sentinel_Incident__c createIncident(
         String riskLevel,
         String approvalStatus,

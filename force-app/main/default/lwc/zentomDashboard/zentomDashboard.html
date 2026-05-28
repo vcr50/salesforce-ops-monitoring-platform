@@ -444,6 +444,11 @@
                                 </div>
                                 <span class={event.decisionClass}>{event.decision}</span>
                                 <span>{event.createdLabel}</span>
+                                <div class="timeline-actions slds-m-left_auto slds-p-left_small">
+                                    <lightning-button-icon icon-name="utility:download" variant="bare" title="Export CSV" class="slds-m-left_xx-small" data-id={event.incidentId} onclick={handleExportCsv}></lightning-button-icon>
+                                    <lightning-button-icon icon-name="utility:copy" variant="bare" title="Copy Summary" class="slds-m-left_xx-small" data-id={event.incidentId} onclick={handleCopySummary}></lightning-button-icon>
+                                    <lightning-button-icon icon-name="utility:new_window" variant="bare" title="Open Incident" class="slds-m-left_xx-small" data-id={event.incidentId} onclick={openIncident}></lightning-button-icon>
+                                </div>
                             </div>
                         </template>
                     </div>

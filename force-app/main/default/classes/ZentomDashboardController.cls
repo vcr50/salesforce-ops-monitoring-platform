@@ -424,6 +424,23 @@ public with sharing class ZentomDashboardController {
         @AuraEnabled public Integer count;
     }
 
+    public class ReplayExportData {
+        @AuraEnabled public String incidentName;
+        @AuraEnabled public String incidentType;
+        @AuraEnabled public String riskLevel;
+        @AuraEnabled public String policyDecision;
+        @AuraEnabled public String approvalStatus;
+        @AuraEnabled public String executionStatus;
+        @AuraEnabled public List<ReplayExportEvent> events;
+    }
+
+    public class ReplayExportEvent {
+        @AuraEnabled public String eventName;
+        @AuraEnabled public Datetime eventTime;
+        @AuraEnabled public String eventDetails;
+        @AuraEnabled public String actor;
+    }
+
     
     // ─── NATIVE ENDPOINTS FOR DASHBOARD ─────────────────────────────
     
@@ -577,6 +594,46 @@ public with sharing class ZentomDashboardController {
             return '{"error": "' + e.getMessage().replaceAll('"', '') + '"}';
         }
     }
+
+
+    @AuraEnabled(cacheable=true)
+    public static ReplayExportData getReplayExportData(Id incidentId) {
+        Sentinel_Incident__c inc = [
+            SELECT Name, Incident_Type__c, Risk_Level__c, Policy_Decision__c,
+                   Approval_Status__c, Execution_Status__c
+            FROM Sentinel_Incident__c
+            WHERE Id = :incidentId
+        ];
+        
+        ReplayExportData data = new ReplayExportData();
+        data.incidentName = inc.Name;
+        data.incidentType = inc.Incident_Type__c;
+        data.riskLevel = inc.Risk_Level__c;
+        data.policyDecision = inc.Policy_Decision__c;
+        data.approvalStatus = inc.Approval_Status__c;
+        data.executionStatus = inc.Execution_Status__c;
+        data.events = new List<ReplayExportEvent>();
+        
+        List<Sentinel_Audit_Log__c> logs = [
+            SELECT Event_Type__c, CreatedDate, Decision__c, CreatedBy.Name
+            FROM Sentinel_Audit_Log__c
+            WHERE Incident__c = :incidentId
+            ORDER BY CreatedDate ASC
+        ];
+        
+        for (Sentinel_Audit_Log__c log : logs) {
+            ReplayExportEvent ev = new ReplayExportEvent();
+            ev.eventName = log.Event_Type__c;
+            ev.eventTime = log.CreatedDate;
+            ev.eventDetails = log.Decision__c;
+            ev.actor = log.CreatedBy.Name;
+            data.events.add(ev);
+        }
+        
+        return data;
+    }
+
+    // ─── UTILITIES ───────────────────────────────────────────────────────────
 
     // ─── NATIVE ACTION CENTER QUEUE (EXECUTION GATE) ─────────────────────────────
 
