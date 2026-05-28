@@ -17,7 +17,63 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
     // ── Milestone 43: Filter state ──────────────────────────────────────
     @track filterRisk = 'ALL';
     @track filterStatus = 'ALL';
+    @track filterEnvironment = 'ALL';
+    @track filterType = 'ALL';
+    @track filterAiStatus = 'ALL';
+    @track presetView = 'ALL';
     @track isFilterOpen = false;
+
+    // ── Preset view options ─────────────────────────────────────────────
+    get presetOptions() {
+        return [
+            { label: 'None', value: 'ALL' },
+            { label: 'Needs Approval', value: 'NEEDS_APPROVAL' },
+            { label: 'Critical Production', value: 'CRITICAL_PROD' },
+            { label: 'Recent Failures', value: 'RECENT_FAILURES' },
+            { label: 'AI High Confidence', value: 'AI_HIGH_CONF' },
+            { label: 'AI Review Needed', value: 'AI_REVIEW' },
+            { label: 'Executed Today', value: 'EXECUTED_TODAY' }
+        ];
+    }
+
+    // ── Time range options ──────────────────────────────────────────────
+    get timeRangeOptions() {
+        return [
+            { label: 'Today', value: 'TODAY' },
+            { label: 'Last 7 Days', value: 'LAST_7_DAYS' },
+            { label: 'All Time', value: 'ALL' }
+        ];
+    }
+
+    // ── Environment filter options ──────────────────────────────────────
+    get environmentOptions() {
+        return [
+            { label: 'All Environments', value: 'ALL' },
+            { label: 'Production', value: 'production' },
+            { label: 'Sandbox', value: 'sandbox' }
+        ];
+    }
+
+    // ── Incident Type filter options ────────────────────────────────────
+    get typeOptions() {
+        return [
+            { label: 'All Types', value: 'ALL' },
+            { label: 'Flow Failure', value: 'FLOW_FAILURE' },
+            { label: 'Integration Error', value: 'INTEGRATION_ERROR' },
+            { label: 'Apex Exception', value: 'APEX_EXCEPTION' },
+            { label: 'Security Event', value: 'SECURITY_EVENT' }
+        ];
+    }
+
+    // ── AI Status filter options ────────────────────────────────────────
+    get aiStatusOptions() {
+        return [
+            { label: 'All AI Statuses', value: 'ALL' },
+            { label: 'High Confidence (>80)', value: 'HIGH_CONFIDENCE' },
+            { label: 'Review Needed (≤80)', value: 'REVIEW_NEEDED' },
+            { label: 'Active Reasoning', value: 'ACTIVE' }
+        ];
+    }
 
     // ── Risk filter options ─────────────────────────────────────────────
     get riskOptions() {
@@ -46,6 +102,9 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
         let count = 0;
         if (this.filterRisk !== 'ALL') count++;
         if (this.filterStatus !== 'ALL') count++;
+        if (this.filterEnvironment !== 'ALL') count++;
+        if (this.filterType !== 'ALL') count++;
+        if (this.filterAiStatus !== 'ALL') count++;
         return count;
     }
 
@@ -145,11 +204,21 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
 
     _applyFilters(rows) {
         return rows.filter((row) => {
-            const riskMatch =
-                this.filterRisk === 'ALL' || row.riskLevel === this.filterRisk;
-            const statusMatch =
-                this.filterStatus === 'ALL' || row.status === this.filterStatus;
-            return riskMatch && statusMatch;
+            const riskMatch = this.filterRisk === 'ALL' || row.riskLevel === this.filterRisk;
+            const statusMatch = this.filterStatus === 'ALL' || row.status === this.filterStatus;
+            const envMatch = this.filterEnvironment === 'ALL' || (row.environment && row.environment.toLowerCase() === this.filterEnvironment.toLowerCase());
+            const typeMatch = this.filterType === 'ALL' || row.incidentType === this.filterType;
+            
+            let aiMatch = true;
+            if (this.filterAiStatus === 'HIGH_CONFIDENCE') {
+                aiMatch = row.aiConfidence > 80;
+            } else if (this.filterAiStatus === 'REVIEW_NEEDED') {
+                aiMatch = row.aiConfidence <= 80;
+            } else if (this.filterAiStatus === 'ACTIVE') {
+                aiMatch = row.aiStatus === 'ACTIVE';
+            }
+
+            return riskMatch && statusMatch && envMatch && typeMatch && aiMatch;
         });
     }
 
@@ -264,7 +333,7 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
 
     // ── Event handlers ──────────────────────────────────────────────────
     handleRangeChange(event) {
-        this.dateRange = event.target.dataset.range;
+        this.dateRange = event.detail ? event.detail.value : event.target.dataset.range;
         refreshApex(this.wiredDashboard);
     }
 
@@ -278,15 +347,62 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
 
     handleFilterRiskChange(event) {
         this.filterRisk = event.detail.value;
+        this.presetView = 'ALL';
     }
 
     handleFilterStatusChange(event) {
         this.filterStatus = event.detail.value;
+        this.presetView = 'ALL';
+    }
+
+    handleFilterEnvironmentChange(event) {
+        this.filterEnvironment = event.detail.value;
+        this.presetView = 'ALL';
+    }
+
+    handleFilterTypeChange(event) {
+        this.filterType = event.detail.value;
+        this.presetView = 'ALL';
+    }
+
+    handleFilterAiStatusChange(event) {
+        this.filterAiStatus = event.detail.value;
+        this.presetView = 'ALL';
+    }
+
+    handlePresetChange(event) {
+        this.presetView = event.detail.value;
+        if (this.presetView === 'NEEDS_APPROVAL') {
+            this.handleClearFilters();
+            this.filterStatus = 'Approval Required';
+        } else if (this.presetView === 'CRITICAL_PROD') {
+            this.handleClearFilters();
+            this.filterRisk = 'CRITICAL';
+            this.filterEnvironment = 'production';
+        } else if (this.presetView === 'RECENT_FAILURES') {
+            this.handleClearFilters();
+            this.filterType = 'FLOW_FAILURE';
+        } else if (this.presetView === 'AI_HIGH_CONF') {
+            this.handleClearFilters();
+            this.filterAiStatus = 'HIGH_CONFIDENCE';
+        } else if (this.presetView === 'AI_REVIEW') {
+            this.handleClearFilters();
+            this.filterAiStatus = 'REVIEW_NEEDED';
+        } else if (this.presetView === 'EXECUTED_TODAY') {
+            this.handleClearFilters();
+            this.filterStatus = 'Closed';
+            this.dateRange = 'TODAY';
+            refreshApex(this.wiredDashboard);
+        }
     }
 
     handleClearFilters() {
         this.filterRisk = 'ALL';
         this.filterStatus = 'ALL';
+        this.filterEnvironment = 'ALL';
+        this.filterType = 'ALL';
+        this.filterAiStatus = 'ALL';
+        this.presetView = 'ALL';
     }
 
     openIncident(event) {
@@ -324,7 +440,7 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
             createdLabel: this.formatDate(row.createdDate),
             executedLabel: this.formatDateTime(row.executedAt),
             caseLabel: row.createdCaseNumber ? `Case ${row.createdCaseNumber}` : 'No case',
-            environmentLabel: 'Salesforce',
+            environmentLabel: row.environment ? (row.environment.charAt(0).toUpperCase() + row.environment.slice(1).toLowerCase()) : 'Salesforce',
             recommendedActionLabel:
                 row.executionAction || row.runbookKey || 'Review recommendation'
         }));

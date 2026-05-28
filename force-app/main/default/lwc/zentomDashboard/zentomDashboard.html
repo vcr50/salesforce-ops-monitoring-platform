@@ -23,14 +23,6 @@
                     title="Refresh dashboard"
                     onclick={handleRefresh}
                 ></lightning-button-icon>
-                <div class="range-controls" aria-label="Dashboard date range">
-                    <lightning-button-group>
-                        <lightning-button label="Today" data-range="TODAY" onclick={handleRangeChange}></lightning-button>
-                        <lightning-button label="Last 7 Days" data-range="LAST_7_DAYS" onclick={handleRangeChange}></lightning-button>
-                        <lightning-button label="All" data-range="ALL" onclick={handleRangeChange}></lightning-button>
-                    </lightning-button-group>
-                    <span class="range-label">{activeRangeLabel}</span>
-                </div>
             </div>
         </header>
 
@@ -53,25 +45,78 @@
 
         <template if:true={isFilterOpen}>
             <div class="filters-container">
-                <div class="filter-group">
-                    <label class="filter-label">Risk Level</label>
+                <div class="filter-presets">
+                    <label class="filter-label">Preset Views</label>
                     <lightning-combobox
-                        name="filterRisk"
-                        value={filterRisk}
-                        options={riskOptions}
-                        onchange={handleFilterRiskChange}
+                        name="presetView"
+                        value={presetView}
+                        options={presetOptions}
+                        onchange={handlePresetChange}
                         variant="label-hidden"
                     ></lightning-combobox>
                 </div>
-                <div class="filter-group">
-                    <label class="filter-label">Incident Status</label>
-                    <lightning-combobox
-                        name="filterStatus"
-                        value={filterStatus}
-                        options={statusOptions}
-                        onchange={handleFilterStatusChange}
-                        variant="label-hidden"
-                    ></lightning-combobox>
+                
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Time Range</label>
+                        <lightning-combobox
+                            name="filterTimeRange"
+                            value={dateRange}
+                            options={timeRangeOptions}
+                            onchange={handleRangeChange}
+                            variant="label-hidden"
+                        ></lightning-combobox>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Risk Level</label>
+                        <lightning-combobox
+                            name="filterRisk"
+                            value={filterRisk}
+                            options={riskOptions}
+                            onchange={handleFilterRiskChange}
+                            variant="label-hidden"
+                        ></lightning-combobox>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Incident Status</label>
+                        <lightning-combobox
+                            name="filterStatus"
+                            value={filterStatus}
+                            options={statusOptions}
+                            onchange={handleFilterStatusChange}
+                            variant="label-hidden"
+                        ></lightning-combobox>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Environment</label>
+                        <lightning-combobox
+                            name="filterEnvironment"
+                            value={filterEnvironment}
+                            options={environmentOptions}
+                            onchange={handleFilterEnvironmentChange}
+                            variant="label-hidden"
+                        ></lightning-combobox>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Incident Type</label>
+                        <lightning-combobox
+                            name="filterType"
+                            value={filterType}
+                            options={typeOptions}
+                            onchange={handleFilterTypeChange}
+                            variant="label-hidden"
+                        ></lightning-combobox>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">AI Status</label>
+                        <lightning-combobox
+                            name="filterAiStatus"
+                            value={filterAiStatus}
+                            options={aiStatusOptions}
+                            onchange={handleFilterAiStatusChange}
+                            variant="label-hidden"
+                        ></lightning-combobox>
+                    </div>
                 </div>
             </div>
         </template>

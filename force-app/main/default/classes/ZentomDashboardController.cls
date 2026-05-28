@@ -151,7 +151,8 @@ public with sharing class ZentomDashboardController {
                 Policy_Decision__c, Recommendation_Status__c, Status__c,
                 Approval_Status__c, Execution_Status__c, Execution_Action__c,
                 Execution_Result__c, Executed_At__c, Runbook_Key__c,
-                Created_Case__c, Created_Case__r.CaseNumber, CreatedDate
+                Created_Case__c, Created_Case__r.CaseNumber, CreatedDate,
+                Environment__c, AI_Confidence__c, AI_Reasoning_Status__c
             FROM Sentinel_Incident__c
             WHERE Approval_Status__c = 'Pending Approval'
             ORDER BY CreatedDate DESC
@@ -167,7 +168,8 @@ public with sharing class ZentomDashboardController {
                 Policy_Decision__c, Recommendation_Status__c, Status__c,
                 Approval_Status__c, Execution_Status__c, Execution_Action__c,
                 Execution_Result__c, Executed_At__c, Runbook_Key__c,
-                Created_Case__c, Created_Case__r.CaseNumber, CreatedDate
+                Created_Case__c, Created_Case__r.CaseNumber, CreatedDate,
+                Environment__c, AI_Confidence__c, AI_Reasoning_Status__c
             FROM Sentinel_Incident__c
             WHERE Execution_Status__c = 'Executed'
             ORDER BY Executed_At__c DESC NULLS LAST, CreatedDate DESC
@@ -222,7 +224,8 @@ public with sharing class ZentomDashboardController {
                 Policy_Decision__c, Recommendation_Status__c, Status__c,
                 Approval_Status__c, Execution_Status__c, Execution_Action__c,
                 Execution_Result__c, Executed_At__c, Runbook_Key__c,
-                Created_Case__c, Created_Case__r.CaseNumber, CreatedDate
+                Created_Case__c, Created_Case__r.CaseNumber, CreatedDate,
+                Environment__c, AI_Confidence__c, AI_Reasoning_Status__c
             FROM Sentinel_Incident__c
             WHERE Created_Case__c != null
             ORDER BY Executed_At__c DESC NULLS LAST, CreatedDate DESC
@@ -239,7 +242,8 @@ public with sharing class ZentomDashboardController {
                     Policy_Decision__c, Recommendation_Status__c, Status__c,
                     Approval_Status__c, Execution_Status__c, Execution_Action__c,
                     Execution_Result__c, Executed_At__c, Runbook_Key__c,
-                    Created_Case__c, Created_Case__r.CaseNumber, CreatedDate
+                    Created_Case__c, Created_Case__r.CaseNumber, CreatedDate,
+                    Environment__c, AI_Confidence__c, AI_Reasoning_Status__c
                 FROM Sentinel_Incident__c
                 ORDER BY CreatedDate DESC
                 LIMIT :rowLimit
@@ -251,7 +255,8 @@ public with sharing class ZentomDashboardController {
                 Policy_Decision__c, Recommendation_Status__c, Status__c,
                 Approval_Status__c, Execution_Status__c, Execution_Action__c,
                 Execution_Result__c, Executed_At__c, Runbook_Key__c,
-                Created_Case__c, Created_Case__r.CaseNumber, CreatedDate
+                Created_Case__c, Created_Case__r.CaseNumber, CreatedDate,
+                Environment__c, AI_Confidence__c, AI_Reasoning_Status__c
             FROM Sentinel_Incident__c
             WHERE CreatedDate >= :cutoff
             ORDER BY CreatedDate DESC
@@ -318,6 +323,9 @@ public with sharing class ZentomDashboardController {
                 ? incident.Created_Case__r.CaseNumber
                 : null;
             row.createdDate = incident.CreatedDate;
+            row.environment = incident.Environment__c;
+            row.aiConfidence = incident.AI_Confidence__c;
+            row.aiStatus = incident.AI_Reasoning_Status__c;
             rows.add(row);
         }
         return rows;
@@ -372,6 +380,9 @@ public with sharing class ZentomDashboardController {
         @AuraEnabled public Id createdCaseId;
         @AuraEnabled public String createdCaseNumber;
         @AuraEnabled public Datetime createdDate;
+        @AuraEnabled public String environment;
+        @AuraEnabled public Decimal aiConfidence;
+        @AuraEnabled public String aiStatus;
     }
 
     public class ReplayEventRow {
