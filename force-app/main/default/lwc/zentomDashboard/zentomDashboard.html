@@ -257,6 +257,9 @@
                                     <div class="approval-detail">
                                         <span>{incident.policyDecision}</span>
                                         <span>{incident.recommendedActionLabel}</span>
+                                        <template if:true={incident.escalationNeeded}>
+                                            <span class="badge warning-badge slds-m-top_xx-small" title={incident.escalationReason}>Escalation Needed</span>
+                                        </template>
                                     </div>
                                     <div class="approval-action">
                                         <lightning-button

@@ -1,4 +1,6 @@
 public with sharing class ZentomDashboardController {
+    private static final Integer ESCALATION_THRESHOLD_HOURS = 4;
+
     @AuraEnabled(cacheable=true)
     public static DashboardData getDashboardData(String dateRange) {
         DashboardData data = new DashboardData();
@@ -347,6 +349,16 @@ public with sharing class ZentomDashboardController {
             row.environment = incident.Environment__c;
             row.aiConfidence = incident.AI_Confidence__c;
             row.aiStatus = incident.AI_Reasoning_Status__c;
+            
+            // Milestone 43F: Escalation logic
+            row.escalationNeeded = false;
+            if (incident.Status__c == 'Approval Required' && incident.Approval_Status__c != 'Approved') {
+                if (incident.CreatedDate != null && incident.CreatedDate.addHours(ESCALATION_THRESHOLD_HOURS) < System.now()) {
+                    row.escalationNeeded = true;
+                    row.escalationReason = 'Pending approval > ' + ESCALATION_THRESHOLD_HOURS + ' hours';
+                }
+            }
+            
             rows.add(row);
         }
         return rows;
@@ -406,6 +418,8 @@ public with sharing class ZentomDashboardController {
         @AuraEnabled public String environment;
         @AuraEnabled public Decimal aiConfidence;
         @AuraEnabled public String aiStatus;
+        @AuraEnabled public Boolean escalationNeeded;
+        @AuraEnabled public String escalationReason;
     }
 
     public class ReplayEventRow {

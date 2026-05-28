@@ -22,7 +22,7 @@
 - Added `getReplayExportData` method in `ZentomDashboardController.cls` returning safe export wrapper.
 - Implemented `handleExportCsv` and `handleCopySummary` in `zentomDashboard.js`.
 - Attached actions to the Flight Recorder timeline in `zentomDashboard.html`.
-
-### Milestone 43F — Approval Escalation Paths: Planning
-- Drafted initial plan in `docs/approval-escalation-paths-plan.md`.
-- Focus on visually identifying overdue incidents in the Approval Queue.
+### Milestone 43F — Approval Escalation Paths: Complete
+- Added `ESCALATION_THRESHOLD_HOURS` to `ZentomDashboardController.cls`.
+- Updated `toIncidentRows` to evaluate `CreatedDate` against the threshold and flag incidents needing escalation.
+- Added visually distinct escalation badge and reason tooltips to the Clearance Queue in `zentomDashboard.html`.

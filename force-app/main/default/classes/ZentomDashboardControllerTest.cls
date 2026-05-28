@@ -382,6 +382,28 @@ private class ZentomDashboardControllerTest {
         System.assertEquals('DETECTION', data.events[0].eventName, 'First event should be DETECTION');
     }
 
+    @IsTest
+    static void getDashboardData_flagsOverdueApprovals() {
+        Sentinel_Incident__c inc = createIncident(
+            'CRITICAL',
+            'Pending Approval',
+            'Not Started',
+            'Approval Required',
+            'FLOW_FAILURE_BASIC_RECOVERY'
+        );
+        insert inc;
+        
+        Test.setCreatedDate(inc.Id, System.now().addHours(-5));
+
+        Test.startTest();
+        ZentomDashboardController.DashboardData data = ZentomDashboardController.getDashboardData('LAST_7_DAYS');
+        Test.stopTest();
+
+        System.assertEquals(1, data.pendingApprovals.size(), 'Should have 1 pending approval');
+        System.assertEquals(true, data.pendingApprovals[0].escalationNeeded, 'Should be flagged for escalation');
+        System.assert(data.pendingApprovals[0].escalationReason.contains('Pending approval'), 'Should have escalation reason');
+    }
+
     private static Sentinel_Incident__c createIncident(
         String riskLevel,
         String approvalStatus,
