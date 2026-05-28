@@ -1,6 +1,9 @@
-# Milestone 43G: v1.1.0 Wrap-up / Release Candidate
+# Milestone 44: v1.1.0 Validation / Release
 
-- [x] 1. Create v1.1.0 release candidate wrap-up document
-- [x] 2. Update maintenance log
-- [x] 3. Commit release documentation to version control
-- [x] 4. Tag and push release candidate `v1.1.0-rc.1`
+- [x] 44A — v1.1.0 Release Validation Plan
+- [ ] 44B — Full Salesforce Deployment Validation
+- [ ] 44C — Feature Regression Testing
+- [ ] 44D — Security / Permission Validation
+- [ ] 44E — Production Release Notes
+- [ ] 44F — v1.1.0 Final Tag
+- [ ] 44G — v1.1.0 Release Wrap-up

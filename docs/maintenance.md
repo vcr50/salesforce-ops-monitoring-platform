@@ -31,3 +31,7 @@
 
 ## Milestone 43 Complete
 All tasks for v1.1.0 Product Planning & UX Improvements are completed successfully.
+
+## Milestone 44 — v1.1.0 Validation / Release
+### 44A — v1.1.0 Release Validation Plan: Complete
+- Created `docs/v1.1.0-release-validation-plan.md` to define testing scope, regression checklists, and go/no-go criteria.
