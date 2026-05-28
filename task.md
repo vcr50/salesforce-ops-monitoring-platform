@@ -1,10 +1,9 @@
-# Milestone 43D: Near-Realtime Telemetry Widgets
+# Milestone 43E: Replay Export / Share
 
-- [x] 1. Draft telemetry widgets plan
-- [x] 2. Update maintenance log
-- [x] 3. Commit plan to version control
-- [x] 4. (Pending Approval) Implement Apex backend changes for summary telemetry
-- [x] 5. (Pending Approval) Build telemetry UI components in `zentomDashboard.html`
-- [x] 6. (Pending Approval) Implement `lastRefreshed` JS logic
-- [x] 7. (Pending Approval) Verify styling and real-time polling updates
-- [x] 8. (Pending Approval) Deploy and finalize Milestone 43D
+- [ ] 1. Draft replay export share plan
+- [ ] 2. Update maintenance log
+- [ ] 3. Commit plan to version control
+- [ ] 4. (Pending Approval) Add Apex replay export data method (`ZentomDashboardController.cls`)
+- [ ] 5. (Pending Approval) Add LWC CSV export functionality
+- [ ] 6. (Pending Approval) Add Copy Summary functionality
+- [ ] 7. (Pending Approval) Validate and deploy

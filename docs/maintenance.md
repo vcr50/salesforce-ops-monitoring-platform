@@ -18,3 +18,7 @@
 - Added `avgAiConfidence` and `errorLogCount` metrics to `DashboardSummary`.
 - Integrated Average AI Confidence and Error Log Count into the KPI grid in `zentomDashboard.html`.
 - Displayed `lastRefreshedLabel` near-realtime timestamp dynamically updated on every payload fetch.
+
+### Milestone 43E — Replay Export / Share: Planning
+- Drafted initial plan in `docs/replay-export-share-plan.md`.
+- Focus on allowing safe CSV exports and clipboard summaries of incident replays.
