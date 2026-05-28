@@ -13,3 +13,7 @@
 - Introduced macro "Preset Views" to automatically apply filter combinations.
 - Updated Apex wrapper class (`IncidentRow`) and backend queries to fetch and expose `Environment__c`, `AI_Confidence__c`, and `AI_Reasoning_Status__c`.
 - Kept architecture lightweight by applying filters strictly on the client side against the fetched payload.
+
+### Milestone 43D — Near-Realtime Telemetry Widgets: Planning
+- Drafted initial plan in `docs/near-realtime-telemetry-widgets.md`.
+- Focus on operational trend widgets via near-realtime polling and client-side derivations.
