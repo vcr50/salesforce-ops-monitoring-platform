@@ -18,29 +18,15 @@ export default class ZentomApprovalQueue extends LightningElement {
         this.isRefreshing = true;
         this.isLoading = true;
         try {
-            // Mocking data to match dashboard
-            const mockWorkflows = [];
-            for (let i = 0; i < 9; i++) {
-                const idNum = 231 - i;
-                mockWorkflows.push({
-                    workflowId: idNum,
-                    incidentId: `INC-2025-${String(idNum + 100).padStart(4, '0')}`,
-                    proposedAction: i % 2 === 0 ? `Restart Service ${i}` : `Scale Component ${i}`,
-                    confidence: 85 - i * 5,
-                    riskScore: 8.5 + (i % 3) * 0.5,
-                    policyReasoning: 'Risk exceeds autonomous threshold.',
-                    expiresAt: Date.now() + 600000 * (i + 1)
-                });
-            }
-
-            this.approvalCount = mockWorkflows.length;
-            this.approvals = mockWorkflows.map(w => {
+            const data = await getPendingApprovals();
+            this.approvalCount = data.length;
+            this.approvals = data.map(w => {
                 const exp = new Date(w.expiresAt);
                 const rem = Math.max(0, Math.round((exp - Date.now()) / 60000));
                 
                 return {
-                    workflowId: w.workflowId,
-                    paddedId: String(w.workflowId).padStart(7, '0'),
+                    id: w.id,
+                    paddedId: w.incidentId, // using incident Name directly as we don't have integer IDs anymore
                     incidentId: w.incidentId,
                     proposedAction: w.proposedAction,
                     confidence: w.confidence,
@@ -53,7 +39,7 @@ export default class ZentomApprovalQueue extends LightningElement {
                 };
             });
         } catch (e) {
-            this.showToast('Error', e.message, 'error');
+            this.showToast('Error', e.body ? e.body.message : e.message, 'error');
         } finally {
             this.isLoading = false;
             setTimeout(() => { this.isRefreshing = false; }, 500); // Visual feedback delay
@@ -76,7 +62,7 @@ export default class ZentomApprovalQueue extends LightningElement {
         
         this.isLoading = true;
         try {
-            const res = await approveWorkflow({ workflowId: parseInt(wfId, 10), approvedBy: by });
+            const res = await approveWorkflow({ incidentId: wfId, approvedBy: by });
             const data = JSON.parse(res);
             if (data.error) {
                 this.showToast('Action Failed', data.error, 'error');
@@ -98,7 +84,7 @@ export default class ZentomApprovalQueue extends LightningElement {
 
         this.isLoading = true;
         try {
-            const res = await rejectWorkflow({ workflowId: parseInt(wfId, 10), reason: reason });
+            const res = await rejectWorkflow({ incidentId: wfId, reason: reason });
             const data = JSON.parse(res);
             if (data.error) {
                 this.showToast('Action Failed', data.error, 'error');

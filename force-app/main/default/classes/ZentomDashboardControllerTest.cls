@@ -187,6 +187,87 @@ private class ZentomDashboardControllerTest {
         System.assertEquals('Critical', summary.orgHealthStatus);
     }
 
+    @IsTest
+    static void getPendingApprovals_returnsRows() {
+        insert createIncident(
+            'CRITICAL',
+            'Pending Approval',
+            'Not Started',
+            'Approval Required',
+            'FLOW_FAILURE_BASIC_RECOVERY'
+        );
+
+        Test.startTest();
+        List<ZentomDashboardController.ZentomApprovalRow> rows = ZentomDashboardController.getPendingApprovals();
+        Test.stopTest();
+
+        System.assertEquals(1, rows.size(), 'Should return 1 pending approval');
+        System.assertNotEquals(null, rows[0].id);
+        System.assertEquals(87, rows[0].confidence); // populated by createIncident
+    }
+
+    @IsTest
+    static void approveWorkflow_updatesIncident() {
+        Sentinel_Incident__c inc = createIncident(
+            'CRITICAL',
+            'Pending Approval',
+            'Not Started',
+            'Approval Required',
+            'FLOW_FAILURE_BASIC_RECOVERY'
+        );
+        insert inc;
+
+        Test.startTest();
+        String result = ZentomDashboardController.approveWorkflow(inc.Id, 'Test User');
+        Test.stopTest();
+
+        System.assert(result.contains('"success": true'), 'Result should be successful: ' + result);
+
+        Sentinel_Incident__c updatedInc = [SELECT Approval_Status__c, Status__c, Execution_Status__c FROM Sentinel_Incident__c WHERE Id = :inc.Id];
+        System.assertEquals('Approved', updatedInc.Approval_Status__c);
+        System.assertEquals('Approved', updatedInc.Status__c);
+        System.assertEquals('Ready for Execution', updatedInc.Execution_Status__c);
+
+        List<Zentom_Policy_Decision__c> decisions = [SELECT Decision__c, Reason__c, Action_Type__c FROM Zentom_Policy_Decision__c WHERE Incident__c = :inc.Id];
+        System.assertEquals(1, decisions.size(), 'Should insert 1 decision record');
+        System.assertEquals('Approved', decisions[0].Decision__c);
+        System.assertEquals('Approved by Test User', decisions[0].Reason__c);
+        System.assertEquals('Runbook Execution', decisions[0].Action_Type__c);
+        
+        // Test Already Processed
+        String duplicateResult = ZentomDashboardController.approveWorkflow(inc.Id, 'Test User');
+        System.assert(duplicateResult.contains('already processed'));
+    }
+
+    @IsTest
+    static void rejectWorkflow_updatesIncident() {
+        Sentinel_Incident__c inc = createIncident(
+            'CRITICAL',
+            'Pending Approval',
+            'Not Started',
+            'Approval Required',
+            'FLOW_FAILURE_BASIC_RECOVERY'
+        );
+        insert inc;
+
+        Test.startTest();
+        String result = ZentomDashboardController.rejectWorkflow(inc.Id, 'Too risky');
+        Test.stopTest();
+
+        System.assert(result.contains('"success": true'), 'Result should be successful: ' + result);
+
+        Sentinel_Incident__c updatedInc = [SELECT Approval_Status__c, Status__c, Execution_Status__c FROM Sentinel_Incident__c WHERE Id = :inc.Id];
+        System.assertEquals('Rejected', updatedInc.Approval_Status__c);
+        System.assertEquals('Analyzed', updatedInc.Status__c);
+        System.assertEquals('Not Started', updatedInc.Execution_Status__c);
+
+        List<Zentom_Policy_Decision__c> decisions = [SELECT Decision__c, Reason__c, Action_Type__c FROM Zentom_Policy_Decision__c WHERE Incident__c = :inc.Id];
+        System.assertEquals(1, decisions.size(), 'Should insert 1 decision record');
+        System.assertEquals('Rejected', decisions[0].Decision__c);
+        System.assertEquals('Too risky', decisions[0].Reason__c);
+        System.assertEquals('Runbook Execution Cancelled', decisions[0].Action_Type__c);
+    }
+
     private static Sentinel_Incident__c createIncident(
         String riskLevel,
         String approvalStatus,
