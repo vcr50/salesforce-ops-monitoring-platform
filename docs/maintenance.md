@@ -25,4 +25,9 @@
 ### Milestone 43F — Approval Escalation Paths: Complete
 - Added `ESCALATION_THRESHOLD_HOURS` to `ZentomDashboardController.cls`.
 - Updated `toIncidentRows` to evaluate `CreatedDate` against the threshold and flag incidents needing escalation.
-- Added visually distinct escalation badge and reason tooltips to the Clearance Queue in `zentomDashboard.html`.
+### Milestone 43G — v1.1.0 Wrap-up / Release Candidate: Complete
+- Created `docs/v1.1.0-release-candidate-wrap-up.md` containing release scope, validated features, and known gaps.
+- Tagged `v1.1.0-rc.1`.
+
+## Milestone 43 Complete
+All tasks for v1.1.0 Product Planning & UX Improvements are completed successfully.

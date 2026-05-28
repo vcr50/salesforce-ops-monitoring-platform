@@ -1,8 +1,6 @@
-# Milestone 43F: Approval Escalation Paths
+# Milestone 43G: v1.1.0 Wrap-up / Release Candidate
 
-- [x] 1. Draft approval escalation paths plan
+- [x] 1. Create v1.1.0 release candidate wrap-up document
 - [x] 2. Update maintenance log
-- [x] 3. Commit plan to version control
-- [x] 4. (Pending Approval) Update `ZentomDashboardController` to flag overdue approvals
-- [x] 5. (Pending Approval) Update `zentomDashboard.html` and `.js` to display escalation indicators
-- [x] 6. (Pending Approval) Validate and deploy
+- [x] 3. Commit release documentation to version control
+- [x] 4. Tag and push release candidate `v1.1.0-rc.1`
