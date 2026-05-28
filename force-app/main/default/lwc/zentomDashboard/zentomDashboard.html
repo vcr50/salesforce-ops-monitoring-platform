@@ -207,6 +207,18 @@
                     <strong>{failedExecutionLabel}</strong>
                     <p>Derived from incidents</p>
                 </article>
+                <article class="metric success">
+                    <lightning-icon icon-name="utility:metrics" size="x-small"></lightning-icon>
+                    <span>Avg AI Confidence</span>
+                    <strong>{data.summary.avgAiConfidence}%</strong>
+                    <p>AI Reasoning</p>
+                </article>
+                <article class="metric danger">
+                    <lightning-icon icon-name="utility:error" size="x-small"></lightning-icon>
+                    <span>Error Log Count</span>
+                    <strong>{data.summary.errorLogCount}</strong>
+                    <p>Audit trail errors</p>
+                </article>
                 <article class="metric">
                     <lightning-icon icon-name="utility:preview" size="x-small"></lightning-icon>
                     <span>Flight Recorder</span>

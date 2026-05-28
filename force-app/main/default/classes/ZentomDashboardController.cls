@@ -27,10 +27,13 @@ public with sharing class ZentomDashboardController {
         DashboardSummary summary = new DashboardSummary();
         summary.totalIncidents = incidents.size();
         summary.recentReplayEvents = getReplayEventCount(dateRange);
+        summary.errorLogCount = getErrorLogCount(dateRange);
         Integer criticalOpen = 0;
         Integer pendingApp = 0;
         Integer rejectedRec = 0;
         Integer failedExec = 0;
+        Integer aiConfidenceSum = 0;
+        Integer aiConfidenceCount = 0;
 
         Map<String, Integer> runbookCounts = new Map<String, Integer>();
         for (Sentinel_Incident__c incident : incidents) {
@@ -60,6 +63,10 @@ public with sharing class ZentomDashboardController {
                     : 0;
                 runbookCounts.put(incident.Runbook_Key__c, current + 1);
             }
+            if (incident.AI_Confidence__c != null) {
+                aiConfidenceSum += Integer.valueOf(incident.AI_Confidence__c);
+                aiConfidenceCount++;
+            }
 
             // Health Score data gathering
             if (incident.Risk_Level__c == 'CRITICAL' && incident.Status__c != 'Closed' && incident.Status__c != 'Action Created' && incident.Status__c != 'Resolved') {
@@ -76,6 +83,12 @@ public with sharing class ZentomDashboardController {
                 topCount = runbookCounts.get(runbookKey);
                 summary.topRunbook = runbookKey;
             }
+        }
+        
+        if (aiConfidenceCount > 0) {
+            summary.avgAiConfidence = aiConfidenceSum / aiConfidenceCount;
+        } else {
+            summary.avgAiConfidence = 0;
         }
 
         // Calculate orgHealthScore
@@ -300,6 +313,14 @@ public with sharing class ZentomDashboardController {
         return [SELECT COUNT() FROM Sentinel_Audit_Log__c WHERE CreatedDate >= :cutoff];
     }
 
+    private static Integer getErrorLogCount(String dateRange) {
+        Datetime cutoff = getCutoff(dateRange);
+        if (cutoff == null) {
+            return [SELECT COUNT() FROM Sentinel_Audit_Log__c WHERE Decision__c IN ('Failed', 'Error', 'Exception') OR Event_Type__c IN ('Error', 'Exception')];
+        }
+        return [SELECT COUNT() FROM Sentinel_Audit_Log__c WHERE CreatedDate >= :cutoff AND (Decision__c IN ('Failed', 'Error', 'Exception') OR Event_Type__c IN ('Error', 'Exception'))];
+    }
+
     private static List<IncidentRow> toIncidentRows(List<Sentinel_Incident__c> incidents) {
         List<IncidentRow> rows = new List<IncidentRow>();
         for (Sentinel_Incident__c incident : incidents) {
@@ -356,6 +377,8 @@ public with sharing class ZentomDashboardController {
         @AuraEnabled public Integer recentReplayEvents = 0;
         @AuraEnabled public Integer approvalRequired = 0;
         @AuraEnabled public Integer recentCasesCreated = 0;
+        @AuraEnabled public Integer avgAiConfidence = 0;
+        @AuraEnabled public Integer errorLogCount = 0;
         @AuraEnabled public String topRunbook;
         @AuraEnabled public Integer orgHealthScore = 100;
         @AuraEnabled public String orgHealthStatus = 'Healthy';
