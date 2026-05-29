@@ -313,12 +313,11 @@
                         </div>
                         <div>
                             <span>Poll interval</span>
-                            <strong>60 s (fallback)</strong>
+                            <strong>{pollIntervalLabel}</strong>
                         </div>
                         <div>
                             <span>Live streaming</span>
-                            <strong if:true={streamingActive}>Active ⚡</strong>
-                            <strong if:false={streamingActive}>Polling only</strong>
+                            <strong>{streamingStatusLabel}</strong>
                         </div>
                         <div>
                             <span>Freshness</span>

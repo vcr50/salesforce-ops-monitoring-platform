@@ -175,4 +175,31 @@ All webhook notification code, trigger automation, security compliance, smoke te
 - Created `SentinelFlowEventPublisherTest.cls` verifying single event publishing, 200-record bulk publishing under 1 DML statement, static recursion guard deduplication, and system-only event delivery.
 - Boosted SentinelFlow suite reliability, executing all tests successfully with 100% pass rate.
 
+### 49C — Emit events from incident approval/action/error flows: Complete
+- Configured `SentinelIncidentTrigger.trigger` to emit events for incident creation, approval state, and risk level updates.
+- Configured `ZentomDashboardController.cls` to emit events for approvals, rejections, case creation, and action execution.
+- Configured `SentinelFlowNotificationDispatcher.cls` to emit system telemetry events when webhook notifications fail.
+
+### 49D — Add LWC empApi subscription to dashboard: Complete
+- Developed `streamingTelemetry` reusable service module encapsulating `lightning/empApi` connections, 2-second debounce, and 5-attempt exponential-backoff reconnect delays.
+- Integrated `streamingTelemetry` into `zentomDashboard` LWC component for real-time dashboard refresh.
+- Created beautiful live indicator dot UI showing real-time streaming state in the dashboard header.
+
+### 49E — Fallback polling/reconnect behavior: Complete
+- Implemented dynamic adaptive polling intervals (switching from 60s active to 30s degraded polling when stream is lost).
+- Implemented 30-second background silent reconnect retry loop.
+- Ensured complete lifecycle cleanup of timers and subscriptions in `disconnectedCallback()`.
+- Bound dynamic `streamingStatusLabel` and `pollIntervalLabel` fields to the Tower Systems dashboard panel.
+
+### 49F — Validate streaming + regression tests: Complete
+- Deployed components to sandbox and ran validation.
+- Resolved compile/test issues on untracked metadata (deleted experimental `FlowFaultTrigger` trigger).
+- Executed all 393 Apex unit tests with 100% pass rate.
+
+### 49G — Streaming telemetry implementation wrap-up: Complete
+- Pushed final implementation changes and updated project documentation.
+
+## Milestone 49 Complete ✅
+All tasks for real-time streaming telemetry and fallback polling have been completed successfully. 393/393 Apex tests pass.
+
 
