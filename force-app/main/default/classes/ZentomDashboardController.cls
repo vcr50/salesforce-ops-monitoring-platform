@@ -20,6 +20,18 @@ public with sharing class ZentomDashboardController {
         data.recentExecutions = getRecentExecutions(dateRange);
         data.recentReplayEvents = getRecentReplayEvents(dateRange);
         data.recentCasesCreated = getRecentCasesCreated(dateRange);
+
+        List<Sentinel_Incident__c> criticals = [
+            SELECT Id, Name, Incident_Type__c, AI_Summary__c, Recommended_Action__c, Runbook_Key__c 
+            FROM Sentinel_Incident__c 
+            WHERE Risk_Level__c = 'Critical' OR Risk_Level__c = 'CRITICAL'
+            ORDER BY CreatedDate DESC 
+            LIMIT 1
+        ];
+        if (!criticals.isEmpty()) {
+            data.latestCriticalIncident = criticals[0];
+        }
+
         return data;
     }
 
@@ -373,6 +385,7 @@ public with sharing class ZentomDashboardController {
         @AuraEnabled public List<ReplayEventRow> recentReplayEvents;
         @AuraEnabled public List<IncidentRow> recentCasesCreated;
         @AuraEnabled public AiSignal latestAiSignal;
+        @AuraEnabled public Sentinel_Incident__c latestCriticalIncident;
     }
 
     public class AiSignal {

@@ -17,10 +17,10 @@
 - [x] 4. Commit and push 45A prototype-only changes.
 
 ## Milestone 45B — Production LWC Alignment Review
-- [ ] 1. Review and align Salesforce LWC files (`sentinelFlowBetaAppShell`):
-    - [ ] Sidebar active states and mobile collapse.
-    - [ ] Focus-visible accessibility outlines.
-    - [ ] Page routing and visual consistency.
-- [ ] 2. Ensure real Apex-backed approval/action flows are preserved (no simulation in production LWC).
-- [ ] 3. Run Apex tests and verify deployment validation.
-- [ ] 4. Commit and push 45B LWC changes.
+- [x] 1. Review and align Salesforce LWC files (`sentinelFlowBetaAppShell`):
+    - [x] Sidebar active states and mobile collapse.
+    - [x] Focus-visible accessibility outlines.
+    - [x] Page routing and visual consistency.
+- [x] 2. Ensure real Apex-backed approval/action flows are preserved (no simulation in production LWC).
+- [x] 3. Run dry-run deployment validation (630 components, 0 errors).
+- [x] 4. Commit and push 45B LWC changes.
