@@ -58,3 +58,18 @@
 - [x] 7. Deploy new Custom Metadata and modified Apex classes to the org.
 - [x] 8. Verify the deployment by running local Apex unit tests (394/394 passed).
 - [x] 9. Update the walkthrough and maintenance log.
+
+## Milestone 47A - Guardian Gate Webhook Notifications
+- [x] 1. Add Slack and Microsoft Teams webhook dispatch for `Sentinel_Incident__c` records entering `Pending Approval`.
+- [x] 2. Add Teams webhook path metadata on `Tenant__c` and `SentinelFlow_Settings__c`.
+- [x] 3. Add `Teams_Webhook` Named Credential.
+- [x] 4. Log webhook success, failure, and missing configuration to `Sentinel_Audit_Log__c`.
+- [x] 5. Add email fallback for failed or unconfigured webhook delivery.
+- [x] 6. Validate targeted webhook tests (6/6 passing).
+
+## Milestone 47B - Full Regression Fix for Webhook Release
+- [x] 1. Investigate `ZentomDashboardControllerTest` replay count regression.
+- [x] 2. Investigate `ZentomIncidentClientTest` future-trigger regression.
+- [x] 3. Make webhook trigger dispatch opt-in during Apex tests while preserving production behavior.
+- [x] 4. Validate focused regression set with dispatcher coverage (24/24 passing).
+- [x] 5. Validate full local test suite (330/330 passing).

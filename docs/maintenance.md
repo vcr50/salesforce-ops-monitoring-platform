@@ -85,3 +85,19 @@ All tasks for v1.1.0 Product Planning & UX Improvements are completed successful
 - Administrators can now configure the autonomous risk threshold and SLA escalation hours directly from Salesforce Setup without code changes.
 - Full walkthrough: `docs/v1.1.0-metadata-governance-walkthrough.md`.
 
+## Milestone 47 - Guardian Gate Webhook Notifications
+
+### 47A - Slack and Teams Approval Webhooks: Complete
+- Added `SentinelFlowNotificationDispatcher` and `SentinelIncidentTrigger` to notify operations channels when `Sentinel_Incident__c.Approval_Status__c` transitions to `Pending Approval`.
+- Added Slack Block Kit and Microsoft Teams MessageCard payload support with Salesforce review links.
+- Added `Teams_Webhook_Path__c` fields on `Tenant__c` and `SentinelFlow_Settings__c`.
+- Added `Teams_Webhook` Named Credential targeting `https://outlook.office.com`.
+- Added `Sentinel_Audit_Log__c` delivery logging and email fallback when Slack or Teams delivery fails or is not configured.
+- Targeted validation passed: 6/6 webhook tests, dispatcher coverage 202/218, trigger coverage 100%.
+
+### 47B - Full Regression Fix for Webhook Release: Complete
+- Resolved the regression where webhook fallback audit logs affected `ZentomDashboardControllerTest` replay counts.
+- Resolved the regression where `ZentomIncidentClientTest` inserted pending approval incidents from a future method and the new trigger attempted to enqueue another future.
+- Updated test behavior so webhook trigger dispatch is opt-in during Apex tests and production behavior remains unchanged.
+- Focused validation passed against `astrosoft`: 24/24 tests, 0 failures.
+- Full `RunLocalTests` validate-only deployment passed against `astrosoft`: 330/330 tests, 0 failures (Deploy ID: `0AfdL00000bDU1NSAW`).
