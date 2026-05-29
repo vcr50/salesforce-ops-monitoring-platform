@@ -323,6 +323,10 @@ All tasks for Cost Savings Analytics QA + Executive Readiness are complete and f
 ### 54B — Prediction Data Model Design: Complete
 - Created `docs/prediction-engine-data-model-design.md` detailing the schema design for `Sentinel_Anomaly_Signal__c` (monitoring raw and normalized telemetry metrics) and `Sentinel_Prediction__c` (tracking calculated predictions, recommendations, status lifecycles, and operator feedback decisions).
 
+### 54C — Prediction Scoring Algorithm Design: Complete
+- Created `docs/prediction-scoring-algorithm-design.md` defining the mathematical scoring logic, normalized telemetry signal parameters, confidence calculation, risk thresholds, and scenario equations.
+
+
 
 
 

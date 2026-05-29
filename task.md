@@ -172,5 +172,9 @@
 ### 54B — Prediction Data Model Design ✅
 - [x] Create `docs/prediction-engine-data-model-design.md` detailing the custom object schema, field lists, relations, lifecycles, permissions, and data retention guidelines
 
+### 54C — Prediction Scoring Algorithm Design ✅
+- [x] Create `docs/prediction-scoring-algorithm-design.md` detailing the scoring formulas, weighting matrix, confidence variables, threshold mapping, scenarios, feedback loop, and governance rules
+
+
 
 
