@@ -19,7 +19,11 @@
 
             <div class="global-search">
                 <lightning-icon icon-name="utility:search" size="x-small"></lightning-icon>
-                <span>Search incidents, actions, cases, runbooks...</span>
+                <input type="text" 
+                       placeholder="Search incidents, actions, cases, runbooks..." 
+                       value={searchKey} 
+                       oninput={handleSearchChange} 
+                       class="search-input" />
                 <kbd>/</kbd>
             </div>
 

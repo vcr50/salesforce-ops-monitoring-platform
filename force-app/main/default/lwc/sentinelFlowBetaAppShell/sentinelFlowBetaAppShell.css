@@ -153,12 +153,21 @@
     box-shadow: 0 4px 14px var(--shadow-light);
 }
 
-.global-search span {
+.global-search input.search-input {
     flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    border: none;
+    outline: none;
+    background: transparent;
     font-size: 0.82rem;
+    color: var(--text-primary);
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.global-search input.search-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.85;
 }
 
 .global-search kbd {

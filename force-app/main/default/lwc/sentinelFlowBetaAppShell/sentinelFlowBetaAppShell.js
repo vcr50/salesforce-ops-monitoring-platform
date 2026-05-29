@@ -83,8 +83,10 @@ export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningE
     @track userName = 'Loading...';
     @track userProfile = 'Loading...';
     @track orgName = 'Loading...';
+    @track searchKey = '';
 
     clock;
+    _windowKeydownHandler;
 
     connectedCallback() {
         this.updateTime();
@@ -94,6 +96,18 @@ export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningE
             if (saved === 'light') this.isDarkMode = false;
             else if (saved === 'dark') this.isDarkMode = true;
         } catch(e) { /* noop */ }
+
+        // Focus search box on '/' keypress
+        this._windowKeydownHandler = (event) => {
+            if (event.key === '/' && document.activeElement && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                event.preventDefault();
+                const searchInput = this.template.querySelector('.search-input');
+                if (searchInput) {
+                    searchInput.focus();
+                }
+            }
+        };
+        window.addEventListener('keydown', this._windowKeydownHandler);
     }
 
     _themeApplied = false;
@@ -104,6 +118,9 @@ export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningE
     disconnectedCallback() {
         if (this.clock) {
             clearInterval(this.clock);
+        }
+        if (this._windowKeydownHandler) {
+            window.removeEventListener('keydown', this._windowKeydownHandler);
         }
     }
 
@@ -152,6 +169,10 @@ export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningE
             hour: '2-digit',
             minute: '2-digit'
         });
+    }
+
+    handleSearchChange(event) {
+        this.searchKey = event.target.value;
     }
 
     navigate(event) {
@@ -302,18 +323,27 @@ export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningE
 
     get pendingApprovalRows() {
         if (!this.dashboardData || !this.dashboardData.pendingApprovals) return [];
-        return this.dashboardData.pendingApprovals.map(inc => ({
+        let rows = this.dashboardData.pendingApprovals.map(inc => ({
             id: inc.Name,
             type: 'Action',
             action: inc.Runbook_Title__c || inc.Recommended_Action__c,
             risk: inc.Risk_Level__c,
             riskClass: 'risk-pill ' + (inc.Risk_Level__c ? inc.Risk_Level__c.toLowerCase() : 'low')
         }));
+        if (this.searchKey) {
+            const sk = this.searchKey.toLowerCase();
+            rows = rows.filter(r => 
+                (r.id && r.id.toLowerCase().includes(sk)) || 
+                (r.action && r.action.toLowerCase().includes(sk)) || 
+                (r.risk && r.risk.toLowerCase().includes(sk))
+            );
+        }
+        return rows;
     }
 
     get recentIncidentRows() {
         if (!this.dashboardData || !this.dashboardData.recentIncidents) return [];
-        return this.dashboardData.recentIncidents.map(inc => ({
+        let rows = this.dashboardData.recentIncidents.map(inc => ({
             id: inc.Name,
             type: inc.Incident_Type__c,
             env: inc.Environment__c,
@@ -323,6 +353,18 @@ export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningE
             statusClass: 'status-pill ' + (inc.Status__c === 'Resolved' ? 'resolved' : 'progress'),
             runbook: inc.Runbook_Title__c
         }));
+        if (this.searchKey) {
+            const sk = this.searchKey.toLowerCase();
+            rows = rows.filter(r => 
+                (r.id && r.id.toLowerCase().includes(sk)) || 
+                (r.type && r.type.toLowerCase().includes(sk)) || 
+                (r.env && r.env.toLowerCase().includes(sk)) || 
+                (r.risk && r.risk.toLowerCase().includes(sk)) || 
+                (r.status && r.status.toLowerCase().includes(sk)) || 
+                (r.runbook && r.runbook.toLowerCase().includes(sk))
+            );
+        }
+        return rows;
     }
 
 
