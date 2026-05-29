@@ -38,3 +38,12 @@
 - [x] 4. Create post-release monitoring report (`docs/v1.1.0-post-release-monitoring.md`).
 - [x] 5. Update `docs/maintenance.md` with Milestone 46A results.
 - [x] 6. Verdict: **v1.1.0 is healthy. No code changes required.**
+
+## Milestone 46B — Customer Feedback Review
+- [x] 1. Analyze case patterns to separate expected platform behavior from real customer pain.
+- [x] 2. Inspect failed integration log message profiles and health signals.
+- [x] 3. Track customer comments, confusion points, feature requests, and support questions.
+- [x] 4. Document adoption signals, risk signals, and P0/P1/P2 issue checks.
+- [x] 5. Define candidates for the v1.2.0 engineering roadmap.
+- [x] 6. Create the customer feedback review document (`docs/v1.1.0-customer-feedback-review.md`).
+- [x] 7. Update `docs/maintenance.md` with Milestone 46B results.
