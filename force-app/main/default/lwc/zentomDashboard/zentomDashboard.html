@@ -341,15 +341,15 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Incident</th>
-                                    <th>Type</th>
-                                    <th>Environment</th>
-                                    <th>Risk</th>
-                                    <th>Policy</th>
-                                    <th>Status</th>
-                                    <th>Runbook</th>
-                                    <th>Approval</th>
-                                    <th>Created</th>
+                                    <th onclick={handleSort} data-field="Name">Incident{sortIndicators.Name}</th>
+                                    <th onclick={handleSort} data-field="Incident_Type__c">Type{sortIndicators.Incident_Type__c}</th>
+                                    <th onclick={handleSort} data-field="Environment__c">Environment{sortIndicators.Environment__c}</th>
+                                    <th onclick={handleSort} data-field="Risk_Level__c">Risk{sortIndicators.Risk_Level__c}</th>
+                                    <th onclick={handleSort} data-field="Policy_Decision__c">Policy{sortIndicators.Policy_Decision__c}</th>
+                                    <th onclick={handleSort} data-field="Status__c">Status{sortIndicators.Status__c}</th>
+                                    <th onclick={handleSort} data-field="Runbook_Key__c">Runbook{sortIndicators.Runbook_Key__c}</th>
+                                    <th onclick={handleSort} data-field="Approval_Status__c">Approval{sortIndicators.Approval_Status__c}</th>
+                                    <th onclick={handleSort} data-field="CreatedDate">Created{sortIndicators.CreatedDate}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -372,6 +372,40 @@
                                 </template>
                             </tbody>
                         </table>
+                    </div>
+                    <!-- Pagination Footer (Milestone 50) -->
+                    <div class="pagination-controls">
+                        <div class="pagination-meta">
+                            Showing {startIndex} - {endIndex} of {totalRecords} incidents
+                        </div>
+                        <div class="pagination-buttons">
+                            <lightning-button-icon
+                                icon-name="utility:left"
+                                onclick={handlePrevPage}
+                                disabled={isFirstPage}
+                                alternative-text="Previous Page"
+                                variant="border-filled"
+                                size="small"
+                            ></lightning-button-icon>
+                            <span class="page-indicator">Page {pageNumber} of {totalPages}</span>
+                            <lightning-button-icon
+                                icon-name="utility:right"
+                                onclick={handleNextPage}
+                                disabled={isLastPage}
+                                alternative-text="Next Page"
+                                variant="border-filled"
+                                size="small"
+                            ></lightning-button-icon>
+                        </div>
+                        <div class="pagination-size">
+                            <lightning-combobox
+                                label="Show"
+                                value={pageSize}
+                                options={pageSizeOptions}
+                                onchange={handlePageSizeChange}
+                                variant="label-hidden"
+                            ></lightning-combobox>
+                        </div>
                     </div>
                 </template>
                 <template if:false={hasFilteredIncidents}>

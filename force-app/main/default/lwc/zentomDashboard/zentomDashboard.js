@@ -5,6 +5,7 @@ import { createStreamingSession } from 'c/streamingTelemetry';
 
 import getDashboardData from '@salesforce/apex/ZentomDashboardController.getDashboardData';
 import getReplayExportData from '@salesforce/apex/ZentomDashboardController.getReplayExportData';
+import getPaginatedIncidents from '@salesforce/apex/ZentomDashboardController.getPaginatedIncidents';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const POLL_INTERVAL_ACTIVE_MS   = 60000; // relaxed 60s — streaming covers near-real-time
@@ -25,6 +26,16 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
     _currentPollMs      = POLL_INTERVAL_ACTIVE_MS; // 49E: tracks active interval
     @track _streamingActive = false;
     @track _lastEventType   = null;
+
+    // ── Milestone 50: Server-side pagination state ─────────────────────
+    @track pageNumber = 1;
+    @track pageSize = 25;
+    @track sortBy = 'CreatedDate';
+    @track sortDirection = 'DESC';
+    @track totalRecords = 0;
+    @track totalPages = 0;
+    @track paginatedIncidents = [];
+    wiredPaginatedResult;
 
     // ── Milestone 43: Filter state ──────────────────────────────────────
     @track filterRisk = 'ALL';
@@ -144,6 +155,36 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
         }
     }
 
+    get paginatedRequest() {
+        return {
+            pageNumber: this.pageNumber,
+            pageSize: this.pageSize,
+            sortBy: this.sortBy,
+            sortDirection: this.sortDirection,
+            dateRange: this.dateRange,
+            riskLevel: this.filterRisk,
+            status: this.filterStatus,
+            environment: this.filterEnvironment,
+            incidentType: this.filterType,
+            aiStatus: this.filterAiStatus
+        };
+    }
+
+    @wire(getPaginatedIncidents, { req: '$paginatedRequest' })
+    wiredGetPaginatedIncidents(result) {
+        this.wiredPaginatedResult = result;
+        if (result.data) {
+            this.paginatedIncidents = result.data.records || [];
+            this.totalRecords = result.data.totalRecords || 0;
+            this.totalPages = result.data.totalPages || 0;
+        } else if (result.error) {
+            this.paginatedIncidents = [];
+            this.totalRecords = 0;
+            this.totalPages = 0;
+            console.error('[zentomDashboard] Error loading paginated incidents:', result.error);
+        }
+    }
+
     connectedCallback() {
         // ── Polling fallback (safety net, 49E adaptive) ──────────────────────
         this._setPollingInterval(POLL_INTERVAL_ACTIVE_MS);
@@ -194,6 +235,9 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
     _handleStreamRefresh() {
         if (this.wiredDashboard) {
             refreshApex(this.wiredDashboard);
+        }
+        if (this.wiredPaginatedResult) {
+            refreshApex(this.wiredPaginatedResult);
         }
     }
 
@@ -316,34 +360,55 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
         return `${Math.floor(secs / 60)}m ago`;
     }
 
-    // ── Filtered data getters ───────────────────────────────────────────
+    // ── Filtered data getters (Milestone 50 server-side) ───────────────
     get filteredIncidents() {
-        const rows = this.decorateRows(this.data?.recentIncidents || []);
-        return this._applyFilters(rows);
-    }
-
-    _applyFilters(rows) {
-        return rows.filter((row) => {
-            const riskMatch = this.filterRisk === 'ALL' || row.riskLevel === this.filterRisk;
-            const statusMatch = this.filterStatus === 'ALL' || row.status === this.filterStatus;
-            const envMatch = this.filterEnvironment === 'ALL' || (row.environment && row.environment.toLowerCase() === this.filterEnvironment.toLowerCase());
-            const typeMatch = this.filterType === 'ALL' || row.incidentType === this.filterType;
-            
-            let aiMatch = true;
-            if (this.filterAiStatus === 'HIGH_CONFIDENCE') {
-                aiMatch = row.aiConfidence > 80;
-            } else if (this.filterAiStatus === 'REVIEW_NEEDED') {
-                aiMatch = row.aiConfidence <= 80;
-            } else if (this.filterAiStatus === 'ACTIVE') {
-                aiMatch = row.aiStatus === 'ACTIVE';
-            }
-
-            return riskMatch && statusMatch && envMatch && typeMatch && aiMatch;
-        });
+        return this.decorateRows(this.paginatedIncidents || []);
     }
 
     get hasFilteredIncidents() {
-        return this.filteredIncidents.length > 0;
+        return this.paginatedIncidents && this.paginatedIncidents.length > 0;
+    }
+
+    // ── Milestone 50: Server-side pagination getters ──────────────────
+    get isFirstPage() {
+        return this.pageNumber <= 1;
+    }
+
+    get isLastPage() {
+        return this.pageNumber >= this.totalPages;
+    }
+
+    get startIndex() {
+        if (this.totalRecords === 0) return 0;
+        return (this.pageNumber - 1) * this.pageSize + 1;
+    }
+
+    get endIndex() {
+        const end = this.pageNumber * this.pageSize;
+        return end > this.totalRecords ? this.totalRecords : end;
+    }
+
+    get pageSizeOptions() {
+        return [
+            { label: '25', value: 25 },
+            { label: '50', value: 50 },
+            { label: '100', value: 100 }
+        ];
+    }
+
+    get sortIndicators() {
+        const indicator = this.sortDirection === 'ASC' ? ' ▲' : ' ▼';
+        return {
+            Name: this.sortBy === 'Name' ? indicator : '',
+            Incident_Type__c: this.sortBy === 'Incident_Type__c' ? indicator : '',
+            Environment__c: this.sortBy === 'Environment__c' ? indicator : '',
+            Risk_Level__c: this.sortBy === 'Risk_Level__c' ? indicator : '',
+            Policy_Decision__c: this.sortBy === 'Policy_Decision__c' ? indicator : '',
+            Status__c: this.sortBy === 'Status__c' ? indicator : '',
+            Runbook_Key__c: this.sortBy === 'Runbook_Key__c' ? indicator : '',
+            Approval_Status__c: this.sortBy === 'Approval_Status__c' ? indicator : '',
+            CreatedDate: this.sortBy === 'CreatedDate' ? indicator : ''
+        };
     }
 
     // ── Original getters ────────────────────────────────────────────────
@@ -454,11 +519,13 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
     // ── Event handlers ──────────────────────────────────────────────────
     handleRangeChange(event) {
         this.dateRange = event.detail ? event.detail.value : event.target.dataset.range;
+        this.pageNumber = 1;
         refreshApex(this.wiredDashboard);
     }
 
     handleRefresh() {
         refreshApex(this.wiredDashboard);
+        refreshApex(this.wiredPaginatedResult);
     }
 
     handleToggleFilters() {
@@ -468,30 +535,36 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
     handleFilterRiskChange(event) {
         this.filterRisk = event.detail.value;
         this.presetView = 'ALL';
+        this.pageNumber = 1;
     }
 
     handleFilterStatusChange(event) {
         this.filterStatus = event.detail.value;
         this.presetView = 'ALL';
+        this.pageNumber = 1;
     }
 
     handleFilterEnvironmentChange(event) {
         this.filterEnvironment = event.detail.value;
         this.presetView = 'ALL';
+        this.pageNumber = 1;
     }
 
     handleFilterTypeChange(event) {
         this.filterType = event.detail.value;
         this.presetView = 'ALL';
+        this.pageNumber = 1;
     }
 
     handleFilterAiStatusChange(event) {
         this.filterAiStatus = event.detail.value;
         this.presetView = 'ALL';
+        this.pageNumber = 1;
     }
 
     handlePresetChange(event) {
         this.presetView = event.detail.value;
+        this.pageNumber = 1;
         if (this.presetView === 'NEEDS_APPROVAL') {
             this.handleClearFilters();
             this.filterStatus = 'Approval Required';
@@ -512,6 +585,7 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
             this.handleClearFilters();
             this.filterStatus = 'Closed';
             this.dateRange = 'TODAY';
+            this.pageNumber = 1;
             refreshApex(this.wiredDashboard);
         }
     }
@@ -523,6 +597,36 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
         this.filterType = 'ALL';
         this.filterAiStatus = 'ALL';
         this.presetView = 'ALL';
+        this.pageNumber = 1;
+    }
+
+    // ── Milestone 50: Server-side pagination handlers ──────────────────
+    handlePrevPage() {
+        if (this.pageNumber > 1) {
+            this.pageNumber--;
+        }
+    }
+
+    handleNextPage() {
+        if (this.pageNumber < this.totalPages) {
+            this.pageNumber++;
+        }
+    }
+
+    handlePageSizeChange(event) {
+        this.pageSize = parseInt(event.detail.value, 10);
+        this.pageNumber = 1;
+    }
+
+    handleSort(event) {
+        const sortedBy = event.currentTarget.dataset.field;
+        if (this.sortBy === sortedBy) {
+            this.sortDirection = this.sortDirection === 'ASC' ? 'DESC' : 'ASC';
+        } else {
+            this.sortBy = sortedBy;
+            this.sortDirection = 'DESC'; // Default to DESC
+        }
+        this.pageNumber = 1;
     }
 
     openIncident(event) {

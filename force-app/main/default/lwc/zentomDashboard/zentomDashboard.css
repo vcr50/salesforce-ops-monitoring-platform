@@ -911,3 +911,52 @@ tbody tr:hover {
     background: var(--zd-success-bg);
     color: var(--zd-success);
 }
+
+/* ── Milestone 50 — Server-side Pagination & Table Sorting Header UX ── */
+
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--zd-border-alt);
+    margin-top: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--zd-text-secondary);
+}
+
+.pagination-meta {
+    font-weight: 500;
+}
+
+.pagination-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.page-indicator {
+    font-weight: 600;
+    color: var(--zd-text-primary);
+    min-width: 5rem;
+    text-align: center;
+}
+
+.pagination-size {
+    display: flex;
+    align-items: center;
+    width: 4.5rem;
+    --sds-c-combobox-line-height: 1.8;
+}
+
+/* Interactivity for clickable sort headers */
+th[data-field] {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+th[data-field]:hover {
+    background-color: var(--zd-blue-light);
+    color: var(--zd-blue);
+}

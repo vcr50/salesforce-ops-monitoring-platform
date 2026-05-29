@@ -440,4 +440,127 @@ private class ZentomDashboardControllerTest {
             Execution_Result__c = executionStatus == 'Executed' ? 'Case created' : null
         );
     }
+
+    @IsTest
+    static void testGetPaginatedIncidents_AllScenarios() {
+        // Insert a variety of incidents for pagination, sorting and filtering checks
+        List<Sentinel_Incident__c> incidents = new List<Sentinel_Incident__c>();
+        
+        // Incident 1: Critical, production, Flow Failure, High AI Confidence
+        Sentinel_Incident__c inc1 = createIncident('CRITICAL', 'Pending Approval', 'Not Started', 'Approval Required', 'RUNBOOK_A');
+        inc1.Environment__c = 'production';
+        inc1.Incident_Type__c = 'FLOW_FAILURE';
+        inc1.AI_Confidence__c = 95;
+        inc1.AI_Reasoning_Status__c = 'ACTIVE';
+        incidents.add(inc1);
+        
+        // Incident 2: Low, sandbox, Integration Error, Low AI Confidence
+        Sentinel_Incident__c inc2 = createIncident('LOW', 'Approved', 'Executed', 'Closed', 'RUNBOOK_B');
+        inc2.Environment__c = 'sandbox';
+        inc2.Incident_Type__c = 'INTEGRATION_ERROR';
+        inc2.AI_Confidence__c = 45;
+        inc2.AI_Reasoning_Status__c = 'ACTIVE';
+        incidents.add(inc2);
+        
+        // Incident 3: High, production, Apex Exception, High AI Confidence
+        Sentinel_Incident__c inc3 = createIncident('HIGH', 'Approved', 'Executed', 'Closed', 'RUNBOOK_C');
+        inc3.Environment__c = 'production';
+        inc3.Incident_Type__c = 'APEX_EXCEPTION';
+        inc3.AI_Confidence__c = 85;
+        inc3.AI_Reasoning_Status__c = 'ACTIVE';
+        incidents.add(inc3);
+
+        insert incidents;
+        
+        // Verify default request
+        ZentomDashboardController.PaginatedRequest reqDefault = new ZentomDashboardController.PaginatedRequest();
+        reqDefault.pageNumber = 1;
+        reqDefault.pageSize = 25;
+        
+        Test.startTest();
+        ZentomDashboardController.PaginatedResult resultDefault = ZentomDashboardController.getPaginatedIncidents(reqDefault);
+        
+        // Verify sorting default and results
+        System.assertEquals(3, resultDefault.totalRecords, 'Total records should be 3');
+        System.assertEquals(3, resultDefault.records.size(), 'Records list size should be 3');
+        System.assertEquals(1, resultDefault.pageNumber, 'Page number should be 1');
+        System.assertEquals(1, resultDefault.totalPages, 'Total pages should be 1');
+        
+        // Verify filtering by Risk Level
+        ZentomDashboardController.PaginatedRequest reqFilterRisk = new ZentomDashboardController.PaginatedRequest();
+        reqFilterRisk.riskLevel = 'CRITICAL';
+        ZentomDashboardController.PaginatedResult resultRisk = ZentomDashboardController.getPaginatedIncidents(reqFilterRisk);
+        System.assertEquals(1, resultRisk.records.size(), 'Should return 1 critical incident');
+        System.assertEquals('CRITICAL', resultRisk.records[0].riskLevel, 'Risk level should match');
+        
+        // Verify filtering by Environment
+        ZentomDashboardController.PaginatedRequest reqFilterEnv = new ZentomDashboardController.PaginatedRequest();
+        reqFilterEnv.environment = 'sandbox';
+        ZentomDashboardController.PaginatedResult resultEnv = ZentomDashboardController.getPaginatedIncidents(reqFilterEnv);
+        System.assertEquals(1, resultEnv.records.size(), 'Should return 1 sandbox incident');
+        System.assertEquals('sandbox', resultEnv.records[0].environment, 'Environment should match');
+        
+        // Verify filtering by Status
+        ZentomDashboardController.PaginatedRequest reqFilterStatus = new ZentomDashboardController.PaginatedRequest();
+        reqFilterStatus.status = 'Closed';
+        ZentomDashboardController.PaginatedResult resultStatus = ZentomDashboardController.getPaginatedIncidents(reqFilterStatus);
+        System.assertEquals(2, resultStatus.records.size(), 'Should return 2 closed incidents');
+        
+        // Verify filtering by Incident Type
+        ZentomDashboardController.PaginatedRequest reqFilterType = new ZentomDashboardController.PaginatedRequest();
+        reqFilterType.incidentType = 'APEX_EXCEPTION';
+        ZentomDashboardController.PaginatedResult resultType = ZentomDashboardController.getPaginatedIncidents(reqFilterType);
+        System.assertEquals(1, resultType.records.size(), 'Should return 1 apex exception incident');
+        
+        // Verify filtering by AI Status - HIGH_CONFIDENCE (>80)
+        ZentomDashboardController.PaginatedRequest reqFilterAiHigh = new ZentomDashboardController.PaginatedRequest();
+        reqFilterAiHigh.aiStatus = 'HIGH_CONFIDENCE';
+        ZentomDashboardController.PaginatedResult resultAiHigh = ZentomDashboardController.getPaginatedIncidents(reqFilterAiHigh);
+        System.assertEquals(2, resultAiHigh.records.size(), 'Should return 2 high confidence incidents (95, 85)');
+        
+        // Verify filtering by AI Status - REVIEW_NEEDED (<=80)
+        ZentomDashboardController.PaginatedRequest reqFilterAiReview = new ZentomDashboardController.PaginatedRequest();
+        reqFilterAiReview.aiStatus = 'REVIEW_NEEDED';
+        ZentomDashboardController.PaginatedResult resultAiReview = ZentomDashboardController.getPaginatedIncidents(reqFilterAiReview);
+        System.assertEquals(1, resultAiReview.records.size(), 'Should return 1 review needed incident (45)');
+
+        // Verify filtering by AI Status - ACTIVE
+        ZentomDashboardController.PaginatedRequest reqFilterAiActive = new ZentomDashboardController.PaginatedRequest();
+        reqFilterAiActive.aiStatus = 'ACTIVE';
+        ZentomDashboardController.PaginatedResult resultAiActive = ZentomDashboardController.getPaginatedIncidents(reqFilterAiActive);
+        System.assertEquals(3, resultAiActive.records.size(), 'Should return 3 active reasoning incidents');
+        
+        // Verify Sorting - whitelisted sortBy
+        ZentomDashboardController.PaginatedRequest reqSortName = new ZentomDashboardController.PaginatedRequest();
+        reqSortName.sortBy = 'Name';
+        reqSortName.sortDirection = 'ASC';
+        ZentomDashboardController.PaginatedResult resultSortName = ZentomDashboardController.getPaginatedIncidents(reqSortName);
+        System.assertNotEquals(null, resultSortName.records, 'Sorted records list should not be null');
+        
+        // Verify Sorting - non-whitelisted sortBy fallback to CreatedDate DESC
+        ZentomDashboardController.PaginatedRequest reqSortInvalid = new ZentomDashboardController.PaginatedRequest();
+        reqSortInvalid.sortBy = 'Non_Existing_Field__c';
+        reqSortInvalid.sortDirection = 'INVALID_DIRECTION';
+        ZentomDashboardController.PaginatedResult resultSortInvalid = ZentomDashboardController.getPaginatedIncidents(reqSortInvalid);
+        System.assertNotEquals(null, resultSortInvalid.records, 'Invalid sort parameters should fallback gracefully and not throw exception');
+        
+        // Verify dateRange parameter
+        ZentomDashboardController.PaginatedRequest reqDateToday = new ZentomDashboardController.PaginatedRequest();
+        reqDateToday.dateRange = 'TODAY';
+        ZentomDashboardController.PaginatedResult resultDateToday = ZentomDashboardController.getPaginatedIncidents(reqDateToday);
+        System.assertEquals(3, resultDateToday.records.size(), 'Should return all 3 created today');
+        
+        // Verify Null Request handling
+        ZentomDashboardController.PaginatedResult resultNull = ZentomDashboardController.getPaginatedIncidents(null);
+        System.assertNotEquals(null, resultNull, 'Null request should return empty result wrapper');
+        
+        // Verify Offset limit cap safety (offsetVal > 2000)
+        ZentomDashboardController.PaginatedRequest reqOffsetOver = new ZentomDashboardController.PaginatedRequest();
+        reqOffsetOver.pageNumber = 100; // offset = (100-1) * 25 = 2475 > 2000
+        reqOffsetOver.pageSize = 25;
+        ZentomDashboardController.PaginatedResult resultOffsetOver = ZentomDashboardController.getPaginatedIncidents(reqOffsetOver);
+        System.assertEquals(100, resultOffsetOver.pageNumber, 'Page number should match requested page');
+        
+        Test.stopTest();
+    }
 }

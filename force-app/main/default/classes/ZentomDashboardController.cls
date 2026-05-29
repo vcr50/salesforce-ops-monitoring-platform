@@ -147,6 +147,111 @@ public with sharing class ZentomDashboardController {
         return toIncidentRows(queryIncidents(dateRange, 8));
     }
 
+    private static Boolean isValidSortField(String fieldName) {
+        Set<String> whitelistedFields = new Set<String>{
+            'Name',
+            'Incident_Type__c',
+            'Environment__c',
+            'Risk_Level__c',
+            'Policy_Decision__c',
+            'Status__c',
+            'Runbook_Key__c',
+            'Approval_Status__c',
+            'CreatedDate'
+        };
+        return whitelistedFields.contains(fieldName);
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static PaginatedResult getPaginatedIncidents(PaginatedRequest req) {
+        if (req == null) {
+            return new PaginatedResult();
+        }
+        // 1. Sanitize and validate inputs
+        Integer limitVal = (req.pageSize != null && req.pageSize > 0 && req.pageSize <= 100) ? req.pageSize : 25;
+        Integer pageNum = (req.pageNumber != null && req.pageNumber > 0) ? req.pageNumber : 1;
+        Integer offsetVal = (pageNum - 1) * limitVal;
+        
+        // Safety guard: Enforce Salesforce maximum offset constraint of 2000
+        if (offsetVal > 2000) {
+            offsetVal = 2000;
+        }
+        
+        String sortByField = 'CreatedDate';
+        if (String.isNotBlank(req.sortBy) && isValidSortField(req.sortBy)) {
+            sortByField = req.sortBy;
+        }
+        
+        String sortDir = 'DESC';
+        if (String.isNotBlank(req.sortDirection) && (req.sortDirection.toUpperCase() == 'ASC' || req.sortDirection.toUpperCase() == 'DESC')) {
+            sortDir = req.sortDirection.toUpperCase();
+        }
+        
+        // 2. Build WHERE clause with bind variables
+        List<String> conditions = new List<String>();
+        
+        // Date filter
+        Datetime cutoff = getCutoff(req.dateRange);
+        if (cutoff != null) {
+            conditions.add('CreatedDate >= :cutoff');
+        }
+        // Field filters
+        String riskLevel = req.riskLevel;
+        if (String.isNotBlank(riskLevel) && riskLevel != 'ALL') {
+            conditions.add('Risk_Level__c = :riskLevel');
+        }
+        String status = req.status;
+        if (String.isNotBlank(status) && status != 'ALL') {
+            conditions.add('Status__c = :status');
+        }
+        String environment = req.environment;
+        if (String.isNotBlank(environment) && environment != 'ALL') {
+            conditions.add('Environment__c = :environment');
+        }
+        String incidentType = req.incidentType;
+        if (String.isNotBlank(incidentType) && incidentType != 'ALL') {
+            conditions.add('Incident_Type__c = :incidentType');
+        }
+        String aiStatus = req.aiStatus;
+        if (String.isNotBlank(aiStatus) && aiStatus != 'ALL') {
+            if (aiStatus == 'HIGH_CONFIDENCE') {
+                conditions.add('AI_Confidence__c > 80');
+            } else if (aiStatus == 'REVIEW_NEEDED') {
+                conditions.add('AI_Confidence__c <= 80');
+            } else if (aiStatus == 'ACTIVE') {
+                conditions.add('AI_Reasoning_Status__c = \'ACTIVE\'');
+            }
+        }
+        
+        String whereClause = conditions.isEmpty() ? '' : 'WHERE ' + String.join(conditions, ' AND ');
+        
+        // 3. Execute COUNT Query
+        String countQuery = 'SELECT COUNT() FROM Sentinel_Incident__c ' + whereClause;
+        Integer totalCount = Database.countQuery(countQuery);
+        
+        // 4. Execute Paginated Query
+        String dataQuery = 'SELECT Id, Name, Incident_Type__c, Risk_Level__c, Risk_Score__c, ' +
+                           'Policy_Decision__c, Recommendation_Status__c, Status__c, ' +
+                           'Approval_Status__c, Execution_Status__c, Execution_Action__c, ' +
+                           'Execution_Result__c, Executed_At__c, Runbook_Key__c, ' +
+                           'Created_Case__c, Created_Case__r.CaseNumber, CreatedDate, ' +
+                           'Environment__c, AI_Confidence__c, AI_Reasoning_Status__c ' +
+                           'FROM Sentinel_Incident__c ' +
+                           whereClause + ' ' +
+                           'ORDER BY ' + sortByField + ' ' + sortDir + ', Id DESC ' +
+                           'LIMIT :limitVal OFFSET :offsetVal';
+                           
+        List<Sentinel_Incident__c> incidents = Database.query(dataQuery);
+        
+        // 5. Package results
+        PaginatedResult result = new PaginatedResult();
+        result.records = toIncidentRows(incidents);
+        result.totalRecords = totalCount;
+        result.pageNumber = pageNum;
+        result.totalPages = (totalCount == 0) ? 0 : (Integer)Math.ceil((Double)totalCount / limitVal);
+        return result;
+    }
+
     @AuraEnabled(cacheable=true)
     public static List<RiskBucket> getRiskDistribution(String dateRange) {
         Map<String, Integer> counts = new Map<String, Integer>{
@@ -391,6 +496,26 @@ public with sharing class ZentomDashboardController {
     public class AiSignal {
         @AuraEnabled public String aiStatus;
         @AuraEnabled public Integer confidenceScore;
+    }
+
+    public class PaginatedRequest {
+        @AuraEnabled public Integer pageNumber { get; set; }
+        @AuraEnabled public Integer pageSize { get; set; }
+        @AuraEnabled public String sortBy { get; set; }
+        @AuraEnabled public String sortDirection { get; set; }
+        @AuraEnabled public String dateRange { get; set; }
+        @AuraEnabled public String riskLevel { get; set; }
+        @AuraEnabled public String status { get; set; }
+        @AuraEnabled public String environment { get; set; }
+        @AuraEnabled public String incidentType { get; set; }
+        @AuraEnabled public String aiStatus { get; set; }
+    }
+
+    public class PaginatedResult {
+        @AuraEnabled public List<IncidentRow> records { get; set; }
+        @AuraEnabled public Integer totalRecords { get; set; }
+        @AuraEnabled public Integer pageNumber { get; set; }
+        @AuraEnabled public Integer totalPages { get; set; }
     }
 
     public class DashboardSummary {
