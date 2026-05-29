@@ -41,11 +41,13 @@
 - [x] Create `docs/streaming-telemetry-fallback-polling-design.md`
 
 
-## 48E — Security / Governor Limit Review
-- [ ] Update `SentinelFlow_Admin` permission set with `SentinelFlow_Dashboard_Event__e` CRUD
-- [ ] Verify FLS compliance for event fields
-- [ ] Add `EventBus.publish()` calls to triggers and controllers
-- [ ] Validate DML governor limits not exceeded with event publishing
+## 48E — Security / Governor Limit Review ✅
+- [x] Update `SentinelFlow_Admin` permission set with `SentinelFlow_Dashboard_Event__e` CRUD
+- [x] Verify FLS compliance for event fields
+- [x] Add `EventBus.publish()` calls to triggers and controllers
+- [x] Validate DML governor limits not exceeded with event publishing
+- [x] Create `docs/streaming-telemetry-security-governor-limit-review.md`
+
 
 ## 48F — Prototype Validation
 - [ ] Deploy all changes to `astrosoft`

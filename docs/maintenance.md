@@ -147,3 +147,11 @@ All webhook notification code, trigger automation, security compliance, smoke te
 - Engineered connection state transition logic for connect success, drops, quota limits, and maintenance windows.
 - Designed silent, graceful degradation that recovers automatically using a background 30-second retry timer.
 - Detailed complete teardown of interval and retry timers in LWC lifecycle `disconnectedCallback()` to avoid memory leaks.
+
+### 48E — Security / Governor Limit Review: Complete
+- Created `docs/streaming-telemetry-security-governor-limit-review.md` detailing the security framework and database governor constraints.
+- Designed permission set modifications for `SentinelFlow_Admin` (Read + Create) and `SentinelFlow_Operator` (Read-only) roles.
+- Established FLS Compliance by Design, excluding sensitive/PII data from event payloads.
+- Engineered Hybrid Record-Level Security, using lightweight event notification to trigger sharing-compliant Apex `refreshApex` re-fetches.
+- Designed a static set recursion guard inside `SentinelFlowEventPublisher` to prevent infinite trigger loops.
+- Conducted DML bulkification analysis, ensuring bulk updates use `publishBulk` to consume only 1 DML statement.
