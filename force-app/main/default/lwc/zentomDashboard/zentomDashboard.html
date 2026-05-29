@@ -222,6 +222,57 @@
                 </article>
             </section>
 
+            <!-- ── Milestone 55: Prediction Engine UI ──────────────── -->
+            <span class="section-label slds-m-top_large">Predictive Operational Intelligence</span>
+            <section class="prediction-grid" aria-label="Prediction intelligence">
+                <template if:true={hasPredictions}>
+                    <template for:each={predictions} for:item="prediction">
+                        <article class={prediction.cardClass} key={prediction.id}>
+                            <header class="prediction-header">
+                                <lightning-icon icon-name={prediction.iconName} size="small" class="prediction-icon"></lightning-icon>
+                                <div class="prediction-header-text">
+                                    <template if:true={prediction.isCritical}>
+                                        <h3 class="prediction-score-title critical-text">Critical Anomaly: Imminent Outage Risk ({prediction.predictionScore}%)</h3>
+                                    </template>
+                                    <template if:false={prediction.isCritical}>
+                                        <h3 class="prediction-score-title warning-text">Warning: Potential Operational Threat ({prediction.predictionScore}%)</h3>
+                                    </template>
+                                    <span class="prediction-confidence">Confidence: {prediction.confidenceScore}%</span>
+                                </div>
+                            </header>
+                            <div class="prediction-body">
+                                <strong class="prediction-summary-title">Summary: {prediction.summary}</strong>
+                                <div class="prediction-explanation">
+                                    <em>Why this may happen:</em>
+                                    <p>{prediction.explanation}</p>
+                                </div>
+                                <div class="prediction-mitigation">
+                                    <em>Recommended Mitigation:</em>
+                                    <p><strong>Suggested Runbook:</strong> {prediction.recommendedRunbook}</p>
+                                </div>
+                            </div>
+                            <footer class="prediction-footer">
+                                <p class="prediction-safety">
+                                    <lightning-icon icon-name="utility:warning" size="xx-small" class="safety-icon"></lightning-icon>
+                                    Zentom AI predicts possible operational risk. No action is executed without policy &amp; human approval.
+                                </p>
+                                <div class="prediction-actions">
+                                    <lightning-button label="Review Details" variant="base" data-id={prediction.id} onclick={handleReviewPrediction} class="slds-m-right_small"></lightning-button>
+                                    <lightning-button label="Dismiss" variant="neutral" data-id={prediction.id} onclick={handleDismissPrediction} class="slds-m-right_small"></lightning-button>
+                                    <lightning-button label="Approve Runbook" variant="brand" data-id={prediction.id} onclick={handleApprovePrediction}></lightning-button>
+                                </div>
+                            </footer>
+                        </article>
+                    </template>
+                </template>
+                <template if:false={hasPredictions}>
+                    <article class="prediction-card empty-prediction">
+                        <lightning-icon icon-name="utility:success" size="small"></lightning-icon>
+                        <p>No imminent operational risks predicted. The SentinelFlow system is stable.</p>
+                    </article>
+                </template>
+            </section>
+
             <!-- ── KPI Metric Grid ─────────────────────────────────── -->
             <section class="kpi-grid" aria-label="Dashboard summary metrics">
                 <article class="metric">
