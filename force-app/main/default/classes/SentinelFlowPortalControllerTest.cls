@@ -6,6 +6,9 @@ private class SentinelFlowPortalControllerTest {
         User portalUser = createPortalUser();
         insert portalUser;
 
+        PermissionSet ps = [SELECT Id FROM PermissionSet WHERE Name = 'SentinelFlow_Admin' LIMIT 1];
+        insert new PermissionSetAssignment(AssigneeId = portalUser.Id, PermissionSetId = ps.Id);
+
         System.runAs(portalUser) {
             Tenant__c tenant = new Tenant__c(
                 Name = 'Portal Test Tenant',
