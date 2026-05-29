@@ -116,3 +116,13 @@ All tasks for v1.1.0 Product Planning & UX Improvements are completed successful
 ## Milestone 47 — Functionally Complete ✅
 All webhook notification code, trigger automation, security compliance, smoke testing, and documentation are production-ready. 400/400 Apex tests passing.
 
+## Milestone 48 — Streaming Telemetry
+
+### 48A — Streaming Telemetry Architecture Plan: Complete
+- Created `docs/streaming-telemetry-architecture-plan.md` covering the full design.
+- Documented current polling model: `zentomDashboard` uses `setInterval(30s)` → `refreshApex()`, executing ~9-11 SOQL queries per cycle via `ZentomDashboardController.getDashboardData()`.
+- Identified existing streaming infrastructure: 2 Platform Events (`Flow_Health_Event__e`, `Integration_Health_Event__e`) and 4 Portal LWC components already using `empApi` subscriptions.
+- Proposed hybrid architecture: new `SentinelFlow_Dashboard_Event__e` Platform Event published from triggers/controllers, LWC subscribes via `empApi` with 2s debounce, polling interval extended from 30s → 60s as fallback.
+- Design principle: **polling is never removed** — streaming is an enhancement layer.
+
+
