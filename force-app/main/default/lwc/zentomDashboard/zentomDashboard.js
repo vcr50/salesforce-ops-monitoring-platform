@@ -6,6 +6,7 @@ import { createStreamingSession } from 'c/streamingTelemetry';
 import getDashboardData from '@salesforce/apex/ZentomDashboardController.getDashboardData';
 import getReplayExportData from '@salesforce/apex/ZentomDashboardController.getReplayExportData';
 import getKeysetPaginatedIncidents from '@salesforce/apex/ZentomDashboardController.getKeysetPaginatedIncidents';
+import getCostSavingsAnalytics from '@salesforce/apex/ZentomDashboardController.getCostSavingsAnalytics';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const POLL_INTERVAL_ACTIVE_MS   = 60000; // relaxed 60s — streaming covers near-real-time
@@ -36,6 +37,10 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
     @track totalPages = 0;
     @track paginatedIncidents = [];
     wiredPaginatedResult;
+
+    // ── Milestone 52: Cost savings analytics state ─────────────────────
+    @track costSavingsData;
+    wiredCostSavingsResult;
 
     // Keyset pagination cursor state
     nextCursorCreatedDate = null;
@@ -162,6 +167,16 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
         }
     }
 
+    @wire(getCostSavingsAnalytics, { dateRange: '$dateRange' })
+    wiredGetCostSavingsAnalytics(result) {
+        this.wiredCostSavingsResult = result;
+        if (result.data) {
+            this.costSavingsData = result.data;
+        } else if (result.error) {
+            console.error('[zentomDashboard] Error loading cost savings:', result.error);
+        }
+    }
+
     get paginatedRequest() {
         return {
             pageNumber: this.pageNumber,
@@ -252,6 +267,9 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
         }
         if (this.wiredPaginatedResult) {
             refreshApex(this.wiredPaginatedResult);
+        }
+        if (this.wiredCostSavingsResult) {
+            refreshApex(this.wiredCostSavingsResult);
         }
     }
 
@@ -425,6 +443,31 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
         };
     }
 
+    // ── Milestone 52: Cost savings getters ──────────────────────────────
+    get costRecoveries() {
+        return this.costSavingsData?.successfulRecoveries ?? 0;
+    }
+
+    get costHoursSaved() {
+        return this.costSavingsData?.hoursSaved ?? 0;
+    }
+
+    get costCasesAvoided() {
+        return this.costSavingsData?.casesAvoided ?? 0;
+    }
+
+    get costSavingsTotal() {
+        return this.costSavingsData?.estimatedCostSavings
+            ? `$${this.costSavingsData.estimatedCostSavings.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+            : '$0.00';
+    }
+
+    get costMttrPercent() {
+        return this.costSavingsData?.mttrImprovementPercent
+            ? `${this.costSavingsData.mttrImprovementPercent.toFixed(1)}%`
+            : '0.0%';
+    }
+
     // ── Original getters ────────────────────────────────────────────────
     get topRunbook() {
         return this.data?.summary?.topRunbook || 'None';
@@ -550,6 +593,7 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
     handleRefresh() {
         refreshApex(this.wiredDashboard);
         refreshApex(this.wiredPaginatedResult);
+        refreshApex(this.wiredCostSavingsResult);
     }
 
     handleToggleFilters() {

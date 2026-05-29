@@ -259,3 +259,35 @@ All tasks for server-side incident pagination, sorting, filtering, and governor 
 
 ## Milestone 51 Complete ✅
 All tasks for keyset pagination, sorting fallback, LWC integration, and test validation are complete and fully validated.
+
+## Milestone 52 — Cost Savings Analytics Widgets
+
+### 52A — Cost Savings Analytics Architecture Plan: Complete
+- Created `docs/cost-savings-analytics-architecture-plan.md` outlining the metrics to display, configurable assumptions using Custom Metadata, explainable calculation formulas (Successful Recoveries, Hours Saved, Cases Avoided, Estimated Cost Savings, and MTTR Improvement), and the premium glassmorphism UI mockups.
+
+### 52B — Custom Metadata Records: Complete
+- Created 4 Custom Metadata records under `System_Setting__mdt`:
+  - `Engineering_Hourly_Rate` (Default: 80.0)
+  - `Manual_Resolution_Hours` (Default: 2.0)
+  - `Baseline_MTTR_Minutes` (Default: 240.0)
+  - `Cost_Per_Support_Case` (Default: 150.0)
+
+### 52C — Apex getCostSavingsAnalytics() Implementation: Complete
+- Created `CostAnalyticsResult` wrapper class inside `ZentomDashboardController.cls`.
+- Implemented `@AuraEnabled(cacheable=true) public static CostAnalyticsResult getCostSavingsAnalytics(String dateRange)` in `ZentomDashboardController.cls` query logic with metadata settings fallback, calculate successful recoveries (`Execution_Status__c = 'Executed'`), hours saved, cases avoided (`Created_Case__c = null`), total estimated savings, and average actual MTTR duration calculations.
+
+### 52D — LWC Analytics Widgets: Complete
+- Wire-mapped `getCostSavingsAnalytics` in `zentomDashboard.js` reactively to the dashboard's active dateRange parameter.
+- Implemented the Value Insights grid and cards layout in `zentomDashboard.html`.
+- Styled cards in `zentomDashboard.css` using modern glassmorphism UI tokens, micro-animations on hover, and informative hover tooltip overlays explaining the math/metadata settings.
+
+### 52E — Tests: Complete
+- Added `testGetCostSavingsAnalytics_AllScenarios` inside `ZentomDashboardControllerTest.cls` verifying calculation precision, cases-avoided logic, MTTR averages, and fallback logic using a consistent anchor datetime to avoid execution timing discrepancies.
+
+### 52F — Deploy & QA: Complete
+- Deployed all changes to sandbox `vjdev@asap.com`.
+- Executed all 396 local unit tests synchronously with **100% success rate**.
+
+## Milestone 52 Complete ✅
+All tasks for Cost Savings Analytics Widgets, custom metadata config, and Apex/LWC integrations are complete and fully validated.
+

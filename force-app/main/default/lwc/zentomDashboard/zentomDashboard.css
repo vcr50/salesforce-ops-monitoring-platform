@@ -960,3 +960,101 @@ th[data-field]:hover {
     background-color: var(--zd-blue-light);
     color: var(--zd-blue);
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   Milestone 52 — Cost Savings Analytics UI Cards
+   ═══════════════════════════════════════════════════════════════════ */
+.value-insights-grid {
+    display: grid;
+    gap: 0.875rem;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    margin-top: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.value-insights-grid .metric-card {
+    background: var(--zd-card-bg);
+    border: 1px solid var(--zd-border);
+    border-radius: var(--zd-radius);
+    box-shadow: var(--zd-shadow);
+    padding: 0.875rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 6.5rem;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease;
+    border-left: 0.25rem solid var(--zd-blue);
+}
+
+.value-insights-grid .metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--zd-shadow-hover);
+}
+
+.value-insights-grid .metric-card.highlight {
+    background: linear-gradient(135deg, var(--zd-card-bg), rgba(99, 102, 241, 0.04));
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-left: 0.25rem solid #6366f1;
+}
+
+.card-header-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.card-title {
+    color: var(--zd-text-muted);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.info-icon {
+    --slds-c-icon-color-foreground: var(--zd-text-subtle);
+    cursor: help;
+    transition: color 0.15s ease;
+}
+
+.info-icon:hover {
+    --slds-c-icon-color-foreground: var(--zd-blue);
+}
+
+.card-value {
+    color: var(--zd-text-primary);
+    font-size: 1.45rem;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-top: 0.25rem;
+}
+
+.metric-card.highlight .card-value {
+    color: #4f46e5;
+}
+
+.card-subtitle {
+    color: var(--zd-text-subtle);
+    font-size: 0.725rem;
+    margin-top: 0.2rem;
+}
+
+@media (max-width: 1200px) {
+    .value-insights-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 800px) {
+    .value-insights-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 500px) {
+    .value-insights-grid {
+        grid-template-columns: 1fr;
+    }
+}

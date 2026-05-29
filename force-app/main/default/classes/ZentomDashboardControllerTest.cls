@@ -662,4 +662,46 @@ private class ZentomDashboardControllerTest {
         
         Test.stopTest();
     }
+
+    @IsTest
+    static void testGetCostSavingsAnalytics_AllScenarios() {
+        Datetime anchor = System.now();
+
+        // Create 2 executed incidents: 
+        // Inc 1: No case created (Cases Avoided). Executed in 30 minutes.
+        Sentinel_Incident__c inc1 = createIncident('CRITICAL', 'Approved', 'Executed', 'Closed', 'RUNBOOK_A');
+        inc1.Created_Case__c = null;
+        inc1.Executed_At__c = anchor.addMinutes(-15);
+        
+        // Inc 2: Has case created (Not avoided). Executed in 90 minutes.
+        Case c = new Case(Subject = 'Sentinel Case', Status = 'New', Origin = 'Web');
+        insert c;
+        
+        Sentinel_Incident__c inc2 = createIncident('HIGH', 'Approved', 'Executed', 'Closed', 'RUNBOOK_B');
+        inc2.Created_Case__c = c.Id;
+        inc2.Executed_At__c = anchor.addMinutes(-10);
+
+        insert new List<Sentinel_Incident__c>{ inc1, inc2 };
+
+        // Override CreatedDate using Test.setCreatedDate
+        Test.setCreatedDate(inc1.Id, anchor.addMinutes(-45));
+        Test.setCreatedDate(inc2.Id, anchor.addMinutes(-100));
+
+        Test.startTest();
+        ZentomDashboardController.CostAnalyticsResult result = ZentomDashboardController.getCostSavingsAnalytics('ALL');
+        Test.stopTest();
+
+        // Successful Recoveries = 2
+        System.assertEquals(2, result.successfulRecoveries);
+        // Hours Saved = 2 * 2.0 = 4.0
+        System.assertEquals(4.00, result.hoursSaved);
+        // Cases Avoided = 1 (inc1 has no case, inc2 has case c.Id)
+        System.assertEquals(1, result.casesAvoided);
+        // Cost Savings = (4.0 * 80.0) + (1 * 150.0) = 320.0 + 150.0 = 470.00
+        System.assertEquals(470.00, result.estimatedCostSavings);
+        // Average actual MTTR = (30 + 90) / 2 = 60.0 minutes
+        System.assertEquals(60.00, result.automatedMttrMinutes);
+        // MTTR Improvement % = ((240.0 - 60.0) / 240.0) * 100 = 75.0%
+        System.assertEquals(75.00, result.mttrImprovementPercent);
+    }
 }

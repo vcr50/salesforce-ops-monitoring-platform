@@ -419,6 +419,74 @@ public with sharing class ZentomDashboardController {
         return result;
     }
 
+    @AuraEnabled(cacheable=true)
+    public static CostAnalyticsResult getCostSavingsAnalytics(String dateRange) {
+        Decimal hourlyRate = SystemSettings.get('Engineering_Hourly_Rate', 80.0);
+        Decimal manualHours = SystemSettings.get('Manual_Resolution_Hours', 2.0);
+        Decimal baselineMttr = SystemSettings.get('Baseline_MTTR_Minutes', 240.0);
+        Decimal costPerCase = SystemSettings.get('Cost_Per_Support_Case', 150.0);
+
+        Datetime cutoff = getCutoff(dateRange);
+        List<Sentinel_Incident__c> resolvedIncidents;
+        if (cutoff == null) {
+            resolvedIncidents = [
+                SELECT CreatedDate, Executed_At__c, Created_Case__c
+                FROM Sentinel_Incident__c
+                WHERE Execution_Status__c = 'Executed'
+            ];
+        } else {
+            resolvedIncidents = [
+                SELECT CreatedDate, Executed_At__c, Created_Case__c
+                FROM Sentinel_Incident__c
+                WHERE Execution_Status__c = 'Executed' AND CreatedDate >= :cutoff
+            ];
+        }
+
+        Integer successfulRecoveries = resolvedIncidents.size();
+        Decimal hoursSaved = successfulRecoveries * manualHours;
+        
+        Integer casesAvoidedCount = 0;
+        Decimal totalResolutionTimeMinutes = 0;
+        Integer resolutionTimeCount = 0;
+        
+        for (Sentinel_Incident__c inc : resolvedIncidents) {
+            if (inc.Created_Case__c == null) {
+                casesAvoidedCount++;
+            }
+            if (inc.Executed_At__c != null && inc.CreatedDate != null) {
+                Long diffMs = inc.Executed_At__c.getTime() - inc.CreatedDate.getTime();
+                Decimal diffMinutes = Decimal.valueOf(diffMs) / 60000.0;
+                if (diffMinutes >= 0) {
+                    totalResolutionTimeMinutes += diffMinutes;
+                    resolutionTimeCount++;
+                }
+            }
+        }
+
+        Decimal engineeringSavings = hoursSaved * hourlyRate;
+        Decimal caseSavings = casesAvoidedCount * costPerCase;
+        Decimal estimatedCostSavingsVal = engineeringSavings + caseSavings;
+
+        Decimal actualAvgMttr = 0;
+        if (resolutionTimeCount > 0) {
+            actualAvgMttr = totalResolutionTimeMinutes / resolutionTimeCount;
+        }
+
+        Decimal mttrImprovement = 0;
+        if (baselineMttr > 0) {
+            mttrImprovement = ((baselineMttr - actualAvgMttr) / baselineMttr) * 100;
+        }
+
+        CostAnalyticsResult result = new CostAnalyticsResult();
+        result.successfulRecoveries = successfulRecoveries;
+        result.hoursSaved = hoursSaved.setScale(2, System.RoundingMode.HALF_UP);
+        result.casesAvoided = casesAvoidedCount;
+        result.estimatedCostSavings = estimatedCostSavingsVal.setScale(2, System.RoundingMode.HALF_UP);
+        result.automatedMttrMinutes = actualAvgMttr.setScale(2, System.RoundingMode.HALF_UP);
+        result.mttrImprovementPercent = mttrImprovement.setScale(2, System.RoundingMode.HALF_UP);
+        return result;
+    }
+
     private static Object parseCursorValue(String sortBy, String valueStr) {
         if (String.isBlank(valueStr)) {
             return null;
@@ -741,6 +809,15 @@ public with sharing class ZentomDashboardController {
         @AuraEnabled public String previousCursorId { get; set; }
         @AuraEnabled public Integer pageNumber { get; set; }
         @AuraEnabled public Integer totalPages { get; set; }
+    }
+
+    public class CostAnalyticsResult {
+        @AuraEnabled public Integer successfulRecoveries { get; set; }
+        @AuraEnabled public Decimal hoursSaved { get; set; }
+        @AuraEnabled public Integer casesAvoided { get; set; }
+        @AuraEnabled public Decimal estimatedCostSavings { get; set; }
+        @AuraEnabled public Decimal automatedMttrMinutes { get; set; }
+        @AuraEnabled public Decimal mttrImprovementPercent { get; set; }
     }
 
 

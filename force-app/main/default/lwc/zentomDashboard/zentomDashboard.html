@@ -177,6 +177,51 @@
                 </div>
             </article>
 
+            <!-- ── Milestone 52: Cost & Value Insights Grid ─────────── -->
+            <span class="section-label slds-m-top_large">Estimated Value Realization</span>
+            <section class="value-insights-grid" aria-label="Estimated value insights">
+                <article class="metric-card">
+                    <div class="card-header-flex">
+                        <span class="card-title">Successful Recoveries</span>
+                        <lightning-icon icon-name="utility:info" size="x-small" class="info-icon" title="Count of incidents successfully auto-healed or resolved through automated operations without manual engineer intervention."></lightning-icon>
+                    </div>
+                    <strong class="card-value">{costRecoveries}</strong>
+                    <p class="card-subtitle">Incidents auto-healed</p>
+                </article>
+                <article class="metric-card">
+                    <div class="card-header-flex">
+                        <span class="card-title">Estimated Hours Saved</span>
+                        <lightning-icon icon-name="utility:info" size="x-small" class="info-icon" title="Productive engineering hours reclaimed. Formula: Successful Recoveries × Manual Resolution Time (default: 2.0 hours)."></lightning-icon>
+                    </div>
+                    <strong class="card-value">{costHoursSaved} hrs</strong>
+                    <p class="card-subtitle">Engineering triage bypassed</p>
+                </article>
+                <article class="metric-card highlight">
+                    <div class="card-header-flex">
+                        <span class="card-title">Estimated Cost Savings</span>
+                        <lightning-icon icon-name="utility:info" size="x-small" class="info-icon" title="Explainable cost savings derived from reclaimed hours and avoided Salesforce Cases. Formula: (Hours Saved × Engineering Rate) + (Cases Avoided × Cost Per Case). Settings: Rate = $80/hr, Cost Per Case = $150."></lightning-icon>
+                    </div>
+                    <strong class="card-value">{costSavingsTotal}</strong>
+                    <p class="card-subtitle">Estimated resource savings</p>
+                </article>
+                <article class="metric-card">
+                    <div class="card-header-flex">
+                        <span class="card-title">Cases Avoided / Work Reduced</span>
+                        <lightning-icon icon-name="utility:info" size="x-small" class="info-icon" title="Incidents resolved autonomously without escalating or generating an external Salesforce Support Case."></lightning-icon>
+                    </div>
+                    <strong class="card-value">{costCasesAvoided}</strong>
+                    <p class="card-subtitle">Support escalations prevented</p>
+                </article>
+                <article class="metric-card">
+                    <div class="card-header-flex">
+                        <span class="card-title">MTTR Improvement</span>
+                        <lightning-icon icon-name="utility:info" size="x-small" class="info-icon" title="Mean Time to Resolution reduction percentage compared against manual historic baseline of 240 minutes. Formula: ((Baseline MTTR - Actual Avg MTTR) / Baseline MTTR) × 100."></lightning-icon>
+                    </div>
+                    <strong class="card-value">{costMttrPercent}</strong>
+                    <p class="card-subtitle">MTTR reduction vs baseline</p>
+                </article>
+            </section>
+
             <!-- ── KPI Metric Grid ─────────────────────────────────── -->
             <section class="kpi-grid" aria-label="Dashboard summary metrics">
                 <article class="metric">
