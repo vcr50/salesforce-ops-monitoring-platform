@@ -31,3 +31,10 @@
 - [x] 3. Resolve all failing tests in local test suite (394/394 passing, 0 failing).
 - [x] 4. Update release validation documentation with final evidence.
 
+## Milestone 46A — Post-Release Feedback Monitoring
+- [x] 1. Query and triage all open Cases in the Salesforce org.
+- [x] 2. Query live incident, integration log, auto-heal, and AI decision telemetry.
+- [x] 3. Classify all 30 open Cases — no P0/P1/P2 bugs identified.
+- [x] 4. Create post-release monitoring report (`docs/v1.1.0-post-release-monitoring.md`).
+- [x] 5. Update `docs/maintenance.md` with Milestone 46A results.
+- [x] 6. Verdict: **v1.1.0 is healthy. No code changes required.**
