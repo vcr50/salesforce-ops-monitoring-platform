@@ -125,4 +125,12 @@ All webhook notification code, trigger automation, security compliance, smoke te
 - Proposed hybrid architecture: new `SentinelFlow_Dashboard_Event__e` Platform Event published from triggers/controllers, LWC subscribes via `empApi` with 2s debounce, polling interval extended from 30s → 60s as fallback.
 - Design principle: **polling is never removed** — streaming is an enhancement layer.
 
+### 48B — Platform Event Contract Design: Complete
+- Created `docs/streaming-telemetry-platform-event-contract.md` defining the full event contract.
+- Designed `SentinelFlow_Dashboard_Event__e` Platform Event with 13 fields: `Event_Type__c`, `Incident_Id__c`, `Incident_Number__c`, `Incident_Type__c`, `Risk_Level__c`, `Approval_Status__c`, `Execution_Status__c`, `AI_Reasoning_Status__c`, `AI_Confidence__c`, `Environment__c`, `Event_Source__c`, `Event_Timestamp__c`, `Message__c`.
+- Defined 11 event types: `INCIDENT_CREATED`, `RISK_UPDATED`, `APPROVAL_REQUIRED`, `APPROVED`, `REJECTED`, `ACTION_READY`, `ACTION_EXECUTED`, `CASE_CREATED`, `AI_TRACE_UPDATED`, `ERROR_LOGGED`, `DASHBOARD_REFRESH_REQUESTED`.
+- Mapped 5 emit sources to specific event types with example Apex code.
+- Designed `SentinelFlowEventPublisher` utility class for centralized event publishing.
+- Estimated payload size: ~292 bytes per event (well under 1 MB limit).
+- Enforced security rules: no raw payloads, no secrets, no PII, no hidden AI reasoning.
 
