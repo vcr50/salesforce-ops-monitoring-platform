@@ -175,6 +175,10 @@
 ### 54C — Prediction Scoring Algorithm Design ✅
 - [x] Create `docs/prediction-scoring-algorithm-design.md` detailing the scoring formulas, weighting matrix, confidence variables, threshold mapping, scenarios, feedback loop, and governance rules
 
+### 54D — Prediction Engine Apex Service Design ✅
+- [x] Create `docs/prediction-engine-apex-service-design.md` detailing class patterns, query designs, scoring classes, creation triggers, explanation decorators, bulkification boundaries, error monitors, and mock test formats
+
+
 
 
 
