@@ -153,8 +153,8 @@
 ### 53B — Metadata override verification ✅
 - [x] Verify that modifying custom metadata overrides shifts the output of the cost analytics calculations programmatically
 
-### 53C — Executive guide ✅
-- [x] Create `docs/cost-savings-analytics-executive-guide.md` covering metric meanings, formulas, metadata adjustment, and demo scenarios
+### 53C — Executive guide & Readiness Package ✅
+- [x] Create `docs/cost-savings-executive-readiness.md` covering metric meanings, formulas, metadata adjustment, and demo scenarios
 
 ### 53D — Visual mockup / screenshot ✅
 - [x] Generate mockup image of the widgets to serve as a supporting demo asset
