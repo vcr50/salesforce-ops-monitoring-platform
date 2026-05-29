@@ -83,3 +83,28 @@
 - [x] Update `docs/maintenance.md` with results
 - [x] Update implementation walkthrough
 - [x] Commit all code and push to remote
+
+## Milestone 51 — Keyset Pagination for Unlimited Enterprise Scale
+
+### 51A — Keyset Pagination Architecture Plan ✅
+- [x] Create `docs/keyset-pagination-architecture-plan.md`
+- [x] Update `docs/maintenance.md`
+- [x] Update `task.md`
+
+### 51B — Apex Cursor Request / Result
+- [ ] Add new wrapper fields for keyset boundaries on Request & Result classes
+- [ ] Support page direction, sort cursors, and row-level cursor mappings
+
+### 51C — Apex Method
+- [ ] Implement `getKeysetPaginatedIncidents(KeysetPaginatedRequest req)`
+- [ ] Support first page, next page, and reversed prev page ordering in SOQL
+- [ ] Maintain old offset query wrapper as a fallback
+
+### 51D — LWC Update
+- [ ] Incorporate cursor boundary tracking inside LWC state manager
+- [ ] Bind list queries to wire `getKeysetPaginatedIncidents`
+- [ ] Adapt page transitions to set boundary cursors instead of offsets
+
+### 51E — Tests and hard regressions
+- [ ] Test cursor-based next, prev, and default views in `ZentomDashboardControllerTest.cls`
+- [ ] Run validation checks and secure coverage limits
