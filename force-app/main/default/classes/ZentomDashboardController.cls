@@ -1,5 +1,5 @@
 public with sharing class ZentomDashboardController {
-    private static final Integer ESCALATION_THRESHOLD_HOURS = 4;
+    private static final Integer ESCALATION_THRESHOLD_HOURS = SystemSettings.getInt('Escalation_Threshold_Hours', 4);
 
     @AuraEnabled(cacheable=true)
     public static DashboardData getDashboardData(String dateRange) {

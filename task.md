@@ -47,3 +47,14 @@
 - [x] 5. Define candidates for the v1.2.0 engineering roadmap.
 - [x] 6. Create the customer feedback review document (`docs/v1.1.0-customer-feedback-review.md`).
 - [x] 7. Update `docs/maintenance.md` with Milestone 46B results.
+
+## Milestone 46C — Metadata-Driven Governance Configuration
+- [x] 1. Create `System_Setting.Escalation_Threshold_Hours` custom metadata record.
+- [x] 2. Create `System_Setting.Revenue_Risk_Threshold` custom metadata record.
+- [x] 3. Update `BusinessImpactCalculator.cls` to fetch `Revenue_Risk_Threshold` dynamically.
+- [x] 4. Update `ZentomModelRouter.cls` to fetch `Revenue_Risk_Threshold` dynamically.
+- [x] 5. Update `ZentomGetIncidentDetailsAction.cls` prompt injection to fetch `Revenue_Risk_Threshold` dynamically.
+- [x] 6. Update `ZentomDashboardController.cls` to fetch `Escalation_Threshold_Hours` dynamically.
+- [x] 7. Deploy new Custom Metadata and modified Apex classes to the org.
+- [x] 8. Verify the deployment by running local Apex unit tests (394/394 passed).
+- [x] 9. Update the walkthrough and maintenance log.

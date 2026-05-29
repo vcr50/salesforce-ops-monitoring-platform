@@ -76,3 +76,12 @@ All tasks for v1.1.0 Product Planning & UX Improvements are completed successful
 - Separated expected platform behavior (such as AI Guardian Policy escalations and FlowFaultTrigger cases) from actual customer issues.
 - Confirmed zero P0/P1/P2 issues exist and no patch is needed for the v1.1.0 release.
 - Proposed key roadmap items for v1.2.0, including streaming telemetry, custom metadata governance parameters, and Slack/Teams connectors.
+
+### 46C — Metadata-Driven Governance Configuration: Complete
+- Created two `System_Setting__mdt` Custom Metadata records: `Revenue_Risk_Threshold` (default: 50000) and `Escalation_Threshold_Hours` (default: 4).
+- Updated `BusinessImpactCalculator.cls`, `ZentomModelRouter.cls`, `ZentomGetIncidentDetailsAction.cls`, and `ZentomDashboardController.cls` to dynamically read thresholds from `SystemSettings` instead of hardcoded constants.
+- Deployed all changes to `vjdev@asap.com` (Deploy ID: `0AfdL00000bDO41SAG`). 13/13 components deployed successfully.
+- Ran full Apex test suite: **394/394 passed** (Test Run ID: `707dL000019sL3q`).
+- Administrators can now configure the autonomous risk threshold and SLA escalation hours directly from Salesforce Setup without code changes.
+- Full walkthrough: `docs/v1.1.0-metadata-governance-walkthrough.md`.
+
