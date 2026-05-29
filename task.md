@@ -24,12 +24,14 @@
 - [x] Create `docs/streaming-telemetry-platform-event-contract.md`
 - [x] Update `docs/maintenance.md`
 
-## 48C — LWC empApi Subscription Design
-- [ ] Create `streamingTelemetry.js` reusable utility module
-- [ ] Integrate `empApi` subscription into `zentomDashboard.js`
-- [ ] Add debounce logic (2-second window)
-- [ ] Subscribe to `SentinelFlow_Dashboard_Event__e` + existing `Integration_Health_Event__e`
-- [ ] Add event type filtering for selective refresh (future Phase 2)
+## 48C — LWC empApi Subscription Design ✅
+- [x] Create `streamingTelemetry.js` reusable utility module
+- [x] Integrate `empApi` subscription into `zentomDashboard.js`
+- [x] Add debounce logic (2-second window)
+- [x] Subscribe to `SentinelFlow_Dashboard_Event__e` + existing `Integration_Health_Event__e`
+- [x] Add event type filtering for selective refresh (future Phase 2)
+- [x] Create `docs/streaming-telemetry-lwc-subscription-design.md`
+
 
 ## 48D — Fallback Polling Strategy
 - [ ] Implement adaptive polling interval (60s streaming / 30s fallback)

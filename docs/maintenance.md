@@ -134,3 +134,9 @@ All webhook notification code, trigger automation, security compliance, smoke te
 - Estimated payload size: ~292 bytes per event (well under 1 MB limit).
 - Enforced security rules: no raw payloads, no secrets, no PII, no hidden AI reasoning.
 
+### 48C — LWC empApi Subscription Design: Complete
+- Created `docs/streaming-telemetry-lwc-subscription-design.md` detailing LWC subscription architecture.
+- Designed `streamingTelemetry` reusable utility LWC module providing subscription, unsubscription, and global error handling with `lightning/empApi`.
+- Configured LWC 2-second debounce timer to absorb rapid event bursts and avoid server overload.
+- Integrated dual-channel registration for both `/event/SentinelFlow_Dashboard_Event__e` and `/event/Integration_Health_Event__e`.
+- Designed event-driven toast alerts to push critical alerts directly to operators' screens in real-time.
