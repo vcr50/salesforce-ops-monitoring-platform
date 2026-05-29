@@ -164,3 +164,9 @@
 - [x] Update implementation walkthrough
 - [x] Commit all changes to the repository and push to remote
 
+## Milestone 54 — Prediction Engine / Auto-Heal GA Design
+
+### 54A — Prediction Engine Architecture Plan ✅
+- [x] Create `docs/prediction-engine-architecture-plan.md` outlining purpose, candidate signals, scoring model, thresholds, boundaries, schema, explainability, security rules, pilot scope, and success criteria
+
+
