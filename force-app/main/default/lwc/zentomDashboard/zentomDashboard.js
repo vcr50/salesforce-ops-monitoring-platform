@@ -1,12 +1,13 @@
 import { LightningElement, wire, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { refreshApex } from '@salesforce/apex';
+import { createStreamingSession } from 'c/streamingTelemetry';
 
 import getDashboardData from '@salesforce/apex/ZentomDashboardController.getDashboardData';
 import getReplayExportData from '@salesforce/apex/ZentomDashboardController.getReplayExportData';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
-const POLL_INTERVAL_MS = 30000; // 30 seconds near-realtime polling
+const POLL_INTERVAL_MS = 60000; // 60s baseline — streaming covers near-real-time; poll is the safety net
 
 export default class ZentomDashboard extends NavigationMixin(LightningElement) {
     dateRange = 'LAST_7_DAYS';
@@ -15,6 +16,11 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
     lastRefreshed;
     wiredDashboard;
     _pollTimer;
+
+    // ── Milestone 49D: Streaming telemetry state ─────────────────────────
+    _streamingSession = null;
+    @track _streamingActive = false;
+    @track _lastEventType = null;
 
     // ── Milestone 43: Filter state ──────────────────────────────────────
     @track filterRisk = 'ALL';
@@ -135,17 +141,63 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
     }
 
     connectedCallback() {
+        // ── Polling fallback (safety net) ────────────────────────────────
         this._pollTimer = setInterval(() => {
             if (this.wiredDashboard) {
                 refreshApex(this.wiredDashboard);
             }
         }, POLL_INTERVAL_MS);
+
+        // ── Streaming telemetry (49D) ────────────────────────────────────
+        this._streamingSession = createStreamingSession({
+            onRefresh:       () => this._handleStreamRefresh(),
+            onEventReceived: (detail) => this._handleStreamEvent(detail),
+            onStreamError:   (msg) => this._handleStreamError(msg)
+        });
+        this._streamingSession.start();
     }
 
     disconnectedCallback() {
         if (this._pollTimer) {
             clearInterval(this._pollTimer);
+            this._pollTimer = null;
         }
+        // Cleanly unsubscribe and cancel all streaming timers
+        if (this._streamingSession) {
+            this._streamingSession.stop();
+            this._streamingSession = null;
+        }
+    }
+
+    // ── Streaming telemetry handlers (49D) ──────────────────────────────
+    _handleStreamRefresh() {
+        if (this.wiredDashboard) {
+            refreshApex(this.wiredDashboard);
+        }
+    }
+
+    _handleStreamEvent({ eventType }) {
+        this._streamingActive = true;
+        this._lastEventType = eventType;
+    }
+
+    _handleStreamError(msg) {
+        // Streaming is unavailable — degrade gracefully to polling-only
+        this._streamingActive = false;
+        console.warn('[zentomDashboard] Streaming degraded to polling:', msg);
+        // Only surface a toast if it is a genuine connection failure (not 'not available')
+        if (!msg.includes('not available')) {
+            this.showToast('Live Updates', 'Streaming connection lost. Refreshing via polling.', 'warning');
+        }
+    }
+
+    // ── Streaming status getters (49D) ───────────────────────────────────
+    get streamingActive() {
+        return this._streamingActive;
+    }
+
+    get lastEventTypeLabel() {
+        return this._lastEventType ? `⚡ ${this._lastEventType.replace(/_/g, ' ')}` : '';
     }
 
     // ── Summary metric getters (Milestone 43 telemetry widgets) ─────────

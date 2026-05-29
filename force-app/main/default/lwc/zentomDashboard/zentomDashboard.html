@@ -8,11 +8,19 @@
                 <p class="header-subtitle">Live incident radar, approval clearance, action tracking, and replay evidence powered by the Zentom AI OS.</p>
             </div>
             <div class="header-actions">
-                <!-- Near-realtime freshness pill -->
-                <span class="freshness-pill" title="Auto-refreshes every 30 seconds">
-                    <span class="freshness-dot"></span>
-                    Near Realtime · {freshnessLabel}
-                </span>
+                <!-- Near-realtime freshness pill (streaming when active, polling when not) -->
+                <template if:true={streamingActive}>
+                    <span class="freshness-pill freshness-pill-live" title="Live streaming telemetry active">
+                        <span class="freshness-dot freshness-dot-live"></span>
+                        Live · {lastEventTypeLabel}
+                    </span>
+                </template>
+                <template if:false={streamingActive}>
+                    <span class="freshness-pill" title="Auto-refreshes every 60 seconds">
+                        <span class="freshness-dot"></span>
+                        Polling · {freshnessLabel}
+                    </span>
+                </template>
                 <div class="refresh-meta">
                     <span class="range-label">Last refreshed</span>
                     <strong>{lastRefreshedLabel}</strong>
@@ -305,7 +313,12 @@
                         </div>
                         <div>
                             <span>Poll interval</span>
-                            <strong>30 s</strong>
+                            <strong>60 s (fallback)</strong>
+                        </div>
+                        <div>
+                            <span>Live streaming</span>
+                            <strong if:true={streamingActive}>Active ⚡</strong>
+                            <strong if:false={streamingActive}>Polling only</strong>
                         </div>
                         <div>
                             <span>Freshness</span>
