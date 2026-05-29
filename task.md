@@ -24,3 +24,10 @@
 - [x] 2. Ensure real Apex-backed approval/action flows are preserved (no simulation in production LWC).
 - [x] 3. Run dry-run deployment validation (630 components, 0 errors).
 - [x] 4. Commit and push 45B LWC changes.
+
+## Milestone 46 — Post-Release Apex Code Coverage Hardening
+- [x] 1. Boost overall Salesforce Org-Wide Code Coverage to >=75% (achieved 76.03%).
+- [x] 2. Ensure every single Apex trigger in the org has >0% test coverage (all covered).
+- [x] 3. Resolve all failing tests in local test suite (394/394 passing, 0 failing).
+- [x] 4. Update release validation documentation with final evidence.
+
