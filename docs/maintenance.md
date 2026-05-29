@@ -140,3 +140,10 @@ All webhook notification code, trigger automation, security compliance, smoke te
 - Configured LWC 2-second debounce timer to absorb rapid event bursts and avoid server overload.
 - Integrated dual-channel registration for both `/event/SentinelFlow_Dashboard_Event__e` and `/event/Integration_Health_Event__e`.
 - Designed event-driven toast alerts to push critical alerts directly to operators' screens in real-time.
+
+### 48D — Fallback Polling Strategy: Complete
+- Created `docs/streaming-telemetry-fallback-polling-design.md` detailing the hybrid adaptive polling model.
+- Designed dynamic interval switching between 60 seconds (streaming active) and 30 seconds (streaming offline).
+- Engineered connection state transition logic for connect success, drops, quota limits, and maintenance windows.
+- Designed silent, graceful degradation that recovers automatically using a background 30-second retry timer.
+- Detailed complete teardown of interval and retry timers in LWC lifecycle `disconnectedCallback()` to avoid memory leaks.

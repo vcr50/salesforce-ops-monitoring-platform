@@ -33,11 +33,13 @@
 - [x] Create `docs/streaming-telemetry-lwc-subscription-design.md`
 
 
-## 48D — Fallback Polling Strategy
-- [ ] Implement adaptive polling interval (60s streaming / 30s fallback)
-- [ ] Add streaming health detection (`isStreamingActive`)
-- [ ] Ensure `disconnectedCallback` cleans up subscriptions and timers
-- [ ] Test graceful degradation when streaming is unavailable
+## 48D — Fallback Polling Strategy ✅
+- [x] Implement adaptive polling interval (60s streaming / 30s fallback)
+- [x] Add streaming health detection (`isStreamingActive`)
+- [x] Ensure `disconnectedCallback` cleans up subscriptions and timers
+- [x] Test graceful degradation when streaming is unavailable
+- [x] Create `docs/streaming-telemetry-fallback-polling-design.md`
+
 
 ## 48E — Security / Governor Limit Review
 - [ ] Update `SentinelFlow_Admin` permission set with `SentinelFlow_Dashboard_Event__e` CRUD
