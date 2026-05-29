@@ -101,3 +101,10 @@ All tasks for v1.1.0 Product Planning & UX Improvements are completed successful
 - Updated test behavior so webhook trigger dispatch is opt-in during Apex tests and production behavior remains unchanged.
 - Focused validation passed against `astrosoft`: 24/24 tests, 0 failures.
 - Full `RunLocalTests` validate-only deployment passed against `astrosoft`: 330/330 tests, 0 failures (Deploy ID: `0AfdL00000bDU1NSAW`).
+
+### 47D — Webhook Production Configuration + Smoke Test: Complete
+- Configured Slack and Teams webhook path parameters in Custom Settings and verified Named Credentials.
+- Ran live smoke test executing setups, updates (deduplication check), and webhook-disabled fallback triggers in the org.
+- Verified trigger, dispatcher callouts, and email routing behave properly in production context with the correct permission sets assigned.
+- Full details logged: `docs/webhook-notification-qa-readiness.md`.
+

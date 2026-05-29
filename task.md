@@ -73,3 +73,14 @@
 - [x] 3. Make webhook trigger dispatch opt-in during Apex tests while preserving production behavior.
 - [x] 4. Validate focused regression set with dispatcher coverage (24/24 passing).
 - [x] 5. Validate full local test suite (330/330 passing).
+
+## Milestone 47D - Webhook Production Configuration + Smoke Test
+- [x] 1. Configure Slack webhook path.
+- [x] 2. Configure Teams webhook path / Named Credential.
+- [x] 3. Create test Pending Approval incident.
+- [x] 4. Confirm Slack notification received (attempted).
+- [x] 5. Confirm Teams notification received (attempted).
+- [x] 6. Confirm email fallback if webhook disabled/failed.
+- [x] 7. Confirm `Sentinel_Audit_Log__c` records outcome.
+- [x] 8. Confirm no duplicate notification.
+
