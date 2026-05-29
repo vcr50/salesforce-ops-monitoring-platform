@@ -7,6 +7,12 @@ private class SentinelFlowPortalControllerTest {
         insert portalUser;
 
         System.runAs(portalUser) {
+            Tenant__c tenant = new Tenant__c(
+                Name = 'Portal Test Tenant',
+                Status__c = 'Active'
+            );
+            insert tenant;
+
             Environment__c environmentRecord = new Environment__c(
                 Name = 'Portal Test Environment',
                 Org_Id__c = '00DPORTALTEST0001'
@@ -26,18 +32,21 @@ private class SentinelFlowPortalControllerTest {
                     API_Name__c = 'Orders API',
                     Status__c = 'Failed',
                     Response_Time__c = 2400,
-                    Error_Message__c = 'Timeout'
+                    Error_Message__c = 'Timeout',
+                    Tenant__c = tenant.Id
                 ),
                 new Integration_Log__c(
                     API_Name__c = 'Inventory API',
                     Status__c = 'Warning',
                     Response_Time__c = 950,
-                    Error_Message__c = 'Delay'
+                    Error_Message__c = 'Delay',
+                    Tenant__c = tenant.Id
                 ),
                 new Integration_Log__c(
                     API_Name__c = 'Shipping API',
                     Status__c = 'Success',
-                    Response_Time__c = 420
+                    Response_Time__c = 420,
+                    Tenant__c = tenant.Id
                 )
             };
 
@@ -54,19 +63,22 @@ private class SentinelFlowPortalControllerTest {
                     Status__c = 'New',
                     Description__c = 'Critical linked portal test incident',
                     Environment__c = environmentRecord.Id,
-                    Integration_Log__c = failedLogId
+                    Integration_Log__c = failedLogId,
+                    Tenant__c = tenant.Id
                 ),
                 new Incident__c(
                     Severity__c = 'High',
                     Status__c = 'Escalated',
                     Description__c = 'Escalated portal test incident',
-                    Environment__c = environmentRecord.Id
+                    Environment__c = environmentRecord.Id,
+                    Tenant__c = tenant.Id
                 ),
                 new Incident__c(
                     Severity__c = 'High',
                     Status__c = 'Closed',
                     Description__c = 'Closed portal test incident',
-                    Environment__c = environmentRecord.Id
+                    Environment__c = environmentRecord.Id,
+                    Tenant__c = tenant.Id
                 )
             };
         }
@@ -273,6 +285,79 @@ private class SentinelFlowPortalControllerTest {
             WHERE Alias = 'sfpt'
             LIMIT 1
         ];
+    }
+
+    @IsTest
+    static void testAdditionalPortalControllerMethods() {
+        enableSecurityBypass();
+        System.runAs(getPortalUser()) {
+            // Seed a universal event if the object exists
+            Boolean ueExists = Schema.getGlobalDescribe().containsKey('Universal_Event__c');
+            if (ueExists) {
+                SObject ue = Schema.getGlobalDescribe().get('Universal_Event__c').newSObject();
+                ue.put('Event_Key__c', 'test_key_123');
+                ue.put('Event_Type__c', 'Flow Exception');
+                ue.put('Source__c', 'Salesforce');
+                ue.put('Severity__c', 'Medium');
+                ue.put('Status__c', 'New');
+                insert ue;
+            }
+
+            // Seed an AI Decision if the object exists
+            Incident__c inc = [SELECT Id FROM Incident__c LIMIT 1];
+            Boolean adExists = Schema.getGlobalDescribe().containsKey('AI_Decision__c');
+            if (adExists) {
+                SObject ad1 = Schema.getGlobalDescribe().get('AI_Decision__c').newSObject();
+                ad1.put('Incident__c', inc.Id);
+                ad1.put('Confidence_Score__c', 85.0);
+                ad1.put('Root_Cause__c', 'CPU Limit');
+                ad1.put('Recommended_Action__c', 'Retry');
+                insert ad1;
+
+                SObject ad2 = Schema.getGlobalDescribe().get('AI_Decision__c').newSObject();
+                ad2.put('Incident__c', inc.Id);
+                ad2.put('Confidence_Score__c', 70.0);
+                ad2.put('Root_Cause__c', 'CPU Limit');
+                ad2.put('Recommended_Action__c', 'Retry');
+                insert ad2;
+
+                SObject ad3 = Schema.getGlobalDescribe().get('AI_Decision__c').newSObject();
+                ad3.put('Incident__c', inc.Id);
+                ad3.put('Root_Cause__c', 'CPU Limit');
+                ad3.put('Recommended_Action__c', 'Retry');
+                insert ad3;
+            }
+
+            Test.startTest();
+            List<SentinelFlowPortalController.PortalUniversalEventRow> events = SentinelFlowPortalController.getUniversalEvents();
+            List<SentinelFlowPortalController.PortalAIDecisionRow> decisions = SentinelFlowPortalController.getAIDecisions(inc.Id);
+            List<SentinelFlowPortalController.PortalAIDecisionRow> decisionsNull = SentinelFlowPortalController.getAIDecisions(null);
+            HealTelemetryService.HealMetrics metrics = SentinelFlowPortalController.getHealMetrics();
+            Test.stopTest();
+
+            System.assertNotEquals(null, events);
+            System.assertNotEquals(null, decisions);
+            System.assertEquals(0, decisionsNull.size());
+            System.assertNotEquals(null, metrics);
+        }
+    }
+
+    @IsTest
+    static void testWithoutTenant() {
+        enableSecurityBypass();
+        System.runAs(getPortalUser()) {
+            // Delete the tenant to force fallback to null
+            delete [SELECT Id FROM Tenant__c];
+            TenantContext.clearCache();
+
+            Test.startTest();
+            SentinelFlowPortalController.PortalSummary summary = SentinelFlowPortalController.getSummary();
+            List<SentinelFlowPortalController.PortalIncidentRow> incidents = SentinelFlowPortalController.getOpenIncidents();
+            List<SentinelFlowPortalController.PortalIntegrationRow> logs = SentinelFlowPortalController.getIntegrationLogs();
+            Test.stopTest();
+
+            System.assertNotEquals(null, summary);
+        }
     }
 
     private static void enableSecurityBypass() {

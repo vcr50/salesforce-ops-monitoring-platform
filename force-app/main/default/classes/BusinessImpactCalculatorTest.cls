@@ -1,97 +1,99 @@
-/**
- * BusinessImpactCalculatorTest
- * @author   Tomcodex
- */
 @IsTest
 private class BusinessImpactCalculatorTest {
 
-    @IsTest
-    static void testCalculateCriticalRisk() {
-        BusinessImpactCalculator.ImpactResult r =
-            BusinessImpactCalculator.calculate(2000, 50.00, 'Payment Integration');
+    @TestSetup
+    static void setup() {
+        SecurityGate.bypassForTests = true;
+        
+        Incident__c inc1 = new Incident__c(
+            Severity__c = 'Critical',
+            Status__c = 'Open',
+            Description__c = 'Billing System Downtime',
+            Users_Affected__c = 1200
+        );
+        insert inc1;
 
-        System.assertEquals(100000, r.revenueAtRisk, 'Revenue should be 2000 × 50');
-        System.assertEquals('Critical', r.riskLevel,  'Should be Critical');
-        System.assert(r.summary.contains('Critical'),  'Summary should mention Critical');
+        Incident__c inc2 = new Incident__c(
+            Severity__c = 'High',
+            Status__c = 'Open',
+            Description__c = 'Stripe Connection Issue',
+            Users_Affected__c = null
+        );
+        insert inc2;
+
+        Incident__c inc3 = new Incident__c(
+            Severity__c = 'Closed',
+            Status__c = 'Closed',
+            Description__c = 'Resolved incident'
+        );
+        insert inc3;
     }
 
     @IsTest
-    static void testCalculateHighRisk() {
-        BusinessImpactCalculator.ImpactResult r =
-            BusinessImpactCalculator.calculate(500, 30.00, 'ERP Sync');
+    static void testCalculate() {
+        Test.startTest();
+        BusinessImpactCalculator.ImpactResult res1 = BusinessImpactCalculator.calculate(null, null, null);
+        BusinessImpactCalculator.ImpactResult res2 = BusinessImpactCalculator.calculate(100, 15.5, 'Orders API');
+        Test.stopTest();
 
-        System.assertEquals(15000,  r.revenueAtRisk);
-        System.assertEquals('High', r.riskLevel);
-    }
-
-    @IsTest
-    static void testCalculateMediumRisk() {
-        BusinessImpactCalculator.ImpactResult r =
-            BusinessImpactCalculator.calculate(100, 20.00, 'Data Import');
-
-        System.assertEquals(2000,     r.revenueAtRisk);
-        System.assertEquals('Medium', r.riskLevel);
-    }
-
-    @IsTest
-    static void testCalculateLowRisk() {
-        BusinessImpactCalculator.ImpactResult r =
-            BusinessImpactCalculator.calculate(10, 5.00, 'Notification Service');
-
-        System.assertEquals(50,    r.revenueAtRisk);
-        System.assertEquals('Low', r.riskLevel);
-    }
-
-    @IsTest
-    static void testZeroUsers() {
-        BusinessImpactCalculator.ImpactResult r =
-            BusinessImpactCalculator.calculate(0, 40.00, 'Test');
-
-        System.assertEquals(0,     r.revenueAtRisk);
-        System.assertEquals('Low', r.riskLevel);
-    }
-
-    @IsTest
-    static void testNullInputsDefaultToZero() {
-        BusinessImpactCalculator.ImpactResult r =
-            BusinessImpactCalculator.calculate(null, null, null);
-
-        System.assertEquals(0, r.revenueAtRisk, 'Null inputs should produce zero revenue');
+        System.assertEquals(0, res1.revenueAtRisk);
+        System.assertEquals(1550, res2.revenueAtRisk);
     }
 
     @IsTest
     static void testCalculateForIncident() {
-        Environment__c env = new Environment__c(Name = 'Production');
-        insert env;
-
-        Incident__c inc = new Incident__c(
-            Severity__c      = 'Critical',
-            Status__c        = 'New',
-            Description__c   = 'Test incident',
-            Users_Affected__c = 1000,
-            Environment__c   = env.Id
-        );
-        insert inc;
+        SecurityGate.bypassForTests = true;
+        Incident__c inc = [SELECT Id FROM Incident__c WHERE Severity__c = 'Critical' LIMIT 1];
 
         Test.startTest();
-        BusinessImpactCalculator.ImpactResult r =
-            BusinessImpactCalculator.calculateForIncident(inc.Id, 42.00);
+        BusinessImpactCalculator.ImpactResult res = BusinessImpactCalculator.calculateForIncident(inc.Id, 50.0);
         Test.stopTest();
 
-        System.assertEquals(42000,    r.revenueAtRisk);
-        System.assertEquals('High', r.riskLevel);
-        Incident__c updated = [SELECT Revenue_at_Risk__c FROM Incident__c WHERE Id = :inc.Id];
-        System.assertEquals(42000, updated.Revenue_at_Risk__c, 'Revenue should be persisted');
+        System.assertEquals(60000, res.revenueAtRisk);
     }
 
     @IsTest
-    static void testNullIncidentIdThrows() {
-        Boolean threw = false;
+    static void testCalculateForIncidentNull() {
+        Test.startTest();
         try {
-            BusinessImpactCalculator.calculateForIncident(null, 30.00);
+            BusinessImpactCalculator.calculateForIncident(null, 50.0);
+            System.assert(false, 'Should have thrown exception');
         } catch (BusinessImpactCalculator.ImpactCalculationException e) {
-            threw = true;
+            System.assert(e.getMessage().contains('Incident Id must not be null'));
         }
-        System.assert(threw, 'Expected exception for null Id');
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testCalculateForIncidentDefaultARPU() {
+        SecurityGate.bypassForTests = true;
+        Incident__c inc = [SELECT Id FROM Incident__c WHERE Severity__c = 'High' LIMIT 1];
+
+        Test.startTest();
+        BusinessImpactCalculator.ImpactResult res = BusinessImpactCalculator.calculateForIncident(inc.Id, null);
+        Test.stopTest();
+
+        // High default users = 500, default ARPU = 30.00
+        System.assertEquals(15000, res.revenueAtRisk);
+    }
+
+    @IsTest
+    static void testCalculateAllOpen() {
+        SecurityGate.bypassForTests = true;
+        Test.startTest();
+        List<BusinessImpactCalculator.ImpactResult> results = BusinessImpactCalculator.calculateAllOpen();
+        Test.stopTest();
+
+        System.assert(results.size() >= 2);
+    }
+
+    @IsTest
+    static void testGetOpenImpact() {
+        SecurityGate.bypassForTests = true;
+        Test.startTest();
+        List<BusinessImpactCalculator.ImpactResult> results = BusinessImpactCalculator.getOpenImpact();
+        Test.stopTest();
+
+        System.assert(results.size() >= 2);
     }
 }

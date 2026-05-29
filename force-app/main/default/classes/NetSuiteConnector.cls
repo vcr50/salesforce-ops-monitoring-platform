@@ -13,6 +13,10 @@ public with sharing class NetSuiteConnector {
     // Abstracted endpoint configuration
     private static final String NETSUITE_API_ENDPOINT = 'callout:NetSuite_API/services/rest/record/v1';
 
+    @TestVisible private static Boolean forceException = false;
+    @TestVisible private static Integer mockStatusCode;
+
+
     public class NetSuiteSyncResult {
         @AuraEnabled public Boolean isSuccess;
         @AuraEnabled public String errorMessage;
@@ -39,9 +43,14 @@ public with sharing class NetSuiteConnector {
 
         // 2. Perform Mock Callout
         try {
-            // In reality, this builds the JSON payload and sends HTTP request.
-            // Using a simulated HTTP response for architectural validation.
+            if (Test.isRunningTest() && forceException) {
+                throw new CalloutException('Forced connection failure');
+            }
             HttpResponse res = simulateNetSuiteCallout();
+            if (Test.isRunningTest() && mockStatusCode != null) {
+                res.setStatusCode(mockStatusCode);
+                res.setStatus('Mock Status');
+            }
             
             if (res.getStatusCode() == 200 || res.getStatusCode() == 201) {
                 result.isSuccess = true;

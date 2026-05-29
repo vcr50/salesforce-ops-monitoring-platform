@@ -99,4 +99,10 @@ public with sharing class LightningSelfRegisterControllerTest {
   paramsMap.put('startUrl', startUrl);
   return paramsMap;
  }
+
+ @IsTest
+ static void testSetExperienceId() {
+  LightningSelfRegisterController.setExperienceId('testExp');
+  LightningSelfRegisterController.setExperienceId(null);
+ }
 }

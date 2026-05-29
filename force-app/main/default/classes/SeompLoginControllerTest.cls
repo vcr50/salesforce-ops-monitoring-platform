@@ -52,4 +52,16 @@ private class SeompLoginControllerTest {
         }
         Test.stopTest();
     }
+
+    @IsTest
+    static void testForgotPassword_ValidUser() {
+        Test.startTest();
+        try {
+            // Passing the current user's email, which will find a user record
+            SeompLoginController.forgotPassword(UserInfo.getUserEmail());
+        } catch (AuraHandledException e) {
+            System.assertNotEquals(null, e.getMessage());
+        }
+        Test.stopTest();
+    }
 }

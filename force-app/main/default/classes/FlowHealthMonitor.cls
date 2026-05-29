@@ -1,5 +1,8 @@
 public with sharing class FlowHealthMonitor implements Schedulable {
     
+    @TestVisible
+    private static List<SObject> mockFailedFlows;
+
     public void execute(SchedulableContext context) {
         monitorFailedFlows();
     }
@@ -15,14 +18,16 @@ public with sharing class FlowHealthMonitor implements Schedulable {
             'Severity__c', 'Status__c', 'Error_Type__c', 'Description__c'
         });
         // Query failed Flow Interviews
-        // Note: This requires Flow Tracking to be enabled in the org to capture FlowInterviewLog
         List<SObject> failedFlows = new List<SObject>();
-        try {
-            failedFlows = Database.query('SELECT Id, FlowVersionId, FlowInterviewId, CreatedDate FROM FlowInterviewLog WHERE Status = \'Error\' AND CreatedDate >= YESTERDAY ORDER BY CreatedDate DESC LIMIT 50');
-        } catch (Exception e) {
-            // Fallback if FlowInterviewLog object is not accessible/enabled in this org
-            System.debug('FlowInterviewLog not accessible: ' + e.getMessage());
-            return;
+        if (Test.isRunningTest() && mockFailedFlows != null) {
+            failedFlows = mockFailedFlows;
+        } else {
+            try {
+                failedFlows = Database.query('SELECT Id, FlowVersionId, FlowInterviewId, CreatedDate FROM FlowInterviewLog WHERE Status = \'Error\' AND CreatedDate >= YESTERDAY ORDER BY CreatedDate DESC LIMIT 50');
+            } catch (Exception e) {
+                System.debug('FlowInterviewLog not accessible: ' + e.getMessage());
+                return;
+            }
         }
 
         if (failedFlows.isEmpty()) {
@@ -33,12 +38,19 @@ public with sharing class FlowHealthMonitor implements Schedulable {
         List<Incident__c> incidents = new List<Incident__c>();
         
         for (SObject flowLog : failedFlows) {
-            String flowId = (String) flowLog.get('FlowVersionId');
+            String flowId = 'Unknown';
+            DateTime failureDate = System.now();
+            try {
+                flowId = (String) flowLog.get('FlowVersionId');
+                failureDate = (DateTime) flowLog.get('CreatedDate');
+            } catch (Exception e) {
+                // Defensive — field may not exist on mock SObject type
+            }
             
             Flow_Health__c health = new Flow_Health__c();
             health.Flow_API_Name__c = 'FlowVersion_' + flowId;
             health.Last_Run_Status__c = 'Failed';
-            health.Last_Failure_Date__c = (DateTime) flowLog.get('CreatedDate');
+            health.Last_Failure_Date__c = failureDate;
             health.Error_Message__c = 'Flow Execution Error Detected';
             healthLogs.add(health);
             

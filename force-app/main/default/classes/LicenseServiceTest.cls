@@ -173,4 +173,44 @@ private class LicenseServiceTest {
 
         System.assertEquals(30, info.daysRemaining, 'Days remaining should be 30');
     }
+
+    @IsTest
+    static void testPackageLicenseActive() {
+        LicenseService.clearCache();
+        LicenseService.mockNamespace = 'test_ns';
+        
+        PackageLicense mockPL = (PackageLicense) JSON.deserialize(
+            '{"Status":"Active", "ExpirationDate":"' + String.valueOf(Date.today().addDays(45)) + '"}',
+            PackageLicense.class
+        );
+        LicenseService.mockLicenses = new List<SObject>{ mockPL };
+
+        Test.startTest();
+        LicenseService.LicenseInfo info = LicenseService.resolve();
+        Test.stopTest();
+
+        System.assertNotEquals(null, info);
+        System.assertEquals(true, info.isActive);
+        System.assertEquals(45, info.daysRemaining);
+    }
+
+    @IsTest
+    static void testPackageLicenseExpired() {
+        LicenseService.clearCache();
+        LicenseService.mockNamespace = 'test_ns';
+        
+        PackageLicense mockPL = (PackageLicense) JSON.deserialize(
+            '{"Status":"Expired", "ExpirationDate":"' + String.valueOf(Date.today().addDays(-5)) + '"}',
+            PackageLicense.class
+        );
+        LicenseService.mockLicenses = new List<SObject>{ mockPL };
+
+        Test.startTest();
+        LicenseService.LicenseInfo info = LicenseService.resolve();
+        Test.stopTest();
+
+        System.assertNotEquals(null, info);
+        System.assertEquals(false, info.isActive);
+        System.assertEquals('Free', info.plan);
+    }
 }

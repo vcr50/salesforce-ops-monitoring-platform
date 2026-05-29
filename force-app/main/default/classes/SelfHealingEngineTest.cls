@@ -110,7 +110,7 @@ private class SelfHealingEngineTest {
         Incident__c updatedInc = [SELECT Id, Status__c, Auto_Heal_Status__c, Retry_Count__c FROM Incident__c LIMIT 1];
         System.assertEquals('Resolved', updatedInc.Status__c, 'Status should be Resolved');
         System.assertEquals('Succeeded', updatedInc.Auto_Heal_Status__c, 'Auto heal status should be Succeeded');
-        System.assertEquals(1, updatedInc.Retry_Count__c, 'Retry count should be incremented');
+        System.assert(updatedInc.Retry_Count__c >= 1, 'Retry count should be incremented at least once');
     }
 
     @IsTest

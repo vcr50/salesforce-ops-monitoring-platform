@@ -8,15 +8,23 @@
 @SuppressWarnings('PMD.ApexDoc')
 public with sharing class FeatureFlag {
 
+    @TestVisible
+    private static List<Feature_Flag__mdt> mockFlags;
+
     public static Boolean isEnabled(String featureName, Id tenantId) {
         if (String.isBlank(featureName)) return false;
         
-        List<Feature_Flag__mdt> flags = [
-            SELECT Is_Enabled__c, Tenant_ID__c 
-            FROM Feature_Flag__mdt 
-            WHERE DeveloperName = :featureName
-            WITH USER_MODE
-        ];
+        List<Feature_Flag__mdt> flags = new List<Feature_Flag__mdt>();
+        if (Test.isRunningTest() && mockFlags != null) {
+            flags = mockFlags;
+        } else {
+            flags = [
+                SELECT Is_Enabled__c, Tenant_ID__c 
+                FROM Feature_Flag__mdt 
+                WHERE DeveloperName = :featureName
+                WITH USER_MODE
+            ];
+        }
 
         if (flags.isEmpty()) {
             if (featureName == 'AI_ANALYSIS' || featureName == 'AUTO_HEAL') return true;

@@ -96,19 +96,7 @@ public abstract with sharing class ExternalIntelligenceConnector extends Connect
                 CircuitBreaker.recordSuccess(endpointId);
             } else {
                 CircuitBreaker.recordFailure(endpointId);
-                // Create Incident
-                SecurityGate.requireCreateAccess('Incident__c', new Set<String>{
-                    'Integration_Endpoint__c', 'Integration_Log__c', 'Severity__c', 'Status__c', 'Description__c', 'Self_Heal_Attempted__c'
-                });
-                Incident__c inc = new Incident__c(
-                    Integration_Endpoint__c = endpointId,
-                    Integration_Log__c = logRecord.Id,
-                    Severity__c = 'High',
-                    Status__c = 'Open',
-                    Description__c = 'Connector Failure: ' + (logRecord.Error_Message__c != null ? logRecord.Error_Message__c : 'Unknown error'),
-                    Self_Heal_Attempted__c = false
-                );
-                insert as user inc;
+                // Incident is auto-created by IntegrationLogTrigger upon Integration_Log__c insert
             }
         }
 

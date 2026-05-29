@@ -209,4 +209,58 @@ private class IncidentRestApiTest {
 
         System.assertEquals(200, res.statusCode, 'Should return 200 OK');
     }
+
+    @IsTest
+    static void testPostDeactivatedEndpoint() {
+        SentinelFlow_Settings__c settings = SentinelFlow_Settings__c.getOrgDefaults();
+        settings.Endpoint_Active__c = false;
+        upsert settings;
+
+        RestRequest req = new RestRequest();
+        req.requestURI = '/services/apexrest/sentinelflow/incidents';
+        req.httpMethod = 'POST';
+        req.requestBody = Blob.valueOf(JSON.serialize(new Map<String, Object>{
+            'system' => 'Stripe',
+            'error'  => 'timeout'
+        }));
+
+        RestResponse res = new RestResponse();
+        RestContext.request = req;
+        RestContext.response = res;
+
+        Test.startTest();
+        IncidentRestApi.doPost();
+        Test.stopTest();
+
+        System.assertEquals(503, res.statusCode, 'Deactivated endpoint should return 503');
+    }
+
+    @IsTest
+    static void testPostRateLimited() {
+        Tenant__c tenant = [SELECT Id, API_Key__c FROM Tenant__c LIMIT 1];
+
+        // Enable rate limiting mock cache
+        String currentMinute = String.valueOf(DateTime.now().minute());
+        String cacheKey = 'local.SentinelCache.' + tenant.Id + '_INCIDENT_POST_' + currentMinute;
+        RateLimiter.mockCacheMap = new Map<String, Integer>{ cacheKey => 105 };
+
+        RestRequest req = new RestRequest();
+        req.requestURI = '/services/apexrest/sentinelflow/incidents';
+        req.httpMethod = 'POST';
+        req.requestBody = Blob.valueOf(JSON.serialize(new Map<String, Object>{
+            'apiKey' => tenant.API_Key__c,
+            'system' => 'Stripe',
+            'error'  => 'timeout'
+        }));
+
+        RestResponse res = new RestResponse();
+        RestContext.request = req;
+        RestContext.response = res;
+
+        Test.startTest();
+        IncidentRestApi.doPost();
+        Test.stopTest();
+
+        System.assertEquals(429, res.statusCode, 'Rate limited endpoint should return 429');
+    }
 }

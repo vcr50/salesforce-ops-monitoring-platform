@@ -15,6 +15,9 @@ public with sharing class LicenseCacheService {
     private static final String CACHE_KEY = 'LicenseInfo';
     private static final Integer CACHE_TTL_SECONDS = 3600; // 1 hour
 
+    @TestVisible
+    private static Map<String, Object> mockPartitionMap;
+
     /**
      * Resolve license info with Platform Cache support.
      * Falls back to direct resolution if cache is unavailable.
@@ -62,6 +65,13 @@ public with sharing class LicenseCacheService {
 
     private static LicenseService.LicenseInfo getFromPlatformCache() {
         try {
+            if (Test.isRunningTest() && mockPartitionMap != null) {
+                Object cached = mockPartitionMap.get(CACHE_KEY);
+                if (cached instanceof Map<String, Object>) {
+                    return deserializeLicenseInfo((Map<String, Object>) cached);
+                }
+                return null;
+            }
             Cache.OrgPartition partition = Cache.Org.getPartition(CACHE_PARTITION);
             Object cached = partition.get(CACHE_KEY);
             if (cached instanceof Map<String, Object>) {
@@ -75,6 +85,11 @@ public with sharing class LicenseCacheService {
 
     private static void putInPlatformCache(LicenseService.LicenseInfo info) {
         try {
+            if (Test.isRunningTest() && mockPartitionMap != null) {
+                Map<String, Object> serialized = serializeLicenseInfo(info);
+                mockPartitionMap.put(CACHE_KEY, serialized);
+                return;
+            }
             Cache.OrgPartition partition = Cache.Org.getPartition(CACHE_PARTITION);
             Map<String, Object> serialized = serializeLicenseInfo(info);
             partition.put(CACHE_KEY, serialized, CACHE_TTL_SECONDS);
@@ -85,6 +100,10 @@ public with sharing class LicenseCacheService {
 
     private static void removePlatformCache() {
         try {
+            if (Test.isRunningTest() && mockPartitionMap != null) {
+                mockPartitionMap.remove(CACHE_KEY);
+                return;
+            }
             Cache.OrgPartition partition = Cache.Org.getPartition(CACHE_PARTITION);
             partition.remove(CACHE_KEY);
         } catch (Exception e) {

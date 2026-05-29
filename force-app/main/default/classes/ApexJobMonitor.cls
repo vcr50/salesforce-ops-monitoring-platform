@@ -4,21 +4,34 @@ public with sharing class ApexJobMonitor implements Schedulable {
         monitorFailedJobs();
     }
     
+    @TestVisible
+    private static List<AsyncApexJob> mockFailedJobs;
+
     @future
     public static void monitorFailedJobs() {
+        monitorFailedJobsInternal();
+    }
+
+    public static void monitorFailedJobsInternal() {
         // Security Gate check
         SecurityGate.requireReadAccess('AsyncApexJob', new Set<String>{'Id', 'ApexClassId', 'JobType', 'Status', 'ExtendedStatus', 'CreatedDate'});
         SecurityGate.requireCreateable('Incident__c');
 
         // Query failed jobs from the last 24 hours
-        List<AsyncApexJob> failedJobs = [
-            SELECT Id, ApexClassId, ApexClass.Name, JobType, Status, ExtendedStatus, CreatedDate
-            FROM AsyncApexJob
-            WHERE Status IN ('Failed', 'Aborted') 
-            AND CreatedDate >= YESTERDAY
-            ORDER BY CreatedDate DESC
-            LIMIT 50
-        ];
+        List<AsyncApexJob> failedJobs = new List<AsyncApexJob>();
+        
+        if (Test.isRunningTest() && mockFailedJobs != null) {
+            failedJobs = mockFailedJobs;
+        } else {
+            failedJobs = [
+                SELECT Id, ApexClassId, ApexClass.Name, JobType, Status, ExtendedStatus, CreatedDate
+                FROM AsyncApexJob
+                WHERE Status IN ('Failed', 'Aborted') 
+                AND CreatedDate >= YESTERDAY
+                ORDER BY CreatedDate DESC
+                LIMIT 50
+            ];
+        }
 
         if (failedJobs.isEmpty()) {
             return;
@@ -40,7 +53,7 @@ public with sharing class ApexJobMonitor implements Schedulable {
 
         if (!incidentsToCreate.isEmpty()) {
             insert as user incidentsToCreate;
-            AuditTrailService.log('ApexJobMonitor', 'System', 'Created', null, String.valueOf(incidentsToCreate.size()) + ' new Apex incidents detected.');
+            AuditTrailService.log(null, 'ApexJobMonitor', 'System Created', null, String.valueOf(incidentsToCreate.size()) + ' new Apex incidents detected.');
         }
     }
 }

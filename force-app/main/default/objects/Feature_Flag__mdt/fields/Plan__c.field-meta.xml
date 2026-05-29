@@ -5,7 +5,31 @@
     <fieldManageability>DeveloperControlled</fieldManageability>
     <label>Minimum Plan</label>
     <required>false</required>
-    <type>Text</type>
-    <length>255</length>
-    <unique>false</unique>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Free</fullName>
+                <default>true</default>
+                <label>Free</label>
+            </value>
+            <value>
+                <fullName>Starter</fullName>
+                <default>false</default>
+                <label>Starter</label>
+            </value>
+            <value>
+                <fullName>Professional</fullName>
+                <default>false</default>
+                <label>Professional</label>
+            </value>
+            <value>
+                <fullName>Enterprise</fullName>
+                <default>false</default>
+                <label>Enterprise</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
 </CustomField>

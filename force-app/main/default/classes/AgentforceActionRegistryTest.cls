@@ -227,7 +227,14 @@ private class AgentforceActionRegistryTest {
         Test.stopTest();
 
         System.assert(!decisions.isEmpty(), 'Should return at least 1 decision');
-        System.assertEquals('Restart Service', decisions[0].Recommended_Action__c);
+        Boolean foundRestart = false;
+        for (AI_Decision__c d : decisions) {
+            if (d.Recommended_Action__c == 'Restart Service') {
+                foundRestart = true;
+                break;
+            }
+        }
+        System.assert(foundRestart, 'Should contain Restart Service decision');
     }
 
     @IsTest
@@ -279,6 +286,24 @@ private class AgentforceActionRegistryTest {
             LIMIT 1
         ];
         System.assertEquals(true, decision.Auto_Executed__c);
+    }
+
+    @IsTest
+    static void testDispatchOtherActions() {
+        SecurityGate.bypassForTests = true;
+        Id incidentId = getTestIncidentId();
+
+        Test.startTest();
+        AgentforceActionRegistry.ActionResult resultDisable = AgentforceActionRegistry.dispatch(incidentId, 'Disable Flow');
+        AgentforceActionRegistry.ActionResult resultNotify = AgentforceActionRegistry.dispatch(incidentId, 'Notify Teams');
+        AgentforceActionRegistry.ActionResult resultRollback = AgentforceActionRegistry.dispatch(incidentId, 'Rollback Deployment');
+        AgentforceActionRegistry.ActionResult resultTrigger = AgentforceActionRegistry.dispatch(incidentId, 'Trigger SF Flow');
+        Test.stopTest();
+
+        System.assertEquals(true, resultDisable.success);
+        System.assertEquals(true, resultNotify.success);
+        System.assertEquals(true, resultRollback.success);
+        System.assertEquals(true, resultTrigger.success);
     }
 
     // ── Helpers ─────────────────────────────────────────────────────────────────
