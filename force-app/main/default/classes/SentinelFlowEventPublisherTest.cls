@@ -57,8 +57,8 @@ public with sharing class SentinelFlowEventPublisherTest {
                      FROM Sentinel_Incident__c WHERE Id IN :incidents];
 
         Test.startTest();
-        // Clear transaction limits tracker before starting publishing
-        Integer startingDml = Limits.getDmlStatements();
+        // Reset the TestVisible counter so trigger-side INCIDENT_CREATED calls (from insert) are excluded.
+        SentinelFlowEventPublisher.publishedEventCount = 0;
 
         SentinelFlowEventPublisher.publishBulk(
             'RISK_UPDATED',
@@ -66,10 +66,10 @@ public with sharing class SentinelFlowEventPublisherTest {
             'SentinelFlowEventPublisherTest.testPublishBulkEvents',
             'Bulk risk scoring changes processed.'
         );
+        Integer actualCalls = SentinelFlowEventPublisher.publishedEventCount;
         Test.stopTest();
 
-        Integer endingDml = Limits.getDmlStatements();
-        System.assertEquals(1, endingDml - startingDml, 'Bulk events must be published in exactly 1 DML statement.');
+        System.assertEquals(1, actualCalls, 'Bulk events must be published in exactly 1 EventBus.publish() call (single DML statement).');
     }
 
     @IsTest
@@ -78,7 +78,11 @@ public with sharing class SentinelFlowEventPublisherTest {
             Incident_Type__c = 'SECURITY_EVENT',
             Risk_Level__c = 'CRITICAL',
             Environment__c = 'production',
-            Status__c = 'New'
+            Status__c = 'New',
+            // Explicitly set to 'Not Required' to prevent the trigger from emitting
+            // APPROVAL_REQUIRED during insert (Approval_Status__c defaults to 'Pending Approval')
+            // which would pre-populate the guard key and block the test's explicit calls.
+            Approval_Status__c = 'Not Required'
         );
         insert inc;
 
@@ -87,10 +91,10 @@ public with sharing class SentinelFlowEventPublisherTest {
                FROM Sentinel_Incident__c WHERE Id = :inc.Id];
 
         Test.startTest();
-        // Clear transaction tracker statements
-        Integer startingDml = Limits.getDmlStatements();
+        // Reset counter so trigger-side INCIDENT_CREATED call (from insert) is excluded.
+        SentinelFlowEventPublisher.publishedEventCount = 0;
 
-        // 1st Publish: Unique incident + eventType combo
+        // 1st Publish: Unique incident + eventType combo — should publish (counter +1)
         SentinelFlowEventPublisher.publish(
             'APPROVAL_REQUIRED', 
             inc, 
@@ -98,7 +102,7 @@ public with sharing class SentinelFlowEventPublisherTest {
             'Guardian Gate approval required.'
         );
 
-        // 2nd Publish: Duplicate combo
+        // 2nd Publish: Duplicate combo — recursion guard must suppress this (counter unchanged)
         SentinelFlowEventPublisher.publish(
             'APPROVAL_REQUIRED', 
             inc, 
@@ -106,10 +110,11 @@ public with sharing class SentinelFlowEventPublisherTest {
             'Duplicate - Should be ignored by recursion guard.'
         );
 
+        Integer actualCalls = SentinelFlowEventPublisher.publishedEventCount;
         Test.stopTest();
 
-        Integer endingDml = Limits.getDmlStatements();
-        System.assertEquals(1, endingDml - startingDml, 'Duplicate publishing calls in the same transaction must be suppressed.');
+        System.assertEquals(1, actualCalls, 
+            'Recursion guard must suppress the duplicate: EventBus.publish() should be called exactly once, not twice.');
     }
 
     @IsTest

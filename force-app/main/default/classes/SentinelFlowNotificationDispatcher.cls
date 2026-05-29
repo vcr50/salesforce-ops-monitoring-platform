@@ -34,6 +34,7 @@ public with sharing class SentinelFlowNotificationDispatcher {
 
         for (Sentinel_Incident__c incident : incidents) {
             Boolean needsEmailFallback = false;
+            Boolean hasWebhookFailure = false;
             String recordUrl = buildRecordUrl(incident.Id);
 
             if (String.isBlank(config.slackPath)) {
@@ -58,6 +59,9 @@ public with sharing class SentinelFlowNotificationDispatcher {
                     slackResult.message
                 ));
                 needsEmailFallback = needsEmailFallback || !slackResult.success;
+                if (!slackResult.success) {
+                    hasWebhookFailure = true;
+                }
             }
 
             if (String.isBlank(config.teamsPath)) {
@@ -82,6 +86,9 @@ public with sharing class SentinelFlowNotificationDispatcher {
                     teamsResult.message
                 ));
                 needsEmailFallback = needsEmailFallback || !teamsResult.success;
+                if (!teamsResult.success) {
+                    hasWebhookFailure = true;
+                }
             }
 
             if (needsEmailFallback) {
@@ -93,6 +100,14 @@ public with sharing class SentinelFlowNotificationDispatcher {
                     'Email fallback sent to ' + UserInfo.getUserEmail(),
                     null
                 ));
+            }
+            // Streaming telemetry — emit ERROR_LOGGED when a configured webhook actually failed delivery
+            if (hasWebhookFailure) {
+                SentinelFlowEventPublisher.publishSystemEvent(
+                    'ERROR_LOGGED',
+                    'SentinelFlowNotificationDispatcher',
+                    'Webhook delivery failed for incident ' + incident.Name + '. Email fallback triggered.'
+                );
             }
         }
 

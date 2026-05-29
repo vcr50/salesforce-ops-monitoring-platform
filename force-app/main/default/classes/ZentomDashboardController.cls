@@ -547,8 +547,10 @@ public with sharing class ZentomDashboardController {
             }
             
             List<Sentinel_Incident__c> incidents = [
-                SELECT Id, Status__c, Approval_Status__c, Name 
-                FROM Sentinel_Incident__c 
+                SELECT Id, Name, Status__c, Approval_Status__c,
+                       Incident_Type__c, Risk_Level__c, Execution_Status__c,
+                       AI_Reasoning_Status__c, AI_Confidence__c, Environment__c
+                FROM Sentinel_Incident__c
                 WHERE Id = :incidentId
             ];
             
@@ -574,7 +576,11 @@ public with sharing class ZentomDashboardController {
             decision.Reason__c = 'Approved by ' + approvedBy;
             decision.Action_Type__c = 'Runbook Execution';
             insert decision;
-            
+            SentinelFlowEventPublisher.publish(
+                'APPROVED', inc,
+                'ZentomDashboardController.approveWorkflow',
+                'Incident ' + inc.Name + ' approved by ' + approvedBy
+            );
             return '{"success": true, "incidentId": "' + inc.Name + '"}';
         } catch (Exception e) {
             return '{"error": "' + e.getMessage().replaceAll('"', '') + '"}';
@@ -590,8 +596,10 @@ public with sharing class ZentomDashboardController {
             }
             
             List<Sentinel_Incident__c> incidents = [
-                SELECT Id, Status__c, Approval_Status__c, Name 
-                FROM Sentinel_Incident__c 
+                SELECT Id, Name, Status__c, Approval_Status__c,
+                       Incident_Type__c, Risk_Level__c, Execution_Status__c,
+                       AI_Reasoning_Status__c, AI_Confidence__c, Environment__c
+                FROM Sentinel_Incident__c
                 WHERE Id = :incidentId
             ];
             
@@ -615,7 +623,11 @@ public with sharing class ZentomDashboardController {
             decision.Reason__c = reason;
             decision.Action_Type__c = 'Runbook Execution Cancelled';
             insert decision;
-            
+            SentinelFlowEventPublisher.publish(
+                'REJECTED', inc,
+                'ZentomDashboardController.rejectWorkflow',
+                'Incident ' + inc.Name + ' rejected. Reason: ' + reason
+            );
             return '{"success": true, "incidentId": "' + inc.Name + '"}';
         } catch (Exception e) {
             return '{"error": "' + e.getMessage().replaceAll('"', '') + '"}';
@@ -716,8 +728,10 @@ public with sharing class ZentomDashboardController {
             }
             
             List<Sentinel_Incident__c> incidents = [
-                SELECT Id, Status__c, Approval_Status__c, Execution_Status__c, Name, Runbook_Key__c 
-                FROM Sentinel_Incident__c 
+                SELECT Id, Name, Status__c, Approval_Status__c, Execution_Status__c, Runbook_Key__c,
+                       Incident_Type__c, Risk_Level__c, AI_Reasoning_Status__c,
+                       AI_Confidence__c, Environment__c
+                FROM Sentinel_Incident__c
                 WHERE Id = :incidentId
             ];
             
@@ -765,7 +779,16 @@ public with sharing class ZentomDashboardController {
             decision.Reason__c = 'Executed by ' + executedBy + '. Case ' + createdCase.CaseNumber + ' created.';
             decision.Action_Type__c = 'Runbook Execution Completed';
             insert decision;
-            
+            SentinelFlowEventPublisher.publish(
+                'ACTION_EXECUTED', inc,
+                'ZentomDashboardController.executeApprovedAction',
+                'Runbook executed for incident ' + inc.Name + ' by ' + executedBy
+            );
+            SentinelFlowEventPublisher.publish(
+                'CASE_CREATED', inc,
+                'ZentomDashboardController.executeApprovedAction',
+                'Case ' + createdCase.CaseNumber + ' created for incident ' + inc.Name
+            );
             return '{"success": true, "incidentId": "' + inc.Name + '", "caseNumber": "' + createdCase.CaseNumber + '"}';
         } catch (Exception e) {
             return '{"error": "' + e.getMessage().replaceAll('"', '') + '"}';

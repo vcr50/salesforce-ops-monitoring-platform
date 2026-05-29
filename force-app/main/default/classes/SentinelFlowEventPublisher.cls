@@ -11,6 +11,10 @@ public with sharing class SentinelFlowEventPublisher {
     // Recursion guard to prevent duplicate event publishing for the same event type on an incident
     private static Set<String> publishedIncidentKeys = new Set<String>();
 
+    // @TestVisible counter — incremented every time EventBus.publish() is actually called;
+    // lets unit tests verify guard behaviour without relying on DML-count or EventBus test APIs.
+    @TestVisible private static Integer publishedEventCount = 0;
+
     /**
      * Publishes a single telemetry event for an incident context.
      * Enforces deduplication and schema rules.
@@ -54,6 +58,7 @@ public with sharing class SentinelFlowEventPublisher {
         }
 
         Database.SaveResult result = EventBus.publish(event);
+        publishedEventCount++;
         if (!result.isSuccess()) {
             System.debug(LoggingLevel.ERROR, 
                 '[SentinelFlowEventPublisher] Failed to publish event: ' + 
@@ -116,6 +121,7 @@ public with sharing class SentinelFlowEventPublisher {
         }
 
         List<Database.SaveResult> results = EventBus.publish(events);
+        publishedEventCount++;
         for (Integer i = 0; i < results.size(); i++) {
             if (!results[i].isSuccess()) {
                 System.debug(LoggingLevel.ERROR, 
