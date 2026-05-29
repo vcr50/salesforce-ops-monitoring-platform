@@ -161,3 +161,12 @@ All webhook notification code, trigger automation, security compliance, smoke te
 - Outlined step-by-step manual validation scenarios for real-time dashboard refreshes, approval queue updates, adaptive polling disconnects, and integration health portal regressions.
 - Designed comprehensive Apex unit testing specifications for single event mapping, bulk publication constraints, and trigger recursion guards.
 - Documented pre-deployment check pipeline commands, execution dry-runs, and metadata integrity plans to prepare for full production rollout.
+
+## Milestone 49 — Streaming Telemetry Implementation
+
+### 49A — Create SentinelFlow_Dashboard_Event__e metadata: Complete
+- Created `SentinelFlow_Dashboard_Event__e` Platform Event object-meta file under `force-app/main/default/objects/SentinelFlow_Dashboard_Event__e/`.
+- Created 13 custom field metadata files under the `fields/` subdirectory: `Event_Type__c`, `Incident_Id__c`, `Incident_Number__c`, `Incident_Type__c`, `Risk_Level__c`, `Approval_Status__c`, `Execution_Status__c`, `AI_Reasoning_Status__c`, `AI_Confidence__c`, `Environment__c`, `Event_Source__c`, `Event_Timestamp__c`, `Message__c`.
+- Designed event fields to exclude raw payloads, secrets, and raw AI outputs, ensuring FLS safety by design.
+- Enforced HighVolume eventType and PublishAfterCommit behavior.
+

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Real-time streaming event emitted when SentinelFlow incident state changes. Powers dashboard live-refresh and reduces polling overhead.</description>
+    <eventType>HighVolume</eventType>
+    <label>SentinelFlow Dashboard Event</label>
+    <pluralLabel>SentinelFlow Dashboard Events</pluralLabel>
+    <publishBehavior>PublishAfterCommit</publishBehavior>
+</CustomObject>

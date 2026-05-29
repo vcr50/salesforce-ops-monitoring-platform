@@ -1,66 +1,44 @@
-# Milestone 48: Streaming Telemetry
+# Milestone 49: Streaming Telemetry Implementation
 
-## 48A — Streaming Telemetry Architecture Plan ✅
-- [x] Research current polling model in `zentomDashboard.js` and `ZentomDashboardController.cls`
-- [x] Identify existing Platform Events (`Flow_Health_Event__e`, `Integration_Health_Event__e`)
-- [x] Identify existing empApi subscriptions (4 Portal LWC components)
-- [x] Design hybrid streaming + fallback polling architecture
-- [x] Define `SentinelFlow_Dashboard_Event__e` Platform Event contract
-- [x] Define event publishing points (triggers, controllers, dispatcher)
-- [x] Document governor limit analysis and security considerations
-- [x] Define success criteria (functional, performance, safety)
-- [x] Create `docs/streaming-telemetry-architecture-plan.md`
+## 49A — Create SentinelFlow_Dashboard_Event__e metadata ✅
+- [x] Create object-meta.xml for `SentinelFlow_Dashboard_Event__e`
+- [x] Create 13 field metadata files in `fields/` subdirectory
+- [x] Enforce `HighVolume` event type and `PublishAfterCommit` behavior
+- [x] Ensure fields omit secrets, raw payloads, and hidden AI reasoning
 - [x] Update `docs/maintenance.md`
+- [x] Update `task.md`
 
-## 48B — Platform Event Contract Design ✅
-- [x] Define `SentinelFlow_Dashboard_Event__e` with 13 fields
-- [x] Define 11 event types with categories and descriptions
-- [x] Map 5 emit sources to specific event types with Apex examples
-- [x] Design `SentinelFlowEventPublisher` centralized publishing utility
-- [x] Define deduplication strategy (trigger-level + LWC debounce)
-- [x] Document CometD channel and replay ID strategy
-- [x] Create payload examples (INCIDENT_CREATED, APPROVED, DASHBOARD_REFRESH_REQUESTED)
-- [x] Security checklist: no raw payloads, no secrets, no PII, no hidden AI reasoning
-- [x] Create `docs/streaming-telemetry-platform-event-contract.md`
-- [x] Update `docs/maintenance.md`
+## 49B — Create SentinelFlowEventPublisher Apex service
+- [ ] Create `SentinelFlowEventPublisher.cls` with publish, publishBulk, and publishSystemEvent methods
+- [ ] Implement `publishedIncidentIds` recursion guard set
+- [ ] Create `SentinelFlowEventPublisherTest.cls` matching unit test specifications
+- [ ] Achieve 100% code coverage on publisher service class
 
-## 48C — LWC empApi Subscription Design ✅
-- [x] Create `streamingTelemetry.js` reusable utility module
-- [x] Integrate `empApi` subscription into `zentomDashboard.js`
-- [x] Add debounce logic (2-second window)
-- [x] Subscribe to `SentinelFlow_Dashboard_Event__e` + existing `Integration_Health_Event__e`
-- [x] Add event type filtering for selective refresh (future Phase 2)
-- [x] Create `docs/streaming-telemetry-lwc-subscription-design.md`
+## 49C — Emit events from incident approval/action/error flows
+- [ ] Modify `SentinelIncidentTrigger.trigger` to publish `INCIDENT_CREATED`, `APPROVAL_REQUIRED`, and `RISK_UPDATED` events
+- [ ] Modify `ZentomDashboardController.cls` to publish `APPROVED`, `REJECTED`, `ACTION_READY`, `ACTION_EXECUTED`, and `CASE_CREATED` events
+- [ ] Modify `SentinelFlowNotificationDispatcher.cls` to publish `ERROR_LOGGED` event on webhook fail
+- [ ] Verify webhook/trigger backward compatibility in tests
 
+## 49D — Add LWC empApi subscription to dashboard
+- [ ] Create `force-app/main/default/lwc/streamingTelemetry` utility module
+- [ ] Implement subscription, unsubscription, and global error listener APIs
+- [ ] Import utility module in `zentomDashboard.js`
+- [ ] Implement 2-second debounce mechanism for data refreshing
+- [ ] Subscribe to dashboard and integration health events
 
-## 48D — Fallback Polling Strategy ✅
-- [x] Implement adaptive polling interval (60s streaming / 30s fallback)
-- [x] Add streaming health detection (`isStreamingActive`)
-- [x] Ensure `disconnectedCallback` cleans up subscriptions and timers
-- [x] Test graceful degradation when streaming is unavailable
-- [x] Create `docs/streaming-telemetry-fallback-polling-design.md`
+## 49E — Add fallback polling/reconnect behavior
+- [ ] Implement dynamic polling interval switching (60s active / 30s fallback)
+- [ ] Implement CometD transport error listeners and connection drop triggers
+- [ ] Implement silent background 30-second re-subscription retry loop
+- [ ] Guarantee cleanup of timers and subscriptions in `disconnectedCallback()`
 
+## 49F — Validate streaming + regression tests
+- [ ] Deploy streaming telemetry implementation to `astrosoft` sandbox
+- [ ] Validate manual QA scenarios A (incident insert toast), B (approval queue refresh), C (adaptive polling drops), and D (portal regressions)
+- [ ] Execute full Apex test suite (400+ unit tests) and ensure 100% success
 
-## 48E — Security / Governor Limit Review ✅
-- [x] Update `SentinelFlow_Admin` permission set with `SentinelFlow_Dashboard_Event__e` CRUD
-- [x] Verify FLS compliance for event fields
-- [x] Add `EventBus.publish()` calls to triggers and controllers
-- [x] Validate DML governor limits not exceeded with event publishing
-- [x] Create `docs/streaming-telemetry-security-governor-limit-review.md`
-
-
-## 48F — Prototype Validation ✅
-- [x] Deploy all changes to `astrosoft` (Design mapped)
-- [x] Test: Incident insert → dashboard updates within 3 seconds (QA script written)
-- [x] Test: Approval approve/reject → dashboard updates instantly (QA script written)
-- [x] Test: Streaming disconnected → polling resumes at 30s (QA script written)
-- [x] Test: No duplicate refreshes from stream + poll overlap (QA script written)
-- [x] Test: Portal LWC streaming components unaffected (regression test written)
-- [x] Run full Apex test suite (400+ tests) (Command planned)
-- [x] Create `docs/streaming-telemetry-prototype-validation-plan.md`
-
-## 48G — Streaming Telemetry Wrap-up ✅
-- [x] Update `docs/maintenance.md` with final status
-- [x] Create walkthrough / design documentation
-- [x] Commit and push all changes
-
+## 49G — Streaming telemetry implementation wrap-up
+- [ ] Update `docs/maintenance.md` with final results
+- [ ] Create implementation walkthrough / design results documentation
+- [ ] Commit all implementation files and push to remote
