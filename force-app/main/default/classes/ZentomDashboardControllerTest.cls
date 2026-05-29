@@ -563,4 +563,103 @@ private class ZentomDashboardControllerTest {
         
         Test.stopTest();
     }
+
+    @IsTest
+    static void testGetKeysetPaginatedIncidents_AllScenarios() {
+        // Insert a variety of incidents for keyset checks
+        List<Sentinel_Incident__c> incidents = new List<Sentinel_Incident__c>();
+        
+        Sentinel_Incident__c inc1 = createIncident('CRITICAL', 'Pending Approval', 'Not Started', 'Approval Required', 'RUNBOOK_A');
+        inc1.Environment__c = 'production';
+        inc1.Incident_Type__c = 'FLOW_FAILURE';
+        inc1.AI_Confidence__c = 95;
+        inc1.AI_Reasoning_Status__c = 'ACTIVE';
+        incidents.add(inc1);
+        
+        Sentinel_Incident__c inc2 = createIncident('LOW', 'Approved', 'Executed', 'Closed', 'RUNBOOK_B');
+        inc2.Environment__c = 'sandbox';
+        inc2.Incident_Type__c = 'INTEGRATION_ERROR';
+        inc2.AI_Confidence__c = 45;
+        inc2.AI_Reasoning_Status__c = 'ACTIVE';
+        incidents.add(inc2);
+        
+        Sentinel_Incident__c inc3 = createIncident('HIGH', 'Approved', 'Executed', 'Closed', 'RUNBOOK_C');
+        inc3.Environment__c = 'production';
+        inc3.Incident_Type__c = 'APEX_EXCEPTION';
+        inc3.AI_Confidence__c = 85;
+        inc3.AI_Reasoning_Status__c = 'ACTIVE';
+        incidents.add(inc3);
+
+        insert incidents;
+
+        Test.startTest();
+        
+        // Scenario 1: First page keyset query (default CreatedDate DESC)
+        ZentomDashboardController.KeysetPaginatedRequest reqDefault = new ZentomDashboardController.KeysetPaginatedRequest();
+        reqDefault.pageSize = 2;
+        reqDefault.sortBy = 'CreatedDate';
+        reqDefault.sortDirection = 'DESC';
+        
+        ZentomDashboardController.KeysetPaginatedResult resultDefault = ZentomDashboardController.getKeysetPaginatedIncidents(reqDefault);
+        System.assertEquals(3, resultDefault.totalRecords);
+        System.assertEquals(2, resultDefault.records.size());
+        System.assertEquals(true, resultDefault.hasMore);
+        System.assertNotEquals(null, resultDefault.nextCursorCreatedDate);
+        System.assertNotEquals(null, resultDefault.nextCursorId);
+        
+        // Scenario 2: Forward pagination (NEXT)
+        ZentomDashboardController.KeysetPaginatedRequest reqNext = new ZentomDashboardController.KeysetPaginatedRequest();
+        reqNext.pageSize = 2;
+        reqNext.sortBy = 'CreatedDate';
+        reqNext.sortDirection = 'DESC';
+        reqNext.direction = 'NEXT';
+        reqNext.nextCursorCreatedDate = resultDefault.nextCursorCreatedDate;
+        reqNext.nextCursorId = resultDefault.nextCursorId;
+        
+        ZentomDashboardController.KeysetPaginatedResult resultNext = ZentomDashboardController.getKeysetPaginatedIncidents(reqNext);
+        System.assertEquals(1, resultNext.records.size());
+        
+        // Scenario 3: Backward pagination (PREV)
+        ZentomDashboardController.KeysetPaginatedRequest reqPrev = new ZentomDashboardController.KeysetPaginatedRequest();
+        reqPrev.pageSize = 2;
+        reqPrev.sortBy = 'CreatedDate';
+        reqPrev.sortDirection = 'DESC';
+        reqPrev.direction = 'PREV';
+        reqPrev.previousCursorCreatedDate = resultNext.previousCursorCreatedDate;
+        reqPrev.previousCursorId = resultNext.previousCursorId;
+        
+        ZentomDashboardController.KeysetPaginatedResult resultPrev = ZentomDashboardController.getKeysetPaginatedIncidents(reqPrev);
+        System.assertEquals(2, resultPrev.records.size());
+        
+        // Scenario 4: Fallback to offset pagination (sort by Name)
+        ZentomDashboardController.KeysetPaginatedRequest reqFallback = new ZentomDashboardController.KeysetPaginatedRequest();
+        reqFallback.pageSize = 2;
+        reqFallback.pageNumber = 2;
+        reqFallback.sortBy = 'Name';
+        reqFallback.sortDirection = 'ASC';
+        
+        ZentomDashboardController.KeysetPaginatedResult resultFallback = ZentomDashboardController.getKeysetPaginatedIncidents(reqFallback);
+        System.assertEquals(3, resultFallback.totalRecords);
+        System.assertEquals(1, resultFallback.records.size()); // page 2 with page size 2 has 1 record
+        
+        // Scenario 5: Filters check
+        ZentomDashboardController.KeysetPaginatedRequest reqFilter = new ZentomDashboardController.KeysetPaginatedRequest();
+        reqFilter.pageSize = 25;
+        reqFilter.filters = new ZentomDashboardController.FilterWrapper();
+        reqFilter.filters.riskLevel = 'CRITICAL';
+        reqFilter.filters.environment = 'production';
+        reqFilter.filters.status = 'Approval Required';
+        reqFilter.filters.incidentType = 'FLOW_FAILURE';
+        reqFilter.filters.aiStatus = 'HIGH_CONFIDENCE';
+        reqFilter.filters.dateRange = 'TODAY';
+        
+        ZentomDashboardController.KeysetPaginatedResult resultFilter = ZentomDashboardController.getKeysetPaginatedIncidents(reqFilter);
+        System.assertEquals(1, resultFilter.records.size());
+        
+        // Scenario 6: Null request check
+        ZentomDashboardController.KeysetPaginatedResult resultNull = ZentomDashboardController.getKeysetPaginatedIncidents(null);
+        System.assertNotEquals(null, resultNull);
+        
+        Test.stopTest();
+    }
 }

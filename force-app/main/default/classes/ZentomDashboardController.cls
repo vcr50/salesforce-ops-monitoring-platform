@@ -253,6 +253,197 @@ public with sharing class ZentomDashboardController {
     }
 
     @AuraEnabled(cacheable=true)
+    public static KeysetPaginatedResult getKeysetPaginatedIncidents(KeysetPaginatedRequest req) {
+        if (req == null) {
+            return new KeysetPaginatedResult();
+        }
+        
+        Integer limitVal = (req.pageSize != null && req.pageSize > 0 && req.pageSize <= 100) ? req.pageSize : 25;
+        String sortByField = 'CreatedDate';
+        if (String.isNotBlank(req.sortBy) && isValidSortField(req.sortBy)) {
+            sortByField = req.sortBy;
+        }
+        
+        String sortDir = 'DESC';
+        if (String.isNotBlank(req.sortDirection) && (req.sortDirection.toUpperCase() == 'ASC' || req.sortDirection.toUpperCase() == 'DESC')) {
+            sortDir = req.sortDirection.toUpperCase();
+        }
+        
+        // 1. Build WHERE conditions for filters (WITHOUT keyset pagination cursor)
+        List<String> baseConditions = new List<String>();
+        FilterWrapper filters = req.filters;
+        Datetime cutoff = null;
+        String riskLevel = null;
+        String status = null;
+        String environment = null;
+        String incidentType = null;
+        String aiStatus = null;
+        
+        if (filters != null) {
+            cutoff = getCutoff(filters.dateRange);
+            if (cutoff != null) {
+                baseConditions.add('CreatedDate >= :cutoff');
+            }
+            riskLevel = filters.riskLevel;
+            if (String.isNotBlank(riskLevel) && riskLevel != 'ALL') {
+                baseConditions.add('Risk_Level__c = :riskLevel');
+            }
+            status = filters.status;
+            if (String.isNotBlank(status) && status != 'ALL') {
+                baseConditions.add('Status__c = :status');
+            }
+            environment = filters.environment;
+            if (String.isNotBlank(environment) && environment != 'ALL') {
+                baseConditions.add('Environment__c = :environment');
+            }
+            incidentType = filters.incidentType;
+            if (String.isNotBlank(incidentType) && incidentType != 'ALL') {
+                baseConditions.add('Incident_Type__c = :incidentType');
+            }
+            aiStatus = filters.aiStatus;
+            if (String.isNotBlank(aiStatus) && aiStatus != 'ALL') {
+                if (aiStatus == 'HIGH_CONFIDENCE') {
+                    baseConditions.add('AI_Confidence__c > 80');
+                } else if (aiStatus == 'REVIEW_NEEDED') {
+                    baseConditions.add('AI_Confidence__c <= 80');
+                } else if (aiStatus == 'ACTIVE') {
+                    baseConditions.add('AI_Reasoning_Status__c = \'ACTIVE\'');
+                }
+            }
+        }
+        
+        String countWhereClause = baseConditions.isEmpty() ? '' : 'WHERE ' + String.join(baseConditions, ' AND ');
+        
+        // 2. Execute COUNT Query (strictly with filter conditions only, no keyset)
+        String countQuery = 'SELECT COUNT() FROM Sentinel_Incident__c ' + countWhereClause;
+        Integer totalCount = Database.countQuery(countQuery);
+        
+        // 3. Build data query conditions (including keyset cursor condition if applicable)
+        List<String> dataConditions = new List<String>(baseConditions);
+        
+        Datetime cursorCreatedDate = null;
+        String cursorId = null;
+        Boolean isKeysetApplied = false;
+        
+        if (String.isNotBlank(req.direction) && sortByField == 'CreatedDate') {
+            if (req.direction == 'NEXT' && String.isNotBlank(req.nextCursorId) && String.isNotBlank(req.nextCursorCreatedDate)) {
+                cursorId = req.nextCursorId;
+                cursorCreatedDate = (Datetime)parseCursorValue('CreatedDate', req.nextCursorCreatedDate);
+                isKeysetApplied = true;
+            } else if (req.direction == 'PREV' && String.isNotBlank(req.previousCursorId) && String.isNotBlank(req.previousCursorCreatedDate)) {
+                cursorId = req.previousCursorId;
+                cursorCreatedDate = (Datetime)parseCursorValue('CreatedDate', req.previousCursorCreatedDate);
+                isKeysetApplied = true;
+            }
+        }
+        
+        if (isKeysetApplied) {
+            Boolean lookForSmaller = false;
+            if (req.direction == 'NEXT' && sortDir == 'DESC') lookForSmaller = true;
+            if (req.direction == 'PREV' && sortDir == 'ASC') lookForSmaller = true;
+            
+            String op = lookForSmaller ? '<' : '>';
+            dataConditions.add('(CreatedDate ' + op + ' :cursorCreatedDate OR (CreatedDate = :cursorCreatedDate AND Id ' + op + ' :cursorId))');
+        }
+        
+        String dataWhereClause = dataConditions.isEmpty() ? '' : 'WHERE ' + String.join(dataConditions, ' AND ');
+        
+        // Determine sorting direction for database query
+        String querySortDir = sortDir;
+        if (req.direction == 'PREV' && isKeysetApplied) {
+            querySortDir = (sortDir == 'DESC') ? 'ASC' : 'DESC';
+        }
+        
+        String dataQuery = '';
+        Integer offsetVal = 0;
+        
+        if (sortByField != 'CreatedDate') {
+            Integer pageNum = (req.pageNumber != null && req.pageNumber > 0) ? req.pageNumber : 1;
+            offsetVal = (pageNum - 1) * limitVal;
+            if (offsetVal > 2000) {
+                offsetVal = 2000;
+            }
+            dataQuery = 'SELECT Id, Name, Incident_Type__c, Risk_Level__c, Risk_Score__c, ' +
+                        'Policy_Decision__c, Recommendation_Status__c, Status__c, ' +
+                        'Approval_Status__c, Execution_Status__c, Execution_Action__c, ' +
+                        'Execution_Result__c, Executed_At__c, Runbook_Key__c, ' +
+                        'Created_Case__c, Created_Case__r.CaseNumber, CreatedDate, ' +
+                        'Environment__c, AI_Confidence__c, AI_Reasoning_Status__c ' +
+                        'FROM Sentinel_Incident__c ' +
+                        dataWhereClause + ' ' +
+                        'ORDER BY ' + sortByField + ' ' + querySortDir + ', Id ' + querySortDir + ' ' +
+                        'LIMIT :limitVal OFFSET :offsetVal';
+        } else {
+            dataQuery = 'SELECT Id, Name, Incident_Type__c, Risk_Level__c, Risk_Score__c, ' +
+                        'Policy_Decision__c, Recommendation_Status__c, Status__c, ' +
+                        'Approval_Status__c, Execution_Status__c, Execution_Action__c, ' +
+                        'Execution_Result__c, Executed_At__c, Runbook_Key__c, ' +
+                        'Created_Case__c, Created_Case__r.CaseNumber, CreatedDate, ' +
+                        'Environment__c, AI_Confidence__c, AI_Reasoning_Status__c ' +
+                        'FROM Sentinel_Incident__c ' +
+                        dataWhereClause + ' ' +
+                        'ORDER BY ' + sortByField + ' ' + querySortDir + ', Id ' + querySortDir + ' ' +
+                        'LIMIT :limitVal';
+        }
+                           
+        List<Sentinel_Incident__c> incidents = Database.query(dataQuery);
+        
+        // If it was a PREV query, reverse the list in-memory to restore the user's expected sorting
+        if (req.direction == 'PREV' && isKeysetApplied && !incidents.isEmpty()) {
+            List<Sentinel_Incident__c> reversed = new List<Sentinel_Incident__c>();
+            for (Integer i = incidents.size() - 1; i >= 0; i--) {
+                reversed.add(incidents[i]);
+            }
+            incidents = reversed;
+        }
+        
+        List<IncidentRow> rows = toIncidentRows(incidents);
+        
+        KeysetPaginatedResult result = new KeysetPaginatedResult();
+        result.records = rows;
+        result.totalRecords = totalCount;
+        result.hasMore = totalCount > limitVal;
+        
+        Integer returnPageNum = (req.pageNumber != null && req.pageNumber > 0) ? req.pageNumber : 1;
+        result.pageNumber = returnPageNum;
+        result.totalPages = (totalCount == 0) ? 0 : (Integer)Math.ceil((Double)totalCount / limitVal);
+        
+        if (!rows.isEmpty()) {
+            result.previousCursorCreatedDate = String.valueOf(rows[0].createdDate.getTime());
+            result.previousCursorId = rows[0].id;
+            
+            result.nextCursorCreatedDate = String.valueOf(rows[rows.size() - 1].createdDate.getTime());
+            result.nextCursorId = rows[rows.size() - 1].id;
+        }
+        
+        return result;
+    }
+
+    private static Object parseCursorValue(String sortBy, String valueStr) {
+        if (String.isBlank(valueStr)) {
+            return null;
+        }
+        if (sortBy == 'CreatedDate') {
+            try {
+                if (valueStr.contains('T') || valueStr.contains('-')) {
+                    String jsonStr = '"' + valueStr + '"';
+                    return (Datetime)JSON.deserialize(jsonStr, Datetime.class);
+                } else {
+                    return Datetime.newInstance(Long.valueOf(valueStr));
+                }
+            } catch (Exception e) {
+                try {
+                    return Datetime.valueOf(valueStr.replace('T', ' ').replace('Z', ''));
+                } catch (Exception ex) {
+                    return null;
+                }
+            }
+        }
+        return valueStr;
+    }
+
+
+    @AuraEnabled(cacheable=true)
     public static List<RiskBucket> getRiskDistribution(String dateRange) {
         Map<String, Integer> counts = new Map<String, Integer>{
             'CRITICAL' => 0,
@@ -517,6 +708,41 @@ public with sharing class ZentomDashboardController {
         @AuraEnabled public Integer pageNumber { get; set; }
         @AuraEnabled public Integer totalPages { get; set; }
     }
+
+    public class FilterWrapper {
+        @AuraEnabled public String dateRange { get; set; }
+        @AuraEnabled public String riskLevel { get; set; }
+        @AuraEnabled public String status { get; set; }
+        @AuraEnabled public String environment { get; set; }
+        @AuraEnabled public String incidentType { get; set; }
+        @AuraEnabled public String aiStatus { get; set; }
+    }
+
+    public class KeysetPaginatedRequest {
+        @AuraEnabled public Integer pageNumber { get; set; }
+        @AuraEnabled public Integer pageSize { get; set; }
+        @AuraEnabled public String sortBy { get; set; }
+        @AuraEnabled public String sortDirection { get; set; }
+        @AuraEnabled public FilterWrapper filters { get; set; }
+        @AuraEnabled public String nextCursorCreatedDate { get; set; }
+        @AuraEnabled public String nextCursorId { get; set; }
+        @AuraEnabled public String previousCursorCreatedDate { get; set; }
+        @AuraEnabled public String previousCursorId { get; set; }
+        @AuraEnabled public String direction { get; set; } // 'NEXT' or 'PREV'
+    }
+
+    public class KeysetPaginatedResult {
+        @AuraEnabled public List<IncidentRow> records { get; set; }
+        @AuraEnabled public Integer totalRecords { get; set; }
+        @AuraEnabled public Boolean hasMore { get; set; }
+        @AuraEnabled public String nextCursorCreatedDate { get; set; }
+        @AuraEnabled public String nextCursorId { get; set; }
+        @AuraEnabled public String previousCursorCreatedDate { get; set; }
+        @AuraEnabled public String previousCursorId { get; set; }
+        @AuraEnabled public Integer pageNumber { get; set; }
+        @AuraEnabled public Integer totalPages { get; set; }
+    }
+
 
     public class DashboardSummary {
         @AuraEnabled public Integer totalIncidents = 0;

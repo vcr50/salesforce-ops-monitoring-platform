@@ -91,20 +91,20 @@
 - [x] Update `docs/maintenance.md`
 - [x] Update `task.md`
 
-### 51B — Apex Cursor Request / Result
-- [ ] Add new wrapper fields for keyset boundaries on Request & Result classes
-- [ ] Support page direction, sort cursors, and row-level cursor mappings
+### 51B — Apex Cursor Request / Result ✅
+- [x] Add new wrapper fields for keyset boundaries on Request & Result classes
+- [x] Support page direction, sort cursors, and row-level cursor mappings
 
-### 51C — Apex Method
-- [ ] Implement `getKeysetPaginatedIncidents(KeysetPaginatedRequest req)`
-- [ ] Support first page, next page, and reversed prev page ordering in SOQL
-- [ ] Maintain old offset query wrapper as a fallback
+### 51C — Apex Method ✅
+- [x] Implement `getKeysetPaginatedIncidents(KeysetPaginatedRequest req)`
+- [x] Support first page, next page, and reversed prev page ordering in SOQL
+- [x] Maintain old offset query wrapper as a fallback
 
-### 51D — LWC Update
-- [ ] Incorporate cursor boundary tracking inside LWC state manager
-- [ ] Bind list queries to wire `getKeysetPaginatedIncidents`
-- [ ] Adapt page transitions to set boundary cursors instead of offsets
+### 51D — LWC Update ✅
+- [x] Incorporate cursor boundary tracking inside LWC state manager
+- [x] Bind list queries to wire `getKeysetPaginatedIncidents`
+- [x] Adapt page transitions to set boundary cursors instead of offsets
 
-### 51E — Tests and hard regressions
-- [ ] Test cursor-based next, prev, and default views in `ZentomDashboardControllerTest.cls`
-- [ ] Run validation checks and secure coverage limits
+### 51E — Tests and hard regressions ✅
+- [x] Test cursor-based next, prev, and default views in `ZentomDashboardControllerTest.cls`
+- [x] Run validation checks and secure coverage limits

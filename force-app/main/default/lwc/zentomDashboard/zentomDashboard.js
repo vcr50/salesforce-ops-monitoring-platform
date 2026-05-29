@@ -5,7 +5,7 @@ import { createStreamingSession } from 'c/streamingTelemetry';
 
 import getDashboardData from '@salesforce/apex/ZentomDashboardController.getDashboardData';
 import getReplayExportData from '@salesforce/apex/ZentomDashboardController.getReplayExportData';
-import getPaginatedIncidents from '@salesforce/apex/ZentomDashboardController.getPaginatedIncidents';
+import getKeysetPaginatedIncidents from '@salesforce/apex/ZentomDashboardController.getKeysetPaginatedIncidents';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const POLL_INTERVAL_ACTIVE_MS   = 60000; // relaxed 60s — streaming covers near-real-time
@@ -27,7 +27,7 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
     @track _streamingActive = false;
     @track _lastEventType   = null;
 
-    // ── Milestone 50: Server-side pagination state ─────────────────────
+    // ── Milestone 50/51: Server-side pagination state ─────────────────────
     @track pageNumber = 1;
     @track pageSize = 25;
     @track sortBy = 'CreatedDate';
@@ -36,6 +36,13 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
     @track totalPages = 0;
     @track paginatedIncidents = [];
     wiredPaginatedResult;
+
+    // Keyset pagination cursor state
+    nextCursorCreatedDate = null;
+    nextCursorId = null;
+    previousCursorCreatedDate = null;
+    previousCursorId = null;
+    pageDirection = null; // 'NEXT' or 'PREV'
 
     // ── Milestone 43: Filter state ──────────────────────────────────────
     @track filterRisk = 'ALL';
@@ -161,16 +168,23 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
             pageSize: this.pageSize,
             sortBy: this.sortBy,
             sortDirection: this.sortDirection,
-            dateRange: this.dateRange,
-            riskLevel: this.filterRisk,
-            status: this.filterStatus,
-            environment: this.filterEnvironment,
-            incidentType: this.filterType,
-            aiStatus: this.filterAiStatus
+            filters: {
+                dateRange: this.dateRange,
+                riskLevel: this.filterRisk,
+                status: this.filterStatus,
+                environment: this.filterEnvironment,
+                incidentType: this.filterType,
+                aiStatus: this.filterAiStatus
+            },
+            nextCursorCreatedDate: this.nextCursorCreatedDate,
+            nextCursorId: this.nextCursorId,
+            previousCursorCreatedDate: this.previousCursorCreatedDate,
+            previousCursorId: this.previousCursorId,
+            direction: this.pageDirection
         };
     }
 
-    @wire(getPaginatedIncidents, { req: '$paginatedRequest' })
+    @wire(getKeysetPaginatedIncidents, { req: '$paginatedRequest' })
     wiredGetPaginatedIncidents(result) {
         this.wiredPaginatedResult = result;
         if (result.data) {
@@ -517,8 +531,18 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
     }
 
     // ── Event handlers ──────────────────────────────────────────────────
+    resetCursors() {
+        this.nextCursorCreatedDate = null;
+        this.nextCursorId = null;
+        this.previousCursorCreatedDate = null;
+        this.previousCursorId = null;
+        this.pageDirection = null;
+    }
+
+    // ── Event handlers ──────────────────────────────────────────────────
     handleRangeChange(event) {
         this.dateRange = event.detail ? event.detail.value : event.target.dataset.range;
+        this.resetCursors();
         this.pageNumber = 1;
         refreshApex(this.wiredDashboard);
     }
@@ -535,36 +559,42 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
     handleFilterRiskChange(event) {
         this.filterRisk = event.detail.value;
         this.presetView = 'ALL';
+        this.resetCursors();
         this.pageNumber = 1;
     }
 
     handleFilterStatusChange(event) {
         this.filterStatus = event.detail.value;
         this.presetView = 'ALL';
+        this.resetCursors();
         this.pageNumber = 1;
     }
 
     handleFilterEnvironmentChange(event) {
         this.filterEnvironment = event.detail.value;
         this.presetView = 'ALL';
+        this.resetCursors();
         this.pageNumber = 1;
     }
 
     handleFilterTypeChange(event) {
         this.filterType = event.detail.value;
         this.presetView = 'ALL';
+        this.resetCursors();
         this.pageNumber = 1;
     }
 
     handleFilterAiStatusChange(event) {
         this.filterAiStatus = event.detail.value;
         this.presetView = 'ALL';
+        this.resetCursors();
         this.pageNumber = 1;
     }
 
     handlePresetChange(event) {
         this.presetView = event.detail.value;
         this.pageNumber = 1;
+        this.resetCursors();
         if (this.presetView === 'NEEDS_APPROVAL') {
             this.handleClearFilters();
             this.filterStatus = 'Approval Required';
@@ -597,24 +627,46 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
         this.filterType = 'ALL';
         this.filterAiStatus = 'ALL';
         this.presetView = 'ALL';
+        this.resetCursors();
         this.pageNumber = 1;
     }
 
-    // ── Milestone 50: Server-side pagination handlers ──────────────────
+    // ── Milestone 50/51: Server-side pagination handlers ──────────────────
     handlePrevPage() {
         if (this.pageNumber > 1) {
+            if (this.sortBy === 'CreatedDate') {
+                this.pageDirection = 'PREV';
+                if (this.paginatedIncidents.length > 0) {
+                    const firstRec = this.paginatedIncidents[0];
+                    this.previousCursorCreatedDate = firstRec.createdDate ? String(new Date(firstRec.createdDate).getTime()) : null;
+                    this.previousCursorId = firstRec.id;
+                }
+                this.nextCursorCreatedDate = null;
+                this.nextCursorId = null;
+            }
             this.pageNumber--;
         }
     }
 
     handleNextPage() {
         if (this.pageNumber < this.totalPages) {
+            if (this.sortBy === 'CreatedDate') {
+                this.pageDirection = 'NEXT';
+                if (this.paginatedIncidents.length > 0) {
+                    const lastRec = this.paginatedIncidents[this.paginatedIncidents.length - 1];
+                    this.nextCursorCreatedDate = lastRec.createdDate ? String(new Date(lastRec.createdDate).getTime()) : null;
+                    this.nextCursorId = lastRec.id;
+                }
+                this.previousCursorCreatedDate = null;
+                this.previousCursorId = null;
+            }
             this.pageNumber++;
         }
     }
 
     handlePageSizeChange(event) {
         this.pageSize = parseInt(event.detail.value, 10);
+        this.resetCursors();
         this.pageNumber = 1;
     }
 
@@ -626,6 +678,7 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
             this.sortBy = sortedBy;
             this.sortDirection = 'DESC'; // Default to DESC
         }
+        this.resetCursors();
         this.pageNumber = 1;
     }
 
