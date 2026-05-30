@@ -181,118 +181,30 @@
 ### 54E — Prediction UI / Command Center Design ✅
 - [x] Create `docs/prediction-engine-command-center-ui-design.md` detailing prediction layouts, states, detail panel, operator actions, safe wording policies, grids, and error modes
 
-## Milestone 55 — Prediction Engine Implementation
-
-### 55A — Custom Object Metadata ✅
+## Milestone 55 — Prediction Engine Implementation ✅
 - [x] Create `Sentinel_Anomaly_Signal__c` custom object metadata and its fields
 - [x] Create `Sentinel_Prediction__c` custom object metadata and its fields
-
-### 55B — Permission Set Updates ✅
 - [x] Update `SentinelFlow_Admin` with full CRUD/FLS for the new objects
 - [x] Update `SentinelFlow_Operator` with read/edit FLS for statuses/decisions
-
-### 55C — Apex Service Layer ✅
 - [x] Implement `SentinelPredictionScoringService.cls` scoring logic
 - [x] Implement `SentinelPredictionExplanationService.cls` Natural Language templates
 - [x] Implement `SentinelPredictionQueueable.cls` queueable envelope
 - [x] Implement `SentinelPredictionEngine.cls` central coordinator
-
-### 55D — Apex Test Coverage ✅
 - [x] Implement `SentinelPredictionEngineTest.cls` verifying calculations, bulk limits, and CPU overhead
-
-### 55E — LWC Dashboard Integration ✅
 - [x] Integrate prediction widget into `zentomDashboard.html`
 - [x] Implement wire adapters and controls in `zentomDashboard.js`
 - [x] Apply glassmorphic visual indicator styling in `zentomDashboard.css`
+- [x] Deploy prediction code and metadata to dev sandbox `vjdev@asap.com`
+- [x] Run full Apex unit tests to verify regression safety
+- [x] Manually verify prediction warning UI states on the dashboard
 
-### 55F — Deploy & QA ✅
-- [x] Deploy all prediction components to `vjdev@asap.com`
-- [x] Validate regression tests pass with 100% success rate
+## Milestone 56 — Prediction Engine QA + Trust Validation ✅
+- [x] **56A — QA + Trust Validation Plan**: Create `docs/prediction-engine-qa-trust-validation.md` defining validation scopes, scenarios, accuracy checks, explainability, human boundaries, feedback loop, and Go/No-Go criteria.
+- [x] **56B — Sample Signal Scenario Setup**: Create `docs/prediction-sample-signal-scenarios.md` outlining timeout spike, deployment correlation, flow exhaustion, and noise suppression test scenarios.
+- [x] **56C — False Positive / False Negative Tracking**: Create `docs/prediction-false-positive-negative-tracking.md` defining operator feedback, RCA, and trust score impact mathematical rules.
 
-## Milestone 55 Complete ✅
+## Milestone 57 — Prediction Engine Pilot Run ✅
+- [x] **57A — Prediction Engine Pilot Scope**: Create `docs/prediction-engine-pilot-scope.md` defining boundaries, 30-day timeline, weekly calibration, metrics, and Go/No-Go.
+- [x] **57B — Pilot Signal Simulation Playbooks**: Create `docs/prediction-pilot-signal-simulation.md` and executable Apex simulation scripts for scenarios A, B, C, D with dry-run support.
+- [x] **57C — Prediction Pilot Execution Log**: Create `docs/prediction-pilot-execution-log.md` logging dry-run simulation outcomes, schema mismatches, custom picklist resolutions, and OTS validations.
 
-## Milestone 56 — Prediction Engine QA + Trust Validation
-
-### 56A — Prediction QA + Trust Validation Plan ✅
-- [x] Create `docs/prediction-engine-qa-trust-validation.md`
-- [x] Document purpose and governance mandate
-- [x] Define prediction UI validation scope
-- [x] Design sample signal scenarios (API Timeout, Deployment Correlation, Flow Exhaustion)
-- [x] Establish accuracy checks with Precision (≥90%) and Recall (≥92%) targets
-- [x] Define false positive detection and dynamic weight adjustment protocols
-- [x] Define false negative detection and lookback ingestion auditing
-- [x] Specify explainability review checklist
-- [x] Document human approval boundary check with safety air-gap
-- [x] Define operator feedback capture and audit log sync
-- [x] Establish Go/No-Go criteria for Auto-Heal GA promotion
-- [x] Update `docs/maintenance.md`
-- [x] Update `task.md`
-- [x] Update `walkthrough.md`
-
-### 56B — Sample Signal Scenario Setup ✅
-- [x] Create `docs/prediction-sample-signal-scenarios.md`
-- [x] Document purpose and scenario data setup template
-- [x] Design Scenario A — API Timeout Spike (~78% Critical)
-- [x] Design Scenario B — Deployment Correlation (~85% Critical)
-- [x] Design Scenario C — Flow Exhaustion (~55% Warning)
-- [x] Design Scenario D — Low-Risk Noise (~6% Info, no card)
-- [x] Define expected score ranges with tolerance bands
-- [x] Define expected UI states for all risk tiers
-- [x] Define expected operator actions and system responses
-- [x] Create comprehensive validation checklist
-- [x] Update `docs/maintenance.md`
-- [x] Update `task.md`
-- [x] Update `walkthrough.md`
-
-### 56C — False Positive / False Negative Tracking ✅
-- [x] Create `docs/prediction-false-positive-negative-tracking.md`
-- [x] Document purpose and advisory-only pilot mode governance
-- [x] Define False Positive and database representation mapping
-- [x] Define False Negative and programmatic lookback audit architecture
-- [x] Document 5 operator actions (Accept, Dismiss, Mark as noisy, Mark as useful, Link to real incident)
-- [x] Track dismissal reasons and map qualitative feedback categories
-- [x] Design programmatic RCA and tuning recommendation suggestions
-- [x] Specify dynamic weight adjustments, suppression cooldown, and proactive gain amplification
-- [x] Define rolling Operational Trust Score (OTS) and exponential rolling decay formula
-- [x] Design reporting views, Pareto analysis, and calibration suggestion consoles
-- [x] Document comprehensive technical and governance success gates
-- [x] Update `docs/maintenance.md`
-- [x] Update `task.md`
-- [x] Update `walkthrough.md`
-
-## Milestone 56 Complete ✅
-All tasks for Prediction Engine QA + Trust Validation are complete.
-
-## Milestone 57 — Prediction Engine Pilot Run
-
-### 57A — Prediction Engine Pilot Scope ✅
-- [x] Create `docs/prediction-engine-pilot-scope.md`
-- [x] Document purpose and core governance advisory-only mandate
-- [x] Define pilot run scopes (in-scope vs. out-of-scope parameters)
-- [x] Outline pilot duration and three execution phases (Calibration, Advisory, Validation)
-- [x] Identify test sandbox environment `vjdev@asap.com` details
-- [x] Map four canonical signal scenarios (Scenarios A, B, C, and D)
-- [x] Establish operator participant matrices and assigned permission profiles
-- [x] Define prediction monitoring, platform event routing, and audit trail processes
-- [x] Formulate mathematical accuracy KPIs (Precision, Recall, decay OTS index)
-- [x] Outline feedback capture processes, modal designs, and audit fields
-- [x] Establish 7 strict Go/No-Go Go/No-Go criteria trust gates
-- [x] Update `docs/maintenance.md`
-- [x] Update `task.md`
-- [x] Update `walkthrough.md`
-
-### 57B — Pilot Signal Simulation & Ingestion Scripts ✅
-- [x] Create `docs/prediction-pilot-signal-simulation.md`
-- [x] Document purpose, instructions, and standard Salesforce CLI commands
-- [x] Write `scripts/apex/simulate_pilot_scenario_a.apex` simulating Zoho CRM timeouts
-- [x] Write `scripts/apex/simulate_pilot_scenario_b.apex` simulating post-deployment CPU limits
-- [x] Write `scripts/apex/simulate_pilot_scenario_c.apex` simulating Flow duration exhaustion
-- [x] Write `scripts/apex/simulate_pilot_scenario_d.apex` simulating transient Slack webhook rate limits
-- [x] Design transaction rollback strategy and dry-run execution wrapper
-- [x] Detail live commit pipeline and database purge cleaning routines
-- [x] Formulate LWC feedback validation, comments capture, and audit log steps
-- [x] Outline tuning logs and programmatic suggestion checks in `Sentinel_Error_Log__c`
-- [x] Complete comprehensive verification success checklists
-- [x] Update `docs/maintenance.md`
-- [x] Update `task.md`
-- [x] Update `walkthrough.md`

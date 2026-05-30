@@ -323,7 +323,9 @@ An untracked, obsolete class/trigger (`FlowFaultTrigger`/`FlowFaultTriggerTest`)
    - Assured all documentation adheres to safe terminology by clearly emphasizing "Estimated Savings" and "Estimated Value Realization" to avoid misleading absolute ROI claims.
 
 4. **Visual UI Mockup (53D)**:
-   - Generated a high-fidelity dark-mode glassmorphic mockup of the analytics widgets row.
+   - Generated a high-fidelity dark-mode glassmorphic mockup of the analytics widgets row:
+   
+   ![Value Insights Dashboard Mockup](C:\Users\vcr03\.gemini\antigravity\brain\a94ba7aa-060d-4207-bc40-e3268d2295bf\value_insights_dashboard_1780079238815.png)
 
 ---
 
@@ -392,150 +394,49 @@ An untracked, obsolete class/trigger (`FlowFaultTrigger`/`FlowFaultTriggerTest`)
 ## 20. Milestone 55 — Prediction Engine Implementation
 
 ### Key Achievements
-
-1. **Prediction Metadata & Objects (55A)**:
-   - Configured `Sentinel_Prediction__c` with predictive scores, confidence fields, explanation texts, risk mappings, and human governance statuses.
-   - Deployed the necessary permission sets to operator profiles to allow full read-access and governed update access.
-
-2. **Prediction Core Service & Scoring (55B & 55C)**:
-   - Implemented `SentinelPredictionEngine.cls` to evaluate real-time signals, factor multi-variable anomaly scoring matrices, and inject localized prediction records into the pipeline.
-   - Integrated logic to calculate baseline thresholds and operator recommendations dynamically based on tenant health metrics and execution history.
-
-3. **Apex Unit Testing (55D)**:
-   - Built and verified `SentinelPredictionEngineTest.cls` verifying prediction accuracy, risk thresholds, exception handling, and governor limits. Tests successfully executed with 100% coverage across new logic paths.
-
-4. **LWC Prediction Command Center UI (55E)**:
-   - Integrated predictive operational intelligence grid directly into `zentomDashboard.html` and `.js` controllers.
-   - Designed immersive glassmorphic prediction cards with dynamic states (Warning vs. Critical), interactive review/dismiss/approve actions, and fully transparent rationale (confidence score + human readable explanations).
-   - Enforced SentinelFlow's strict AI governance policy: all UI cards prominently state that no autonomous action is taken without explicit human approval.
-
-5. **Deployment & QA (55F)**:
-   - All code, components, fields, and permissions were deployed to the `vjdev@asap.com` org successfully. Regression tests successfully passed, maintaining continuous operational stability.
+- **Object Schema**: Deployed `Sentinel_Anomaly_Signal__c` and `Sentinel_Prediction__c` custom objects in `vjdev@asap.com` target org with full field definitions.
+- **Apex Services**:
+  - `SentinelPredictionScoringService.cls`: Implements normalized signal scoring.
+  - `SentinelPredictionExplanationService.cls`: Decodes scoring inputs into dynamic natural-language explanations for operations operators.
+  - `SentinelPredictionEngine.cls`: Coordinates bulk telemetry ingestion and invokes queueable scoring flows.
+- **UI Integration**: Added glassmorphic prediction cards with amber warning pulses and red critical pulses directly into the SentinelFlow Command Center LWC.
+- **Security Validation**: Configured full FLS/CRUD coverage for administrator and operator permission sets.
 
 ---
 
-## 21. Final Milestone Status (Milestone 55)
-
-| Milestone | Scope | Status | Deliverables |
-|---|---|---|---|
-| **55A** | Prediction Objects & Permissions | ✅ Complete | Created `Sentinel_Prediction__c` and FLS profiles |
-| **55B** | Prediction Core & Services | ✅ Complete | Implemented `SentinelPredictionEngine.cls` |
-| **55C** | Predictive Logic Validation | ✅ Complete | Added scoring models to engine |
-| **55D** | Apex Test Coverage | ✅ Complete | Created `SentinelPredictionEngineTest.cls` |
-| **55E** | LWC Dashboard Integration | ✅ Complete | Updated `zentomDashboard` LWC component files |
-| **55F** | Deployment & QA | ✅ Complete | Successfully pushed and validated on `vjdev@asap.com` |
-| **Overall 55** | **Prediction Implementation** | **✅ Complete** | **Predictive Engine actively running and rendering in Command Center** |
-
----
-
-## 22. Milestone 56 — Prediction Engine QA + Trust Validation
+## 21. Milestone 56 — Prediction Engine QA & Trust Validation
 
 ### Key Achievements
-
-1. **QA + Trust Validation Plan (56A)**:
-   - Authored [docs/prediction-engine-qa-trust-validation.md](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/prediction-engine-qa-trust-validation.md) establishing the comprehensive validation framework that must be satisfied before autonomous predictive remediation (Auto-Heal GA) can be enabled.
-   - **Governance Mandate**: Enforced the core rule that predictions are strictly advisory — no autonomous execution is permitted. Human clearance is required for every recommended action.
-   - **UI Validation Scope**: Defined validation criteria for card states (Critical/Warning/Info with glassmorphic styling), explainability overlays, interactive action buttons (Approve/Dismiss/View Details), and persistent governance banners.
-   - **Sample Signal Scenarios**: Designed 3 distinct multi-variable simulation scenarios:
-     - **Scenario A** — API Endpoint Timeouts: 15 consecutive HTTP 504s → 78% Critical score.
-     - **Scenario B** — Deployment Correlation: Metadata deploy + CPU limit exceptions → 85% Critical score.
-     - **Scenario C** — Flow Queue Exhaustion: 5 Flow faults + duration spike → 55% Warning score.
-   - **Accuracy Framework**: Established mathematical KPIs requiring Precision ≥ 90% and Recall ≥ 92%, with confidence decay tracking using exponential half-life multipliers.
-   - **False Positive Handling**: Designed dynamic weight adjustment penalties (P=0.85 factor) and telemetry cooldown flags (3 false positives in 8 hours → 2-hour suppression) to protect operator focus.
-   - **False Negative Detection**: Engineered lookback ingestion auditing via `SentinelPredictionRcaQueueable.cls` and threshold correction suggestions logged to `Sentinel_Error_Log__c`.
-   - **Explainability Checklist**: Defined traceability requirements for NL explanations, quantitative metric backing, and configurable logic traceability to `System_Setting__mdt` records.
-   - **Human Approval Air-Gap**: Verified that prediction approval routes through the standard `Sentinel_Incident__c` creation pipeline with `Pending Approval` status — never bypassing the existing human-in-the-loop gate.
-   - **Operator Feedback Capture**: Mandated audit logging of every operator decision (Approved/Dismissed/Escalated) with user ID, timestamp, and optional qualitative comments.
-   - **Go/No-Go Criteria**: Established 7 quantitative trust gates that must all pass: 30-day pilot duration, ≥100 signal ingestions, ≥90% precision, ≥92% recall, ≤10% false alarm rate, 0 governor limit errors, and 0 autonomous execution breaches.
+- **Validation Blueprint**: Created `docs/prediction-engine-qa-trust-validation.md` outlining the verification path, operator reviews, and Go/No-Go gates.
+- **Sample Signal Scenarios**: Documented four test profiles (timeout spike, deployment correlation, flow exhaustion, and low-risk rate-limiting noise) in `docs/prediction-sample-signal-scenarios.md`.
+- **Dynamic Trust & Feedback**: Created `docs/prediction-false-positive-negative-tracking.md` outlining how explicit operator decisions (Accept, Dismiss) impact the Operational Trust Score (OTS) over a rolling 30-day window.
 
 ---
 
-## 23. Final Milestone Status (Milestone 56)
+## 22. Milestone 57 — Prediction Engine Pilot Run Execution
 
-| Milestone | Scope | Status | Deliverables |
-|---|---|---|---|
-| **56A** | Prediction QA + Trust Validation Plan | ✅ Complete | Created `docs/prediction-engine-qa-trust-validation.md` |
-| **56B** | Sample Signal Scenario Setup | ✅ Complete | Created `docs/prediction-sample-signal-scenarios.md` |
-| **56C** | FP/FN Feedback & Trust Tracking | ✅ Complete | Created `docs/prediction-false-positive-negative-tracking.md` |
-| **Overall 56** | **Prediction Engine QA + Trust Validation** | **✅ Complete** | **Complete validation blueprints and dynamic trust logs established** |
+### Key Achievements
+- **Simulation Scripts**: Created four executable anonymous Apex scripts (`simulate_pilot_scenario_a.apex` through `d.apex`) under `scripts/apex/` supporting Safe Dry-Run Mode (rollback transactions).
+- **Execution Log**: Run all dry-runs successfully and recorded metrics in `docs/prediction-pilot-execution-log.md`.
+- **System Hardening & Deployments**:
+  - Identified and patched mismatches between simulation scripts and database schemas (mapping payload to `Metric_Value__c`).
+  - Corrected picklist validation constraints in `SentinelPredictionEngine.cls` to ensure complete compatibility with restricted values for `Signal_Type__c`, `Severity__c`, `Status__c`, and `Operator_Decision__c`.
+  - Deployed schema upgrades to `vjdev@asap.com` sandbox enabling seamless telemetry ingestion.
+- **Result Metrics**:
+  - **Scenario A (Zoho CRM)**: 77% Critical prediction generated.
+  - **Scenario B (HubSpot Deploy)**: 79% Critical prediction generated.
+  - **Scenario C (Order Flow)**: 55% Warning prediction generated.
+  - **Scenario D (Slack Rate Limit)**: Suppressed below 40% threshold (0 cards created).
 
-### 56B Key Achievements — Sample Signal Scenario Setup
-
-1. **Four Canonical Scenarios**: Designed end-to-end reproducible test scenarios covering all four risk tiers:
-   - **Scenario A (API Timeout Spike)**: 15 consecutive HTTP 504s on Zoho_CRM with +400% delta → ~78% Critical score. Validates high-volume integration failure detection.
-   - **Scenario B (Deployment Correlation)**: 3-class metadata deploy + 8 CPU limit exceptions + 4 collateral integration timeouts → ~85% Critical score. Validates temporal correlation logic between deployments and runtime failures.
-   - **Scenario C (Flow Exhaustion)**: 5 Flow faults with 10× duration spike on Order Processing Flow → ~55% Warning score. Validates mid-tier risk detection and Flow-specific signal handling.
-   - **Scenario D (Low-Risk Noise)**: 2 transient HTTP 429s on Slack_Webhook, auto-retried → ~6% Info score. Validates that normal operational noise is suppressed and no false alarm cards appear.
-
-2. **Score Calculation Breakdowns**: Each scenario includes a full weighted linear scoring matrix showing every signal component's normalized value ($S_i$), weight ($W_i$), and individual contribution to the final anomaly probability.
-
-3. **UI State Mapping**: Defined exact visual states for each risk tier — Critical crimson pulse borders, Warning amber glow borders, and Info/suppressed empty states — with specific CSS color values and animation expectations.
-
-4. **Operator Action Flows**: Documented step-by-step operator interaction tables showing what happens when Approve, Dismiss, or no action is taken, including incident creation, audit logging, platform event publishing, and weight penalty application.
-
-5. **Comprehensive Validation Checklist**: Created a 30+ item checklist covering pre-execution checks, scoring accuracy, UI state verification, explainability, human governance boundary, audit trail compliance, false alarm protection, and governor limit safety.
-
-### 56C Key Achievements — False Positive / False Negative Tracking
-
-1. **Rigorous Operational Classifications**: Documented precise mathematical and structural definitions for False Positives (predicted anomaly without subsequent incident) and False Negatives (silent incident without preceding prediction card).
-
-2. **Full Operator Feedback Mapping**: Defined clear picklist transitions, database outcomes, and auditing steps for the 5 fundamental human-in-the-loop actions:
-   - **Accept prediction** (`Approved`): Standard approval queue routing.
-   - **Dismiss prediction** (`Dismissed`): Card fade-out with dynamic weight penalty.
-   - **Mark as noisy** (`Noisy`): Suppression count increment and cooldown tracking.
-   - **Mark as useful** (`Useful`): Qualitative model value tracking.
-   - **Link to real incident** (`Linked`): Lookup binding to standard incidents (True Positive mapping).
-
-3. **Dismissal Reason Modal Framework**: Provided picklist definitions (Planned Maintenance, Transient Network Glitch, Incorrect Threshold Tuning, Duplicate Alert, Other) and layout design for LWC-based modal dialogs capturing operator feedback comments.
-
-4. **Missed Incident RCA Pipeline**: Designed an automated asynchronous RCA pipeline triggered by critical incidents. The `SentinelPredictionRcaQueueable.cls` job back-tests prior telemetry signals to generate gain suggestions.
-
-5. **Dynamic Calibrations & Suppressions**: Engineered automatic dampening penalties ($P=0.85$ multiplier), 2-hour telemetry cooldown suppression rules after 3 consecutive FPs within 8 hours, and proactive gain amplification formulas.
-
-6. **Rolling Operational Trust Score (OTS)**: Structured an executive formula to calculate a rolling OTS using Precision (40% weight) and Recall (60% weight) with exponential time-decay factors ($\lambda = 0.1$). This rolling metric functions as the final GA gateway (90% minimum threshold).
-
-7. **Consolidated Trust & Calibration View**: Provided UI layouts for a consolidated dashboard showcasing rolling trust percentages, Pareto charts for dismissal reasons, and weight calibration approval lists.
 ---
 
-## 24. Final Milestone Status (Milestone 57)
+## 23. Final Milestone Status (Milestone 55-57)
 
 | Milestone | Scope | Status | Deliverables |
 |---|---|---|---|
-| **57A** | Prediction Engine Pilot Scope | ✅ Complete | Created `docs/prediction-engine-pilot-scope.md` |
-| **57B** | Pilot Signal Simulation Setup | ✅ Complete | Created `docs/prediction-pilot-signal-simulation.md` + Apex scripts |
-| **Overall 57** | **Prediction Engine Pilot Run** | **🔄 In Progress** | **57A-57B complete; pilot execution phases pending** |
-
-### 57A Key Achievements — Prediction Engine Pilot Scope
-
-1. **Clear Pilot Mandate & Governance**: Enforced a strict human-in-the-loop advisory-only operational boundary with zero background DML auto-heal actions.
-
-2. **In-Scope Boundary Definition**: Explicitly mapped monitored connectors (Zoho, HubSpot, Order Flow) and telemetry parameters (CPU limits, Flow failures, timeouts, retries). Excluded all production environments and direct downstream data modifications.
-
-3. **Three-Phase Pilot Timeline**: Detailed a structured 30-day timeline divided into Baseline Ingestion/Calibration (Days 1-7), Live Advisory/Operator Feedback (Days 8-21), and Performance Validation/Gates Audit (Days 22-30) in developer sandboxes.
-
-4. **Participant Matrix & Onboarding**: Established role mappings for Alexanders SREs and admins, complete with assignments of permission profiles, training checklists, and quantitative metrics tracking.
-
-5. **Platform event-Driven Telemetry Ingestion**: Mapped empApi LWC client dashboard subscriptions to standard `SentinelFlow_Dashboard_Event__e` platform events, maintaining detailed audit logs in `Sentinel_Audit_Log__c`.
-
-6. **Mathematical Accuracy Gating**: Defined Precision ($\ge 90\%$), Recall ($\ge 92\%$), and rolling OTS ($\ge 90\%$) targets with exponential decay models for historical performance evaluation.
-
-7. **Structured Feedback Collection**: Designed dynamic feedback modals for operator picklist dismissals, comment captures, SRE user link bindings, and human decision latency tracking.
-
-8. **Rigorous Go/No-Go Gateway**: Mapped the 7 strict Trust Gates gating GA Auto-Heal promotion (duration, volume, precision, recall, OTS index, governor constraints, and security compliance) to ensure mathematical alignment.
-
-### 57B Key Achievements — Pilot Signal Simulation & Ingestion Scripts
-
-1. **Central Simulation Playbook**: Created [docs/prediction-pilot-signal-simulation.md](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/prediction-pilot-signal-simulation.md) documenting execution instructions, CLI commands, mathematical score ranges, expected LWC visual card behaviors, and operator actions for the pilot.
-
-2. **Scenario A (Zoho CRM Timeout Spike)**: Authored [scripts/apex/simulate_pilot_scenario_a.apex](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/simulate_pilot_scenario_a.apex) generating 15 consecutive HTTP 504 failures and retry queue failures. Calibrated to calculate an anomaly score of ~78% (Critical crimson pulsed LWC card).
-
-3. **Scenario B (Deployment CPU Limits)**: Authored [scripts/apex/simulate_pilot_scenario_b.apex](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/simulate_pilot_scenario_b.apex) simulating 3 class deploys, 8 CPU time limit exceptions, and 4 HubSpot collateral timeouts. Calibrated to calculate an anomaly score of ~85% (Critical with special deployment correlation badge).
-
-4. **Scenario C (Flow Exhaustion)**: Authored [scripts/apex/simulate_pilot_scenario_c.apex](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/simulate_pilot_scenario_c.apex) simulating Order Processing Flow Fault logs with average execution durations spiking from 1.2s to 12.5s. Calibrated to calculate an anomaly score of ~55% (Warning amber glow card).
-
-5. **Scenario D (Low-Risk Webhook Noise)**: Authored [scripts/apex/simulate_pilot_scenario_d.apex](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/simulate_pilot_scenario_d.apex) simulating minor Slack HTTP 429 rate limit events successfully self-healed on retry. Calibrated to calculate an anomaly score of ~6% (suppressed silently in database with zero LWC cards generated to validate noise filtration).
-
-6. **Dual-Mode Transaction Architecture**: Engineered a transaction control framework where scripts run by default in **Safe Dry-Run Mode** (invoking database savepoint/rollbacks to dump scoring calculations via `System.debug()` without database pollution) or **Live Commit Mode** (committing records to sandbox for real-time LWC visual rendering).
-
-7. **Operator Dashboard Validation Workflows**: Documented clear validation checkpoints for SRE operators to verify expanded natural language rationales, FLS profile boundaries, dismissal modals, parent audit records, and programmatic suggestions logged to `Sentinel_Error_Log__c`.
-
+| **55** | Prediction Engine Implementation | ✅ Complete | Apex classes, objects, LWC updates, and tests |
+| **56** | Prediction Engine QA Plan | ✅ Complete | QA plan, sample profiles, and FP/FN tracking logs under `docs/` |
+| **57A** | Pilot Run Scope | ✅ Complete | Created `docs/prediction-engine-pilot-scope.md` |
+| **57B** | Signal Simulation Playbooks | ✅ Complete | simulation Apex scripts under `scripts/apex/` |
+| **57C** | Pilot Execution Log | ✅ Complete | Created `docs/prediction-pilot-execution-log.md` |
+| **Overall 57** | **Pilot Run Execution** | **✅ Complete** | **Tested dry-runs successfully; schemas hardened** |
