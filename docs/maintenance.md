@@ -639,3 +639,8 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Authored the final wrap-up document [`docs/auto-heal-ga-implementation-wrap-up.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/auto-heal-ga-implementation-wrap-up.md) summarizing project goals, safety controls, allowed actions, blocked action restrictions, rollback mechanisms, failure lifecycles, and validation evidence.
 - Final Status: Auto-Heal GA implementation is complete and validation passed. Ready for controlled pilot. Not yet GA until Milestone 62 pilot validation completes.
 - Pushed all implementation, validation, test coverage, and documentation files to the repository under version control.
+
+## Milestone 62 — Auto-Heal GA Pilot
+
+### 62A — Auto-Heal GA Pilot Scope: Complete
+- Created the Auto-Heal GA pilot scoping document [`docs/auto-heal-ga-pilot-scope.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/auto-heal-ga-pilot-scope.md) defining purpose, target sandbox environment, duration phases (calibration and guided runs), allowed recovery actions, blocked policy actions, simulated test profiles, SRE operator roles, quantitative success metrics, rollback testing specifications, and master Go/No-Go GA promotion criteria.

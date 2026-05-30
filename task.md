@@ -352,3 +352,11 @@
 - [x] Update walkthrough documentation.
 - [x] Commit all code changes to remote.
 
+## Milestone 62 — Auto-Heal GA Pilot
+
+### 62A — Auto-Heal GA Pilot Scope ✅
+- [x] Create `docs/auto-heal-ga-pilot-scope.md` defining purpose, environment, phases, allowed/blocked pilot actions, test scenarios, operators, success metrics, and Go/No-Go criteria.
+- [ ] Update `docs/maintenance.md`.
+- [ ] Update walkthrough documentation.
+- [ ] Commit all code changes to remote.
+
