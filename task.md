@@ -236,4 +236,11 @@
   - 7 audit log lifecycle events specified
   - 6 safety boundaries enforced at Apex service layer
   - 8 success criteria defined
-  - New Apex class `SentinelPredictionGovernanceService` scoped for 59B
+- [x] **59B — Implement SentinelPredictionGovernanceService**:
+  - [x] Create custom lookup field `Sentinel_Incident__c.Source_Prediction__c` referencing `Sentinel_Prediction__c`
+  - [x] Update `Operator_Decision__c` restricted picklist metadata with `Confirmed`, `Dismissed`, `Useful`, and `False Positive` values
+  - [x] Implement `createApprovalFromPrediction` with bounds checks, lookup mapping, and `'Prediction Approval Requested'` audit logging
+  - [x] Implement `updatePredictionDecision` with prediction state updates and dynamic incident-aware audit logging
+  - [x] Implement trigger propagation in `SentinelIncidentTrigger.trigger` to map incident approvals/rejections back to predictions
+  - [x] Patch all permission sets for the new field FLS using `patch_all_perms.py`
+  - [x] Verify implementation by writing `SentinelPredictionGovernanceServiceTest.cls` and aligning `SentinelPredictionEngineTest.cls` (100% tests pass)

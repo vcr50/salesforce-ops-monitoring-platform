@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Signal_Type__c</fullName>
+    <label>Signal Type</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Flow Failure</fullName>
+                <default>false</default>
+                <label>Flow Failure</label>
+            </value>
+            <value>
+                <fullName>Integration Error</fullName>
+                <default>false</default>
+                <label>Integration Error</label>
+            </value>
+            <value>
+                <fullName>Apex Exception</fullName>
+                <default>false</default>
+                <label>Apex Exception</label>
+            </value>
+            <value>
+                <fullName>Retry Spike</fullName>
+                <default>false</default>
+                <label>Retry Spike</label>
+            </value>
+            <value>
+                <fullName>Deployment Activity</fullName>
+                <default>false</default>
+                <label>Deployment Activity</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

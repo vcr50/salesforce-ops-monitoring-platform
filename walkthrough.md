@@ -610,3 +610,28 @@ Action Center handles any downstream execution
 
 ### Next: 59B — Implement `SentinelPredictionGovernanceService`
 
+---
+
+## 28. Milestone 59B — Implement SentinelPredictionGovernanceService
+
+### Implementation Highlights
+
+- **Data Model Lookup**: Created custom lookup field `Sentinel_Incident__c.Source_Prediction__c` pointing to `Sentinel_Prediction__c`.
+- **Picklist Value Alignment**: Updated `Operator_Decision__c` restricted picklist metadata on `Sentinel_Prediction__c` to include `Confirmed`, `Dismissed`, `Useful`, and `False Positive` values.
+- **Apex Service (`SentinelPredictionGovernanceService.cls`)**:
+  - `createApprovalFromPrediction(predictionId)`: Validates that a prediction is Pending, hasn't already requested approval, and isn't dismissed. Creates `Sentinel_Incident__c` with status 'Approval Required', maps confidence and reasoning fields, logs the `'Prediction Approval Requested'` audit event, and links lookups bidirectionally.
+  - `updatePredictionDecision(predictionId, decision)`: Enforces terminal decision lock, updates Operator Decision, and dynamically logs the appropriate audit event type (e.g. `'Prediction Approval Confirmed'`, `'Prediction Approval Rejected'`, `'Prediction Dismissed'`, `'Prediction Marked Useful'`, or `'Prediction Marked False Positive'`).
+- **Trigger-Based Propagation (`SentinelIncidentTrigger.trigger`)**:
+  - Automatically propagates changes in incident approval status (`Approved` or `Rejected`) back to update the prediction's operator decision (`Confirmed` or `Dismissed`) using `updatePredictionDecision` flow.
+- **Permission Set Patches**: Executed `patch_all_perms.py` to auto-inject the new field's FLS across all 7 permission sets in the codebase.
+
+### Verification Results
+
+1. **Unit Testing (`SentinelPredictionGovernanceServiceTest.cls`)**:
+   - Covers success paths, exceptions, safety guard validation, and trigger status propagation.
+   - **Pass Rate**: 100% (6/6 tests pass)
+   - **Code Coverage**: 97% for the service class, 87% for the incident trigger.
+2. **Regression Testing (`SentinelPredictionEngineTest.cls`)**:
+   - Aligned signal scores and assertions with the calibrated weights and 40% noise suppression threshold.
+   - **Pass Rate**: 100% (4/4 tests pass)
+

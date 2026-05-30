@@ -37,6 +37,27 @@ trigger SentinelIncidentTrigger on Sentinel_Incident__c (after insert, after upd
         SentinelFlowNotificationDispatcher.dispatchPendingApprovalAlerts(pendingApprovalIncidentIds);
     }
 
+    // Milestone 59B: Propagate approval status changes back to Sentinel_Prediction__c
+    Map<Id, String> predictionIdToDecision = new Map<Id, String>();
+    if (Trigger.isUpdate) {
+        for (Sentinel_Incident__c incident : Trigger.new) {
+            Sentinel_Incident__c oldInc = Trigger.oldMap.get(incident.Id);
+            if (incident.Source_Prediction__c != null && incident.Approval_Status__c != oldInc.Approval_Status__c) {
+                if (incident.Approval_Status__c == 'Approved') {
+                    predictionIdToDecision.put(incident.Source_Prediction__c, 'Confirmed');
+                } else if (incident.Approval_Status__c == 'Rejected') {
+                    predictionIdToDecision.put(incident.Source_Prediction__c, 'Dismissed');
+                }
+            }
+        }
+    }
+
+    if (!predictionIdToDecision.isEmpty()) {
+        for (Id predId : predictionIdToDecision.keySet()) {
+            SentinelPredictionGovernanceService.updatePredictionDecision(predId, predictionIdToDecision.get(predId));
+        }
+    }
+
     // Streaming telemetry — publish dashboard platform events (bulk, deduplication-safe)
     if (!createdIncidents.isEmpty()) {
         SentinelFlowEventPublisher.publishBulk(

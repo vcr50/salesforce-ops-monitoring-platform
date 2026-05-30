@@ -905,8 +905,63 @@ public with sharing class ZentomDashboardController {
     }
     
     @AuraEnabled(cacheable=true)
-    public static String getPredictions() {
-        return '{"predictions": []}';
+    public static List<PredictionRow> getPredictions() {
+        List<PredictionRow> rows = new List<PredictionRow>();
+        if (!Schema.sObjectType.Sentinel_Prediction__c.isAccessible()) {
+            return rows;
+        }
+        
+        List<Sentinel_Prediction__c> preds = [
+            SELECT Id, Prediction_Score__c, Confidence_Score__c, Summary__c,
+                   Explanation__c, Recommended_Runbook__c, Status__c,
+                   Operator_Decision__c, CreatedDate
+            FROM Sentinel_Prediction__c
+            WHERE Operator_Decision__c = 'Pending'
+            ORDER BY Prediction_Score__c DESC, CreatedDate DESC
+            LIMIT 6
+        ];
+        
+        for (Sentinel_Prediction__c p : preds) {
+            PredictionRow row = new PredictionRow();
+            row.id = p.Id;
+            row.predictionScore = p.Prediction_Score__c != null ? p.Prediction_Score__c : 0;
+            row.confidenceScore = p.Confidence_Score__c != null ? p.Confidence_Score__c : 0;
+            row.summary = p.Summary__c;
+            row.explanation = p.Explanation__c;
+            row.recommendedRunbook = p.Recommended_Runbook__c;
+            row.status = p.Status__c;
+            row.operatorDecision = p.Operator_Decision__c;
+            row.createdDate = p.CreatedDate;
+            rows.add(row);
+        }
+        return rows;
+    }
+
+    public class PredictionRow {
+        @AuraEnabled public Id id;
+        @AuraEnabled public Decimal predictionScore;
+        @AuraEnabled public Decimal confidenceScore;
+        @AuraEnabled public String summary;
+        @AuraEnabled public String explanation;
+        @AuraEnabled public String recommendedRunbook;
+        @AuraEnabled public String status;
+        @AuraEnabled public String operatorDecision;
+        @AuraEnabled public Datetime createdDate;
+    }
+
+    @AuraEnabled
+    public static String updatePredictionDecision(Id predictionId, String decision) {
+        try {
+            if (!Schema.sObjectType.Sentinel_Prediction__c.isUpdateable()) {
+                return '{"error": "Insufficient permissions"}';
+            }
+            Sentinel_Prediction__c p = [SELECT Id, Operator_Decision__c FROM Sentinel_Prediction__c WHERE Id = :predictionId LIMIT 1];
+            p.Operator_Decision__c = decision;
+            update p;
+            return '{"success": true}';
+        } catch (Exception e) {
+            return '{"error": "' + e.getMessage() + '"}';
+        }
     }
     
     @AuraEnabled(cacheable=true)

@@ -511,3 +511,16 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
   - **New Apex classes scoped**: `SentinelPredictionGovernanceService` + test class (59B).
   - **New metadata scoped**: `Source_Prediction__c` lookup field, permission set FLS updates, LWC button additions (59B).
 
+### 59B — Implement SentinelPredictionGovernanceService: Complete
+- Created new custom lookup field `Sentinel_Incident__c.Source_Prediction__c` referencing `Sentinel_Prediction__c`.
+- Updated `Sentinel_Prediction__c.Operator_Decision__c` restricted picklist metadata to support `Confirmed`, `Dismissed`, `Useful`, and `False Positive` values.
+- Implemented `SentinelPredictionGovernanceService.cls`:
+  - `createApprovalFromPrediction(predictionId)`: Validates state bounds, builds a new `Sentinel_Incident__c` (status: 'Approval Required', type: 'Predicted Anomaly'), links `Source_Prediction__c` and `Incident__c` lookups, and registers the `'Prediction Approval Requested'` audit event.
+  - `updatePredictionDecision(predictionId, decision)`: Implements the feedback loop by setting prediction status to the operator's/approver's terminal decision.
+  - `dismissPrediction(predictionId)` / `markPredictionUseful(predictionId)` / `markPredictionNoisy(predictionId)`: Wraps operator action triggers.
+- Updated `SentinelIncidentTrigger.trigger` to propagate incident approval/rejection updates (`Approved`/`Rejected`) to predictions as terminal decisions (`Confirmed`/`Dismissed`).
+- Patched all 7 permission sets with field level security for the new lookup field using `patch_all_perms.py`.
+- Developed unit test suite `SentinelPredictionGovernanceServiceTest.cls` (100% success rate, 97% code coverage).
+- Restructured `SentinelPredictionEngineTest.cls` to align with the tuned default weights (100% success rate).
+- Deployed project to `vjdev@asap.com` and ran all verification runs successfully.
+

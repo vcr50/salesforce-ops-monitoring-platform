@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <description>Access package for managing SentinelFlow custom objects and fields.</description>
     <hasActivationRequired>false</hasActivationRequired>
@@ -688,7 +688,7 @@
         <field>SentinelFlow_Settings__c.Teams_Webhook_Path__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <fieldPermissions>
+    <fieldPermissions><editable>true</editable><field>Sentinel_Anomaly_Signal__c.Event_Source__c</field><readable>true</readable></fieldPermissions><fieldPermissions><editable>true</editable><field>Sentinel_Anomaly_Signal__c.Metric_Value__c</field><readable>true</readable></fieldPermissions><fieldPermissions><editable>true</editable><field>Sentinel_Anomaly_Signal__c.Prediction__c</field><readable>true</readable></fieldPermissions><fieldPermissions><editable>true</editable><field>Sentinel_Anomaly_Signal__c.Severity__c</field><readable>true</readable></fieldPermissions><fieldPermissions><editable>true</editable><field>Sentinel_Anomaly_Signal__c.Signal_Type__c</field><readable>true</readable></fieldPermissions><fieldPermissions><editable>true</editable><field>Sentinel_Anomaly_Signal__c.Timestamp__c</field><readable>true</readable></fieldPermissions><fieldPermissions>
         <editable>true</editable>
         <field>Sentinel_Audit_Log__c.Created_By_System__c</field>
         <readable>true</readable>
@@ -938,7 +938,7 @@
         <field>Sentinel_Incident__c.Runbook_Title__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <fieldPermissions>
+    <fieldPermissions><editable>true</editable><field>Sentinel_Incident__c.Source_Prediction__c</field><readable>true</readable></fieldPermissions><fieldPermissions>
         <editable>true</editable>
         <field>Sentinel_Incident__c.Source__c</field>
         <readable>true</readable>
@@ -953,7 +953,7 @@
         <field>Sentinel_Incident__c.Zentom_Incident_Id__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <fieldPermissions>
+    <fieldPermissions><editable>true</editable><field>Sentinel_Prediction__c.Confidence_Score__c</field><readable>true</readable></fieldPermissions><fieldPermissions><editable>true</editable><field>Sentinel_Prediction__c.Explanation__c</field><readable>true</readable></fieldPermissions><fieldPermissions><editable>true</editable><field>Sentinel_Prediction__c.Incident__c</field><readable>true</readable></fieldPermissions><fieldPermissions><editable>true</editable><field>Sentinel_Prediction__c.Operator_Decision__c</field><readable>true</readable></fieldPermissions><fieldPermissions><editable>true</editable><field>Sentinel_Prediction__c.Prediction_Score__c</field><readable>true</readable></fieldPermissions><fieldPermissions><editable>true</editable><field>Sentinel_Prediction__c.Recommended_Runbook__c</field><readable>true</readable></fieldPermissions><fieldPermissions><editable>true</editable><field>Sentinel_Prediction__c.Status__c</field><readable>true</readable></fieldPermissions><fieldPermissions><editable>true</editable><field>Sentinel_Prediction__c.Summary__c</field><readable>true</readable></fieldPermissions><fieldPermissions>
         <editable>true</editable>
         <field>Subscription__c.Expiry_Date__c</field>
         <readable>true</readable>
@@ -1217,16 +1217,7 @@
         <object>AI_Decision__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
-    <objectPermissions>
-        <allowCreate>false</allowCreate>
-        <allowDelete>false</allowDelete>
-        <allowEdit>false</allowEdit>
-        <allowRead>true</allowRead>
-        <modifyAllRecords>false</modifyAllRecords>
-        <object>AI_Rule__mdt</object>
-        <viewAllRecords>false</viewAllRecords>
-    </objectPermissions>
-    <objectPermissions>
+    <objectPermissions><allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>AI_Rule__mdt</object><viewAllRecords>false</viewAllRecords></objectPermissions><objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>true</allowDelete>
         <allowEdit>true</allowEdit>
@@ -1262,34 +1253,7 @@
         <object>Environment__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
-    <objectPermissions>
-        <allowCreate>false</allowCreate>
-        <allowDelete>false</allowDelete>
-        <allowEdit>false</allowEdit>
-        <allowRead>true</allowRead>
-        <modifyAllRecords>false</modifyAllRecords>
-        <object>FeatureFlag__mdt</object>
-        <viewAllRecords>false</viewAllRecords>
-    </objectPermissions>
-    <objectPermissions>
-        <allowCreate>false</allowCreate>
-        <allowDelete>false</allowDelete>
-        <allowEdit>false</allowEdit>
-        <allowRead>true</allowRead>
-        <modifyAllRecords>false</modifyAllRecords>
-        <object>Feature_Flag__mdt</object>
-        <viewAllRecords>false</viewAllRecords>
-    </objectPermissions>
-    <objectPermissions>
-        <allowCreate>true</allowCreate>
-        <allowDelete>false</allowDelete>
-        <allowEdit>false</allowEdit>
-        <allowRead>true</allowRead>
-        <modifyAllRecords>false</modifyAllRecords>
-        <object>Flow_Health_Event__e</object>
-        <viewAllRecords>false</viewAllRecords>
-    </objectPermissions>
-    <objectPermissions>
+    <objectPermissions><allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>FeatureFlag__mdt</object><viewAllRecords>false</viewAllRecords></objectPermissions><objectPermissions><allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Feature_Flag__mdt</object><viewAllRecords>false</viewAllRecords></objectPermissions><objectPermissions><allowCreate>true</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Flow_Health_Event__e</object><viewAllRecords>false</viewAllRecords></objectPermissions><objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>true</allowDelete>
         <allowEdit>true</allowEdit>
@@ -1316,16 +1280,7 @@
         <object>Integration_Endpoint__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
-    <objectPermissions>
-        <allowCreate>true</allowCreate>
-        <allowDelete>false</allowDelete>
-        <allowEdit>false</allowEdit>
-        <allowRead>true</allowRead>
-        <modifyAllRecords>false</modifyAllRecords>
-        <object>Integration_Health_Event__e</object>
-        <viewAllRecords>false</viewAllRecords>
-    </objectPermissions>
-    <objectPermissions>
+    <objectPermissions><allowCreate>true</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Integration_Health_Event__e</object><viewAllRecords>false</viewAllRecords></objectPermissions><objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>true</allowDelete>
         <allowEdit>true</allowEdit>
@@ -1361,7 +1316,7 @@
         <object>SLA_Policy__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
-    <objectPermissions>
+    <objectPermissions><allowCreate>true</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>SentinelFlow_Dashboard_Event__e</object><viewAllRecords>false</viewAllRecords></objectPermissions><objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>true</allowDelete>
         <allowEdit>true</allowEdit>
@@ -1370,7 +1325,7 @@
         <object>SentinelFlow_Settings__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
-    <objectPermissions>
+    <objectPermissions><allowCreate>true</allowCreate><allowDelete>true</allowDelete><allowEdit>true</allowEdit><allowRead>true</allowRead><modifyAllRecords>true</modifyAllRecords><object>Sentinel_Anomaly_Signal__c</object><viewAllRecords>true</viewAllRecords></objectPermissions><objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>true</allowDelete>
         <allowEdit>true</allowEdit>
@@ -1397,7 +1352,7 @@
         <object>Sentinel_Incident__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
-    <objectPermissions>
+    <objectPermissions><allowCreate>true</allowCreate><allowDelete>true</allowDelete><allowEdit>true</allowEdit><allowRead>true</allowRead><modifyAllRecords>true</modifyAllRecords><object>Sentinel_Prediction__c</object><viewAllRecords>true</viewAllRecords></objectPermissions><objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>true</allowDelete>
         <allowEdit>true</allowEdit>
@@ -1415,16 +1370,7 @@
         <object>System_Log__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
-    <objectPermissions>
-        <allowCreate>false</allowCreate>
-        <allowDelete>false</allowDelete>
-        <allowEdit>false</allowEdit>
-        <allowRead>true</allowRead>
-        <modifyAllRecords>false</modifyAllRecords>
-        <object>System_Setting__mdt</object>
-        <viewAllRecords>false</viewAllRecords>
-    </objectPermissions>
-    <objectPermissions>
+    <objectPermissions><allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>System_Setting__mdt</object><viewAllRecords>false</viewAllRecords></objectPermissions><objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>true</allowDelete>
         <allowEdit>true</allowEdit>
@@ -1460,7 +1406,7 @@
         <object>Zentom_Replay_Log__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
-    <tabSettings>
+    <objectPermissions><allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Zentom_Runbook__mdt</object><viewAllRecords>false</viewAllRecords></objectPermissions><objectPermissions><allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Zentom_Setting__mdt</object><viewAllRecords>false</viewAllRecords></objectPermissions><objectPermissions><allowCreate>true</allowCreate><allowDelete>true</allowDelete><allowEdit>true</allowEdit><allowRead>true</allowRead><modifyAllRecords>true</modifyAllRecords><object>contact__c</object><viewAllRecords>true</viewAllRecords></objectPermissions><tabSettings>
         <tab>Audit_Trail__c</tab>
         <visibility>Visible</visibility>
     </tabSettings>

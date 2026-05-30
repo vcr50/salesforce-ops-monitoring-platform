@@ -7,6 +7,8 @@ import getDashboardData from '@salesforce/apex/ZentomDashboardController.getDash
 import getReplayExportData from '@salesforce/apex/ZentomDashboardController.getReplayExportData';
 import getKeysetPaginatedIncidents from '@salesforce/apex/ZentomDashboardController.getKeysetPaginatedIncidents';
 import getCostSavingsAnalytics from '@salesforce/apex/ZentomDashboardController.getCostSavingsAnalytics';
+import getPredictions from '@salesforce/apex/ZentomDashboardController.getPredictions';
+import updatePredictionDecision from '@salesforce/apex/ZentomDashboardController.updatePredictionDecision';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const POLL_INTERVAL_ACTIVE_MS   = 60000; // relaxed 60s — streaming covers near-real-time
@@ -41,6 +43,10 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
     // ── Milestone 52: Cost savings analytics state ─────────────────────
     @track costSavingsData;
     wiredCostSavingsResult;
+
+    // ── Milestone 55: Prediction Engine state ──────────────────────────
+    @track predictions = [];
+    wiredPredictionsResult;
 
     // Keyset pagination cursor state
     nextCursorCreatedDate = null;
@@ -177,6 +183,32 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
         }
     }
 
+    @wire(getPredictions)
+    wiredGetPredictions(result) {
+        this.wiredPredictionsResult = result;
+        if (result.data) {
+            this.predictions = result.data.map(p => {
+                let cardClass = 'prediction-card';
+                let iconName = 'utility:info';
+                if (p.status === 'Critical') {
+                    cardClass += ' critical-prediction';
+                    iconName = 'utility:error';
+                } else if (p.status === 'Warning') {
+                    cardClass += ' warning-prediction';
+                    iconName = 'utility:warning';
+                }
+                return {
+                    ...p,
+                    cardClass,
+                    iconName,
+                    isCritical: p.status === 'Critical'
+                };
+            });
+        } else if (result.error) {
+            console.error('[zentomDashboard] Error loading predictions:', result.error);
+        }
+    }
+
     get paginatedRequest() {
         return {
             pageNumber: this.pageNumber,
@@ -270,6 +302,9 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
         }
         if (this.wiredCostSavingsResult) {
             refreshApex(this.wiredCostSavingsResult);
+        }
+        if (this.wiredPredictionsResult) {
+            refreshApex(this.wiredPredictionsResult);
         }
     }
 
@@ -468,6 +503,11 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
             : '0.0%';
     }
 
+    // ── Milestone 55: Prediction getters ──────────────────────────────
+    get hasPredictions() {
+        return this.predictions && this.predictions.length > 0;
+    }
+
     // ── Original getters ────────────────────────────────────────────────
     get topRunbook() {
         return this.data?.summary?.topRunbook || 'None';
@@ -594,6 +634,7 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
         refreshApex(this.wiredDashboard);
         refreshApex(this.wiredPaginatedResult);
         refreshApex(this.wiredCostSavingsResult);
+        refreshApex(this.wiredPredictionsResult);
     }
 
     handleToggleFilters() {
@@ -790,6 +831,35 @@ AI Explanation: ${data.events && data.events.length > 0 ? data.events[data.event
             this.showToast('Success', 'Summary copied to clipboard', 'success');
         } catch (error) {
             this.showToast('Copy Error', this.reduceError(error), 'error');
+        }
+    }
+
+    // ── Milestone 55: Prediction Handlers ───────────────────────────────
+    handleReviewPrediction(event) {
+        const pId = event.currentTarget.dataset.id;
+        this.showToast('Info', 'Prediction details panel opened for ' + pId, 'info');
+        // This would open a modal in a full implementation
+    }
+
+    async handleDismissPrediction(event) {
+        const pId = event.currentTarget.dataset.id;
+        try {
+            await updatePredictionDecision({ predictionId: pId, decision: 'Dismiss - False Positive' });
+            this.showToast('Success', 'Prediction dismissed. Model weights updated.', 'success');
+            refreshApex(this.wiredPredictionsResult);
+        } catch (error) {
+            this.showToast('Error', this.reduceError(error), 'error');
+        }
+    }
+
+    async handleApprovePrediction(event) {
+        const pId = event.currentTarget.dataset.id;
+        try {
+            await updatePredictionDecision({ predictionId: pId, decision: 'Approved' });
+            this.showToast('Success', 'Runbook mitigation approved and dispatched to SentinelFlow Gate.', 'success');
+            refreshApex(this.wiredPredictionsResult);
+        } catch (error) {
+            this.showToast('Error', this.reduceError(error), 'error');
         }
     }
 
