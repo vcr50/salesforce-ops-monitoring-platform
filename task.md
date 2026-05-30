@@ -479,3 +479,11 @@
 - [x] Update `docs/maintenance.md` with review details
 - [x] Update `walkthrough.md` with review details
 - [x] Commit all log changes to version control and push to remote
+
+## 64G — v1.2.0 Release Candidate Wrap-up ✅
+- [x] Create the release candidate wrap-up document `docs/v1.2.0-release-candidate-wrap-up.md`
+- [x] Include purpose, scope, validation, security, release notes, tagging, go/no-go, limitations, final status, and recommendation
+- [x] Record final RC status and Next: Milestone 65 — v1.2.0 Production Release
+- [x] Update `docs/maintenance.md` with wrap-up details
+- [x] Update `walkthrough.md` with wrap-up details
+- [x] Commit all log changes to version control and push to remote
