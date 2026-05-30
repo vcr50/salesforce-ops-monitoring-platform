@@ -386,3 +386,20 @@ All tasks for Predictive Operational Intelligence UI are complete. Prediction ca
 - Documented expected UI states for each risk tier (Critical crimson pulse, Warning amber glow, Info suppressed).
 - Defined operator action flows (Approve → Incident creation, Dismiss → Card suppression with weight penalty).
 - Established a comprehensive validation checklist covering scoring accuracy, UI state verification, explainability, human governance boundary, audit trail compliance, false alarm protection, and governor limit safety.
+
+### 56C — False Positive / False Negative Tracking: Complete
+- Created `docs/prediction-false-positive-negative-tracking.md` defining how SentinelFlow systematically records prediction mistakes, captures explicit human-in-the-loop operator feedback, and performs automated root-cause analysis (RCA) on missed incidents:
+  1. **Purpose**: Operational accountability and dynamic calibration of prediction models in advisory pilot mode.
+  2. **False Positive Definition**: Anomaly probability score calculated at or above Warning threshold (40%) and card rendered on UI, but dismissed by the operator or expired without linked incidents.
+  3. **False Negative Definition**: Creation of a Critical/Warning incident without a preceding prediction card (Score ≥ 40%) referencing that resource within the prior 30 minutes.
+  4. **Operator Feedback Capture**: Detailed UI event transitions and system outcomes for all 5 operator actions (Accept, Dismiss, Mark as noisy, Mark as useful, Link to real incident) with platform event publishing and audit trail integration.
+  5. **Dismissal Reason Tracking**: Predefined picklist categories (Planned Maintenance/Batch, Transient Network Glitch, Incorrect Threshold Tuning, Duplicate Alert, Other) to prompt qualitative operator context in the dashboard LWC feedback modal.
+  6. **Missed Incident RCA Tracking**: Programmatic lookback scanning of telemetry signals and back-testing algorithms by `SentinelPredictionRcaQueueable.cls` to identify coefficient offsets and generate logging recommendations.
+  7. **Score Adjustment Recommendation**: Automated calibration protocols including dynamic weight penalties ($P=0.85$ dampening), telemetry cooldown suppressions (3 false positives in 8 hours -> 2-hour suppression), and proactive gain amplification suggestions.
+  8. **Operational Trust Score (OTS) Impact**: Mathematical formulation and time-decay weighted formula for a rolling OTS based on Precision (40% weight) and Recall (60% weight), acting as the ultimate GA promotion gate.
+  9. **Reporting View**: Visual dashboard wireframe specifications for monitoring rolling trust score indicators, Pareto charts of dismissal reasons, and active calibration consoles.
+  10. **Success Criteria**: 7 quantitative and qualitative gates including FLS/CRUD permission compliance, complete RCA logs, suppression enforcement, OTS mathematical correctness, and low governor limit overhead.
+
+## Milestone 56 Complete ✅
+All tasks for Prediction Engine QA + Trust Validation are complete and fully documented.
+
