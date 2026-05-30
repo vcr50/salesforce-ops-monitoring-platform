@@ -432,3 +432,11 @@
 - [x] Update `walkthrough.md` with demo pack summary.
 - [x] Commit all changes to version control and push to remote.
 
+## Milestone 64 — v1.2.0 Release Candidate
+
+### 64A — v1.2.0 Scope Freeze ✅
+- [x] Create the scope freeze document `docs/v1.2.0-release-candidate-scope-freeze.md`.
+- [x] Update `docs/maintenance.md` with scope freeze details.
+- [x] Update `walkthrough.md` with scope freeze summary.
+- [x] Commit all changes to version control and push to remote.
+

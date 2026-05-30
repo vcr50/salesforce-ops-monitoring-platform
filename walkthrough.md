@@ -866,3 +866,10 @@ Action Center handles any downstream execution
   - **Milestone 63 — Prediction + Auto-Heal Executive Demo Pack**: Complete
   - **Status**: Ready for executive/customer demo
   - **Recommendation**: Proceed to Milestone 64 — v1.2.0 Release Candidate.
+
+## 33. Milestone 64 — v1.2.0 Release Candidate
+
+### 64A — v1.2.0 Scope Freeze
+
+- **Completed Deliverable**: Authored the scope freeze document: [`docs/v1.2.0-release-candidate-scope-freeze.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-release-candidate-scope-freeze.md).
+- **Scope Freeze Parameters**: Restricts feature additions on the release candidate branch. Summarizes the scope of the v1.2.0 release, listing all completed telemetry prediction and governed auto-heal capabilities, deferred UI adjustments, package validation protocols, checkmarx static scanner security requirements, known limitations, and release promo checklists.

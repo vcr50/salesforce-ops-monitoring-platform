@@ -696,3 +696,8 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Created the final demo wrap-up document [`docs/prediction-auto-heal-executive-demo-pack-wrap-up.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/prediction-auto-heal-executive-demo-pack-wrap-up.md) summarizing the storyline structure, visuals check, scripts, slide frames, Q&A responses, and QA checklist.
 - Final Status: Milestone 63 — Prediction + Auto-Heal Executive Demo Pack: Complete. Status: Ready for executive/customer demo. Recommendation: Proceed to Milestone 64 — v1.2.0 Release Candidate.
 - Version-controlled and pushed all demo pack wrap-up files to origin repository.
+
+## Milestone 64 — v1.2.0 Release Candidate
+
+### 64A — v1.2.0 Scope Freeze: Complete
+- Created the scope freeze document [`docs/v1.2.0-release-candidate-scope-freeze.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-release-candidate-scope-freeze.md) establishing strict feature freeze boundaries, listing completed features (predictive engine, explanation templates, action governance services, execution services, savepoint rollbacks, retry ceilings, audit trails, and ROI metrics), deferred items, validation/security requirements, and Go/No-Go checklists. Locked codebase for release branch packaging.
