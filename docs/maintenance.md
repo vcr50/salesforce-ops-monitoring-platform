@@ -584,10 +584,12 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
   4. **Implementation Gaps**: Outlining the remaining Apex, LWC, and Custom Metadata tasks required for GA.
   5. **Go / No-Go Assessment**: Official status set to **NOT GA YET** due to implementation and verification validation being pending. Recommended proceeding to Milestone 61 (Auto-Heal GA Implementation).
 
+## Milestone 61 — Auto-Heal GA Implementation
 
-
-
-
-
+### 61A — Auto-Heal GA Implementation Plan: Complete
+- Created `docs/auto-heal-ga-implementation-plan.md` defining the technical implementation blueprint for executing safe Auto-Heal actions under strict GRC rules.
+- Scoped implementation changes across `AutoHealExecutionService.cls`, `AllowedActionExecutor.cls`, `SentinelFlow_Setting__mdt` custom metadata settings, dashboard alerts, and `SentinelIncidentTrigger.trigger`.
+- Established runtime safety checkpoints: checking for 15%+ CPU/DML headroom, database-level `FOR UPDATE` duplicate locks, strict user mode enforcement, dynamic blocked action validation, savepoint rollbacks, UUID transaction logs, and global kill switch.
+- Outlined unit testing strategy targeting savepoint rollback, duplicate execution, and kill switch deactivation, aiming for 95%+ coverage before deploying validation builds to sandbox.
 
 

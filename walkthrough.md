@@ -696,7 +696,17 @@ Action Center handles any downstream execution
 - **Control Checklists**: Synthesized safety, governance, security, audit, and rollback verification points.
 - **Go / No-Go Verdict**: Assessed status as **NOT GA yet** due to pending implementation and sandbox QA verification, with the recommendation to proceed to **Milestone 61 — Auto-Heal GA Implementation**.
 
+---
 
+## 31. Milestone 61 — Auto-Heal GA Implementation
 
+### 61A — Auto-Heal GA Implementation Plan
 
-
+- **Implementation Blueprint**: Authored the Auto-Heal GA implementation plan document: [`docs/auto-heal-ga-implementation-plan.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/auto-heal-ga-implementation-plan.md).
+- **Core Components Mapping**:
+  - `AutoHealExecutionService.cls`: Manages execution limits, status updates, CPU/DML headroom validation (checking for $\ge 15\%$ headroom), duplicate execution row locks (`FOR UPDATE`), and initiates rollout runbooks.
+  - `AllowedActionExecutor.cls`: Executes allowed actions (Case/Task creation, queueable Slack/Teams alert notifications, safe retries capped at 3 attempts).
+  - `SentinelFlow_Setting__mdt`: Integrates custom settings for global kill switch enforcement and SLA metrics.
+  - `SentinelIncidentTrigger.trigger`: Propagates approvals and automates reversions.
+- **Rollback and Audit**: Implements atomic database savepoints (`Database.setSavepoint()` and `Database.rollback()`) and unique trace UUID context across logs.
+- **Verification Plan**: Specifies unit tests for savepoint rollback on exception, duplicate execution guard, and kill switch active check, targeting $\ge 95\%$ Apex coverage.

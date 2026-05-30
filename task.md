@@ -297,9 +297,37 @@
   - [x] Recommend proceeding to Milestone 61 (Auto-Heal GA Implementation Planning)
   - [x] Update `docs/maintenance.md`, `task.md`, and `walkthrough.md`
 
+## Milestone 61 — Auto-Heal GA Implementation
 
+### 61A — Auto-Heal GA Implementation Plan ✅
+- [x] Create `docs/auto-heal-ga-implementation-plan.md` defining purpose, scope, safety checks, allowed/blocked action mapping, Guardian Gate, rollbacks, audits, and kill switch logic.
+- [x] Integrate safety boundaries, limits, locks, rollbacks, and GRC policies into the roadmap.
+- [x] Define testing scenarios, coverage thresholds (95%+), and target environments.
+- [x] Update `docs/maintenance.md`, `task.md`, and `walkthrough.md`.
 
+### 61B — AutoHealExecutionService design/code
+- [ ] Create `AutoHealExecutionService.cls` coordinating limits and execution flows.
+- [ ] Enforce CPU/DML headroom limits.
+- [ ] Implement query row locks.
 
+### 61C — Allowed action executor
+- [ ] Create `AllowedActionExecutor.cls` to safely execute Case, Task, and Alert callouts.
+- [ ] Implement FLS assertions on DML and callouts in background contexts.
 
+### 61D — Kill switch + duplicate guard
+- [ ] Implement Custom Settings checks for `Auto_Heal_Active`.
+- [ ] Implement static trace UUID and execution thread validations.
 
+### 61E — Rollback + failure lifecycle
+- [ ] Implement Apex savepoint and rollback blocks.
+- [ ] Handle failures and exception audit logging.
+
+### 61F — Unit tests + sandbox dry-runs
+- [ ] Write unit tests targeting rollback and kill switch behaviors.
+- [ ] Target 95%+ test coverage.
+
+### 61G — Milestone 61 wrap-up
+- [ ] Update `docs/maintenance.md`.
+- [ ] Update walkthrough documentation.
+- [ ] Commit all code changes to remote.
 
