@@ -644,3 +644,13 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 
 ### 62A — Auto-Heal GA Pilot Scope: Complete
 - Created the Auto-Heal GA pilot scoping document [`docs/auto-heal-ga-pilot-scope.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/auto-heal-ga-pilot-scope.md) defining purpose, target sandbox environment, duration phases (calibration and guided runs), allowed recovery actions, blocked policy actions, simulated test profiles, SRE operator roles, quantitative success metrics, rollback testing specifications, and master Go/No-Go GA promotion criteria.
+
+### 62B — Auto-Heal Pilot Test Scenario Setup: Complete
+- Created the descriptive test scenario guide [`docs/auto-heal-ga-pilot-test-scenarios.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/auto-heal-ga-pilot-test-scenarios.md) detailing validation guidelines, environment configs, GRC compliance logging requirements, and pass/fail verification checklists.
+- Created six anonymous Apex simulation scripts in the repository under [`scripts/apex/`](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/) to validate each control behavior:
+  1. [`auto_heal_pilot_scenario_a.apex`](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/auto_heal_pilot_scenario_a.apex): Low-risk autonomous task logging (`CREATE_TASK`).
+  2. [`auto_heal_pilot_scenario_b.apex`](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/auto_heal_pilot_scenario_b.apex): Medium-risk pre-approved case creation (`CREATE_CASE`).
+  3. [`auto_heal_pilot_scenario_c.apex`](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/auto_heal_pilot_scenario_c.apex): High-risk Guardian Gate blocking and approval release validation.
+  4. [`auto_heal_pilot_scenario_d.apex`](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/auto_heal_pilot_scenario_d.apex): Enforcement of blocked actions (`DELETE_RECORDS`) and block auditing.
+  5. [`auto_heal_pilot_scenario_e.apex`](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/auto_heal_pilot_scenario_e.apex): Transaction rollback verification using custom exception triggers (`TEST_FORCE_FAILURE`) and status reset.
+  6. [`auto_heal_pilot_scenario_f.apex`](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/auto_heal_pilot_scenario_f.apex): Retry limit enforcement blocking executions after 3 consecutive failures.

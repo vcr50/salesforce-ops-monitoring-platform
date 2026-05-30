@@ -788,3 +788,13 @@ Action Center handles any downstream execution
 ### 62A — Auto-Heal GA Pilot Scope
 
 - **Completed Deliverable**: Authored the pilot scoping document [`docs/auto-heal-ga-pilot-scope.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/auto-heal-ga-pilot-scope.md) mapping out environment settings, continuous 14-day execution phases, safe allowed actions, blocked action matrices, simulated failure test scenarios, GRC compliance metrics, and Go/No-Go criteria.
+
+### 62B — Auto-Heal Pilot Test Scenario Setup
+
+- **Completed Deliverable**: Authored the descriptive test scenarios guide [`docs/auto-heal-ga-pilot-test-scenarios.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/auto-heal-ga-pilot-test-scenarios.md) and created six autonomous simulation Apex scripts in [`scripts/apex/`](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/):
+  - **Scenario A** ([`auto_heal_pilot_scenario_a.apex`](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/auto_heal_pilot_scenario_a.apex)): Low-risk autonomous task creation.
+  - **Scenario B** ([`auto_heal_pilot_scenario_b.apex`](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/auto_heal_pilot_scenario_b.apex)): Medium-risk pre-approved case creation.
+  - **Scenario C** ([`auto_heal_pilot_scenario_c.apex`](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/auto_heal_pilot_scenario_c.apex)): High-risk Guardian Gate validation, asserting that unapproved high-risk runs fail immediately and pass only when approved.
+  - **Scenario D** ([`auto_heal_pilot_scenario_d.apex`](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/auto_heal_pilot_scenario_d.apex)): Blocked action validation verifying that deactivations, deletions, and unauthorized modifications trigger governance blocks and compliance logging.
+  - **Scenario E** ([`auto_heal_pilot_scenario_e.apex`](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/auto_heal_pilot_scenario_e.apex)): Rollback verification ensuring database transactions are reset and parent incident fields are updated upon execution error.
+  - **Scenario F** ([`auto_heal_pilot_scenario_f.apex`](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/auto_heal_pilot_scenario_f.apex)): Retry ceiling enforcement blocking execution after 3 failures.

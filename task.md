@@ -356,7 +356,14 @@
 
 ### 62A — Auto-Heal GA Pilot Scope ✅
 - [x] Create `docs/auto-heal-ga-pilot-scope.md` defining purpose, environment, phases, allowed/blocked pilot actions, test scenarios, operators, success metrics, and Go/No-Go criteria.
-- [ ] Update `docs/maintenance.md`.
-- [ ] Update walkthrough documentation.
-- [ ] Commit all code changes to remote.
+- [x] Update `docs/maintenance.md`.
+- [x] Update walkthrough documentation.
+- [x] Commit all code changes to remote.
+
+### 62B — Auto-Heal Pilot Test Scenario Setup ✅
+- [x] Create `docs/auto-heal-ga-pilot-test-scenarios.md` detailing the test procedures, expected logs, and verification checklists.
+- [x] Create six anonymous Apex pilot scripts under `scripts/apex/` (Scenario A to F).
+- [x] Update `docs/maintenance.md` with pilot scenario details.
+- [x] Update `walkthrough.md` with pilot scenario walkthrough details.
+- [x] Commit all changes to version control and push to remote.
 
