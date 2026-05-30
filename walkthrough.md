@@ -1078,3 +1078,17 @@ Action Center handles any downstream execution
 - **Core Checks**: **7/7 PASSED** — no bypass, no destructive path, write-once audit, limited perms, kill switch, PII/secrets excluded, "Estimated" wording.
 - **Compliance**: SOX 3/3 · SOC2 4/4 · GDPR/CCPA 1/1 — all COMPLIANT.
 - **Final Verdict**: **SECURITY / COMPLIANCE REVIEW PASSED ✅ — Production-Ready for Enterprise**.
+
+### 68B — Compliance Evidence Pack
+
+- **Completed Deliverable**: Authored the compliance evidence pack: [`docs/v1.2.0-compliance-evidence-pack.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-compliance-evidence-pack.md).
+- **SOX Evidence**: 3/3 requirements documented — immutable audit trail, approved change controls, no unauthorized system changes. All COMPLIANT.
+- **SOC2 Evidence**: 4 Trust Service Criteria documented — CC6 Security (access control, least privilege, write-once), CC9 Availability (uptime, auto-recovery), CC11 Confidentiality (no PII/secrets), CC5 Processing Integrity (OTS ≥ 90%, zero false positives, "Estimated" wording). All COMPLIANT.
+- **GDPR/CCPA Evidence**: 5 requirements documented — no PII in any SentinelFlow object, data minimization enforced, retention limits defined, no erasure obligation. All COMPLIANT.
+- **Permission Set Evidence**: Admin (7 controls) and Operator (8 controls) CRUD matrices fully documented.
+- **Audit Log Evidence**: 10 items — write-once FLS+CRUD, UUID, referential integrity, zero tampering, 365-day retention. All verified.
+- **Auto-Heal Governance**: 9 controls — kill switch, approval gate, no destructive actions, retry ceiling, idempotency, governor compliance. All PASS.
+- **Data Retention**: 5 objects (30–365 days), zero PII stored. All PASS.
+- **Known Risks**: 5 documented, all Low severity, all accepted.
+- **Compliance Scorecard**: SOX 3/3 · SOC2 4/4 · GDPR 5/5 · GRC 7/7 — all 100%. Core checks: **7/7 PASSED**.
+- **Final Status**: **SentinelFlow v1.2.0 compliance evidence pack is complete. Status: Enterprise-ready for customer/security review.**
