@@ -430,7 +430,7 @@ An untracked, obsolete class/trigger (`FlowFaultTrigger`/`FlowFaultTriggerTest`)
 
 ---
 
-## 23. Final Milestone Status (Milestone 55-57)
+## 23. Final Milestone Status (Milestone 55-58)
 
 | Milestone | Scope | Status | Deliverables |
 |---|---|---|---|
@@ -439,4 +439,7 @@ An untracked, obsolete class/trigger (`FlowFaultTrigger`/`FlowFaultTriggerTest`)
 | **57A** | Pilot Run Scope | ✅ Complete | Created `docs/prediction-engine-pilot-scope.md` |
 | **57B** | Signal Simulation Playbooks | ✅ Complete | simulation Apex scripts under `scripts/apex/` |
 | **57C** | Pilot Execution Log | ✅ Complete | Created `docs/prediction-pilot-execution-log.md` |
+| **58A** | Tuning Plan | ✅ Complete | Created `docs/prediction-engine-tuning-plan.md` |
 | **Overall 57** | **Pilot Run Execution** | **✅ Complete** | **Tested dry-runs successfully; schemas hardened** |
+| **Overall 58** | **Prediction Engine Tuning** | **🔄 In Progress** | **Tuning plan created; calibration pending** |
+

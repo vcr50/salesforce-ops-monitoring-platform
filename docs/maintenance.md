@@ -438,3 +438,12 @@ All tasks for Prediction Engine QA + Trust Validation are complete and fully doc
 ## Milestone 57 Complete ✅
 All tasks for the Prediction Engine Pilot Run are complete and fully documented.
 
+## Milestone 58 — Prediction Engine Tuning
+
+### 58A — Prediction Result Review + Tuning Plan: Complete
+- Created `docs/prediction-engine-tuning-plan.md` detailing:
+  - Evaluation of expected vs actual pilot scores.
+  - Recommendations to tune Scenario B weights (increasing deployment and CPU error coefficients to target the 82%–88% range).
+  - Noise suppression improvements and explanation layout updates.
+  - Governance locks preserving human validation boundaries.
+

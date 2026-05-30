@@ -208,3 +208,6 @@
 - [x] **57B — Pilot Signal Simulation Playbooks**: Create `docs/prediction-pilot-signal-simulation.md` and executable Apex simulation scripts for scenarios A, B, C, D with dry-run support.
 - [x] **57C — Prediction Pilot Execution Log**: Create `docs/prediction-pilot-execution-log.md` logging dry-run simulation outcomes, schema mismatches, custom picklist resolutions, and OTS validations.
 
+## Milestone 58 — Prediction Engine Tuning
+- [x] **58A — Prediction Result Review + Tuning Plan**: Create `docs/prediction-engine-tuning-plan.md` defining weight calibration adjustments, expected vs actual variance analysis, noise suppression, and retesting specs.
+
