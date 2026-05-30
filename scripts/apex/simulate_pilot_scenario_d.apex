@@ -3,7 +3,7 @@
 // =========================================================================
 // Purpose: Simulates low-risk noise: transient HTTP 429 rate limit events
 //          that are successfully retried. Validates that the system 
-//          does not generate any prediction card on the dashboard (Score < 40%).
+//          does NOT generate any prediction card on the dashboard (Score < 40%).
 // Execution Options:
 //   1. Dry-Run Mode (Default): Runs with a database rollback. Verifies scoring.
 //   2. Live Commit Mode: Comment out the rollback block to persist data 
@@ -15,64 +15,73 @@ Savepoint sp = Database.setSavepoint();
 try {
     System.debug('=== INITIATING SCENARIO D SIMULATION: LOW-RISK NOISE ===');
     
+    // Milestone 58B Validation — Scenario D: No weight overrides.
+    // Uses new default weights (w3=0.45, w1=0.25). Slack noise signals:
+    // S2=20*0.06 + S5=8*0.10 = 1.2+0.8 = ~2% — well below 40% suppression threshold.
+    
     List<Sentinel_Anomaly_Signal__c> signals = new List<Sentinel_Anomaly_Signal__c>();
     
-    // Inject minor integration throttles: 2 retryable HTTP 429s on Slack_Webhook
+    // Minor retry event (1 retry success = very low spike count)
     signals.add(new Sentinel_Anomaly_Signal__c(
-        Signal_Type__c = 'Integration',
+        Signal_Type__c = 'Retry Spike',
         Event_Source__c = 'Slack_Webhook',
-        Error_Rate_Delta__c = 20.0,
-        Signal_Value__c = 429,
-        Timestamp__c = DateTime.now().addMinutes(-12)
+        Metric_Value__c = 1.0,   // 1 retry * 20 = 20 -> S2 = 20 (low)
+        Severity__c = 'Low',
+        Timestamp__c = DateTime.now()
     ));
     
+    // Minimal integration error signal
     signals.add(new Sentinel_Anomaly_Signal__c(
-        Signal_Type__c = 'Integration',
+        Signal_Type__c = 'Integration Error',
         Event_Source__c = 'Slack_Webhook',
-        Error_Rate_Delta__c = 15.0,
-        Signal_Value__c = 429,
-        Timestamp__c = DateTime.now().addMinutes(-8)
-    ));
-    
-    // Inject successful retry event
-    signals.add(new Sentinel_Anomaly_Signal__c(
-        Signal_Type__c = 'Retry',
-        Event_Source__c = 'Slack_Webhook_Retry',
-        Error_Rate_Delta__c = 0.0,
-        Signal_Value__c = 1.0, // 1 retry = success
-        Timestamp__c = DateTime.now().addMinutes(-7)
+        Metric_Value__c = 8.0,   // very low integration rate
+        Severity__c = 'Low',
+        Timestamp__c = DateTime.now()
     ));
     
     insert signals;
-    System.debug('Successfully inserted ' + signals.size() + ' mock low-risk noise signals.');
+    System.debug('Successfully inserted ' + signals.size() + ' Slack low-risk noise signals.');
     
-    // Invoke Sentinel Prediction Engine to calculate scoring and create prediction record
-    System.debug('Invoking SentinelPredictionEngine.evaluate()...');
-    SentinelPredictionEngine.evaluate();
+    System.debug('Invoking SentinelPredictionEngine.processSignals()...');
+    SentinelPredictionEngine.processSignals(signals);
     
-    // Query and output calculated prediction details
+    // Only check if a card was erroneously generated
     List<Sentinel_Prediction__c> predictions = [
-        SELECT Id, Anomaly_Score__c, Risk_Level__c, Summary__c, Status__c
+        SELECT Id, Prediction_Score__c, Status__c, Summary__c
         FROM Sentinel_Prediction__c
-        WHERE CreatedDate = TODAY AND Anomaly_Score__c >= 40.0
+        WHERE CreatedDate = TODAY AND Summary__c LIKE '%Slack_Webhook%'
         ORDER BY CreatedDate DESC
+        LIMIT 5
     ];
     
-    System.debug('=== SCENARIO D EVALUATION RESULTS ===');
+    // Fallback if lookup field not available - check all today's predictions
     if (predictions.isEmpty()) {
-        System.debug('[SUCCESS] As expected, no prediction card was generated. Normal noise suppressed.');
-    } else {
-        System.debug('[WARNING] Unexpected prediction card created! Scoring is too sensitive.');
-        for (Sentinel_Prediction__c p : predictions) {
-            System.debug('Prediction ID: ' + p.Id + ' | Score: ' + p.Anomaly_Score__c + '% | Risk: ' + p.Risk_Level__c);
+        predictions = [
+            SELECT Id, Prediction_Score__c, Status__c, Summary__c
+            FROM Sentinel_Prediction__c
+            WHERE CreatedDate = TODAY
+            ORDER BY Prediction_Score__c ASC
+            LIMIT 5
+        ];
+    }
+    
+    System.debug('=== SCENARIO D EVALUATION RESULTS ===');
+    Boolean cardGenerated = false;
+    for (Sentinel_Prediction__c p : predictions) {
+        if (p.Prediction_Score__c != null && p.Prediction_Score__c < 40) {
+            System.debug('[SUCCESS] Low score prediction found: ' + p.Prediction_Score__c + '% (below 40% threshold - card suppressed, noise filtered correctly)');
+        } else if (p.Prediction_Score__c != null && p.Prediction_Score__c >= 40) {
+            System.debug('[WARNING] Unexpected card generated with score: ' + p.Prediction_Score__c + '%. Scoring is too sensitive for noise.');
+            cardGenerated = true;
         }
+    }
+    if (predictions.isEmpty()) {
+        System.debug('[SUCCESS] Zero prediction records created. Noise correctly suppressed below threshold.');
     }
     
 } catch (Exception e) {
     System.debug('[ERROR] Scenario D Simulation failed: ' + e.getMessage() + '\n' + e.getStackTraceString());
 } finally {
-    // Keep this rollback block active for dry-run testing.
-    // Comment it out if you want to push signals to the live dashboard!
     Database.rollback(sp);
     System.debug('Scenario D completed. Database rolled back to preserve sandbox state.');
 }

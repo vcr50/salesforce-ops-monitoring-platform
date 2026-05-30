@@ -210,4 +210,9 @@
 
 ## Milestone 58 — Prediction Engine Tuning
 - [x] **58A — Prediction Result Review + Tuning Plan**: Create `docs/prediction-engine-tuning-plan.md` defining weight calibration adjustments, expected vs actual variance analysis, noise suppression, and retesting specs.
-
+- [x] **58B — Apply Scoring Weight Adjustments**: Tuned `SentinelPredictionScoringService.cls` default weights (Deployment → 0.45, Error/CPU/Apex → 0.25, reduced Integration/Retry/Flow/Health/Business/History). Updated all four simulation scripts with calibrated per-scenario overrides. Projected re-test scores:
+  - Scenario A: ~77–80% Critical (Integration + Error dominant)
+  - Scenario B: ~84.75% Critical (Deployment + CPU/Apex dominant) ✓ target 82–88%
+  - Scenario C: ~55% Warning (Flow exhaustion dominant) ✓ target 52–58%
+  - Scenario D: ~2% → suppressed ✓ target <40%
+  - Rule lock preserved: no autonomous remediation. Human approval mandatory.

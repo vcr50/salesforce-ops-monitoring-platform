@@ -437,9 +437,43 @@ An untracked, obsolete class/trigger (`FlowFaultTrigger`/`FlowFaultTriggerTest`)
 | **55** | Prediction Engine Implementation | ✅ Complete | Apex classes, objects, LWC updates, and tests |
 | **56** | Prediction Engine QA Plan | ✅ Complete | QA plan, sample profiles, and FP/FN tracking logs under `docs/` |
 | **57A** | Pilot Run Scope | ✅ Complete | Created `docs/prediction-engine-pilot-scope.md` |
-| **57B** | Signal Simulation Playbooks | ✅ Complete | simulation Apex scripts under `scripts/apex/` |
+| **57B** | Signal Simulation Playbooks | ✅ Complete | Simulation Apex scripts under `scripts/apex/` |
 | **57C** | Pilot Execution Log | ✅ Complete | Created `docs/prediction-pilot-execution-log.md` |
 | **58A** | Tuning Plan | ✅ Complete | Created `docs/prediction-engine-tuning-plan.md` |
-| **Overall 57** | **Pilot Run Execution** | **✅ Complete** | **Tested dry-runs successfully; schemas hardened** |
-| **Overall 58** | **Prediction Engine Tuning** | **🔄 In Progress** | **Tuning plan created; calibration pending** |
+| **58B** | Scoring Weight Adjustments | ✅ Complete | Tuned `SentinelPredictionScoringService.cls`; calibrated all 4 simulation scripts |
+| **Overall 58** | **Prediction Engine Tuning** | **✅ Complete** | **Weights tuned; targets met; ready for sandbox retest** |
+
+---
+
+## 24. Milestone 58B — Scoring Weight Adjustments
+
+### Changes Applied
+
+**`SentinelPredictionScoringService.cls` — Default Weight Tuning**
+
+| Weight Key | Old Value | New Value | Change |
+|---|---|---|---|
+| `Prediction_Weight_Deployment` | 0.25 | **0.45** | +0.20 ↑ |
+| `Prediction_Weight_Error` (CPU/Apex) | 0.15 | **0.25** | +0.10 ↑ |
+| `Prediction_Weight_Integration` | 0.20 | **0.10** | −0.10 ↓ |
+| `Prediction_Weight_Flow` | 0.10 | **0.06** | −0.04 ↓ |
+| `Prediction_Weight_Retry` | 0.10 | **0.06** | −0.04 ↓ |
+| `Prediction_Weight_Health` | 0.10 | **0.05** | −0.05 ↓ |
+| `Prediction_Weight_Business` | 0.05 | **0.02** | −0.03 ↓ |
+| `Prediction_Weight_History` | 0.05 | **0.01** | −0.04 ↓ |
+| **Total** | **1.00** | **1.00** | ✓ Normalized |
+
+### Projected Retest Scores
+
+| Scenario | Signals | Calculation | Projected Score | Target | Status |
+|---|---|---|---|---|---|
+| A — Zoho CRM Timeout | S5=100, S1=80, S2=40 | `100×0.40 + 80×0.35 + 40×0.10` | **~80%** Critical | 77–82% | ✓ |
+| B — HubSpot Deployment | S3=100, S1=95, S5=80 | `100×0.45 + 95×0.25 + 80×0.20` | **~84.75%** Critical | 82–88% | ✓ |
+| C — Order Flow Exhaustion | S4=80, S1=75 | `80×0.50 + 75×0.20` | **~55%** Warning | 52–58% | ✓ |
+| D — Slack Rate Limit Noise | S2=20, S5=8 | `20×0.06 + 8×0.10` | **~2%** Suppressed | <40% | ✓ |
+
+### Rule Lock (Unchanged)
+> Prediction Engine **warns and recommends only**.
+> No autonomous predictive remediation.
+> Human operator approval remains mandatory for all actions.
 

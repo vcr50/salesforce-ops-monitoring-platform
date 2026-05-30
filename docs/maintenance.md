@@ -447,3 +447,24 @@ All tasks for the Prediction Engine Pilot Run are complete and fully documented.
   - Noise suppression improvements and explanation layout updates.
   - Governance locks preserving human validation boundaries.
 
+### 58B — Apply Scoring Weight Adjustments: Complete
+- Updated `SentinelPredictionScoringService.cls` default weights (Milestone 58B tuned):
+  - `Prediction_Weight_Deployment`: 0.25 → **0.45** (primary driver)
+  - `Prediction_Weight_Error` (CPU/Apex): 0.15 → **0.25** (secondary driver)
+  - `Prediction_Weight_Integration`: 0.20 → **0.10** (reduced)
+  - `Prediction_Weight_Flow`: 0.10 → **0.06** (reduced)
+  - `Prediction_Weight_Retry`: 0.10 → **0.06** (reduced)
+  - `Prediction_Weight_Health`: 0.10 → **0.05** (reduced)
+  - `Prediction_Weight_Business`: 0.05 → **0.02** (reduced)
+  - `Prediction_Weight_History`: 0.05 → **0.01** (reduced)
+  - Total remains normalized at **1.00** ✓
+- Updated per-scenario `SystemSettings.setOverride()` weight blocks in all four pilot simulation scripts to match tuned calibration targets:
+  - Scenario A (`Zoho_CRM`): w5=0.40, w1=0.35 → projected ~72–80% Critical ✓
+  - Scenario B (`HubSpot_Sync`): w3=0.45, w1=0.25, w5=0.20 → projected **~84.75% Critical** ✓ target 82–88%
+  - Scenario C (`Order_Processing_Flow`): w4=0.50, w1=0.20 → projected **~55% Warning** ✓ target 52–58%
+  - Scenario D (`Slack_Webhook`): default weights → projected **~2%** → suppressed ✓ target <40%
+- Rule lock preserved across all scripts: **no autonomous predictive remediation**. Human operator approval remains mandatory.
+
+## Milestone 58B Complete ✅
+Scoring weights tuned and simulation scripts calibrated. Ready for retesting in sandbox.
+

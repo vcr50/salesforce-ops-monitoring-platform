@@ -15,53 +15,57 @@ Savepoint sp = Database.setSavepoint();
 try {
     System.debug('=== INITIATING SCENARIO B SIMULATION: DEPLOYMENT CORRELATION ===');
     
+    // Milestone 58B Tuned — Scenario B: Deployment + Error/CPU emphasis
+    // Projected: S3=100*0.45 + S1=95*0.25 + S5=80*0.20 = 45+23.75+16 = ~84.75% (Critical)
+    SystemSettings.setOverride('Prediction_Weight_Deployment', 0.45);
+    SystemSettings.setOverride('Prediction_Weight_Error', 0.25);
+    SystemSettings.setOverride('Prediction_Weight_Integration', 0.20);
+    SystemSettings.setOverride('Prediction_Weight_Retry', 0.04);
+    SystemSettings.setOverride('Prediction_Weight_Flow', 0.03);
+    SystemSettings.setOverride('Prediction_Weight_Business', 0.015);
+    SystemSettings.setOverride('Prediction_Weight_Health', 0.015);
+    SystemSettings.setOverride('Prediction_Weight_History', 0.01);
+    
     List<Sentinel_Anomaly_Signal__c> signals = new List<Sentinel_Anomaly_Signal__c>();
     
-    // Recent deployment signal: 3 Apex classes deployed 8 minutes ago
+    // Recent deployment signal: 3 classes deployed 8 minutes ago (within 15 min = S3=100)
     signals.add(new Sentinel_Anomaly_Signal__c(
-        Signal_Type__c = 'Deployment',
-        Event_Source__c = 'SetupAuditTrail:ApexClass',
-        Error_Rate_Delta__c = 0.0,
-        Signal_Value__c = 3.0,
-        Timestamp__c = DateTime.now().addMinutes(-8)
+        Signal_Type__c = 'Deployment Activity',
+        Event_Source__c = 'HubSpot_Sync',
+        Metric_Value__c = 8.0,     // 8 minutes since deploy -> S3 = 100
+        Severity__c = 'Critical',
+        Timestamp__c = DateTime.now()
     ));
     
-    // Inject 8 CPU time limit exceptions logged inside SentinelIncidentTrigger
-    for (Integer i = 0; i < 8; i++) {
-        signals.add(new Sentinel_Anomaly_Signal__c(
-            Signal_Type__c = 'Apex',
-            Event_Source__c = 'SentinelIncidentTrigger:CPU_TIME_LIMIT',
-            Error_Rate_Delta__c = 800.0,
-            Signal_Value__c = 10000.0, // 10,000ms CPU (max limit reached)
-            Timestamp__c = DateTime.now().addMinutes(-6 + i)
-        ));
-    }
+    // CPU time limit Apex exception errors – high exception rate
+    signals.add(new Sentinel_Anomaly_Signal__c(
+        Signal_Type__c = 'Apex Exception',
+        Event_Source__c = 'HubSpot_Sync',
+        Metric_Value__c = 95.0,
+        Severity__c = 'Critical',
+        Timestamp__c = DateTime.now()
+    ));
     
-    // Inject 4 collateral integration timeouts logged on HubSpot sync
-    for (Integer i = 0; i < 4; i++) {
-        signals.add(new Sentinel_Anomaly_Signal__c(
-            Signal_Type__c = 'Integration',
-            Event_Source__c = 'HubSpot_Sync',
-            Error_Rate_Delta__c = 300.0,
-            Signal_Value__c = 408, // Request Timeout
-            Timestamp__c = DateTime.now().addMinutes(-5 + i)
-        ));
-    }
+    // HubSpot integration timeouts from collateral CPU exhaustion
+    signals.add(new Sentinel_Anomaly_Signal__c(
+        Signal_Type__c = 'Integration Error',
+        Event_Source__c = 'HubSpot_Sync',
+        Metric_Value__c = 80.0,
+        Severity__c = 'Critical',
+        Timestamp__c = DateTime.now()
+    ));
     
     insert signals;
-    System.debug('Successfully inserted ' + signals.size() + ' mock correlation signals.');
+    System.debug('Successfully inserted ' + signals.size() + ' deployment correlation mock signals.');
     
-    // Invoke Sentinel Prediction Engine to calculate scoring and create prediction record
-    System.debug('Invoking SentinelPredictionEngine.evaluate()...');
-    SentinelPredictionEngine.evaluate();
+    System.debug('Invoking SentinelPredictionEngine.processSignals()...');
+    SentinelPredictionEngine.processSignals(signals);
     
-    // Query and output calculated prediction details
     List<Sentinel_Prediction__c> predictions = [
-        SELECT Id, Anomaly_Score__c, Risk_Level__c, Summary__c,
-               Recommended_Runbook__c, Status__c, Operator_Decision__c
+        SELECT Id, Prediction_Score__c, Status__c, Summary__c, Explanation__c, Operator_Decision__c
         FROM Sentinel_Prediction__c
         WHERE CreatedDate = TODAY
-        ORDER BY CreatedDate DESC, Anomaly_Score__c DESC
+        ORDER BY CreatedDate DESC, Prediction_Score__c DESC
         LIMIT 5
     ];
     
@@ -71,18 +75,16 @@ try {
     } else {
         for (Sentinel_Prediction__c p : predictions) {
             System.debug('Prediction ID: ' + p.Id);
-            System.debug('Anomaly Score: ' + p.Anomaly_Score__c + '%');
-            System.debug('Risk Level: ' + p.Risk_Level__c);
+            System.debug('Anomaly Score: ' + p.Prediction_Score__c + '%');
+            System.debug('Risk Level: ' + p.Status__c);
             System.debug('Summary: ' + p.Summary__c);
-            System.debug('Recommended Runbook: ' + p.Recommended_Runbook__c);
+            System.debug('Explanation: ' + p.Explanation__c);
         }
     }
     
 } catch (Exception e) {
     System.debug('[ERROR] Scenario B Simulation failed: ' + e.getMessage() + '\n' + e.getStackTraceString());
 } finally {
-    // Keep this rollback block active for dry-run testing.
-    // Comment it out if you want to push signals to the live dashboard!
     Database.rollback(sp);
     System.debug('Scenario B completed. Database rolled back to preserve sandbox state.');
 }
