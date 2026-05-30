@@ -463,10 +463,19 @@
 - [x] Update `docs/maintenance.md` with release notes completion logs.
 - [x] Update `walkthrough.md` with release notes walkthrough summary.
 - [x] Commit all changes to version control and push to remote.
+- [x] Commit all changes to remote.
 
 ## 64E — Release Candidate Tag ✅
 - [x] Create and push the official `v1.2.0-rc.1` release candidate tag
 - [x] Update `docs/maintenance.md` with release candidate tag details
 - [x] Update `walkthrough.md` with tag details
-- [x] Commit all log changes to version control and push to remote
+- [x] Commit all log changes to version control and push to remote.
 
+## 64F — Go / No-Go Review ✅
+- [x] Create the Go / No-Go review document `docs/v1.2.0-go-no-go-review.md`
+- [x] Decide release readiness for `v1.2.0-rc.1`
+- [x] Confirm scope freeze, validation results, security assessment, and release notes
+- [x] Confirm no feature creep and that production deployment occurs in Milestone 65
+- [x] Update `docs/maintenance.md` with review details
+- [x] Update `walkthrough.md` with review details
+- [x] Commit all log changes to version control and push to remote
