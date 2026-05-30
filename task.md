@@ -347,8 +347,8 @@
 - [x] Verify zero destructive operations leak into transaction execution.
 - [x] Verify Slack/Teams/fallback alert path dispatches correctly.
 
-### 61G — Milestone 61 wrap-up
-- [ ] Update `docs/maintenance.md`.
-- [ ] Update walkthrough documentation.
-- [ ] Commit all code changes to remote.
+### 61G — Milestone 61 wrap-up ✅
+- [x] Update `docs/maintenance.md`.
+- [x] Update walkthrough documentation.
+- [x] Commit all code changes to remote.
 
