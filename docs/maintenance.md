@@ -496,3 +496,18 @@ Sandbox retest executed. Scores validated against tuned targets. Safety gate con
 All four prediction scenarios fully calibrated. 4/4 pass. Safety gate confirmed ×2.
 Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 
+## Milestone 59 — Governance Integration
+
+### 59A — Prediction-to-Approval Governance Design: Complete
+- Created `docs/prediction-to-approval-governance-design.md` defining:
+  - **Purpose**: Connect prediction cards to the Guardian Gate approval workflow.
+  - **Prediction-to-Approval Flow**: Prediction → Operator "Request Approval" → `SentinelPredictionGovernanceService` creates `Sentinel_Incident__c` → Guardian Gate displays for human approval → Action Center handles execution.
+  - **Operator actions**: Review Prediction, Request Approval, Dismiss, Mark Useful, Mark Noisy.
+  - **Approval record mapping**: `Sentinel_Incident__c` (Type: Predicted Anomaly) + `Zentom_Policy_Decision__c` on decision.
+  - **Policy decision mapping**: Approved/Rejected → updates `Operator_Decision__c` → feeds trust score model.
+  - **Audit log requirements**: 7 lifecycle events → `Sentinel_Audit_Log__c`.
+  - **Safety boundaries**: No autonomous execution, no self-approval, no prediction chain, Critical severity does not bypass approval, dismissed is terminal, trust score is advisory only.
+  - **Success criteria**: 8 verifiable acceptance criteria defined.
+  - **New Apex classes scoped**: `SentinelPredictionGovernanceService` + test class (59B).
+  - **New metadata scoped**: `Source_Prediction__c` lookup field, permission set FLS updates, LWC button additions (59B).
+

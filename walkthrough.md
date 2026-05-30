@@ -552,3 +552,61 @@ Updated `scripts/apex/simulate_pilot_scenario_a.apex` — no global defaults cha
 > Human operator approval remains mandatory for all actions.
 > **Milestone 58 — Prediction Engine Tuning: COMPLETE ✅**
 
+---
+
+## 27. Milestone 59A — Prediction-to-Approval Governance Design
+
+### Purpose
+Connect `Sentinel_Prediction__c` cards to the Guardian Gate approval workflow. Prediction Engine can **request** governance review — it cannot approve, reject, or execute anything autonomously.
+
+### Prediction-to-Approval Flow
+
+```
+Sentinel_Prediction__c (Score ≥ 40%)
+    │
+    │  Operator clicks "Request Approval"
+    ▼
+SentinelPredictionGovernanceService.createApprovalFromPrediction()
+    │  Creates Sentinel_Incident__c (Type: Predicted Anomaly)
+    │  Logs Sentinel_Audit_Log__c
+    ▼
+Guardian Gate (Approval Queue in zentomDashboard)
+    │  Human Approver: Approve / Reject
+    ▼
+Zentom_Policy_Decision__c created
+    │  Operator_Decision__c updated on Sentinel_Prediction__c
+    │  Trust score adjusted
+    ▼
+Action Center handles any downstream execution
+```
+
+### Operator Action Buttons
+
+| Button | Outcome |
+|---|---|
+| **Review Prediction** | Full detail modal — score, explanation, signal breakdown |
+| **Request Approval** | Creates `Sentinel_Incident__c` in Guardian Gate queue |
+| **Dismiss** | `Operator_Decision__c = 'Dismissed'` — no approval created |
+| **Mark Useful** | `Operator_Decision__c = 'Useful'` — positive trust signal |
+| **Mark Noisy** | `Operator_Decision__c = 'False Positive'` — negative trust signal |
+
+### Safety Boundaries
+
+| Boundary | Rule |
+|---|---|
+| No autonomous execution | Service creates approval records only |
+| No self-approval | Requestor ≠ Approver (Guardian Gate logic) |
+| No prediction chain | Predictions cannot spawn predictions |
+| No Critical bypass | Severity does not grant automatic execution |
+| Dismissed is terminal | Cannot Request Approval after Dismiss |
+| Trust score is advisory | Does not auto-approve or auto-dismiss |
+
+### Audit Log Events (7 Total)
+
+`Prediction Generated` → `Prediction Approval Requested` → `Prediction Approval Confirmed / Rejected` → `Prediction Dismissed` → `Prediction Marked Useful` → `Prediction Marked False Positive`
+
+### Deliverable
+- [`docs/prediction-to-approval-governance-design.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/prediction-to-approval-governance-design.md) — full design with flow, field mappings, safety boundaries, and 8 acceptance criteria
+
+### Next: 59B — Implement `SentinelPredictionGovernanceService`
+

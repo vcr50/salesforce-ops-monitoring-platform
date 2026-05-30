@@ -227,3 +227,13 @@
   - Scenario D safety recheck: **0 cards** ✅ (noise suppression confirmed ×2)
   - Issue 58C-01: **RESOLVED**
   - **Milestone 58 — Prediction Engine Tuning: COMPLETE ✅**
+
+## Milestone 59 — Governance Integration
+- [x] **59A — Prediction-to-Approval Governance Design**: Created `docs/prediction-to-approval-governance-design.md`.
+  - Prediction-to-Approval flow defined end-to-end
+  - 5 operator actions specified (Review, Request Approval, Dismiss, Mark Useful, Mark Noisy)
+  - Approval record mapping: `Sentinel_Incident__c` + `Zentom_Policy_Decision__c`
+  - 7 audit log lifecycle events specified
+  - 6 safety boundaries enforced at Apex service layer
+  - 8 success criteria defined
+  - New Apex class `SentinelPredictionGovernanceService` scoped for 59B
