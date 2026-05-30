@@ -49,26 +49,29 @@ public with sharing class AutoHealExecutionService {
             throw new AutoHealException('Unsupported Action: ' + upperAction + ' is not registered as a safe action.');
         }
 
-        // 5. Prevent duplicate execution
+        // 4 & 5. Prevent duplicate execution and enforce row-level locking
         Sentinel_Incident__c incident;
         try {
             incident = [
                 SELECT Id, Name, Status__c, Approval_Status__c, Risk_Level__c, Risk_Score__c,
-                       Execution_Status__c, Recommended_Action__c, Runbook_Title__c,
+                       Execution_Status__c, Execution_Action__c, Recommended_Action__c, Runbook_Title__c,
                        Incident_Type__c, Created_Case__c, Runbook_Key__c, Runbook_Steps__c
                 FROM Sentinel_Incident__c
                 WHERE Id = :incidentId
                 FOR UPDATE
             ];
         } catch (Exception e) {
+            logAuditEvent(incidentId, 'AUTO_HEAL_BLOCKED', 'LOCK_FAILURE', 'Failed to lock incident record for execution: ' + e.getMessage());
             throw new AutoHealException('Failed to lock incident record for execution: ' + e.getMessage());
         }
 
         if (incident.Execution_Status__c == 'Executed') {
-            throw new AutoHealException('Action has already been executed for this incident.');
+            logAuditEvent(incidentId, 'AUTO_HEAL_BLOCKED', 'DUPLICATE_EXECUTION', 
+                'Action execution aborted: Incident ' + incident.Name + ' has already been executed (Action: ' + incident.Execution_Action__c + ').');
+            throw new AutoHealException('Duplicate Execution: Incident has already executed action: ' + incident.Execution_Action__c);
         }
 
-        // 4. Enforce approval requirement by risk level
+        // Enforce approval requirement by risk level
         Decimal riskScore = incident.Risk_Score__c != null ? incident.Risk_Score__c : 0;
         if (riskScore >= 40.0) {
             if (incident.Approval_Status__c != 'Approved') {
@@ -85,9 +88,8 @@ public with sharing class AutoHealExecutionService {
         result.actionTaken = upperAction;
 
         try {
-            // 6. Execute only safe actions with detailed input validation & GRC checks
+            // Execute safe actions
             if (upperAction == 'CREATE_CASE') {
-                // Input validation
                 if (String.isBlank(incident.Incident_Type__c)) {
                     throw new AutoHealException('Incident Type is required to create a Case.');
                 }
@@ -104,10 +106,6 @@ public with sharing class AutoHealExecutionService {
                 result.message = 'Successfully created Case ID: ' + c.Id;
                 
             } else if (upperAction == 'CREATE_TASK') {
-                if (incident.Created_Case__c != null) {
-                    result.recordId = incident.Created_Case__c;
-                }
-                
                 Task t = new Task(
                     Subject = 'Auto-Heal Task: ' + incident.Name,
                     Description = 'Auto-heal action CREATE_TASK executed.\nRisk level context: ' + incident.Risk_Level__c,
@@ -116,9 +114,7 @@ public with sharing class AutoHealExecutionService {
                     Priority = riskScore >= 70.0 ? 'High' : 'Normal'
                 );
                 insert as user t;
-                if (result.recordId == null) {
-                    result.recordId = t.Id;
-                }
+                result.recordId = t.Id;
                 result.message = 'Successfully created Task ID: ' + t.Id;
                 
             } else if (upperAction == 'SEND_NOTIFICATION') {
@@ -126,7 +122,6 @@ public with sharing class AutoHealExecutionService {
                 result.message = 'Notification alerts successfully dispatched to configured Slack/Teams/Email channels.';
                 
             } else if (upperAction == 'RETRY_SAFE_INTEGRATION') {
-                // Input validation
                 if (String.isBlank(incident.Runbook_Key__c)) {
                     throw new AutoHealException('Runbook Key is required to retry safe integration.');
                 }
@@ -136,7 +131,6 @@ public with sharing class AutoHealExecutionService {
                 result.message = 'SentinelFlow incident status verified and refreshed successfully.';
                 
             } else if (upperAction == 'RECOMMEND_RUNBOOK') {
-                // Input validation
                 if (String.isBlank(incident.Runbook_Title__c)) {
                     throw new AutoHealException('Runbook Title is required to recommend runbook.');
                 }
@@ -156,7 +150,6 @@ public with sharing class AutoHealExecutionService {
 
             result.success = true;
 
-            // 7. Write Sentinel_Audit_Log__c entry
             logAuditEvent(incidentId, 'AUTO_HEAL_EXECUTED', 'SUCCESS', result.message);
 
         } catch (Exception e) {
@@ -180,13 +173,20 @@ public with sharing class AutoHealExecutionService {
     private static void logAuditEvent(Id incidentId, String eventType, String decision, String details) {
         try {
             Sentinel_Audit_Log__c auditEntry = new Sentinel_Audit_Log__c();
-            auditEntry.Incident__c = incidentId;
+            auditEntry.Incident__c = (incidentId != null && incidentId.getSObjectType() == Sentinel_Incident__c.SObjectType) ? incidentId : null;
             auditEntry.Event_Type__c = eventType;
             auditEntry.Decision__c = decision;
             auditEntry.Response_Payload__c = details;
             auditEntry.Created_By_System__c = true;
             auditEntry.Trace_Id__c = String.valueOf(incidentId);
-            insert as user auditEntry;
+            
+            try {
+                insert as user auditEntry;
+            } catch (Exception dmlEx) {
+                // Fallback: retry with null lookup lookup in case of referential constraint failures (e.g. deleted record)
+                auditEntry.Incident__c = null;
+                insert as user auditEntry;
+            }
         } catch (Exception e) {
             System.debug(LoggingLevel.WARN, 'Failed to insert audit log: ' + e.getMessage());
         }

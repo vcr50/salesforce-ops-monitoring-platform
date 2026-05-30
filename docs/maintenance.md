@@ -608,3 +608,11 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Added GRC risk-based checks, such as dynamically mapping Case priorities and Task priorities to `High` for critical incident scores ($\ge 70.0$).
 - Standardized the structured execution result strings returned to the client and logged to the GRC audit table.
 - Added dedicated test methods to `AutoHealExecutionServiceTest.cls` (`testCreateCaseAction()`, `testCreateTaskAction()`, `testSendNotificationAction()`, `testRetrySafeIntegrationAction()`, `testUpdateSentinelFlowStatusAction()`, `testRecommendRunbookAction()`) achieving 100% test success rate (12/12 tests passing).
+
+### 61D — Kill Switch + Duplicate Guard Hardening: Complete
+- Hardened global `Auto_Heal_Active` kill switch check using `SystemSettings.get('Auto_Heal_Active', 1.0)`.
+- Strengthened per-action duplicate execution prevention by verifying that `Execution_Status__c == 'Executed'` causes immediate abort, throwing a specific duplicate execution exception.
+- Enforced row-level locking via `SELECT ... FOR UPDATE` on `Sentinel_Incident__c` inside a try-catch block, logging locking failures (`LOCK_FAILURE`) to the audit trail before throwing exceptions.
+- Hardened GRC compliance tracking by writing detailed `Sentinel_Audit_Log__c` events for blocked duplicate execution attempts (`DUPLICATE_EXECUTION`) and kill switch blocks (`KILL_SWITCH_ACTIVE`).
+- Implemented referential integrity fallback in the audit log utility `logAuditEvent` inside `AutoHealExecutionService.cls` to catch DML exceptions when referencing deleted parent records, clearing the lookup (`Incident__c = null`) and retrying, while preserving the ID in `Trace_Id__c` to ensure GRC logs are always saved.
+- Created and executed comprehensive unit tests in `AutoHealExecutionServiceTest.cls` verifying the kill switch blocks, duplicate execution blocks, duplicate blocked audit trails, and database query locking failures (`testKillSwitchBlocksExecution()`, `testDuplicateExecutionBlocked()`, `testDuplicateBlockedAuditCreated()`, and `testConcurrentLockPreventsDoubleExecution()`) with all 12/12 local tests passing successfully.

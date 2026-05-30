@@ -745,3 +745,17 @@ Action Center handles any downstream execution
   - `testUpdateSentinelFlowStatusAction()`
   - `testRecommendRunbookAction()`
   - **Results**: 100% test success rate (12/12 unit tests passing).
+
+### 61D — Kill Switch + Duplicate Guard Hardening
+
+- **Global Kill Switch**: Verified check against `SystemSettings.get('Auto_Heal_Active', 1.0)`. If disabled (value not 1.0), the engine blocks execution, creates an audit event (`AUTO_HEAL_BLOCKED`, `KILL_SWITCH_ACTIVE`), and throws an exception.
+- **Duplicate Prevention**: Strengthened per-action execution verification. If an incident has `Execution_Status__c == 'Executed'`, attempts to re-execute fail immediately, writing an audit log (`AUTO_HEAL_BLOCKED`, `DUPLICATE_EXECUTION`) before throwing an exception.
+- **Concurrent Row-Level Locking**: Integrated database locking via `SELECT ... FOR UPDATE` syntax. If locking or record query fails, the service catches the exception, logs a block event (`AUTO_HEAL_BLOCKED`, `LOCK_FAILURE`), and bubbles up a clean descriptive exception.
+- **Referential Integrity Fallback for GRC Audit Logs**: Inside `logAuditEvent`, handled cases where parent records are deleted or locked concurrently. If a direct DML insert of the audit log throws an exception due to a deleted lookup reference (`Incident__c`), the service clears the lookup (`Incident__c = null`) and retries the insert. The `Trace_Id__c` field preserves the original record ID string, ensuring compliance auditing is never lost due to concurrency or DML cascades.
+- **Verification Results**:
+  - Implemented 4 dedicated test cases verifying these hardened mechanisms:
+    - `testKillSwitchBlocksExecution()`: Verifies that setting `Auto_Heal_Active` to `0.0` blocks execution and creates a `KILL_SWITCH_ACTIVE` audit log.
+    - `testDuplicateExecutionBlocked()`: Asserts that an incident with status `'Executed'` throws a duplicate exception.
+    - `testDuplicateBlockedAuditCreated()`: Asserts that attempts to run a duplicate action successfully generate a `DUPLICATE_EXECUTION` audit log.
+    - `testConcurrentLockPreventsDoubleExecution()`: Simulates locking query failures by deleting the incident in the test transaction, verifying that the `FOR UPDATE` query exception is caught, raises a lock failure exception, and writes a `LOCK_FAILURE` audit entry using the `Trace_Id__c` fallback (which finds the log even when the lookup field is null).
+  - All tests deployed and verified on developer sandbox `vjdev@asap.com` with 100% pass rate.

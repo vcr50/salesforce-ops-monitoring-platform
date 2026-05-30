@@ -316,9 +316,17 @@
 - [x] Implement input validations and GRC checks for all paths.
 - [x] Extend unit test coverage with dedicated test cases in `AutoHealExecutionServiceTest.cls`.
 
-### 61D — Kill switch + duplicate guard
-- [ ] Implement Custom Settings checks for `Auto_Heal_Active`.
-- [ ] Implement static trace UUID and execution thread validations.
+### 61D — Kill switch + duplicate guard ✅
+- [x] Strengthen global `Auto_Heal_Active` kill switch check using `SystemSettings.get('Auto_Heal_Active', 1.0)`.
+- [x] Implement row-level locking via `SELECT ... FOR UPDATE` and query error handling.
+- [x] Validate per-action duplicate execution status checks preventing reprocessing of completed incidents.
+- [x] Write audit logs for blocked duplicate attempts (`DUPLICATE_EXECUTION`) and kill switch blocks (`KILL_SWITCH_ACTIVE`) including lock query failures (`LOCK_FAILURE`).
+- [x] Implement referential integrity fallback in the audit log utility `logAuditEvent` to retry inserting logs with a null lookup if the parent incident record is deleted or locked.
+- [x] Implement and execute unit tests for duplicate, kill switch, audit logging, and concurrent locking:
+  - `testKillSwitchBlocksExecution()`
+  - `testDuplicateExecutionBlocked()`
+  - `testDuplicateBlockedAuditCreated()`
+  - `testConcurrentLockPreventsDoubleExecution()`
 
 ### 61E — Rollback + failure lifecycle
 - [ ] Implement Apex savepoint and rollback blocks.
