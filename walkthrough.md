@@ -759,3 +759,19 @@ Action Center handles any downstream execution
     - `testDuplicateBlockedAuditCreated()`: Asserts that attempts to run a duplicate action successfully generate a `DUPLICATE_EXECUTION` audit log.
     - `testConcurrentLockPreventsDoubleExecution()`: Simulates locking query failures by deleting the incident in the test transaction, verifying that the `FOR UPDATE` query exception is caught, raises a lock failure exception, and writes a `LOCK_FAILURE` audit entry using the `Trace_Id__c` fallback (which finds the log even when the lookup field is null).
   - All tests deployed and verified on developer sandbox `vjdev@asap.com` with 100% pass rate.
+
+### 61E — Rollback + Failure Lifecycle Implementation
+
+- **Atomic Savepoints & Database Rollbacks**: Wrapped executions in `Database.setSavepoint()` / `Database.rollback()` try-catch blocks to prevent partial mutations and database leaks.
+- **Status Lifecycle Reset**: When Auto-Heal fails, it transitions `Execution_Status__c` to `'Failed'`, `Status__c` to `'Approval Required'`, and `Approval_Status__c` to `'Pending Approval'`. This routes the incident back to the dashboard queue for manual review.
+- **Retry Ingestion Limits**: Added check counting previous logs in `Sentinel_Audit_Log__c` (`Event_Type__c IN ('AUTO_HEAL_EXECUTED', 'AUTO_HEAL_FAILED')`). If the count is $\ge 3$, execution is blocked with `RETRY_EXHAUSTED` audit logs.
+- **Audit Decision Tuning**: Categorized failures in the audit table with decision values: `TIMEOUT` for callout timeouts, `ROLLBACK_EXECUTED` for transaction rollbacks, or general `FAILURE` descriptions.
+- **Operator Notification Dispatch**: Catches failures and calls `SentinelFlowNotificationDispatcher.dispatchPendingApprovalAlerts` asynchronously to push Slack/Teams alerts and emails to operators.
+
+### 61F — Unit Tests + Sandbox Dry-Runs
+
+- **New Test Methods**: Developed 3 unit tests in `AutoHealExecutionServiceTest.cls`:
+  - `testExecuteAction_RollbackOnError()`: Asserts database rollback, sets status fields to `'Failed'`, `'Approval Required'`, and `'Pending Approval'`, and registers audit logs.
+  - `testRetryExhaustionBlocked()`: Asserts that exceeding 3 failures blocks execution and logs `RETRY_EXHAUSTED`.
+  - `testCalloutTimeoutHandling()`: Simulates a callout timeout, verifying rollback, status transition, and `TIMEOUT` audit logs.
+- **Test Outcomes**: All 14 test cases in `AutoHealExecutionServiceTest.cls` passed successfully.

@@ -616,3 +616,18 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Hardened GRC compliance tracking by writing detailed `Sentinel_Audit_Log__c` events for blocked duplicate execution attempts (`DUPLICATE_EXECUTION`) and kill switch blocks (`KILL_SWITCH_ACTIVE`).
 - Implemented referential integrity fallback in the audit log utility `logAuditEvent` inside `AutoHealExecutionService.cls` to catch DML exceptions when referencing deleted parent records, clearing the lookup (`Incident__c = null`) and retrying, while preserving the ID in `Trace_Id__c` to ensure GRC logs are always saved.
 - Created and executed comprehensive unit tests in `AutoHealExecutionServiceTest.cls` verifying the kill switch blocks, duplicate execution blocks, duplicate blocked audit trails, and database query locking failures (`testKillSwitchBlocksExecution()`, `testDuplicateExecutionBlocked()`, `testDuplicateBlockedAuditCreated()`, and `testConcurrentLockPreventsDoubleExecution()`) with all 12/12 local tests passing successfully.
+
+### 61E — Rollback + Failure Lifecycle Implementation: Complete
+- Standardized the parent incident status changes upon execution failure, transitioning `Execution_Status__c` to `'Failed'`, `Status__c` to `'Approval Required'`, and `Approval_Status__c` to `'Pending Approval'` to route the incident back to the operators for manual review.
+- Ensured transaction rollback atomicity by enclosing DML executions in `Database.setSavepoint()` / `Database.rollback()` try-catch structures.
+- Implemented retry limit check mapping (capping attempts at a maximum of 3), querying previous audit logs (`Event_Type__c IN ('AUTO_HEAL_EXECUTED', 'AUTO_HEAL_FAILED')`) in `Sentinel_Audit_Log__c` and throwing a specific `'Retry Exhaustion'` exception if exceeded.
+- Classified transaction failure outcomes for the audit trails, registering distinct audit decisions (`TIMEOUT` for callout failures/timeouts, `ROLLBACK_EXECUTED` for transaction rollbacks, or general `FAILURE` descriptions) inside `Sentinel_Audit_Log__c`.
+- Connected operator notifications on failure, triggering asynchronous Slack, MS Teams, and fallback email alerts via `SentinelFlowNotificationDispatcher.dispatchPendingApprovalAlerts`.
+- Documented details in the technical implementation log [`docs/auto-heal-failure-lifecycle-implementation.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/auto-heal-failure-lifecycle-implementation.md).
+
+### 61F — Unit Tests + Sandbox Dry-Runs: Complete
+- Added robust automated test coverage in `AutoHealExecutionServiceTest.cls` covering all rollback, retry, and timeout code paths:
+  - `testExecuteAction_RollbackOnError()`: Asserts that execution failure reverts database changes, sets the status fields to `'Failed'`, `'Approval Required'`, and `'Pending Approval'`, and registers audit logs.
+  - `testRetryExhaustionBlocked()`: Verifies that attempts to re-execute an action beyond 3 failures are blocked and log a `RETRY_EXHAUSTED` audit block event.
+  - `testCalloutTimeoutHandling()`: Simulates integration timeouts, asserting that the database rolls back, statuses transition correctly, and a `TIMEOUT` audit log is successfully created.
+- Successfully verified and compiled all components. Executed the test suite on developer sandbox `vjdev@asap.com` with 100% pass rate (14/14 tests passing).

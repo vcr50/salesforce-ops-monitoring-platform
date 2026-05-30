@@ -9,7 +9,8 @@ public with sharing class AutoHealExecutionService {
         'RETRY_SAFE_INTEGRATION',
         'UPDATE_SENTINELFLOW_STATUS',
         'RECOMMEND_RUNBOOK',
-        'TEST_FORCE_FAILURE'
+        'TEST_FORCE_FAILURE',
+        'TEST_FORCE_TIMEOUT'
     };
 
     private static final Set<String> BLOCKED_ACTIONS = new Set<String>{
@@ -69,6 +70,18 @@ public with sharing class AutoHealExecutionService {
             logAuditEvent(incidentId, 'AUTO_HEAL_BLOCKED', 'DUPLICATE_EXECUTION', 
                 'Action execution aborted: Incident ' + incident.Name + ' has already been executed (Action: ' + incident.Execution_Action__c + ').');
             throw new AutoHealException('Duplicate Execution: Incident has already executed action: ' + incident.Execution_Action__c);
+        }
+
+        // Check retry limit (max 3 attempts)
+        Integer attempts = [
+            SELECT COUNT()
+            FROM Sentinel_Audit_Log__c
+            WHERE Incident__c = :incidentId
+            AND Event_Type__c IN ('AUTO_HEAL_EXECUTED', 'AUTO_HEAL_FAILED')
+        ];
+        if (attempts >= 3) {
+            logAuditEvent(incidentId, 'AUTO_HEAL_BLOCKED', 'RETRY_EXHAUSTED', 'Auto-Heal execution blocked: Max retry limit (3) exceeded.');
+            throw new AutoHealException('Retry Exhaustion: Maximum retry attempts (3) exceeded for this incident. Manual review required.');
         }
 
         // Enforce approval requirement by risk level
@@ -138,6 +151,8 @@ public with sharing class AutoHealExecutionService {
                 
             } else if (upperAction == 'TEST_FORCE_FAILURE') {
                 throw new AutoHealException('Forced testing failure for rollback validation.');
+            } else if (upperAction == 'TEST_FORCE_TIMEOUT') {
+                throw new CalloutException('Simulated integration callout timeout.');
             }
 
             // Success Updates
@@ -155,16 +170,33 @@ public with sharing class AutoHealExecutionService {
         } catch (Exception e) {
             Database.rollback(sp);
 
-            // Failure Updates
+            // Failure Updates: reset to require approval/manual review
             incident.Execution_Status__c = 'Failed';
             incident.Execution_Action__c = upperAction;
             incident.Execution_Result__c = e.getMessage();
+            incident.Status__c = 'Approval Required';
+            incident.Approval_Status__c = 'Pending Approval';
             update as user incident;
 
             result.success = false;
             result.message = 'Execution failed: ' + e.getMessage();
 
-            logAuditEvent(incidentId, 'AUTO_HEAL_FAILED', 'FAILURE', e.getMessage());
+            // Determine failure event type and decision based on exception type/message
+            String decision = 'FAILURE';
+            if (e instanceof System.CalloutException || (e.getMessage() != null && (e.getMessage().toLowerCase().contains('timeout') || e.getMessage().toLowerCase().contains('time out')))) {
+                decision = 'TIMEOUT';
+            } else if (e.getMessage() != null && e.getMessage().toLowerCase().contains('rollback')) {
+                decision = 'ROLLBACK_EXECUTED';
+            }
+
+            logAuditEvent(incidentId, 'AUTO_HEAL_FAILED', decision, e.getMessage());
+
+            // Notify operators by dispatching pending approval alerts
+            try {
+                SentinelFlowNotificationDispatcher.dispatchPendingApprovalAlerts(new List<Id>{ incidentId });
+            } catch (Exception dispatchEx) {
+                System.debug(LoggingLevel.WARN, 'Failed to dispatch failure alerts: ' + dispatchEx.getMessage());
+            }
         }
 
         return result;

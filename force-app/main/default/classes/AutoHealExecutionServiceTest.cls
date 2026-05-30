@@ -278,10 +278,96 @@ private class AutoHealExecutionServiceTest {
 
         System.assert(!result.success);
         Sentinel_Incident__c updatedInc = [
-            SELECT Execution_Status__c
+            SELECT Execution_Status__c, Status__c, Approval_Status__c
             FROM Sentinel_Incident__c
             WHERE Id = :incident.Id
         ];
         System.assertEquals('Failed', updatedInc.Execution_Status__c);
+        System.assertEquals('Approval Required', updatedInc.Status__c);
+        System.assertEquals('Pending Approval', updatedInc.Approval_Status__c);
+    }
+
+    @IsTest
+    static void testRetryExhaustionBlocked() {
+        Sentinel_Incident__c incident = new Sentinel_Incident__c(
+            Incident_Type__c = 'System Incident',
+            Risk_Score__c = 25.0,
+            Approval_Status__c = 'Not Required',
+            Execution_Status__c = 'Ready for Execution',
+            Status__c = 'New'
+        );
+        insert incident;
+
+        SystemSettings.setOverride('Auto_Heal_Active', 1.0);
+
+        // Inject 3 failed execution logs
+        List<Sentinel_Audit_Log__c> mockLogs = new List<Sentinel_Audit_Log__c>();
+        for (Integer i = 0; i < 3; i++) {
+            mockLogs.add(new Sentinel_Audit_Log__c(
+                Incident__c = incident.Id,
+                Event_Type__c = 'AUTO_HEAL_FAILED',
+                Decision__c = 'FAILURE',
+                Response_Payload__c = 'Mock Failure ' + i,
+                Created_By_System__c = true
+            ));
+        }
+        insert mockLogs;
+
+        Test.startTest();
+        try {
+            AutoHealExecutionService.executeAction(incident.Id, 'CREATE_CASE');
+            System.assert(false, 'Should throw retry exhaustion exception');
+        } catch (AutoHealExecutionService.AutoHealException e) {
+            System.assert(e.getMessage().contains('Retry Exhaustion'), 'Expected retry exhaustion message');
+        }
+        Test.stopTest();
+
+        // Verify retry exhaustion audit log
+        List<Sentinel_Audit_Log__c> auditLogs = [
+            SELECT Event_Type__c, Decision__c
+            FROM Sentinel_Audit_Log__c
+            WHERE Incident__c = :incident.Id
+            AND Decision__c = 'RETRY_EXHAUSTED'
+        ];
+        System.assert(!auditLogs.isEmpty(), 'Retry exhaustion audit log should be created');
+        System.assertEquals('AUTO_HEAL_BLOCKED', auditLogs[0].Event_Type__c);
+    }
+
+    @IsTest
+    static void testCalloutTimeoutHandling() {
+        Sentinel_Incident__c incident = new Sentinel_Incident__c(
+            Incident_Type__c = 'System Incident',
+            Risk_Score__c = 30.0,
+            Approval_Status__c = 'Not Required',
+            Execution_Status__c = 'Ready for Execution',
+            Status__c = 'New'
+        );
+        insert incident;
+
+        SystemSettings.setOverride('Auto_Heal_Active', 1.0);
+
+        Test.startTest();
+        AutoHealExecutionService.ExecutionResult result = AutoHealExecutionService.executeAction(incident.Id, 'TEST_FORCE_TIMEOUT');
+        Test.stopTest();
+
+        System.assert(!result.success);
+        Sentinel_Incident__c updatedInc = [
+            SELECT Execution_Status__c, Status__c, Approval_Status__c
+            FROM Sentinel_Incident__c
+            WHERE Id = :incident.Id
+        ];
+        System.assertEquals('Failed', updatedInc.Execution_Status__c);
+        System.assertEquals('Approval Required', updatedInc.Status__c);
+        System.assertEquals('Pending Approval', updatedInc.Approval_Status__c);
+
+        // Verify timeout audit log
+        List<Sentinel_Audit_Log__c> auditLogs = [
+            SELECT Event_Type__c, Decision__c
+            FROM Sentinel_Audit_Log__c
+            WHERE Incident__c = :incident.Id
+            AND Decision__c = 'TIMEOUT'
+        ];
+        System.assert(!auditLogs.isEmpty(), 'Timeout audit log should be created');
+        System.assertEquals('AUTO_HEAL_FAILED', auditLogs[0].Event_Type__c);
     }
 }
