@@ -677,4 +677,12 @@ Action Center handles any downstream execution
 - **Action Control Bands**: Documented Low risk (autonomous safe notify/task), Medium risk (policy-driven Action Center approval), and High/Critical risk (mandatory human clearance via the Guardian Gate).
 - **Escalation SLA Paths**: Specified rules for SLA timeouts triggering escalation alerts and UI visual color changes if a workflow sits in `Pending Approval` for over 4 hours.
 
+### 60D — Rollback Strategy + Failure Handling
+
+- **Error Design Scope**: Authored the rollback strategy and failure handling design document: [`docs/auto-heal-rollback-failure-handling.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/auto-heal-rollback-failure-handling.md).
+- **Savepoint Transactions**: Configured atomic DML execution and rollbacks using `Database.setSavepoint()` and `Database.rollback()` routines.
+- **Failures & Limits**: Established duplicate execution guards via `SELECT FOR UPDATE` locks, a 3-attempt retry ceiling with exponential backoff delays, a 10s callout timeout threshold, and SRE fallback manuals.
+- **Circuit Breaker**: Outlined shutdown mechanics mapped to the master kill switch `Auto_Heal_Active__c`.
+
+
 

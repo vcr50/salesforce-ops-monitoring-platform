@@ -273,6 +273,15 @@
   - [x] Map High/Critical-risk action rules (Mandatory Human Approve/Reject via Guardian Gate queue)
   - [x] Detail approval timeout SLA policies, escalation paths, and re-routing
   - [x] Update `docs/maintenance.md`, `task.md`, and `walkthrough.md`
+- [x] **60D — Rollback Strategy + Failure Handling**:
+  - [x] Define rollback strategy and failure handling in `docs/auto-heal-rollback-failure-handling.md`
+  - [x] Formulate transaction savepoint strategy (`Database.setSavepoint()` / `Database.rollback()`) and atomicity rules
+  - [x] Map partial failure handling and SRE manual runbook fallbacks
+  - [x] Formulate retry limits (max 3, exponential backoff) and callout timeout limits (10s threshold)
+  - [x] Detail row locking duplicate execution prevention (`SELECT FOR UPDATE`)
+  - [x] Map failed status changes, Sentinel_Audit_Log__c entries, Slack/Teams alerts, and kill switch deactivation
+  - [x] Update `docs/maintenance.md`, `task.md`, and `walkthrough.md`
+
 
 
 

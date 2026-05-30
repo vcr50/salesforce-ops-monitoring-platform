@@ -560,6 +560,15 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
   3. **High/Critical Risk (`70% - 100%`)**: Mandatory human clearance via the **Guardian Gate** queue before DML or callout execution.
 - Defined SLA escalation routing (marking incidents for review if approvals exceed 4 hours), policy feedback mappings, audit event requirements, and transaction locking patterns.
 
+### 60D — Rollback Strategy + Failure Handling: Complete
+- Created `docs/auto-heal-rollback-failure-handling.md` defining the transaction and error lifecycles:
+  1. **Database Savepoints**: Integrated `Database.setSavepoint()` and `Database.rollback()` routines across all execution scripts to guarantee atomic, consistent runs.
+  2. **Partial Failures**: Formulated rules to abort and roll back multi-step runbooks on failure, transitioning incidents to a `Failed` state.
+  3. **Guards & Limits**: Implemented duplicate execution locks (`FOR UPDATE`), callout timeout trapping (10s limit), and retry limitations (capped at 3 attempts with exponential backoff).
+  4. **Emergency Stop**: Described immediate shutdown behavior via the global toggle `Auto_Heal_Active__c`.
+  5. **Auditing & Notification**: Set requirements for rollback logs in `Sentinel_Audit_Log__c` and critical Slack/Teams webhook alerts.
+
+
 
 
 
