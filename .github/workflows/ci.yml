@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
+      - master
+      - 'codex-*'
+      - 'feature/*'
   pull_request:
     branches:
       - main
+      - master
+      - 'codex-*'
+      - 'feature/*'
   workflow_dispatch:
 
 concurrency:
@@ -14,9 +20,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  docs-check:
+    name: Docs / Workflow Sanity Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Confirm workflow is active
+        run: |
+          echo "GitHub Actions workflow is running successfully."
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
+
   node-quality:
     name: Node Quality Checks
     runs-on: ubuntu-latest
+
 
     steps:
       - name: Checkout repository
