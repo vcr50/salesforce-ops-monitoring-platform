@@ -653,4 +653,14 @@ Action Center handles any downstream execution
   - All 10 Apex tests pass successfully with 100% success rate.
   - Visual layout verified for premium responsiveness and consistent margins using Tailwind-like SLDS and flexible container styles.
 
+---
 
+## 30. Milestone 60 — Auto-Heal GA Safety Design
+
+### 60A — Auto-Heal GA Safety Plan
+
+- **Design Scope**: Authored the General Availability (GA) safety design document: [`docs/auto-heal-ga-safety-design.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/auto-heal-ga-safety-design.md).
+- **Allowed Actions**: Structured safe integrations including Case and Task creation, runbook recommendations, notifications, safe retries, and internal status updates.
+- **Blocked Actions**: Prohibited destructive or configuration updates such as deletions, mass modifications, trigger deactivations, permission set overrides, and metadata modifications.
+- **Approval Mapping**: Configured risk-score-based rules mapping Low to recommendations, Medium to Policy sign-offs, and High/Critical to mandatory Guardian Gate human clearance.
+- **Core Security Controls**: Designed the emergency stop toggle, duplicate run protection, savepoint rollbacks, partial failure triggers, CPU/DML governor limit safety margins, user sharing mode FLS/CRUD checklist, and Go/No-Go criteria.

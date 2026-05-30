@@ -252,3 +252,13 @@
   - [x] Verify that updating Operator_Decision__c removes prediction from dashboard queue (decision transitions out of `'Pending'`)
   - [x] Deploy and verify the full suite of unit tests successfully passes
 
+## Milestone 60 — Auto-Heal GA Safety Design
+- [x] **60A — Auto-Heal GA Safety Plan**:
+  - [x] Define safety, approval, rollback, audit, and security boundaries in `docs/auto-heal-ga-safety-design.md`
+  - [x] Map Allowed operations (Create Case, Create Task, Recommend runbook, Send notification, Retry safe integration, Update internal SentinelFlow status)
+  - [x] Map Blocked operations (Delete records, Mass update business records, Change permissions, Modify metadata, Disable flows/triggers, Execute destructive deployment, Bypass approval)
+  - [x] Formulate Human Approval rules for Low, Medium, and High/Critical risk scores
+  - [x] Detail Emergency stop kill switch, duplicate execution prevention, savepoint rollbacks, partial failures, Sentinel_Audit_Log__c audit tracking, FLS/CRUD validation, and CPU/DML governor limit safety limits
+  - [x] Update `docs/maintenance.md`, `task.md`, and `walkthrough.md`
+
+

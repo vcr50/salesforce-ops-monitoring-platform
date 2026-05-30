@@ -539,4 +539,15 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Wired LWC event handlers in `zentomDashboard.js` to call the `SentinelPredictionGovernanceService` Apex endpoints, executing state transitions and refreshing the dashboard components dynamically.
 - Verified that all unit tests across the prediction governance and prediction engine packages compile and pass successfully with a 100% success rate.
 
+## Milestone 60 — Auto-Heal GA Safety Design
+
+### 60A — Auto-Heal GA Safety Plan: Complete
+- Created `docs/auto-heal-ga-safety-design.md` defining the safety, approval, rollback, audit, and security boundaries required to move Auto-Heal toward a General Availability (GA) state:
+  1. **Allowed Actions**: Safe actions including Create Case, Create Task, Recommend runbook, Send notification, Retry safe integration, and Update internal SentinelFlow status.
+  2. **Blocked Actions**: Dangerous or unauthorized actions including Delete records, Mass update business records, Change permissions, Modify metadata, Disable flows/triggers, Execute destructive deployment, and Bypass approval.
+  3. **Human Approval Rules**: Low risk triggers recommendation/notify, Medium risk requires policy approval, and High/Critical risk strictly requires Guardian Gate human approval.
+  4. **Emergency Stop**: Configured a master `Auto_Heal_Active__c` kill switch.
+  5. **Core Protections**: Duplicate execution prevention, database savepoint rollbacks on transaction errors, Sentinel_Audit_Log__c audit tracking, FLS/CRUD user mode enforcement, and CPU/DML governor limit safety gates.
+
+
 
