@@ -664,3 +664,10 @@ Action Center handles any downstream execution
 - **Blocked Actions**: Prohibited destructive or configuration updates such as deletions, mass modifications, trigger deactivations, permission set overrides, and metadata modifications.
 - **Approval Mapping**: Configured risk-score-based rules mapping Low to recommendations, Medium to Policy sign-offs, and High/Critical to mandatory Guardian Gate human clearance.
 - **Core Security Controls**: Designed the emergency stop toggle, duplicate run protection, savepoint rollbacks, partial failure triggers, CPU/DML governor limit safety margins, user sharing mode FLS/CRUD checklist, and Go/No-Go criteria.
+
+### 60B — Auto-Heal Allowed / Blocked Action Matrix
+
+- **Matrix Scope**: Formulated the operational governance table: [`docs/auto-heal-action-matrix.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/auto-heal-action-matrix.md).
+- **Tabular Mapping**: Defined specific risk levels, human approval rules, rollback behaviors, audit hooks, and notes for all 11 core operational actions.
+- **Governance Lock**: Verified that no destructive actions bypass approval workflows or run autonomously at High/Critical risk levels.
+

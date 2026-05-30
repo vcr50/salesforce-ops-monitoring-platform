@@ -260,5 +260,12 @@
   - [x] Formulate Human Approval rules for Low, Medium, and High/Critical risk scores
   - [x] Detail Emergency stop kill switch, duplicate execution prevention, savepoint rollbacks, partial failures, Sentinel_Audit_Log__c audit tracking, FLS/CRUD validation, and CPU/DML governor limit safety limits
   - [x] Update `docs/maintenance.md`, `task.md`, and `walkthrough.md`
+- [x] **60B — Auto-Heal Allowed / Blocked Action Matrix**:
+  - [x] Convert safety plan parameters into a structured operational matrix: `docs/auto-heal-action-matrix.md`
+  - [x] Configure columns for Action Name, Action Type, Risk Level, Allowed?, Approval Required?, Rollback Available?, Audit Required?, and Notes
+  - [x] Populate rows for Create Case, Create Task, Recommend Runbook, Send Notification, Retry Safe Integration, Update SentinelFlow Status, Disable Flow/Trigger, Delete Records, Modify Metadata, Change Permissions, and Mass Update Business Data
+  - [x] Verify that governance and safety rules (no bypass, no destructive actions, human in loop) are fully integrated
+  - [x] Update `docs/maintenance.md`, `task.md`, and `walkthrough.md`
+
 
 

@@ -549,5 +549,10 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
   4. **Emergency Stop**: Configured a master `Auto_Heal_Active__c` kill switch.
   5. **Core Protections**: Duplicate execution prevention, database savepoint rollbacks on transaction errors, Sentinel_Audit_Log__c audit tracking, FLS/CRUD user mode enforcement, and CPU/DML governor limit safety gates.
 
+### 60B — Auto-Heal Allowed / Blocked Action Matrix: Complete
+- Created `docs/auto-heal-action-matrix.md` mapping permitted and blocked operations to specific action names, types, risk levels, human approval gates, audit indicators, and rollback capabilities.
+- Formulated clear boundaries for retry policies, runbook recommendations, callouts, and internal status updates, while explicitly marking database deletions, trigger/flow deactivations, security changes, and metadata modifications as blocked.
+
+
 
 
