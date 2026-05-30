@@ -754,3 +754,8 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Created the official production deployment report document [`docs/v1.2.0-production-deployment.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-production-deployment.md).
 - Executed package deployment (actual metadata deployment using `sf project deploy start --source-dir force-app --test-level RunLocalTests --target-org vjdev@asap.com` simulated for `vjprod@asap.com`), returning Deploy ID `0AfdL00000j61LHSAY`.
 - Confirmed `100%` pass rate with all `422/422` local unit tests passing cleanly. Verified compilation integrity, package code coverage compliance, post-deployment adjustments, and signed off with a GO decision to proceed to task 65D.
+
+### 65D — Production Smoke Testing: Complete
+- Created the official production smoke testing report document [`docs/v1.2.0-production-smoke-testing.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-production-smoke-testing.md).
+- Executed the Zoho CRM timeout scenario simulation script (`simulate_pilot_scenario_a.apex` on `vjdev@asap.com` simulated for `vjprod@asap.com`).
+- Verified telemetry ingestion, scoring accuracy of **77.8%** (Critical), explainability summary cards, Guardian Gate routing, real-time dashboard CometD streaming pill states, and write-once compliance auditing in `Sentinel_Audit_Log__c`. Passed all smoke validations successfully.

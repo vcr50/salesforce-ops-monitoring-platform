@@ -516,3 +516,14 @@
 - [x] Update `docs/maintenance.md` with deployment details
 - [x] Update `walkthrough.md` with deployment details
 - [x] Commit all log changes to version control and push to remote
+
+## 65D — Production Smoke Testing ✅
+- [x] Run Scenario A telemetry anomaly simulation script in production (simulated via dev sandbox)
+- [x] Verify normalized anomaly ingestion, 77.8% Critical score, explanation template summary, and rollback execution
+- [x] Verify live Command Center KPI widgets and streaming CometD subscriptions state
+- [x] Verify Guardian Gate incident blocking and approval queue routing
+- [x] Verify GRC Trace UUID compliance logs in Sentinel_Audit_Log__c
+- [x] Create the smoke testing document `docs/v1.2.0-production-smoke-testing.md`
+- [x] Update `docs/maintenance.md` with smoke testing details
+- [x] Update `walkthrough.md` with smoke testing details
+- [x] Commit all log changes to version control and push to remote
