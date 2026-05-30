@@ -281,6 +281,15 @@
   - [x] Detail row locking duplicate execution prevention (`SELECT FOR UPDATE`)
   - [x] Map failed status changes, Sentinel_Audit_Log__c entries, Slack/Teams alerts, and kill switch deactivation
   - [x] Update `docs/maintenance.md`, `task.md`, and `walkthrough.md`
+- [x] **60E — Auto-Heal Audit + Compliance Evidence Design**:
+  - [x] Define GRC requirements in `docs/auto-heal-audit-compliance-evidence.md`
+  - [x] Formulate audit event taxonomy (recommendations, approvals, execution logs, transactional rollbacks, failures, and emergency stops)
+  - [x] Map required audit fields on `Sentinel_Audit_Log__c` (UUID trace IDs, payloads, triggers)
+  - [x] Detail approval, execution, rollback, and failure audit trails along with digital signature context
+  - [x] Design data retention schedule (30-day signals, 180-day incidents, 365-day audits, off-org vaults)
+  - [x] Define write-once/read-only security rules and FLS-stripped compliance reporting views
+  - [x] Update `docs/maintenance.md`, `task.md`, and `walkthrough.md`
+
 
 
 

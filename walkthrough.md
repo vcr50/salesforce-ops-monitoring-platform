@@ -684,5 +684,12 @@ Action Center handles any downstream execution
 - **Failures & Limits**: Established duplicate execution guards via `SELECT FOR UPDATE` locks, a 3-attempt retry ceiling with exponential backoff delays, a 10s callout timeout threshold, and SRE fallback manuals.
 - **Circuit Breaker**: Outlined shutdown mechanics mapped to the master kill switch `Auto_Heal_Active__c`.
 
+### 60E — Auto-Heal Audit + Compliance Evidence Design
+
+- **Compliance Design Scope**: Authored the GRC audit and compliance evidence document: [`docs/auto-heal-audit-compliance-evidence.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/auto-heal-audit-compliance-evidence.md).
+- **Audit Schemas & Taxonomy**: Specified structured logging events (recommendations, approvals, execution logs, transactional rollbacks, failures, and emergency stops) and digital signature rules for approvals.
+- **Data Protection & FLS**: Defined write-once/read-only security permissions on `Sentinel_Audit_Log__c`, 365-day data retention limits, and off-org archiving vault architectures.
+
+
 
 

@@ -568,6 +568,15 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
   4. **Emergency Stop**: Described immediate shutdown behavior via the global toggle `Auto_Heal_Active__c`.
   5. **Auditing & Notification**: Set requirements for rollback logs in `Sentinel_Audit_Log__c` and critical Slack/Teams webhook alerts.
 
+### 60E — Auto-Heal Audit + Compliance Evidence Design: Complete
+- Created `docs/auto-heal-audit-compliance-evidence.md` establishing enterprise GRC logging specifications:
+  1. **Audit Taxonomy**: Defined events for recommendations, approvals, execution logs, transactional rollbacks, failures, and emergency stops.
+  2. **Audit Fields**: Schema standards for `Sentinel_Audit_Log__c` mapping UUID trace IDs, payloads, system triggers, and incident context.
+  3. **Digital Signatures**: Approval audit trail requirements capturing approver details, timestamps, and justification reasons.
+  4. **Data Retention**: Retention schedule (30-day signal logs, 180-day incidents, 365-day audit logs) and external vault off-boarding rules.
+  5. **Security & FLS**: Defined write-once/read-only access protections for audit trail records and FLS stripping compliance views.
+
+
 
 
 
