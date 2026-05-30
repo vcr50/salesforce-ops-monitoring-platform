@@ -608,3 +608,21 @@
 - [x] Update `docs/maintenance.md` with Day 7 exit review details
 - [x] Update `walkthrough.md` with Day 7 exit review summary
 - [x] Commit all log changes to version control and push to remote
+
+# Milestone 67 — Production Patch Stabilization / Hardening Review
+
+## 67A — Production Patch Risk Review ✅
+- [x] Create the production patch risk review document `docs/v1.2.0-production-patch-risk-review.md`
+- [x] Document current production status (v1.2.0 stable, 8/8 exit criteria passed, zero issues)
+- [x] Review post-release findings (zero issues, 4 observational notes)
+- [x] Evaluate patch candidates (CometD heartbeat, lock optimization, governor telemetry — all deferred)
+- [x] Evaluate security hardening candidates (FLS/CRUD, write-once audit, kill switch, bypass prevention, webhook rotation — all validated, no action needed)
+- [x] Evaluate performance hardening candidates (SOQL optimization, CPU efficiency, bulk publishing, governor telemetry — all validated, no action needed)
+- [x] Document deferred items with target releases (6 items deferred to v1.2.1 or v1.3.0+)
+- [x] Complete risk classification with evidence-based matrix (all Low Impact / Very Low Likelihood)
+- [x] Issue patch/no-patch recommendation: NO PATCH REQUIRED
+- [x] Confirm success criteria: 8/8 passed
+- [x] Enforce core rule: no feature build, only stabilization scope
+- [x] Update `docs/maintenance.md` with risk review details
+- [x] Update `walkthrough.md` with risk review summary
+- [x] Commit all log changes to version control and push to remote
