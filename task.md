@@ -396,3 +396,9 @@
 - [x] Update `walkthrough.md` with storyline summary.
 - [x] Commit all changes to version control and push to remote.
 
+### 63B — Demo Screenshot / Visual Asset Checklist ✅
+- [x] Create the visual asset checklist document `docs/prediction-auto-heal-demo-screenshot-checklist.md`.
+- [x] Update `docs/maintenance.md` with screenshot checklist details.
+- [x] Update `walkthrough.md` with screenshot checklist summary.
+- [x] Commit all changes to version control and push to remote.
+
