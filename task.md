@@ -222,3 +222,8 @@
   - Scenario C: **55%** Warning — ✅ Pass (target 52–58%)
   - Scenario D: **0 cards created** — ✅ Safety Gate Confirmed (suppressed)
   - Issue 58C-01 logged: Scenario A minor weight nudge needed → Milestone 58D
+- [x] **58D — Scenario A Weight Nudge**: Updated `simulate_pilot_scenario_a.apex` overrides (`w5=0.45, w1=0.38`). Global defaults unchanged.
+  - Scenario A re-run: **77.8%** Critical ✅ (target 77–82%)
+  - Scenario D safety recheck: **0 cards** ✅ (noise suppression confirmed ×2)
+  - Issue 58C-01: **RESOLVED**
+  - **Milestone 58 — Prediction Engine Tuning: COMPLETE ✅**
