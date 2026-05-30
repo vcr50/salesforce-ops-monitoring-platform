@@ -289,6 +289,14 @@
   - [x] Design data retention schedule (30-day signals, 180-day incidents, 365-day audits, off-org vaults)
   - [x] Define write-once/read-only security rules and FLS-stripped compliance reporting views
   - [x] Update `docs/maintenance.md`, `task.md`, and `walkthrough.md`
+- [x] **60F — Auto-Heal GA Readiness Review**:
+  - [x] Create GA readiness review document in `docs/auto-heal-ga-readiness-review.md`
+  - [x] Summarize Milestone 60 outcomes and consolidate checklists (Safety, Governance, Security, Audit, Rollback)
+  - [x] Highlight open risks, implementation gaps, and GRC objectives
+  - [x] Formulate Go / No-Go assessment (Set status to **NOT GA yet** and outline rationale)
+  - [x] Recommend proceeding to Milestone 61 (Auto-Heal GA Implementation Planning)
+  - [x] Update `docs/maintenance.md`, `task.md`, and `walkthrough.md`
+
 
 
 
