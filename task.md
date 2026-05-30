@@ -626,3 +626,20 @@
 - [x] Update `docs/maintenance.md` with risk review details
 - [x] Update `walkthrough.md` with risk review summary
 - [x] Commit all log changes to version control and push to remote
+
+## 67B — Hardening Review + Maintenance Cadence ✅
+- [x] Define the ongoing maintenance rhythm for v1.2.0 after confirming no immediate patch is required
+- [x] Create the hardening maintenance cadence document `docs/v1.2.0-hardening-maintenance-cadence.md`
+- [x] Document current production stability status (v1.2.0 stable, no patch required, 4 low risks, 6 deferred items)
+- [x] Define maintenance cadence overview (daily automated, weekly health, monthly security, quarterly architecture, on-demand patch)
+- [x] Document weekly health review checklist (10 items) with escalation rules
+- [x] Document monthly security review checklist (10 items) with escalation rules
+- [x] Document quarterly architecture review agenda (7 topics) with deferred item schedule
+- [x] Define patch trigger criteria with SLAs (P0/P1/P2, security, compliance, governor) and decision flow
+- [x] Establish deferred item review cadence (weekly P2, monthly security, quarterly full backlog)
+- [x] Define ownership / responsibility matrix (SRE On-Duty, SRE Lead, Security Lead, Engineering Lead, Product Lead, Release Manager)
+- [x] Confirm success criteria: 8/8 passed
+- [x] Enforce core rule: no feature build, only stabilization scope
+- [x] Update `docs/maintenance.md` with cadence details
+- [x] Update `walkthrough.md` with cadence summary
+- [x] Commit all log changes to version control and push to remote

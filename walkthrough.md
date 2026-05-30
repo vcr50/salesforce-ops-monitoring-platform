@@ -1034,3 +1034,17 @@ Action Center handles any downstream execution
 - **Deferred Items**: 6 items documented for v1.2.1, v1.3.0+, or operational SOPs.
 - **Risk Classification**: All risks in Low Impact / Very Low Likelihood quadrant.
 - **Patch Verdict**: **NO PATCH REQUIRED ✅** — v1.2.0 is production-stable without immediate patching.
+
+### 67B — Hardening Review + Maintenance Cadence
+
+- **Completed Deliverable**: Authored the hardening maintenance cadence: [`docs/v1.2.0-hardening-maintenance-cadence.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-hardening-maintenance-cadence.md).
+- **Maintenance Cadence**:
+  - **Daily**: Automated monitoring only (telemetry, alerts, error logs).
+  - **Weekly**: Production health review — 10-item checklist (incidents, OTS, Guardian Gate, Auto-Heal, audits, cost widgets, operator feedback).
+  - **Monthly**: Security/FLS/audit review — 10-item checklist (permissions, write-once compliance, kill switch test, credential rotation, data retention).
+  - **Quarterly**: Architecture and roadmap review — 7-topic agenda (deferred items, governor headroom, OTS trends, scalability, roadmap, tech debt, compliance).
+  - **On-Demand**: Patch release triggered by P0/P1/P2, security, or compliance issues only.
+- **Patch Trigger Criteria**: P0 immediate (15min/4hr), P1 priority (1hr/24hr), P2 batched, security/compliance emergency. No feature builds in patches.
+- **Deferred Item Cadence**: Weekly P2 review, monthly security-adjacent, quarterly full backlog (6 items for v1.2.1/v1.3.0+).
+- **Ownership Matrix**: SRE On-Duty (daily), SRE Lead (weekly), Security Lead (monthly), Engineering Lead (quarterly), Product Lead (roadmap), Release Manager (patches).
+- **Result**: **8/8 success criteria passed.** v1.2.0 transitions to **steady-state operations**.
