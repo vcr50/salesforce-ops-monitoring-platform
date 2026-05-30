@@ -527,3 +527,9 @@
 - [x] Update `docs/maintenance.md` with smoke testing details
 - [x] Update `walkthrough.md` with smoke testing details
 - [x] Commit all log changes to version control and push to remote
+
+## 65E — Production Release Tagging ✅
+- [x] Create and push the official `v1.2.0` production release tag to remote origin
+- [x] Update `docs/maintenance.md` with production tagging details
+- [x] Update `walkthrough.md` with release tagging details
+- [x] Commit all log changes to version control and push to remote
