@@ -244,3 +244,11 @@
   - [x] Implement trigger propagation in `SentinelIncidentTrigger.trigger` to map incident approvals/rejections back to predictions
   - [x] Patch all permission sets for the new field FLS using `patch_all_perms.py`
   - [x] Verify implementation by writing `SentinelPredictionGovernanceServiceTest.cls` and aligning `SentinelPredictionEngineTest.cls` (100% tests pass)
+- [x] **59C — Prediction Card UI Governance Actions**:
+  - [x] Add operator buttons to `zentomDashboard.html` prediction cards: Review Details, Request Approval, Dismiss, Mark Useful, Mark Noisy, and View Linked Incident
+  - [x] Use safe UX wording ("Request Approval", no direct execution actions on prediction card)
+  - [x] Implement conditional UI visibility: if a prediction has a linked incident (`prediction.hasIncident` is true), hide "Request Approval" and "Dismiss", and show "View Linked Incident"
+  - [x] Implement button click event handlers in `zentomDashboard.js` calling Apex methods in `SentinelPredictionGovernanceService`
+  - [x] Verify that updating Operator_Decision__c removes prediction from dashboard queue (decision transitions out of `'Pending'`)
+  - [x] Deploy and verify the full suite of unit tests successfully passes
+

@@ -258,8 +258,15 @@
                                 </p>
                                 <div class="prediction-actions">
                                     <lightning-button label="Review Details" variant="base" data-id={prediction.id} onclick={handleReviewPrediction} class="slds-m-right_small"></lightning-button>
-                                    <lightning-button label="Dismiss" variant="neutral" data-id={prediction.id} onclick={handleDismissPrediction} class="slds-m-right_small"></lightning-button>
-                                    <lightning-button label="Approve Runbook" variant="brand" data-id={prediction.id} onclick={handleApprovePrediction}></lightning-button>
+                                    <template if:true={prediction.hasIncident}>
+                                        <lightning-button label="View Linked Incident" variant="brand" data-incident-id={prediction.incidentId} onclick={handleViewIncident} class="slds-m-right_small"></lightning-button>
+                                    </template>
+                                    <template if:false={prediction.hasIncident}>
+                                        <lightning-button label="Dismiss" variant="neutral" data-id={prediction.id} onclick={handleDismissPrediction} class="slds-m-right_small"></lightning-button>
+                                        <lightning-button label="Request Approval" variant="brand" data-id={prediction.id} onclick={handleRequestApproval} class="slds-m-right_small"></lightning-button>
+                                    </template>
+                                    <lightning-button label="Mark Useful" variant="neutral" data-id={prediction.id} onclick={handleMarkUseful} class="slds-m-right_small"></lightning-button>
+                                    <lightning-button label="Mark Noisy" variant="neutral" data-id={prediction.id} onclick={handleMarkNoisy}></lightning-button>
                                 </div>
                             </footer>
                         </article>

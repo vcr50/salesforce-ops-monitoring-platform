@@ -635,3 +635,22 @@ Action Center handles any downstream execution
    - Aligned signal scores and assertions with the calibrated weights and 40% noise suppression threshold.
    - **Pass Rate**: 100% (4/4 tests pass)
 
+---
+
+## 29. Milestone 59C — Prediction Card UI Governance Actions
+
+### Implementation Highlights
+
+- **LWC HTML Integration (`zentomDashboard.html`)**:
+  - Integrated operator buttons directly onto prediction cards inside the command center.
+  - Used safe enterprise-level wording ("Request Approval", no direct execution options like "Execute Fix" or "Auto-Heal Now" on prediction cards).
+  - Implemented conditional UI visibility logic: if `prediction.hasIncident` is true, hides "Dismiss" and "Request Approval" and displays "View Linked Incident". If false, displays all action buttons.
+  - Provided direct links to mark predictions as `Useful` or `Noisy` (False Positive).
+- **LWC JavaScript Controllers (`zentomDashboard.js`)**:
+  - Wired LWC event handlers to call `SentinelPredictionGovernanceService` methods.
+  - Implemented automatic UI updates: clicking a governance action updates the prediction status, removes it from the Pending queue, and fires success toasts.
+- **Verification Results**:
+  - All 10 Apex tests pass successfully with 100% success rate.
+  - Visual layout verified for premium responsiveness and consistent margins using Tailwind-like SLDS and flexible container styles.
+
+

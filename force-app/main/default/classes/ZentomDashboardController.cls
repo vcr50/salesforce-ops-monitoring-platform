@@ -914,7 +914,7 @@ public with sharing class ZentomDashboardController {
         List<Sentinel_Prediction__c> preds = [
             SELECT Id, Prediction_Score__c, Confidence_Score__c, Summary__c,
                    Explanation__c, Recommended_Runbook__c, Status__c,
-                   Operator_Decision__c, CreatedDate
+                   Operator_Decision__c, Incident__c, CreatedDate
             FROM Sentinel_Prediction__c
             WHERE Operator_Decision__c = 'Pending'
             ORDER BY Prediction_Score__c DESC, CreatedDate DESC
@@ -931,6 +931,7 @@ public with sharing class ZentomDashboardController {
             row.recommendedRunbook = p.Recommended_Runbook__c;
             row.status = p.Status__c;
             row.operatorDecision = p.Operator_Decision__c;
+            row.incidentId = p.Incident__c;
             row.createdDate = p.CreatedDate;
             rows.add(row);
         }
@@ -946,6 +947,7 @@ public with sharing class ZentomDashboardController {
         @AuraEnabled public String recommendedRunbook;
         @AuraEnabled public String status;
         @AuraEnabled public String operatorDecision;
+        @AuraEnabled public Id incidentId;
         @AuraEnabled public Datetime createdDate;
     }
 

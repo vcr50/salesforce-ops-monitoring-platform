@@ -9,6 +9,10 @@ import getKeysetPaginatedIncidents from '@salesforce/apex/ZentomDashboardControl
 import getCostSavingsAnalytics from '@salesforce/apex/ZentomDashboardController.getCostSavingsAnalytics';
 import getPredictions from '@salesforce/apex/ZentomDashboardController.getPredictions';
 import updatePredictionDecision from '@salesforce/apex/ZentomDashboardController.updatePredictionDecision';
+import createApprovalFromPrediction from '@salesforce/apex/SentinelPredictionGovernanceService.createApprovalFromPrediction';
+import dismissPrediction from '@salesforce/apex/SentinelPredictionGovernanceService.dismissPrediction';
+import markPredictionUseful from '@salesforce/apex/SentinelPredictionGovernanceService.markPredictionUseful';
+import markPredictionNoisy from '@salesforce/apex/SentinelPredictionGovernanceService.markPredictionNoisy';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const POLL_INTERVAL_ACTIVE_MS   = 60000; // relaxed 60s — streaming covers near-real-time
@@ -201,7 +205,9 @@ export default class ZentomDashboard extends NavigationMixin(LightningElement) {
                     ...p,
                     cardClass,
                     iconName,
-                    isCritical: p.status === 'Critical'
+                    isCritical: p.status === 'Critical',
+                    hasIncident: p.incidentId != null,
+                    incidentId: p.incidentId
                 };
             });
         } else if (result.error) {
@@ -841,26 +847,61 @@ AI Explanation: ${data.events && data.events.length > 0 ? data.events[data.event
         // This would open a modal in a full implementation
     }
 
+    async handleRequestApproval(event) {
+        const pId = event.currentTarget.dataset.id;
+        try {
+            await createApprovalFromPrediction({ predictionId: pId });
+            this.showToast('Success', 'Governance review requested. Sentinel Incident created.', 'success');
+            refreshApex(this.wiredPredictionsResult);
+            refreshApex(this.wiredDashboard);
+        } catch (error) {
+            this.showToast('Error', this.reduceError(error), 'error');
+        }
+    }
+
     async handleDismissPrediction(event) {
         const pId = event.currentTarget.dataset.id;
         try {
-            await updatePredictionDecision({ predictionId: pId, decision: 'Dismiss - False Positive' });
-            this.showToast('Success', 'Prediction dismissed. Model weights updated.', 'success');
+            await dismissPrediction({ predictionId: pId });
+            this.showToast('Success', 'Prediction dismissed.', 'success');
             refreshApex(this.wiredPredictionsResult);
         } catch (error) {
             this.showToast('Error', this.reduceError(error), 'error');
         }
     }
 
-    async handleApprovePrediction(event) {
+    async handleMarkUseful(event) {
         const pId = event.currentTarget.dataset.id;
         try {
-            await updatePredictionDecision({ predictionId: pId, decision: 'Approved' });
-            this.showToast('Success', 'Runbook mitigation approved and dispatched to SentinelFlow Gate.', 'success');
+            await markPredictionUseful({ predictionId: pId });
+            this.showToast('Success', 'Prediction marked useful.', 'success');
             refreshApex(this.wiredPredictionsResult);
         } catch (error) {
             this.showToast('Error', this.reduceError(error), 'error');
         }
+    }
+
+    async handleMarkNoisy(event) {
+        const pId = event.currentTarget.dataset.id;
+        try {
+            await markPredictionNoisy({ predictionId: pId });
+            this.showToast('Success', 'Prediction marked false positive.', 'success');
+            refreshApex(this.wiredPredictionsResult);
+        } catch (error) {
+            this.showToast('Error', this.reduceError(error), 'error');
+        }
+    }
+
+    handleViewIncident(event) {
+        const incidentId = event.currentTarget.dataset.incidentId;
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordPage',
+            attributes: {
+                recordId: incidentId,
+                objectApiName: 'Sentinel_Incident__c',
+                actionName: 'view'
+            }
+        });
     }
 
     showToast(title, message, variant) {
