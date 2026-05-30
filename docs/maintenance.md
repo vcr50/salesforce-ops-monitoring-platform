@@ -468,3 +468,17 @@ All tasks for the Prediction Engine Pilot Run are complete and fully documented.
 ## Milestone 58B Complete ✅
 Scoring weights tuned and simulation scripts calibrated. Ready for retesting in sandbox.
 
+### 58C — Sandbox Retest Execution: Complete
+- Executed all four tuned pilot simulation scripts against `vjdev@asap.com` (dry-run mode, all rollbacks confirmed).
+- Created `docs/prediction-engine-retest-results.md` with full scenario execution table, actual vs expected scores, UI state verification, and pass/fail assessment.
+- **Results:**
+  - Scenario A (Zoho CRM Timeout): **72%** Critical — ⚠️ Partial Pass (5% below 77% floor; card generated correctly)
+  - Scenario B (HubSpot Deployment): **84.75%** Critical — ✅ Pass (target 82–88%)
+  - Scenario C (Order Flow Exhaustion): **55%** Warning — ✅ Pass (target 52–58%)
+  - Scenario D (Slack Noise): **0 cards** — ✅ Safety Gate Confirmed (suppressed below 40%)
+- Overall: **3/4 full pass, 1/4 partial pass**. Safety gate intact. No autonomous remediation triggered.
+- Issue logged (58C-01): Scenario A score 72% vs 77% floor. Minor weight nudge proposed for Milestone 58D.
+
+## Milestone 58C Complete ✅
+Sandbox retest executed. Scores validated against tuned targets. Safety gate confirmed.
+

@@ -216,3 +216,9 @@
   - Scenario C: ~55% Warning (Flow exhaustion dominant) ✓ target 52–58%
   - Scenario D: ~2% → suppressed ✓ target <40%
   - Rule lock preserved: no autonomous remediation. Human approval mandatory.
+- [x] **58C — Sandbox Retest Execution**: Ran all four tuned simulation scripts against `vjdev@asap.com` (dry-run). Created `docs/prediction-engine-retest-results.md`.
+  - Scenario A: **72%** Critical — ⚠️ Partial Pass (5% below 77% floor; card generated correctly)
+  - Scenario B: **84.75%** Critical — ✅ Pass (target 82–88%)
+  - Scenario C: **55%** Warning — ✅ Pass (target 52–58%)
+  - Scenario D: **0 cards created** — ✅ Safety Gate Confirmed (suppressed)
+  - Issue 58C-01 logged: Scenario A minor weight nudge needed → Milestone 58D

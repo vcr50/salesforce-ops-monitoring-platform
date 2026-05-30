@@ -477,3 +477,37 @@ An untracked, obsolete class/trigger (`FlowFaultTrigger`/`FlowFaultTriggerTest`)
 > No autonomous predictive remediation.
 > Human operator approval remains mandatory for all actions.
 
+---
+
+## 25. Milestone 58C — Sandbox Retest Execution
+
+### Sandbox Target
+`vjdev@asap.com` — Developer Sandbox. All runs in **Dry-Run mode** (Database.rollback active).
+
+### Actual Scores from Sandbox Debug Logs
+
+| Scenario | Source | Actual Score | Risk Level | Card Generated | Target | Pass? |
+|---|---|---|---|---|---|---|
+| A — Zoho CRM Timeout | `Zoho_CRM` | **72%** | Critical | ✅ Yes | 77–82% | ⚠️ Partial |
+| B — HubSpot Deployment | `HubSpot_Sync` | **84.75%** | Critical | ✅ Yes | 82–88% | ✅ Pass |
+| C — Order Flow Exhaustion | `Order_Processing_Flow` | **55%** | Warning | ✅ Yes | 52–58% | ✅ Pass |
+| D — Slack Noise | `Slack_Webhook` | **<40%** | — | ❌ None | <40% suppressed | ✅ Pass |
+
+### Safety Gate Result
+> **Scenario D: CONFIRMED SAFE** — `[SUCCESS] Zero prediction records created. Noise correctly suppressed below threshold.`
+> New aggressive default weights (w3=0.45) did NOT cause false positive noise escalation.
+
+### Issue 58C-01 — Scenario A 5% Under Target Floor
+- **Score:** 72% vs 77% floor
+- **Cause:** Script overrides produce `100×0.40 + 80×0.35 + 40×0.10 = 72%` exactly as projected
+- **Impact:** Low — card state (Critical) is correct; numeric score is slightly under documentation target
+- **Fix:** Minor weight nudge in Milestone 58D: `w5=0.45, w1=0.38` → projected ~79%
+
+### Milestone Status Update
+
+| Milestone | Status |
+|---|---|
+| 58A — Tuning Plan | ✅ Complete |
+| 58B — Weight Adjustments | ✅ Complete |
+| 58C — Sandbox Retest | ✅ Complete |
+| 58D — Scenario A Nudge | 🔜 Next |
