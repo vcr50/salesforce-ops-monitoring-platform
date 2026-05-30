@@ -440,3 +440,10 @@
 - [x] Update `walkthrough.md` with scope freeze summary.
 - [x] Commit all changes to version control and push to remote.
 
+### 64B — Full Regression Validation ✅
+- [x] Run full Apex tests (`RunLocalTests`) synchronously on target sandbox `vjdev@asap.com`.
+- [x] Create the release candidate validation document `docs/v1.2.0-release-candidate-validation.md`.
+- [x] Update `docs/maintenance.md` with test pass details.
+- [x] Update `walkthrough.md` with validation summary.
+- [x] Commit all changes to version control and push to remote.
+
