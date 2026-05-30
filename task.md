@@ -447,3 +447,11 @@
 - [x] Update `walkthrough.md` with validation summary.
 - [x] Commit all changes to version control and push to remote.
 
+### 64C — Security / FLS / CRUD Validation ✅
+- [x] Create the security and FLS/CRUD validation document `docs/v1.2.0-security-fls-crud-validation.md`.
+- [x] Validate target areas: Sentinel_Incident__c, Sentinel_Prediction__c, Sentinel_Anomaly_Signal__c, Sentinel_Audit_Log__c, Zentom_Policy_Decision__c, and Sentinel_Error_Log__c.
+- [x] Confirm no approval bypasses, blocked action locking, write-once audit log protection, prediction FLS, and CRUD/FLS user modes.
+- [x] Update `docs/maintenance.md` with security validation details.
+- [x] Update `walkthrough.md` with security validation summary.
+- [x] Commit all changes to version control and push to remote.
+
