@@ -883,3 +883,8 @@ Action Center handles any downstream execution
 
 - **Completed Deliverable**: Authored the FLS/CRUD security assessment report: [`docs/v1.2.0-security-fls-crud-validation.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-security-fls-crud-validation.md).
 - **Security Check Details**: Validates permission set CRUD mappings, Operator field-level security access, Apex sharing model configurations (`with sharing`), user-mode query modifiers (`WITH USER_MODE`), compiled destructive action locks (`DELETE_RECORDS`), write-once audit immutability, and referential integrity fallbacks. Final Security Verdict: APPROVED.
+
+### 64D — v1.2.0 Release Notes
+
+- **Completed Deliverable**: Authored the official customer-facing and internal release notes document: [`docs/v1.2.0-release-notes.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-release-notes.md).
+- **Release Documentation Details**: Details release summaries, major new feature lists, predictive warning console calibrations, safe Governed Auto-Heal engine boundary rules, dynamic Cost & Value Insights estimated savings calculation structures, user-mode security audits, pilot run metrics verification, known limitations (Apex CLI testing constraints), deferred items, and setup configuration/upgrade guides.

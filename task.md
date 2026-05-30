@@ -455,3 +455,12 @@
 - [x] Update `walkthrough.md` with security validation summary.
 - [x] Commit all changes to version control and push to remote.
 
+## 64D — v1.2.0 Release Notes ✅
+- [x] Create the release notes document `docs/v1.2.0-release-notes.md`.
+- [x] Include release summary, major features, prediction engine, governed auto-heal, cost savings analytics, security/compliance, pilot results, known limitations, deferred items, and upgrade notes.
+- [x] Use safe terminology: Estimated savings, Governed Auto-Heal, Human approval required for high-risk actions, Prediction recommends, policy controls, humans approve.
+- [x] Avoid unsafe terminology: Fully autonomous critical remediation, Guaranteed ROI, Unrestricted auto-healing.
+- [x] Update `docs/maintenance.md` with release notes completion logs.
+- [x] Update `walkthrough.md` with release notes walkthrough summary.
+- [x] Commit all changes to version control and push to remote.
+

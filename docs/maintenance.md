@@ -711,3 +711,8 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Created the security FLS and CRUD validation document [`docs/v1.2.0-security-fls-crud-validation.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-security-fls-crud-validation.md).
 - Documented full security reviews for `Sentinel_Incident__c`, `Sentinel_Prediction__c`, `Sentinel_Anomaly_Signal__c`, `Sentinel_Audit_Log__c`, `Zentom_Policy_Decision__c`, and `Sentinel_Error_Log__c`.
 - Confirmed strict validation rules: no approval bypasses, blocked destructive action compile locks, write-once audit trail protections, correct Operator field-level security, and Apex user-mode DML execution. Final Security Verdict: APPROVED.
+
+### 64D — v1.2.0 Release Notes: Complete
+- Created the customer-facing and internal release notes document [`docs/v1.2.0-release-notes.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-release-notes.md).
+- Detailed the release summary, major features (predictive warning console, governed auto-heal, value realization widgets), prediction scoring calibrations, safe Auto-Heal boundary execution rules, dynamic Cost & Value Insights estimated savings calculation engines, DML user-mode security audits, pilot scenarios results, known limitations, deferred items, and setup configuration/upgrade guides.
+- Verified compliance-safe terminology: used "Estimated savings", "Governed Auto-Heal", "Human approval required for high-risk actions", and "Prediction recommends, policy controls, humans approve", while avoiding unsafe phrases ("Fully autonomous critical remediation", "Guaranteed ROI", "Unrestricted auto-healing").
