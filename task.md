@@ -266,6 +266,14 @@
   - [x] Populate rows for Create Case, Create Task, Recommend Runbook, Send Notification, Retry Safe Integration, Update SentinelFlow Status, Disable Flow/Trigger, Delete Records, Modify Metadata, Change Permissions, and Mass Update Business Data
   - [x] Verify that governance and safety rules (no bypass, no destructive actions, human in loop) are fully integrated
   - [x] Update `docs/maintenance.md`, `task.md`, and `walkthrough.md`
+- [x] **60C — Human Approval Rules + Risk Gate Design**:
+  - [x] Define human approval rules and risk gates in `docs/auto-heal-human-approval-risk-gates.md`
+  - [x] Map risk level score definitions (Low, Medium, High, Critical) to action types
+  - [x] Map Low-risk action rules (Recommendations / notify / tasks) and Medium-risk action rules (policy approval / retry safe)
+  - [x] Map High/Critical-risk action rules (Mandatory Human Approve/Reject via Guardian Gate queue)
+  - [x] Detail approval timeout SLA policies, escalation paths, and re-routing
+  - [x] Update `docs/maintenance.md`, `task.md`, and `walkthrough.md`
+
 
 
 

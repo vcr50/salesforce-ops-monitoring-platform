@@ -553,6 +553,14 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Created `docs/auto-heal-action-matrix.md` mapping permitted and blocked operations to specific action names, types, risk levels, human approval gates, audit indicators, and rollback capabilities.
 - Formulated clear boundaries for retry policies, runbook recommendations, callouts, and internal status updates, while explicitly marking database deletions, trigger/flow deactivations, security changes, and metadata modifications as blocked.
 
+### 60C — Human Approval Rules + Risk Gate Design: Complete
+- Created `docs/auto-heal-human-approval-risk-gates.md` mapping risk score ranges ($P_{\text{anomaly}}$) to operational permissions:
+  1. **Low Risk (`0% - 39%`)**: Autonomous safe actions allowed (e.g. notify, task log).
+  2. **Medium Risk (`40% - 69%`)**: Bounded policy approval required via Action Center or Custom Metadata rule sets.
+  3. **High/Critical Risk (`70% - 100%`)**: Mandatory human clearance via the **Guardian Gate** queue before DML or callout execution.
+- Defined SLA escalation routing (marking incidents for review if approvals exceed 4 hours), policy feedback mappings, audit event requirements, and transaction locking patterns.
+
+
 
 
 

@@ -671,3 +671,10 @@ Action Center handles any downstream execution
 - **Tabular Mapping**: Defined specific risk levels, human approval rules, rollback behaviors, audit hooks, and notes for all 11 core operational actions.
 - **Governance Lock**: Verified that no destructive actions bypass approval workflows or run autonomously at High/Critical risk levels.
 
+### 60C — Human Approval Rules + Risk Gate Design
+
+- **Rules Scope**: Authored the human-in-the-loop approval rules and risk gate flow document: [`docs/auto-heal-human-approval-risk-gates.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/auto-heal-human-approval-risk-gates.md).
+- **Action Control Bands**: Documented Low risk (autonomous safe notify/task), Medium risk (policy-driven Action Center approval), and High/Critical risk (mandatory human clearance via the Guardian Gate).
+- **Escalation SLA Paths**: Specified rules for SLA timeouts triggering escalation alerts and UI visual color changes if a workflow sits in `Pending Approval` for over 4 hours.
+
+
