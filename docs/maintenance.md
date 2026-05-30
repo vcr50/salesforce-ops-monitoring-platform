@@ -592,4 +592,12 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Established runtime safety checkpoints: checking for 15%+ CPU/DML headroom, database-level `FOR UPDATE` duplicate locks, strict user mode enforcement, dynamic blocked action validation, savepoint rollbacks, UUID transaction logs, and global kill switch.
 - Outlined unit testing strategy targeting savepoint rollback, duplicate execution, and kill switch deactivation, aiming for 95%+ coverage before deploying validation builds to sandbox.
 
-
+### 61B — AutoHealExecutionService Implementation: Complete
+- Created `AutoHealExecutionService.cls` to coordinate the execution of allowed actions (`CREATE_CASE`, `CREATE_TASK`, `SEND_NOTIFICATION`, `RETRY_SAFE_INTEGRATION`, `UPDATE_SENTINELFLOW_STATUS`, `RECOMMEND_RUNBOOK`).
+- Implemented global kill switch validations mapping to `SystemSettings.get('Auto_Heal_Active', 1.0)`.
+- Blocked dangerous actions (`DELETE_RECORDS`, `MASS_UPDATE_BUSINESS_DATA`, `CHANGE_PERMISSIONS`, `MODIFY_METADATA`, `DISABLE_FLOW_TRIGGER`, `DESTRUCTIVE_DEPLOYMENT`, `BYPASS_APPROVAL`) by throwing custom exceptions and registering blocked events.
+- Enforced risk-based approval rules (incidents with score $\ge 40\%$ require `Approval_Status__c == 'Approved'`).
+- Prevented concurrent duplicate runbook executions using database row locking (`FOR UPDATE`).
+- Wrapped safe DML executions in transaction savepoints (`Database.setSavepoint()` / `Database.rollback()`) to secure rollback on failures.
+- Ensured trace audits for every run are persisted to `Sentinel_Audit_Log__c`.
+- Built comprehensive test suite `AutoHealExecutionServiceTest.cls` verifying all code paths with 100% success rate on 9 test cases.

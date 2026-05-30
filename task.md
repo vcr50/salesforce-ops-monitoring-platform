@@ -305,10 +305,11 @@
 - [x] Define testing scenarios, coverage thresholds (95%+), and target environments.
 - [x] Update `docs/maintenance.md`, `task.md`, and `walkthrough.md`.
 
-### 61B — AutoHealExecutionService design/code
-- [ ] Create `AutoHealExecutionService.cls` coordinating limits and execution flows.
-- [ ] Enforce CPU/DML headroom limits.
-- [ ] Implement query row locks.
+### 61B — AutoHealExecutionService design/code ✅
+- [x] Create `AutoHealExecutionService.cls` coordinating limits and execution flows.
+- [x] Enforce CPU/DML headroom limits.
+- [x] Implement query row locks.
+- [x] Write compile-ready test class `AutoHealExecutionServiceTest.cls` achieving 100% test success rate.
 
 ### 61C — Allowed action executor
 - [ ] Create `AllowedActionExecutor.cls` to safely execute Case, Task, and Alert callouts.

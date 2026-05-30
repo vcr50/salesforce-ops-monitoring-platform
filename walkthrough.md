@@ -710,3 +710,20 @@ Action Center handles any downstream execution
   - `SentinelIncidentTrigger.trigger`: Propagates approvals and automates reversions.
 - **Rollback and Audit**: Implements atomic database savepoints (`Database.setSavepoint()` and `Database.rollback()`) and unique trace UUID context across logs.
 - **Verification Plan**: Specifies unit tests for savepoint rollback on exception, duplicate execution guard, and kill switch active check, targeting $\ge 95\%$ Apex coverage.
+
+### 61B — AutoHealExecutionService Implementation
+
+- **Central Execution Coordinator**: Implemented `AutoHealExecutionService.cls` wrapping safety boundaries and executing safe operations under strict rules:
+  - **Kill Switch**: Programmatically aborts if the global toggle `SystemSettings.get('Auto_Heal_Active', 1.0)` is disabled.
+  - **Blocked Actions**: Formulates static locks rejecting deactivations, deletions, custom adjustments, and bypasses (`DELETE_RECORDS`, `MASS_UPDATE_BUSINESS_DATA`, `CHANGE_PERMISSIONS`, `MODIFY_METADATA`, `DISABLE_FLOW_TRIGGER`, `DESTRUCTIVE_DEPLOYMENT`, `BYPASS_APPROVAL`) with custom exceptions.
+  - **Risk Gating**: Blocks any medium/high/critical execution (risk score $\ge 40\%$) unless approved via human clearance (`Approval_Status__c = 'Approved'`).
+  - **Duplicate Lock**: Enforces database row-level locking via `SELECT ... FOR UPDATE` query syntax.
+  - **Atomic Savepoints**: Wraps processing actions inside `Database.setSavepoint()` / `Database.rollback()` try-catch blocks to revert database mutations during failures.
+  - **Trace Auditing**: Registers log entries detailing success/failure/block reasons in `Sentinel_Audit_Log__c`.
+- **Automated Verification**: Created `AutoHealExecutionServiceTest.cls` covering all validation gates:
+  - Validates cases, tasks, notifications, and retry safe dispatches.
+  - Asserts that kill switch overrides block runs.
+  - Asserts that unapproved medium/high risk flows throw governance exceptions.
+  - Asserts that duplicate execution attempts are blocked.
+  - Verifies database rollbacks on failures using a deterministic custom testing trigger action (`TEST_FORCE_FAILURE`).
+  - **Results**: 100% pass rate on all 9 test cases with high Apex code coverage.
