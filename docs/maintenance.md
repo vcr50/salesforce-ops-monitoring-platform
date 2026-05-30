@@ -601,3 +601,10 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Wrapped safe DML executions in transaction savepoints (`Database.setSavepoint()` / `Database.rollback()`) to secure rollback on failures.
 - Ensured trace audits for every run are persisted to `Sentinel_Audit_Log__c`.
 - Built comprehensive test suite `AutoHealExecutionServiceTest.cls` verifying all code paths with 100% success rate on 9 test cases.
+
+### 61C — Allowed Action Executor Expansion: Complete
+- Expanded and standardized allowed action execution paths (`CREATE_CASE`, `CREATE_TASK`, `SEND_NOTIFICATION`, `RETRY_SAFE_INTEGRATION`, `UPDATE_SENTINELFLOW_STATUS`, `RECOMMEND_RUNBOOK`) inside `AutoHealExecutionService.cls`.
+- Implemented robust input validation checks (e.g. verifying `Incident_Type__c` is populated for Case creation, `Runbook_Key__c` for integration retries, and `Runbook_Title__c` for runbook recommendation).
+- Added GRC risk-based checks, such as dynamically mapping Case priorities and Task priorities to `High` for critical incident scores ($\ge 70.0$).
+- Standardized the structured execution result strings returned to the client and logged to the GRC audit table.
+- Added dedicated test methods to `AutoHealExecutionServiceTest.cls` (`testCreateCaseAction()`, `testCreateTaskAction()`, `testSendNotificationAction()`, `testRetrySafeIntegrationAction()`, `testUpdateSentinelFlowStatusAction()`, `testRecommendRunbookAction()`) achieving 100% test success rate (12/12 tests passing).

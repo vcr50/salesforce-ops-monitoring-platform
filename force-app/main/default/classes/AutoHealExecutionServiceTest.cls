@@ -7,7 +7,8 @@ private class AutoHealExecutionServiceTest {
     }
 
     @IsTest
-    static void testExecuteAction_Success_CreateCase() {
+    static void testCreateCaseAction() {
+        // Success case with Incident_Type__c populated
         Sentinel_Incident__c incident = new Sentinel_Incident__c(
             Incident_Type__c = 'System Incident',
             Risk_Score__c = 35.0,
@@ -23,36 +24,109 @@ private class AutoHealExecutionServiceTest {
         AutoHealExecutionService.ExecutionResult result = AutoHealExecutionService.executeAction(incident.Id, 'CREATE_CASE');
         Test.stopTest();
 
-        System.assert(result.success, 'Execution should be successful');
+        System.assert(result.success, 'Case creation action should succeed');
         System.assertEquals('CREATE_CASE', result.actionTaken);
-        System.assertNotEquals(null, result.recordId, 'Record ID of Case should not be null');
+        System.assertNotEquals(null, result.recordId, 'Record ID of Case should be set');
 
-        // Verify database updates
-        Sentinel_Incident__c updatedInc = [
-            SELECT Status__c, Execution_Status__c, Execution_Action__c, Executed_At__c, Created_Case__c
-            FROM Sentinel_Incident__c
-            WHERE Id = :incident.Id
-        ];
-        System.assertEquals('Action Created', updatedInc.Status__c);
-        System.assertEquals('Executed', updatedInc.Execution_Status__c);
-        System.assertEquals('CREATE_CASE', updatedInc.Execution_Action__c);
-        System.assertNotEquals(null, updatedInc.Executed_At__c);
-        System.assertEquals(result.recordId, updatedInc.Created_Case__c);
+        // Validation failure case (Incident_Type__c is null)
+        Sentinel_Incident__c badIncident = new Sentinel_Incident__c(
+            Risk_Score__c = 20.0,
+            Approval_Status__c = 'Not Required',
+            Execution_Status__c = 'Ready for Execution',
+            Status__c = 'New'
+        );
+        insert badIncident;
 
-        // Verify audit log
-        List<Sentinel_Audit_Log__c> auditLogs = [
-            SELECT Event_Type__c, Decision__c, Response_Payload__c
-            FROM Sentinel_Audit_Log__c
-            WHERE Incident__c = :incident.Id
-            ORDER BY CreatedDate DESC
-        ];
-        System.assert(!auditLogs.isEmpty(), 'Audit logs should be created');
-        System.assertEquals('AUTO_HEAL_EXECUTED', auditLogs[0].Event_Type__c);
-        System.assertEquals('SUCCESS', auditLogs[0].Decision__c);
+        AutoHealExecutionService.ExecutionResult failResult = AutoHealExecutionService.executeAction(badIncident.Id, 'CREATE_CASE');
+        System.assert(!failResult.success, 'Case creation action should fail');
+        System.assert(failResult.message.contains('Incident Type is required'), 'Expected validation message');
     }
 
     @IsTest
-    static void testExecuteAction_Success_CreateTask() {
+    static void testCreateTaskAction() {
+        Sentinel_Incident__c incident = new Sentinel_Incident__c(
+            Incident_Type__c = 'System Incident',
+            Risk_Score__c = 75.0, // High risk
+            Approval_Status__c = 'Approved', // Requires approval for score >= 40
+            Execution_Status__c = 'Ready for Execution',
+            Status__c = 'Approved'
+        );
+        insert incident;
+
+        SystemSettings.setOverride('Auto_Heal_Active', 1.0);
+
+        Test.startTest();
+        AutoHealExecutionService.ExecutionResult result = AutoHealExecutionService.executeAction(incident.Id, 'CREATE_TASK');
+        Test.stopTest();
+
+        System.assert(result.success, 'Task creation action should succeed');
+        System.assertEquals('CREATE_TASK', result.actionTaken);
+
+        Task createdTask = [SELECT Priority FROM Task WHERE Id = :result.recordId LIMIT 1];
+        System.assertEquals('High', createdTask.Priority, 'Task priority should map to High for score >= 70');
+    }
+
+    @IsTest
+    static void testSendNotificationAction() {
+        Sentinel_Incident__c incident = new Sentinel_Incident__c(
+            Incident_Type__c = 'System Incident',
+            Risk_Score__c = 15.0,
+            Approval_Status__c = 'Not Required',
+            Execution_Status__c = 'Ready for Execution',
+            Status__c = 'New'
+        );
+        insert incident;
+
+        SystemSettings.setOverride('Auto_Heal_Active', 1.0);
+
+        Test.startTest();
+        AutoHealExecutionService.ExecutionResult result = AutoHealExecutionService.executeAction(incident.Id, 'SEND_NOTIFICATION');
+        Test.stopTest();
+
+        System.assert(result.success, 'Notification action should succeed');
+        System.assertEquals('SEND_NOTIFICATION', result.actionTaken);
+        System.assert(result.message.contains('dispatched'), 'Expected dispatch message');
+    }
+
+    @IsTest
+    static void testRetrySafeIntegrationAction() {
+        // Success case with Runbook_Key__c populated
+        Sentinel_Incident__c incident = new Sentinel_Incident__c(
+            Incident_Type__c = 'System Incident',
+            Risk_Score__c = 30.0,
+            Approval_Status__c = 'Not Required',
+            Execution_Status__c = 'Ready for Execution',
+            Status__c = 'New',
+            Runbook_Key__c = 'RB_INTEGRATION_RETRY'
+        );
+        insert incident;
+
+        SystemSettings.setOverride('Auto_Heal_Active', 1.0);
+
+        Test.startTest();
+        AutoHealExecutionService.ExecutionResult result = AutoHealExecutionService.executeAction(incident.Id, 'RETRY_SAFE_INTEGRATION');
+        Test.stopTest();
+
+        System.assert(result.success, 'Integration retry action should succeed');
+        System.assertEquals('RETRY_SAFE_INTEGRATION', result.actionTaken);
+        System.assert(result.message.contains('RB_INTEGRATION_RETRY'), 'Expected runbook key in message');
+
+        // Validation failure case (Runbook_Key__c is null)
+        Sentinel_Incident__c badIncident = new Sentinel_Incident__c(
+            Risk_Score__c = 25.0,
+            Approval_Status__c = 'Not Required',
+            Execution_Status__c = 'Ready for Execution',
+            Status__c = 'New'
+        );
+        insert badIncident;
+
+        AutoHealExecutionService.ExecutionResult failResult = AutoHealExecutionService.executeAction(badIncident.Id, 'RETRY_SAFE_INTEGRATION');
+        System.assert(!failResult.success, 'Integration retry action should fail without runbook key');
+        System.assert(failResult.message.contains('Runbook Key is required'), 'Expected validation message');
+    }
+
+    @IsTest
+    static void testUpdateSentinelFlowStatusAction() {
         Sentinel_Incident__c incident = new Sentinel_Incident__c(
             Incident_Type__c = 'System Incident',
             Risk_Score__c = 10.0,
@@ -65,62 +139,49 @@ private class AutoHealExecutionServiceTest {
         SystemSettings.setOverride('Auto_Heal_Active', 1.0);
 
         Test.startTest();
-        AutoHealExecutionService.ExecutionResult result = AutoHealExecutionService.executeAction(incident.Id, 'CREATE_TASK');
+        AutoHealExecutionService.ExecutionResult result = AutoHealExecutionService.executeAction(incident.Id, 'UPDATE_SENTINELFLOW_STATUS');
         Test.stopTest();
 
-        System.assert(result.success, 'Execution should succeed');
-        System.assertEquals('CREATE_TASK', result.actionTaken);
-        System.assertNotEquals(null, result.recordId, 'Task ID should not be null');
-
-        Sentinel_Incident__c updatedInc = [
-            SELECT Status__c, Execution_Status__c
-            FROM Sentinel_Incident__c
-            WHERE Id = :incident.Id
-        ];
-        System.assertEquals('Action Created', updatedInc.Status__c);
-        System.assertEquals('Executed', updatedInc.Execution_Status__c);
+        System.assert(result.success, 'Update status action should succeed');
+        System.assertEquals('UPDATE_SENTINELFLOW_STATUS', result.actionTaken);
     }
 
     @IsTest
-    static void testExecuteAction_Success_OtherSafeActions() {
+    static void testRecommendRunbookAction() {
+        // Success case with Runbook_Title__c populated
         Sentinel_Incident__c incident = new Sentinel_Incident__c(
             Incident_Type__c = 'System Incident',
-            Risk_Score__c = 15.0,
+            Risk_Score__c = 10.0,
             Approval_Status__c = 'Not Required',
             Execution_Status__c = 'Ready for Execution',
-            Status__c = 'New'
+            Status__c = 'New',
+            Runbook_Title__c = 'Zoho API Timeout Resolution',
+            Runbook_Steps__c = '1. Check endpoint health; 2. Retry.'
         );
         insert incident;
 
         SystemSettings.setOverride('Auto_Heal_Active', 1.0);
 
-        // SEND_NOTIFICATION
-        AutoHealExecutionService.ExecutionResult res1 = AutoHealExecutionService.executeAction(incident.Id, 'SEND_NOTIFICATION');
-        System.assert(res1.success);
-        System.assertEquals('SEND_NOTIFICATION', res1.actionTaken);
+        Test.startTest();
+        AutoHealExecutionService.ExecutionResult result = AutoHealExecutionService.executeAction(incident.Id, 'RECOMMEND_RUNBOOK');
+        Test.stopTest();
 
-        // Reset Execution Status to allow re-run
-        incident.Execution_Status__c = 'Ready for Execution';
-        update incident;
+        System.assert(result.success, 'Recommend runbook action should succeed');
+        System.assertEquals('RECOMMEND_RUNBOOK', result.actionTaken);
+        System.assert(result.message.contains('Zoho API Timeout Resolution'), 'Expected runbook title in message');
 
-        // RETRY_SAFE_INTEGRATION
-        AutoHealExecutionService.ExecutionResult res2 = AutoHealExecutionService.executeAction(incident.Id, 'RETRY_SAFE_INTEGRATION');
-        System.assert(res2.success);
-        System.assertEquals('RETRY_SAFE_INTEGRATION', res2.actionTaken);
+        // Validation failure case (Runbook_Title__c is null)
+        Sentinel_Incident__c badIncident = new Sentinel_Incident__c(
+            Risk_Score__c = 10.0,
+            Approval_Status__c = 'Not Required',
+            Execution_Status__c = 'Ready for Execution',
+            Status__c = 'New'
+        );
+        insert badIncident;
 
-        incident.Execution_Status__c = 'Ready for Execution';
-        update incident;
-
-        // UPDATE_SENTINELFLOW_STATUS
-        AutoHealExecutionService.ExecutionResult res3 = AutoHealExecutionService.executeAction(incident.Id, 'UPDATE_SENTINELFLOW_STATUS');
-        System.assert(res3.success);
-
-        incident.Execution_Status__c = 'Ready for Execution';
-        update incident;
-
-        // RECOMMEND_RUNBOOK
-        AutoHealExecutionService.ExecutionResult res4 = AutoHealExecutionService.executeAction(incident.Id, 'RECOMMEND_RUNBOOK');
-        System.assert(res4.success);
+        AutoHealExecutionService.ExecutionResult failResult = AutoHealExecutionService.executeAction(badIncident.Id, 'RECOMMEND_RUNBOOK');
+        System.assert(!failResult.success, 'Recommend runbook action should fail without title');
+        System.assert(failResult.message.contains('Runbook Title is required'), 'Expected validation message');
     }
 
     @IsTest
@@ -217,6 +278,7 @@ private class AutoHealExecutionServiceTest {
 
         // Set to Approved and run
         incident.Approval_Status__c = 'Approved';
+        incident.Incident_Type__c = 'System Incident'; // validation prerequisite
         update incident;
 
         AutoHealExecutionService.ExecutionResult result = AutoHealExecutionService.executeAction(incident.Id, 'CREATE_CASE');

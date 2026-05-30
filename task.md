@@ -311,9 +311,10 @@
 - [x] Implement query row locks.
 - [x] Write compile-ready test class `AutoHealExecutionServiceTest.cls` achieving 100% test success rate.
 
-### 61C — Allowed action executor
-- [ ] Create `AllowedActionExecutor.cls` to safely execute Case, Task, and Alert callouts.
-- [ ] Implement FLS assertions on DML and callouts in background contexts.
+### 61C — Allowed action executor ✅
+- [x] Strengthen and standardize safe action paths (Case, Task, Alerts, Retries, Status, Runbooks) inside `AutoHealExecutionService.cls`.
+- [x] Implement input validations and GRC checks for all paths.
+- [x] Extend unit test coverage with dedicated test cases in `AutoHealExecutionServiceTest.cls`.
 
 ### 61D — Kill switch + duplicate guard
 - [ ] Implement Custom Settings checks for `Auto_Heal_Active`.

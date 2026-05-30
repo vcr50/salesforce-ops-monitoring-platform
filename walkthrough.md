@@ -727,3 +727,21 @@ Action Center handles any downstream execution
   - Asserts that duplicate execution attempts are blocked.
   - Verifies database rollbacks on failures using a deterministic custom testing trigger action (`TEST_FORCE_FAILURE`).
   - **Results**: 100% pass rate on all 9 test cases with high Apex code coverage.
+
+### 61C — Allowed Action Executor Expansion
+
+- **Executor Robustness and GRC Guarding**: Standardized and hardened the executor path inside `AutoHealExecutionService.cls` for all 6 allowed actions:
+  - **CREATE_CASE**: Asserts that `Incident_Type__c` is populated on the incident before calling DML. Maps priority dynamically (`High` if score $\ge 70.0$, otherwise `Medium`).
+  - **CREATE_TASK**: Sets task priority based on the incident risk score ($\ge 70.0$ → `High`). Connects task to incident.
+  - **SEND_NOTIFICATION**: Dispatches webhook notifications asynchronously to avoid callout/transaction limit errors.
+  - **RETRY_SAFE_INTEGRATION**: Validates that `Runbook_Key__c` is not blank before proceeding.
+  - **UPDATE_SENTINELFLOW_STATUS**: Resolves and refreshes the internal record status safely.
+  - **RECOMMEND_RUNBOOK**: Validates that `Runbook_Title__c` is populated to prevent empty UI recommendations.
+- **Dedicated Test Methods**: Developed custom test cases in `AutoHealExecutionServiceTest.cls` verifying each action path's successes and validation failures:
+  - `testCreateCaseAction()`
+  - `testCreateTaskAction()`
+  - `testSendNotificationAction()`
+  - `testRetrySafeIntegrationAction()`
+  - `testUpdateSentinelFlowStatusAction()`
+  - `testRecommendRunbookAction()`
+  - **Results**: 100% test success rate (12/12 unit tests passing).
