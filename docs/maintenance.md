@@ -716,3 +716,10 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Created the customer-facing and internal release notes document [`docs/v1.2.0-release-notes.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-release-notes.md).
 - Detailed the release summary, major features (predictive warning console, governed auto-heal, value realization widgets), prediction scoring calibrations, safe Auto-Heal boundary execution rules, dynamic Cost & Value Insights estimated savings calculation engines, DML user-mode security audits, pilot scenarios results, known limitations, deferred items, and setup configuration/upgrade guides.
 - Verified compliance-safe terminology: used "Estimated savings", "Governed Auto-Heal", "Human approval required for high-risk actions", and "Prediction recommends, policy controls, humans approve", while avoiding unsafe phrases ("Fully autonomous critical remediation", "Guaranteed ROI", "Unrestricted auto-healing").
+
+### 64E — Release Candidate Tag: Complete
+- Created and pushed the official release candidate tag: `v1.2.0-rc.1`.
+- Source branch: `codex-sentinelflow-marketing-zentom-bot`
+- Validation status: `Passed` (100% test success, 422/422 Apex unit tests passed)
+- Security verdict: `Approved`
+- Release notes: `Complete`

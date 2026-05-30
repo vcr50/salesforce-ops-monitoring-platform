@@ -888,3 +888,13 @@ Action Center handles any downstream execution
 
 - **Completed Deliverable**: Authored the official customer-facing and internal release notes document: [`docs/v1.2.0-release-notes.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-release-notes.md).
 - **Release Documentation Details**: Details release summaries, major new feature lists, predictive warning console calibrations, safe Governed Auto-Heal engine boundary rules, dynamic Cost & Value Insights estimated savings calculation structures, user-mode security audits, pilot run metrics verification, known limitations (Apex CLI testing constraints), deferred items, and setup configuration/upgrade guides.
+
+### 64E — Release Candidate Tag
+
+- **Completed Deliverable**: Created and pushed the official release candidate tag `v1.2.0-rc.1` to the remote origin.
+- **Tag Integration Details**:
+  - **Release Candidate Tag**: `v1.2.0-rc.1`
+  - **Source Branch**: `codex-sentinelflow-marketing-zentom-bot`
+  - **Validation Status**: Passed (100% test success, 422/422 Apex unit tests passed)
+  - **Security Verdict**: Approved
+  - **Release Notes**: Complete

@@ -464,3 +464,9 @@
 - [x] Update `walkthrough.md` with release notes walkthrough summary.
 - [x] Commit all changes to version control and push to remote.
 
+## 64E — Release Candidate Tag ✅
+- [x] Create and push the official `v1.2.0-rc.1` release candidate tag
+- [x] Update `docs/maintenance.md` with release candidate tag details
+- [x] Update `walkthrough.md` with tag details
+- [x] Commit all log changes to version control and push to remote
+
