@@ -15,9 +15,7 @@ Sentinel_Incident__c incident = new Sentinel_Incident__c(
 insert incident;
 
 System.debug('--- Running Scenario B: Executing medium-risk CREATE_CASE ---');
-Test.startTest();
 AutoHealExecutionService.ExecutionResult result = AutoHealExecutionService.executeAction(incident.Id, 'CREATE_CASE');
-Test.stopTest();
 
 System.debug('Scenario B Success: ' + result.success);
 System.debug('Scenario B Message: ' + result.message);

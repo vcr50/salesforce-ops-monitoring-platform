@@ -14,9 +14,7 @@ Sentinel_Incident__c incident = new Sentinel_Incident__c(
 insert incident;
 
 System.debug('--- Running Scenario E: Executing failure-inducing TEST_FORCE_FAILURE ---');
-Test.startTest();
 AutoHealExecutionService.ExecutionResult result = AutoHealExecutionService.executeAction(incident.Id, 'TEST_FORCE_FAILURE');
-Test.stopTest();
 
 System.debug('Scenario E Success: ' + result.success); // Should be false
 System.debug('Scenario E Message: ' + result.message);

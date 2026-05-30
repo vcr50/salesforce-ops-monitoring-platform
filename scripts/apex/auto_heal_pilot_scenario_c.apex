@@ -29,9 +29,7 @@ System.debug('--- Running Scenario C: Granting approval and executing ---');
 incident.Approval_Status__c = 'Approved';
 update incident;
 
-Test.startTest();
 AutoHealExecutionService.ExecutionResult result = AutoHealExecutionService.executeAction(incident.Id, 'CREATE_TASK');
-Test.stopTest();
 
 System.debug('Scenario C Success: ' + result.success);
 System.debug('Scenario C Message: ' + result.message);

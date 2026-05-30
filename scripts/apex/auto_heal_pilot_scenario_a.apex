@@ -15,9 +15,7 @@ Sentinel_Incident__c incident = new Sentinel_Incident__c(
 insert incident;
 
 System.debug('--- Running Scenario A: Executing low-risk CREATE_TASK ---');
-Test.startTest();
 AutoHealExecutionService.ExecutionResult result = AutoHealExecutionService.executeAction(incident.Id, 'CREATE_TASK');
-Test.stopTest();
 
 System.debug('Scenario A Success: ' + result.success);
 System.debug('Scenario A Message: ' + result.message);
