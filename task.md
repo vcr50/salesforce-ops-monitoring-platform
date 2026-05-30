@@ -281,4 +281,18 @@ All tasks for Prediction Engine QA + Trust Validation are complete.
 - [x] Update `task.md`
 - [x] Update `walkthrough.md`
 
-
+### 57B — Pilot Signal Simulation & Ingestion Scripts ✅
+- [x] Create `docs/prediction-pilot-signal-simulation.md`
+- [x] Document purpose, instructions, and standard Salesforce CLI commands
+- [x] Write `scripts/apex/simulate_pilot_scenario_a.apex` simulating Zoho CRM timeouts
+- [x] Write `scripts/apex/simulate_pilot_scenario_b.apex` simulating post-deployment CPU limits
+- [x] Write `scripts/apex/simulate_pilot_scenario_c.apex` simulating Flow duration exhaustion
+- [x] Write `scripts/apex/simulate_pilot_scenario_d.apex` simulating transient Slack webhook rate limits
+- [x] Design transaction rollback strategy and dry-run execution wrapper
+- [x] Detail live commit pipeline and database purge cleaning routines
+- [x] Formulate LWC feedback validation, comments capture, and audit log steps
+- [x] Outline tuning logs and programmatic suggestion checks in `Sentinel_Error_Log__c`
+- [x] Complete comprehensive verification success checklists
+- [x] Update `docs/maintenance.md`
+- [x] Update `task.md`
+- [x] Update `walkthrough.md`

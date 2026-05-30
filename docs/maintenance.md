@@ -418,4 +418,12 @@ All tasks for Prediction Engine QA + Trust Validation are complete and fully doc
   9. **Feedback Capture Process**: Structured modal dialogs capturing Operator Decisions, standardized Dismissal Picklist Reasons, qualitative operator context comments, and user link bindings.
   10. **Go / No-Go Criteria**: Master Trust Gates Grid evaluating pilot duration, signal volume, precision, recall, OTS index, governor constraints, and governance bypasses.
 
-
+### 57B — Pilot Signal Simulation & Ingestion Scripts: Complete
+- Created `docs/prediction-pilot-signal-simulation.md` defining the comprehensive simulation setup, execution CLI commands, expected score ranges, expected UI states, and transaction safety architectures.
+- Developed four fully executable anonymous Apex simulation scripts saved inside `scripts/apex/`:
+  1. `scripts/apex/simulate_pilot_scenario_a.apex`: Simulates downstream API timeouts on Zoho_CRM by injecting 15 consecutive HTTP 504 events and retry queueable logs. Expected score: ~78% (Critical crimson pulsed card).
+  2. `scripts/apex/simulate_pilot_scenario_b.apex`: Simulates post-deployment triggers firing 8 CPU limit exceptions and HubSpot collateral timeouts. Expected score: ~85% (Critical with deployment correlation sub-badge).
+  3. `scripts/apex/simulate_pilot_scenario_c.apex`: Simulates Order Processing Flow interview exhaustions with duration spikes. Expected score: ~55% (Warning amber glow card).
+  4. `scripts/apex/simulate_pilot_scenario_d.apex`: Simulates transient, self-healing HTTP 429 Slack webhook throttles. Expected score: ~6% (Info, silently suppressed from LWC dashboard to validate noise reduction).
+- Engineered a dual-mode transaction strategy enabling operators to execute in **Safe Dry-Run Mode** (releasing savepoints and rolling back transactions) or **Live Commit Mode** (committing telemetry metrics to active sandboxes).
+- Established step-by-step verification flows for LWC feedback modals, audit logs, programmatic calibration suggestions, and database purge routines.

@@ -502,7 +502,8 @@ An untracked, obsolete class/trigger (`FlowFaultTrigger`/`FlowFaultTriggerTest`)
 | Milestone | Scope | Status | Deliverables |
 |---|---|---|---|
 | **57A** | Prediction Engine Pilot Scope | ✅ Complete | Created `docs/prediction-engine-pilot-scope.md` |
-| **Overall 57** | **Prediction Engine Pilot Run** | **🔄 In Progress** | **57A pilot scope defined; operational phases pending** |
+| **57B** | Pilot Signal Simulation Setup | ✅ Complete | Created `docs/prediction-pilot-signal-simulation.md` + Apex scripts |
+| **Overall 57** | **Prediction Engine Pilot Run** | **🔄 In Progress** | **57A-57B complete; pilot execution phases pending** |
 
 ### 57A Key Achievements — Prediction Engine Pilot Scope
 
@@ -521,3 +522,20 @@ An untracked, obsolete class/trigger (`FlowFaultTrigger`/`FlowFaultTriggerTest`)
 7. **Structured Feedback Collection**: Designed dynamic feedback modals for operator picklist dismissals, comment captures, SRE user link bindings, and human decision latency tracking.
 
 8. **Rigorous Go/No-Go Gateway**: Mapped the 7 strict Trust Gates gating GA Auto-Heal promotion (duration, volume, precision, recall, OTS index, governor constraints, and security compliance) to ensure mathematical alignment.
+
+### 57B Key Achievements — Pilot Signal Simulation & Ingestion Scripts
+
+1. **Central Simulation Playbook**: Created [docs/prediction-pilot-signal-simulation.md](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/prediction-pilot-signal-simulation.md) documenting execution instructions, CLI commands, mathematical score ranges, expected LWC visual card behaviors, and operator actions for the pilot.
+
+2. **Scenario A (Zoho CRM Timeout Spike)**: Authored [scripts/apex/simulate_pilot_scenario_a.apex](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/simulate_pilot_scenario_a.apex) generating 15 consecutive HTTP 504 failures and retry queue failures. Calibrated to calculate an anomaly score of ~78% (Critical crimson pulsed LWC card).
+
+3. **Scenario B (Deployment CPU Limits)**: Authored [scripts/apex/simulate_pilot_scenario_b.apex](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/simulate_pilot_scenario_b.apex) simulating 3 class deploys, 8 CPU time limit exceptions, and 4 HubSpot collateral timeouts. Calibrated to calculate an anomaly score of ~85% (Critical with special deployment correlation badge).
+
+4. **Scenario C (Flow Exhaustion)**: Authored [scripts/apex/simulate_pilot_scenario_c.apex](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/simulate_pilot_scenario_c.apex) simulating Order Processing Flow Fault logs with average execution durations spiking from 1.2s to 12.5s. Calibrated to calculate an anomaly score of ~55% (Warning amber glow card).
+
+5. **Scenario D (Low-Risk Webhook Noise)**: Authored [scripts/apex/simulate_pilot_scenario_d.apex](file:///d:/TomCodeX%20Inc/SentinelFlow/scripts/apex/simulate_pilot_scenario_d.apex) simulating minor Slack HTTP 429 rate limit events successfully self-healed on retry. Calibrated to calculate an anomaly score of ~6% (suppressed silently in database with zero LWC cards generated to validate noise filtration).
+
+6. **Dual-Mode Transaction Architecture**: Engineered a transaction control framework where scripts run by default in **Safe Dry-Run Mode** (invoking database savepoint/rollbacks to dump scoring calculations via `System.debug()` without database pollution) or **Live Commit Mode** (committing records to sandbox for real-time LWC visual rendering).
+
+7. **Operator Dashboard Validation Workflows**: Documented clear validation checkpoints for SRE operators to verify expanded natural language rationales, FLS profile boundaries, dismissal modals, parent audit records, and programmatic suggestions logged to `Sentinel_Error_Log__c`.
+
