@@ -487,3 +487,14 @@
 - [x] Update `docs/maintenance.md` with wrap-up details
 - [x] Update `walkthrough.md` with wrap-up details
 - [x] Commit all log changes to version control and push to remote
+
+# Milestone 65 — v1.2.0 Production Release
+
+## 65A — Production Deployment Runbook ✅
+- [x] Create the production deployment runbook `docs/v1.2.0-production-deployment-runbook.md`
+- [x] Document release version, RC tag, target environment, and checklists
+- [x] Map pre-deployment, deployment validation, metadata deployment, and settings update steps
+- [x] Map validation tests, smoke testing plans, rollback plans, and communication rules
+- [x] Update `docs/maintenance.md` with runbook details
+- [x] Update `walkthrough.md` with runbook details
+- [x] Commit all log changes to version control and push to remote

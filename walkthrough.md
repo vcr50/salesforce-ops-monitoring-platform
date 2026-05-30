@@ -915,3 +915,10 @@ Action Center handles any downstream execution
   - **RC Tag**: `v1.2.0-rc.1`
   - **Status**: Approved for Production Release Preparation
   - **Next**: Milestone 65 — v1.2.0 Production Release
+
+## 34. Milestone 65 — v1.2.0 Production Release
+
+### 65A — Production Deployment Runbook
+
+- **Completed Deliverable**: Authored the official release candidate production deployment runbook: [`docs/v1.2.0-production-deployment-runbook.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-production-deployment-runbook.md).
+- **Runbook Design Parameters**: Details pre-deployment requirements (metadata backup, kill switch check), dry-run validation rules (`sf project deploy validate`), package deployment parameters, validation Apex tests execution commands, post-deployment manual smoke testing plan, quick rollback fallback sequence (metadata recovery and `Auto_Heal_Active` toggle checks), communication plans, and final release success gates (100% tests successful).

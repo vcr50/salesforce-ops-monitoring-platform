@@ -737,3 +737,10 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - RC Tag: `v1.2.0-rc.1`
 - Status: Approved for Production Release Preparation
 - Recommendation: Proceed to Milestone 65 — v1.2.0 Production Release.
+
+## Milestone 65 — v1.2.0 Production Release
+
+### 65A — Production Deployment Runbook: Complete
+- Created the official production deployment runbook [`docs/v1.2.0-production-deployment-runbook.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-production-deployment-runbook.md).
+- Documented release version `v1.2.0`, source candidate tag `v1.2.0-rc.1`, and production target org specifications.
+- Outlined steps for pre-deployment backup configurations, dry-run deployment validations, full regression test execution triggers, post-deployment manual smoke testing protocols, quick rollback deactivations (`Auto_Heal_Active` toggle checks), and communications timelines.
