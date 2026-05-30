@@ -403,3 +403,19 @@ All tasks for Predictive Operational Intelligence UI are complete. Prediction ca
 ## Milestone 56 Complete ✅
 All tasks for Prediction Engine QA + Trust Validation are complete and fully documented.
 
+## Milestone 57 — Prediction Engine Pilot Run
+
+### 57A — Prediction Engine Pilot Scope: Complete
+- Created `docs/prediction-engine-pilot-scope.md` defining the operational blueprint and boundaries for running the prediction engine against controlled pilot data to earn SRE trust:
+  1. **Purpose**: Measure prediction utility, calibrate algorithms, establish human trust, and confirm governance compliance without executing autonomous changes.
+  2. **Pilot Scope**: Scoped to HubSpot and Zoho integrations, Order Processing Flow, and selected telemetry signals (CPU limitations, Flow faults, HTTP 504 timeouts, HTTP 429 rate throttles). Direct DML execution remains strictly out of scope (advisory warning only).
+  3. **Pilot Duration**: Set to a continuous 30-day run in developer sandboxes with three phases (Baseline Calibration on Days 1-7, Operator Advisory on Days 8-21, Performance Validation on Days 22-30) and weekly calibration cycles.
+  4. **Test Org / Environment**: Isolated on Developer Sandbox `vjdev@asap.com` with active mock telemetry signal generator suites.
+  5. **Signal Scenarios Included**: Controlled test triggers for Scenario A (API Timeout), Scenario B (Deployment Correlation), Scenario C (Flow Exhaustion), and Scenario D (Low-Risk Noise).
+  6. **Operator Participants**: Onboarded team of Alex Rivera (SRE Lead), Priya Patel (SRE), Mark Johnson (SRE), Sarah Jenkins (System Admin), and Tom Chen (Director of Ops) under explicit permission profiles.
+  7. **Prediction Monitoring Process**: Real-time platform event publishing via `SentinelFlow_Dashboard_Event__e` with dashboard `EmpApi` LWC client subscriptions and complete audit logging on `Sentinel_Audit_Log__c`.
+  8. **Accuracy Metrics**: Quantitative mathematical KPIs targeting Precision ($\ge 90\%$), Recall ($\ge 92\%$), and rolling decay Operational Trust Score ($\ge 90\%$).
+  9. **Feedback Capture Process**: Structured modal dialogs capturing Operator Decisions, standardized Dismissal Picklist Reasons, qualitative operator context comments, and user link bindings.
+  10. **Go / No-Go Criteria**: Master Trust Gates Grid evaluating pilot duration, signal volume, precision, recall, OTS index, governor constraints, and governance bypasses.
+
+
