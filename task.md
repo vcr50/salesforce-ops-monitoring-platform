@@ -228,3 +228,18 @@
 - [x] Update `docs/maintenance.md`
 - [x] Update `task.md`
 - [x] Update `walkthrough.md`
+
+### 56B — Sample Signal Scenario Setup ✅
+- [x] Create `docs/prediction-sample-signal-scenarios.md`
+- [x] Document purpose and scenario data setup template
+- [x] Design Scenario A — API Timeout Spike (~78% Critical)
+- [x] Design Scenario B — Deployment Correlation (~85% Critical)
+- [x] Design Scenario C — Flow Exhaustion (~55% Warning)
+- [x] Design Scenario D — Low-Risk Noise (~6% Info, no card)
+- [x] Define expected score ranges with tolerance bands
+- [x] Define expected UI states for all risk tiers
+- [x] Define expected operator actions and system responses
+- [x] Create comprehensive validation checklist
+- [x] Update `docs/maintenance.md`
+- [x] Update `task.md`
+- [x] Update `walkthrough.md`

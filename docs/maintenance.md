@@ -377,5 +377,12 @@ All tasks for Predictive Operational Intelligence UI are complete. Prediction ca
   9. Operator feedback capture with audit log sync and decision field compliance.
   10. Go/No-Go criteria requiring 30-day pilot, ≥100 signals, and all 7 trust gates passed.
 
-
-
+### 56B — Sample Signal Scenario Setup: Complete
+- Created `docs/prediction-sample-signal-scenarios.md` defining four canonical test scenarios with full scoring breakdowns:
+  1. **Scenario A — API Timeout Spike**: 15 consecutive HTTP 504 timeouts on Zoho_CRM with +400% failure delta. Expected score: ~78% (Critical).
+  2. **Scenario B — Deployment Correlation**: 3-class metadata deployment followed by 8 CPU limit exceptions and 4 collateral integration timeouts. Expected score: ~85% (Critical).
+  3. **Scenario C — Flow Exhaustion**: 5 Flow faults on Order Processing Flow with 10× duration spike. Expected score: ~55% (Warning).
+  4. **Scenario D — Low-Risk Noise**: 2 transient HTTP 429 rate limits on Slack_Webhook, auto-retried successfully. Expected score: ~6% (Info, no card rendered).
+- Documented expected UI states for each risk tier (Critical crimson pulse, Warning amber glow, Info suppressed).
+- Defined operator action flows (Approve → Incident creation, Dismiss → Card suppression with weight penalty).
+- Established a comprehensive validation checklist covering scoring accuracy, UI state verification, explainability, human governance boundary, audit trail compliance, false alarm protection, and governor limit safety.

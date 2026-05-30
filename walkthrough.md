@@ -450,9 +450,26 @@ An untracked, obsolete class/trigger (`FlowFaultTrigger`/`FlowFaultTriggerTest`)
 
 ---
 
-## 23. Final Milestone Status (Milestone 56A)
+## 23. Final Milestone Status (Milestone 56)
 
 | Milestone | Scope | Status | Deliverables |
 |---|---|---|---|
 | **56A** | Prediction QA + Trust Validation Plan | ✅ Complete | Created `docs/prediction-engine-qa-trust-validation.md` |
-| **Overall 56** | **Prediction Engine QA + Trust Validation** | **🔄 In Progress** | **56A complete; execution phases pending** |
+| **56B** | Sample Signal Scenario Setup | ✅ Complete | Created `docs/prediction-sample-signal-scenarios.md` |
+| **Overall 56** | **Prediction Engine QA + Trust Validation** | **🔄 In Progress** | **56A–56B complete; execution phases pending** |
+
+### 56B Key Achievements — Sample Signal Scenario Setup
+
+1. **Four Canonical Scenarios**: Designed end-to-end reproducible test scenarios covering all four risk tiers:
+   - **Scenario A (API Timeout Spike)**: 15 consecutive HTTP 504s on Zoho_CRM with +400% delta → ~78% Critical score. Validates high-volume integration failure detection.
+   - **Scenario B (Deployment Correlation)**: 3-class metadata deploy + 8 CPU limit exceptions + 4 collateral integration timeouts → ~85% Critical score. Validates temporal correlation logic between deployments and runtime failures.
+   - **Scenario C (Flow Exhaustion)**: 5 Flow faults with 10× duration spike on Order Processing Flow → ~55% Warning score. Validates mid-tier risk detection and Flow-specific signal handling.
+   - **Scenario D (Low-Risk Noise)**: 2 transient HTTP 429s on Slack_Webhook, auto-retried → ~6% Info score. Validates that normal operational noise is suppressed and no false alarm cards appear.
+
+2. **Score Calculation Breakdowns**: Each scenario includes a full weighted linear scoring matrix showing every signal component's normalized value ($S_i$), weight ($W_i$), and individual contribution to the final anomaly probability.
+
+3. **UI State Mapping**: Defined exact visual states for each risk tier — Critical crimson pulse borders, Warning amber glow borders, and Info/suppressed empty states — with specific CSS color values and animation expectations.
+
+4. **Operator Action Flows**: Documented step-by-step operator interaction tables showing what happens when Approve, Dismiss, or no action is taken, including incident creation, audit logging, platform event publishing, and weight penalty application.
+
+5. **Comprehensive Validation Checklist**: Created a 30+ item checklist covering pre-execution checks, scoring accuracy, UI state verification, explainability, human governance boundary, audit trail compliance, false alarm protection, and governor limit safety.
