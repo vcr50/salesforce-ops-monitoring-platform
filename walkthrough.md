@@ -954,3 +954,21 @@ Action Center handles any downstream execution
   - **Release Tag**: `v1.2.0`
   - **Status**: Deployed & Verified in Production
   - **Recommendation**: Close out Milestone 65 and sign off v1.2.0 as live.
+
+---
+
+## Milestone 66 — v1.2.0 Post-Release Monitoring
+
+### 66A — Production Health Monitoring Plan
+
+- **Completed Deliverable**: Authored the official post-release monitoring plan: [`docs/v1.2.0-post-release-monitoring-plan.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-post-release-monitoring-plan.md).
+- **Monitoring Scope**: Covers anomaly telemetry ingestion, Zentom AI Prediction Engine scoring, Guardian Gate approval queues, Auto-Heal execution pipeline, Cost & Value Dashboard widgets, and GRC compliance audit logging.
+- **Stabilization Window**: 7-day continuous post-release monitoring with daily 15-minute SRE standups and an end-of-Day-7 formal review checkpoint.
+- **Issue Classification**:
+  - **P0**: Critical outage / security breach — 15min triage / 4hr fix SLA. Kill switch toggle + rollback.
+  - **P1**: Core feature failure / data corruption — 1hr triage / 24hr fix SLA.
+  - **P2**: Non-blocking / UI / calibration drift — 4hr triage / next calibration patch.
+- **Daily Health Checklist**: Apex error logs, trigger compilation health, CometD streaming telemetry indicator, OTS calculation verification, and audit trail integrity counts.
+- **Exit Criteria**: Zero open P0/P1 issues, OTS ≥ 90%, zero lock exceptions, and complete audit log verification.
+- **Post-Release Rule**: No new features during monitoring window. Only P0/P1/P2 fixes, security fixes, and production stabilization corrections.
+

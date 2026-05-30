@@ -541,3 +541,21 @@
 - [x] Update `docs/maintenance.md` with release wrap-up details
 - [x] Update `walkthrough.md` with release wrap-up details
 - [x] Commit all log changes to version control and push to remote
+
+# Milestone 66 — v1.2.0 Post-Release Monitoring
+
+## 66A — Production Health Monitoring Plan ✅
+- [x] Create the post-release monitoring plan document `docs/v1.2.0-post-release-monitoring-plan.md`
+- [x] Define production monitoring scope (telemetry, prediction, Guardian Gate, Auto-Heal, cost widgets, GRC logging)
+- [x] Establish 7-day stabilization monitoring window with daily SRE standups
+- [x] Define P0/P1/P2 issue classification and SLA protocols
+- [x] Document Auto-Heal execution monitoring (concurrency locks, rollback frequency, ceiling blocks)
+- [x] Document prediction accuracy monitoring (noise dismissals, threshold drift, RCA auditing)
+- [x] Document Guardian Gate approval monitoring (queue backlogs, bypass auditing)
+- [x] Document audit log verification and cost savings widget verification procedures
+- [x] Define daily health checklist (Apex errors, trigger health, streaming telemetry, OTS, audit trail)
+- [x] Define stabilization exit criteria (zero P0/P1, OTS ≥ 90%, zero lock exceptions, complete audit logs)
+- [x] Enforce post-release rule: no new features during monitoring window
+- [x] Update `docs/maintenance.md` with monitoring plan details
+- [x] Update `walkthrough.md` with monitoring plan summary
+- [x] Commit all log changes to version control and push to remote
