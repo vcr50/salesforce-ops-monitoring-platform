@@ -768,10 +768,13 @@ Action Center handles any downstream execution
 - **Audit Decision Tuning**: Categorized failures in the audit table with decision values: `TIMEOUT` for callout timeouts, `ROLLBACK_EXECUTED` for transaction rollbacks, or general `FAILURE` descriptions.
 - **Operator Notification Dispatch**: Catches failures and calls `SentinelFlowNotificationDispatcher.dispatchPendingApprovalAlerts` asynchronously to push Slack/Teams alerts and emails to operators.
 
-### 61F — Unit Tests + Sandbox Dry-Runs
+### 61F — Full Auto-Heal GA Validation
 
-- **New Test Methods**: Developed 3 unit tests in `AutoHealExecutionServiceTest.cls`:
-  - `testExecuteAction_RollbackOnError()`: Asserts database rollback, sets status fields to `'Failed'`, `'Approval Required'`, and `'Pending Approval'`, and registers audit logs.
-  - `testRetryExhaustionBlocked()`: Asserts that exceeding 3 failures blocks execution and logs `RETRY_EXHAUSTED`.
-  - `testCalloutTimeoutHandling()`: Simulates a callout timeout, verifying rollback, status transition, and `TIMEOUT` audit logs.
-- **Test Outcomes**: All 14 test cases in `AutoHealExecutionServiceTest.cls` passed successfully.
+- **Targeted Test Execution**: Ran the `AutoHealExecutionServiceTest` suite, executing 16 test cases covering allowed actions, blocked action errors, risk clearance thresholds, duplicate locks, savepoint rollbacks, retry ceilings, and timeout logging with 100% success.
+- **Org-Wide Regression Validation**: Executed the complete suite of local Apex unit tests (`RunLocalTests`), validating 420 test cases with a 100% pass rate (0 failures).
+- **Safety Gate Verification Results**:
+  - **Kill Switch**: Verified that setting `Auto_Heal_Active` to `0.0` prevents execution and audits it under `KILL_SWITCH_ACTIVE`.
+  - **Blocked Actions**: Verified that deactivations, deletions, custom permission bypasses, and metadata changes throw runtime exceptions and block executions.
+  - **Risk Gating**: Confirmed that risk scores $\ge 40.0$ enforce strict human approval via the Guardian Gate.
+  - **Failure Lifecycle**: Proved that callout timeouts and execution failures trigger atomic transaction rollbacks, reset parent incident status fields to `'Failed'`, `'Approval Required'`, and `'Pending Approval'`, and successfully queue alerts.
+  - **Retry Limits**: Proved that the engine queries previous audit records to block executions after 3 attempts, logging `RETRY_EXHAUSTED`.

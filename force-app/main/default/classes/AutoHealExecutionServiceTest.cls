@@ -370,4 +370,73 @@ private class AutoHealExecutionServiceTest {
         System.assert(!auditLogs.isEmpty(), 'Timeout audit log should be created');
         System.assertEquals('AUTO_HEAL_FAILED', auditLogs[0].Event_Type__c);
     }
+
+    @IsTest
+    static void testExecuteAction_BlockedDangerousActions() {
+        Sentinel_Incident__c incident = new Sentinel_Incident__c(
+            Incident_Type__c = 'System Incident',
+            Risk_Score__c = 30.0,
+            Approval_Status__c = 'Not Required',
+            Execution_Status__c = 'Ready for Execution',
+            Status__c = 'New'
+        );
+        insert incident;
+
+        SystemSettings.setOverride('Auto_Heal_Active', 1.0);
+
+        // Check DELETE_RECORDS
+        try {
+            AutoHealExecutionService.executeAction(incident.Id, 'DELETE_RECORDS');
+            System.assert(false, 'Should throw exception for blocked DELETE_RECORDS');
+        } catch (AutoHealExecutionService.AutoHealException e) {
+            System.assert(e.getMessage().contains('Blocked Action'), 'Should contain block warning');
+        }
+
+        // Check BYPASS_APPROVAL
+        try {
+            AutoHealExecutionService.executeAction(incident.Id, 'BYPASS_APPROVAL');
+            System.assert(false, 'Should throw exception for blocked BYPASS_APPROVAL');
+        } catch (AutoHealExecutionService.AutoHealException e) {
+            System.assert(e.getMessage().contains('Blocked Action'));
+        }
+
+        // Check UNKNOWN action
+        try {
+            AutoHealExecutionService.executeAction(incident.Id, 'UNKNOWN_DANGER_ACTION');
+            System.assert(false, 'Should throw exception for unknown action');
+        } catch (AutoHealExecutionService.AutoHealException e) {
+            System.assert(e.getMessage().contains('Unsupported Action'));
+        }
+    }
+
+    @IsTest
+    static void testExecuteAction_ApprovalRequirement() {
+        // Medium Risk, Pending Approval
+        Sentinel_Incident__c incident = new Sentinel_Incident__c(
+            Incident_Type__c = 'System Incident',
+            Risk_Score__c = 55.0, // Medium Risk
+            Approval_Status__c = 'Pending Approval',
+            Execution_Status__c = 'Ready for Execution',
+            Status__c = 'New'
+        );
+        insert incident;
+
+        SystemSettings.setOverride('Auto_Heal_Active', 1.0);
+
+        // Try to execute without approval
+        try {
+            AutoHealExecutionService.executeAction(incident.Id, 'CREATE_CASE');
+            System.assert(false, 'Should block execution for unapproved medium risk incident');
+        } catch (AutoHealExecutionService.AutoHealException e) {
+            System.assert(e.getMessage().contains('require human approval'), 'Expected approval required message');
+        }
+
+        // Set to Approved and run
+        incident.Approval_Status__c = 'Approved';
+        incident.Incident_Type__c = 'System Incident'; // validation prerequisite
+        update incident;
+
+        AutoHealExecutionService.ExecutionResult result = AutoHealExecutionService.executeAction(incident.Id, 'CREATE_CASE');
+        System.assert(result.success, 'Should execute successfully after approval');
+    }
 }

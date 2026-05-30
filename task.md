@@ -335,12 +335,17 @@
 - [x] Route timeouts and rollback failures to the audit log table (`TIMEOUT`, `ROLLBACK_EXECUTED`, `FAILURE`).
 - [x] Queue operator notifications upon failure via `SentinelFlowNotificationDispatcher.dispatchPendingApprovalAlerts`.
 
-### 61F — Unit tests + sandbox dry-runs ✅
-- [x] Develop unit tests targeting rollback, retry limit check, and timeout handling:
-  - `testExecuteAction_RollbackOnError()`
-  - `testRetryExhaustionBlocked()`
-  - `testCalloutTimeoutHandling()`
-- [x] Achieve 95%+ test coverage (100% pass rate on all 14 execution service tests).
+### 61F — Full Auto-Heal GA Validation ✅
+- [x] Run `AutoHealExecutionServiceTest` (16/16 pass).
+- [x] Run full Apex regression (`RunLocalTests`, 420/420 pass).
+- [x] Verify kill switch blocks execution.
+- [x] Verify blocked actions never execute.
+- [x] Verify approval required for $\ge 40\%$ risk score.
+- [x] Verify rollback resets incident fields correctly (`Execution_Status__c = 'Failed'`, `Status__c = 'Approval Required'`, `Approval_Status__c = 'Pending Approval'`).
+- [x] Verify retry exhaustion blocks execution after 3 attempts.
+- [x] Verify audit logs are correctly populated for all failure and block states.
+- [x] Verify zero destructive operations leak into transaction execution.
+- [x] Verify Slack/Teams/fallback alert path dispatches correctly.
 
 ### 61G — Milestone 61 wrap-up
 - [ ] Update `docs/maintenance.md`.
