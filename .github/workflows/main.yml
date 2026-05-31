@@ -28,35 +28,3 @@ jobs:
           echo "Branch: ${{ github.ref_name }}"
           echo "Ref: ${{ github.ref }}"
           echo "Commit: ${{ github.sha }}"
-
-  validate-and-deploy:
-    runs-on: ubuntu-latest
-    if: ${{ secrets.TOMCODEX_SF != '' }}
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      - name: Install Salesforce CLI
-        run: npm install @salesforce/cli --global
-
-      - name: Authenticate to Salesforce Hub
-        run: |
-          echo "${{ secrets.TOMCODEX_SF }}" > auth_url.txt
-          sf org login sfdx-url -f auth_url.txt -s -a DevHub
-
-      - name: Run Apex Tests (Code Coverage)
-        continue-on-error: true
-        run: |
-          sf apex run test -l RunLocalTests -c -r human -w 20
-
-      - name: Create Package Version (Main Only)
-        if: ${{ false }}
-        continue-on-error: true
-        run: |
-          echo "Package version creation is disabled until Milestone 71C resolves managed namespace/package strategy."
-          sf package version create -p "SentinelFlow" -x -w 20 -c --installationkeybypass
