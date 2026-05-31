@@ -1,5 +1,7 @@
 name: Tomcodex CI
 
+run-name: Tomcodex CI - ${{ github.ref_name }} - ${{ github.sha }}
+
 on:
   push:
     branches:
@@ -8,6 +10,8 @@ on:
       - 'codex-*'
       - 'feature/*'
       - codex-sentinelflow-marketing-zentom-bot
+    tags:
+      - 'v*'
   pull_request:
     branches:
       - main
@@ -24,14 +28,14 @@ concurrency:
 jobs:
   docs-check:
     name: Docs / Workflow Sanity Check
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
       - name: Confirm workflow is active
         run: |
           echo "GitHub Actions workflow is running successfully."
           echo "Branch: ${{ github.ref_name }}"
+          echo "Ref: ${{ github.ref }}"
           echo "Commit: ${{ github.sha }}"
 
   node-quality:
