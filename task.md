@@ -955,6 +955,15 @@
 - [x] Define script flow, speaking notes, UI navigation sequences, and audio/video sync markers
 - [x] Showcase real-time telemetry, AI predictions, and Guardian Gate approvals
 
+## Milestone 73D — AppExchange Pricing / Trial Strategy
+- [x] Create docs/v1.2.0-appexchange-pricing-trial-strategy.md
+- [x] Define compliant pricing model overview and free trial strategy
+- [x] Document pilot / proof-of-value option
+- [x] Document Starter, Professional, and Enterprise tier positioning
+- [x] Define support included by tier
+- [x] Enforce estimated ROI wording rules and avoid guaranteed savings or unrestricted automation claims
+- [x] Keep 71C BLOCKED until namespace and Managed 2GP setup are resolved
+
 ## Milestone 73G — UI/UX Premium Redesign Concept
 - [x] Create high-fidelity design mockups for Dark/Light Command Center dashboard and Incident Operations page
 - [x] Create the visual design concept document docs/v1.2.0-ui-ux-premium-redesign-concept.md

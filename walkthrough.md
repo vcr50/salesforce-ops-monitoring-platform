@@ -1370,6 +1370,17 @@ Action Center handles any downstream execution
 
 ---
 
+## Milestone 73D - AppExchange Pricing / Trial Strategy
+
+- **Completed Deliverable**: Authored the pricing and trial strategy document: [`docs/v1.2.0-appexchange-pricing-trial-strategy.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-appexchange-pricing-trial-strategy.md).
+- **Pricing Strategy**: Defined a paid tiered subscription model with Starter, Professional, and Enterprise tiers, plus a guided free trial for sandbox or controlled evaluation environments.
+- **Trial / Pilot Strategy**: Recommended a 14- to 30-day free trial and a 30- to 60-day pilot / proof-of-value option with baseline-dependent reporting.
+- **Tier Positioning**: Mapped Starter to monitoring, dashboards, incident visibility, and audit logs; Professional to prediction engine, explainable warning cards, and Guardian Gate approvals; Enterprise to Governed Auto-Heal, compliance evidence, cost savings analytics, and executive reports.
+- **Compliance Alignment**: Locked pricing and ROI wording to Estimated cost savings, Estimated MTTR reduction, Estimated operational value, Governed Auto-Heal, and Human approval required for high-risk actions.
+- **Status**: 71C remains BLOCKED. No package configuration, namespace, Managed 2GP, or `sfdx-project.json` changes were made.
+
+---
+
 ## Milestone 73G - UI/UX Premium Redesign Concept
 
 - **Samsung One UI Aesthetic**: Formulated the visual specifications aligning the interface with Samsung's night-lighting theme using charcoal/graphite variables (`#1b1e22` and `#2d323a`) and Light Mode contrast styles.
