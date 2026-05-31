@@ -1,4 +1,4 @@
-# SentinelFlow + Zentom AI
+# SentinelFlow: Salesforce Ops Monitoring Platform
 
 ## The Salesforce command center for resilient operations.
 
