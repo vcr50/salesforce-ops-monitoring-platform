@@ -860,7 +860,22 @@
 - [x] Improve label visibility and active Settings tab clarity
 - [x] Clean card backgrounds, borders, spacing, and disabled-looking visual treatment
 - [x] Confirm no package metadata, namespace, or `sfdx-project.json` changes were made
-- [ ] Run final UI smoke test before 71C
-- [ ] Keep 71C blocked until UI smoke test and namespace / Managed 2GP blockers are resolved
+- [x] Run final UI smoke test before 71C
+- [ ] Keep 71C blocked until namespace / Managed 2GP blockers are resolved
+
+## 71B-7 - Final UI Smoke Test
+- [x] Create final UI smoke-test document `docs/v1.2.0-final-ui-smoke-test.md`
+- [x] Validate default navigation exposes functional product pages
+- [x] Validate Cases tab is hidden by default
+- [x] Validate Policies tab is hidden by default
+- [x] Validate Runbooks tab is hidden by default
+- [x] Validate no `Coming Soon` strings remain in reviewed LWC source
+- [x] Validate disabled future routes fall back safely to Incidents
+- [x] Validate Settings page readability cleanup in source
+- [x] Validate Dashboard / Command Center links route to functional pages
+- [x] Validate responsive CSS coverage for app shell and Settings
+- [x] Validate accessibility focus-state coverage in source
+- [x] Record final UI verdict
+- [ ] Keep 71C blocked until namespace is confirmed and Managed 2GP package readiness is complete
 
 

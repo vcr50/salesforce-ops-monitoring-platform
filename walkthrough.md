@@ -1241,3 +1241,15 @@ Action Center handles any downstream execution
 - **UI Fix**: Reworked Settings-scoped visual variables, card styling, labels, form fields, focus states, tab bar, subscription metrics, endpoint rows, and action buttons for readable AppExchange-ready light mode.
 - **Packaging Impact**: No namespace, package alias, metadata model, Apex, permission set, or `sfdx-project.json` change was made.
 - **Status**: 71B-6 complete. 71C remains BLOCKED until final UI smoke test and namespace / Managed 2GP blockers are resolved.
+
+---
+
+## Milestone 71B-7 - Final UI Smoke Test
+
+- **Completed Deliverable**: Authored the final UI smoke-test document: [`docs/v1.2.0-final-ui-smoke-test.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-final-ui-smoke-test.md).
+- **Navigation Result**: Default navigation exposes functional pages only: Dashboard, Incidents, Approvals, Actions, Reports, Integrations, and Settings.
+- **Placeholder Result**: Cases, Policies, and Runbooks are hidden by default, no `Coming Soon` strings remain in reviewed LWC source, and disabled future routes fall back to Incidents.
+- **Settings Result**: Light-mode readability, form fields, labels, active tabs, buttons, focus states, and card surfaces pass source-level inspection.
+- **Responsive Result**: App shell and Settings responsive CSS coverage is present for tablet and mobile breakpoints.
+- **Final UI Verdict**: PASS for source-level final UI smoke test.
+- **Status**: UI blockers are cleared. 71C remains BLOCKED by namespace / Managed 2GP readiness.
