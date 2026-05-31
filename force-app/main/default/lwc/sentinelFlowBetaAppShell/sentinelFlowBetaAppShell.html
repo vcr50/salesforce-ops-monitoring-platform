@@ -1,0 +1,602 @@
+<template>
+    <section class={shellClass} aria-label="SentinelFlow Beta 2.0">
+        <header class="topbar">
+            <div class="topbar-left-group">
+                <div class="brand-lockup">
+                    <button class="icon-button mobile-menu-btn" type="button" onclick={toggleSidebar} title="Menu" aria-label="Menu">
+                        <lightning-icon icon-name="utility:rows" size="x-small"></lightning-icon>
+                    </button>
+                    <span class="brand-mark">
+                        <img src={logoUrl} alt="SentinelFlow" />
+                    </span>
+                    <div>
+                        <p class="eyebrow">SentinelFlow Beta 2.0</p>
+                        <h1>Command Center</h1>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="global-search">
+                <lightning-icon icon-name="utility:search" size="x-small"></lightning-icon>
+                <input type="text" 
+                       placeholder="Search incidents, actions, cases, runbooks..." 
+                       value={searchKey} 
+                       oninput={handleSearchChange} 
+                       class="search-input" />
+                <kbd>/</kbd>
+            </div>
+
+            <div class="topbar-actions">
+                <button class="theme-toggle-pill" type="button" onclick={toggleTheme} title={themeToggleTitle} aria-label={themeToggleTitle}>
+                    <span class="theme-toggle-track">
+                        <span class="theme-toggle-thumb">
+                            <lightning-icon icon-name={themeIcon} size="xx-small"></lightning-icon>
+                        </span>
+                    </span>
+                </button>
+                <div class="powered-chip">
+                    <lightning-icon icon-name="utility:sparkles" size="x-small"></lightning-icon>
+                    <span>Powered by Zentom AI</span>
+                </div>
+                <div class={healthClass}>
+                    <span class="status-dot"></span>
+                    <span>{healthLabel}</span>
+                </div>
+                <div class="time-chip">{currentTime}</div>
+                <button class="icon-button" type="button" onclick={refreshView} title="Refresh" aria-label="Refresh">
+                    <lightning-icon icon-name="utility:refresh" size="x-small"></lightning-icon>
+                </button>
+                
+                <div class="glass-user-dropdown" onclick={toggleOrgMenu}>
+                    <div class="glass-user-trigger">
+                        <div class="user-avatar">{userInitials}</div>
+                        <div class="user-info">
+                            <strong>{userName}</strong>
+                            <span>{orgName}</span>
+                        </div>
+                        <lightning-icon icon-name={orgMenuIcon} size="xx-small"></lightning-icon>
+                    </div>
+                    <template if:true={isOrgMenuOpen}>
+                        <div class="glass-menu fade-in">
+                            <div class="glass-menu-item" data-action="switch_org" onclick={handleMenuItemClick}>
+                                <lightning-icon icon-name="utility:switch" size="x-small"></lightning-icon>
+                                <span>Switch Org</span>
+                            </div>
+                            <div class="glass-menu-item" data-action="settings" onclick={handleMenuItemClick}>
+                                <lightning-icon icon-name="utility:setup" size="x-small"></lightning-icon>
+                                <span>Org Settings</span>
+                            </div>
+                            <div class="menu-divider"></div>
+                            <div class="glass-menu-item danger" data-action="logout" onclick={handleMenuItemClick}>
+                                <lightning-icon icon-name="utility:logout" size="x-small"></lightning-icon>
+                                <span>Log Out</span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </header>
+
+        <div class="workspace">
+            <aside class={sidebarClass} aria-label="SentinelFlow Beta 2.0 navigation">
+                <nav class="nav-list">
+                    <button class={commandNavClass} data-page="command" onclick={navigate}>
+                        <lightning-icon icon-name="standard:dashboard" size="small"></lightning-icon>
+                        <span>Dashboard</span>
+                    </button>
+                    <button class={incidentsNavClass} data-page="incidents" onclick={navigate}>
+                        <lightning-icon icon-name="standard:incident" size="small"></lightning-icon>
+                        <span>Incidents</span>
+                    </button>
+                    <button class={approvalsNavClass} data-page="approvals" onclick={navigate}>
+                        <lightning-icon icon-name="standard:approval" size="small"></lightning-icon>
+                        <span>Approvals</span>
+                        <span class="nav-count">{pendingApprovalCount}</span>
+                    </button>
+                    <button class={actionsNavClass} data-page="actions" onclick={navigate}>
+                        <lightning-icon icon-name="standard:action_list_component" size="small"></lightning-icon>
+                        <span>Actions</span>
+                    </button>
+                    <button class={runbooksNavClass} data-page="runbooks" onclick={navigate}>
+                        <lightning-icon icon-name="standard:article" size="small"></lightning-icon>
+                        <span>Runbooks</span>
+                    </button>
+                    <button class={policiesNavClass} data-page="policies" onclick={navigate}>
+                        <lightning-icon icon-name="standard:contract" size="small"></lightning-icon>
+                        <span>Policies</span>
+                    </button>
+                    <button class={casesNavClass} data-page="cases" onclick={navigate}>
+                        <lightning-icon icon-name="standard:case" size="small"></lightning-icon>
+                        <span>Cases</span>
+                    </button>
+                    <button class={reportsNavClass} data-page="reports" onclick={navigate}>
+                        <lightning-icon icon-name="standard:report" size="small"></lightning-icon>
+                        <span>Reports</span>
+                    </button>
+                    <button class={integrationsNavClass} data-page="integrations" onclick={navigate}>
+                        <lightning-icon icon-name="standard:connected_apps" size="small"></lightning-icon>
+                        <span>Integrations</span>
+                    </button>
+                    <button class={settingsNavClass} data-page="settings" onclick={navigate}>
+                        <lightning-icon icon-name="standard:setup" size="small"></lightning-icon>
+                        <span>Settings</span>
+                    </button>
+                </nav>
+
+                <div class="sidebar-mascot-container">
+                    <div class="mascot-glow-bg"></div>
+                    <c-zentom-copilot-mascot></c-zentom-copilot-mascot>
+                    <div class="mascot-tooltip">Ask Zentom AI <lightning-icon icon-name="utility:sparkles" size="xx-small"></lightning-icon></div>
+                </div>
+
+                <div class="side-brand" style="margin-top: 1.5rem; padding-bottom: 0;">
+                    <span class="side-logo">
+                        <img src={logoUrl} alt="SentinelFlow" />
+                    </span>
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 0.35rem;">
+                            <strong>SentinelFlow</strong>
+                            <span class="version-badge">v1.1.0</span>
+                        </div>
+                        <small>Powered by Zentom AI</small>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="content">
+                <section class="hero-panel">
+                    <div>
+                        <p class="eyebrow">{pageEyebrow}</p>
+                        <h2>{pageTitle}</h2>
+                        <p>{pageSummary}</p>
+                    </div>
+                    <div class="hero-metric">
+                        <span>{criticalCount}</span>
+                        <small>Active critical</small>
+                    </div>
+                </section>
+
+                <section class="surface">
+                    <template if:true={isCommand}>
+                        <template if:true={showDashboardLoading}>
+                            <div class="dashboard skeleton-loader" style="width: 100%;">
+                                <!-- Skeleton Health Banner -->
+                                <div class="health-hero dashboard-card skeleton-card animate-pulse" style="padding: 28px 32px; background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 0.5rem; height: 12rem; display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 1.5rem;">
+                                    <div style="display: flex; justify-content: space-between; width: 100%;">
+                                        <div style="display: flex; gap: 1rem; align-items: center;">
+                                            <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--border-light);"></div>
+                                            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                                <div style="width: 120px; height: 12px; background: var(--border-light); border-radius: 4px;"></div>
+                                                <div style="width: 180px; height: 24px; background: var(--border-light); border-radius: 4px;"></div>
+                                            </div>
+                                        </div>
+                                        <div style="width: 200px; height: 40px; background: var(--border-light); border-radius: 4px;"></div>
+                                    </div>
+                                    <div style="width: 100%; height: 8px; background: var(--border-light); border-radius: 4px;"></div>
+                                </div>
+                                <!-- Skeleton KPI Cards -->
+                                <div class="kpi-grid" style="margin-bottom: 1.5rem;">
+                                    <div class="kpi-card dashboard-card skeleton-card animate-pulse" style="height: 6rem; background: var(--bg-surface); border: 1px solid var(--border-light); display: flex; align-items: center; padding: 1rem; gap: 1rem; border-radius: 0.5rem;"><div style="width: 40px; height: 40px; border-radius: 50%; background: var(--border-light);"></div><div style="display: flex; flex-direction: column; gap: 0.5rem; flex: 1;"><div style="width: 50%; height: 10px; background: var(--border-light); border-radius: 4px;"></div><div style="width: 80%; height: 18px; background: var(--border-light); border-radius: 4px;"></div></div></div>
+                                    <div class="kpi-card dashboard-card skeleton-card animate-pulse" style="height: 6rem; background: var(--bg-surface); border: 1px solid var(--border-light); display: flex; align-items: center; padding: 1rem; gap: 1rem; border-radius: 0.5rem;"><div style="width: 40px; height: 40px; border-radius: 50%; background: var(--border-light);"></div><div style="display: flex; flex-direction: column; gap: 0.5rem; flex: 1;"><div style="width: 50%; height: 10px; background: var(--border-light); border-radius: 4px;"></div><div style="width: 80%; height: 18px; background: var(--border-light); border-radius: 4px;"></div></div></div>
+                                    <div class="kpi-card dashboard-card skeleton-card animate-pulse" style="height: 6rem; background: var(--bg-surface); border: 1px solid var(--border-light); display: flex; align-items: center; padding: 1rem; gap: 1rem; border-radius: 0.5rem;"><div style="width: 40px; height: 40px; border-radius: 50%; background: var(--border-light);"></div><div style="display: flex; flex-direction: column; gap: 0.5rem; flex: 1;"><div style="width: 50%; height: 10px; background: var(--border-light); border-radius: 4px;"></div><div style="width: 80%; height: 18px; background: var(--border-light); border-radius: 4px;"></div></div></div>
+                                    <div class="kpi-card dashboard-card skeleton-card animate-pulse" style="height: 6rem; background: var(--bg-surface); border: 1px solid var(--border-light); display: flex; align-items: center; padding: 1rem; gap: 1rem; border-radius: 0.5rem;"><div style="width: 40px; height: 40px; border-radius: 50%; background: var(--border-light);"></div><div style="display: flex; flex-direction: column; gap: 0.5rem; flex: 1;"><div style="width: 50%; height: 10px; background: var(--border-light); border-radius: 4px;"></div><div style="width: 80%; height: 18px; background: var(--border-light); border-radius: 4px;"></div></div></div>
+                                    <div class="kpi-card dashboard-card skeleton-card animate-pulse" style="height: 6rem; background: var(--bg-surface); border: 1px solid var(--border-light); display: flex; align-items: center; padding: 1rem; gap: 1rem; border-radius: 0.5rem;"><div style="width: 40px; height: 40px; border-radius: 50%; background: var(--border-light);"></div><div style="display: flex; flex-direction: column; gap: 0.5rem; flex: 1;"><div style="width: 50%; height: 10px; background: var(--border-light); border-radius: 4px;"></div><div style="width: 80%; height: 18px; background: var(--border-light); border-radius: 4px;"></div></div></div>
+                                </div>
+                                <!-- Skeleton Tables -->
+                                <div class="main-grid">
+                                    <div class="dashboard-card table-card skeleton-card animate-pulse" style="height: 18rem; background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 0.5rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                                        <div style="width: 150px; height: 18px; background: var(--border-light); border-radius: 4px;"></div>
+                                        <div style="width: 100%; height: 1px; background: var(--border-light);"></div>
+                                        <div style="display: flex; flex-direction: column; gap: 0.75rem; flex: 1;">
+                                            <div style="width: 100%; height: 12px; background: var(--border-light); border-radius: 4px;"></div>
+                                            <div style="width: 100%; height: 12px; background: var(--border-light); border-radius: 4px;"></div>
+                                            <div style="width: 100%; height: 12px; background: var(--border-light); border-radius: 4px;"></div>
+                                            <div style="width: 100%; height: 12px; background: var(--border-light); border-radius: 4px;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="dashboard-card critical-card skeleton-card animate-pulse" style="height: 18rem; background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 0.5rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                                        <div style="width: 200px; height: 18px; background: var(--border-light); border-radius: 4px;"></div>
+                                        <div style="width: 100%; height: 1px; background: var(--border-light);"></div>
+                                        <div style="width: 100%; height: 80px; background: var(--border-light); border-radius: 4px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                        <template if:true={showDashboardError}>
+                            <div class="error-state" style="text-align: center; padding: 4rem; color: var(--color-danger-text); background: var(--color-danger-bg); border: 1px solid var(--color-danger-light); border-radius: 0.5rem; margin: 1rem; width: 100%;">
+                                <lightning-icon icon-name="utility:error" variant="error" size="large"></lightning-icon>
+                                <h3 style="font-size: 1.2rem; font-weight: 800; margin-top: 1.2rem;">Failed to Load Operations Posture</h3>
+                                <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-secondary);">{dashboardErrorMessage}</p>
+                                <button class="review-button" style="margin-top: 1.5rem; padding: 0.5rem 1.5rem; border-radius: 0.35rem; cursor: pointer; color: var(--brand-primary); background: var(--bg-surface); border-color: var(--border-blue);" onclick={refreshView}>Retry Connection</button>
+                            </div>
+                        </template>
+                        <template if:false={showDashboardLoading}>
+                            <template if:false={showDashboardError}>
+                                <div class="dashboard">
+                                    <section class="health-hero dashboard-card">
+                                        <div class="health-left">
+                                            <div class="shield-orb">
+                                                <lightning-icon icon-name="utility:shield" size="large"></lightning-icon>
+                                            </div>
+                                            <div>
+                                                <p class="card-eyebrow">Overall Health Score</p>
+                                                <div class="health-score">
+                                                    <span>{orgHealthScore}</span>
+                                                    <small>/100</small>
+                                                    <strong>{orgHealthLabel}</strong>
+                                                </div>
+                                                <p class="health-copy">{orgHealthCopy}</p>
+                                            </div>
+                                        </div>
+                                        <div class="health-meter">
+                                            <div class="meter-scale">
+                                                <span>0</span>
+                                                <span>25</span>
+                                                <span>50</span>
+                                                <span>75</span>
+                                                <span>100</span>
+                                            </div>
+                                            <div class="meter-track" style={healthScorePercentStyle}>
+                                                <span class="meter-fill"></span>
+                                                <span class="meter-pin"></span>
+                                            </div>
+                                            <div class="score-factors">
+                                                <div><span class="dot green"></span>System Health <strong>{systemHealthScore}/100</strong></div>
+                                                <div><span class="dot blue"></span>Incident Impact <strong>{incidentImpactScore}/100</strong></div>
+                                                <div><span class="dot teal"></span>Response Efficiency <strong>{responseEfficiencyScore}/100</strong></div>
+                                                <div><span class="dot amber"></span>Approval Backlog <strong>{approvalBacklogScore}/100</strong></div>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <section class="kpi-grid">
+                                        <template for:each={kpiCards} for:item="kpi">
+                                            <article key={kpi.label} class="kpi-card dashboard-card">
+                                                <div class={kpi.iconClass}>
+                                                    <lightning-icon icon-name={kpi.icon} size="small"></lightning-icon>
+                                                </div>
+                                                <div>
+                                                    <p>{kpi.label}</p>
+                                                    <strong>{kpi.value}</strong>
+                                                    <small class={kpi.trendClass}>{kpi.trend}</small>
+                                                </div>
+                                            </article>
+                                        </template>
+                                    </section>
+
+                                    <section class="main-grid">
+                                        <article class="dashboard-card table-card pending-card">
+                                            <header class="card-header-row">
+                                                <div>
+                                                    <p class="card-eyebrow">Human Governance</p>
+                                                    <h3>Pending Approval Queue <span>{pendingApprovalCount}</span></h3>
+                                                </div>
+                                                <div class="card-header-actions" style="display: flex; align-items: center; gap: 0.5rem;">
+                                                    <select class="filter-dropdown" onchange={handleApprovalFilterRiskChange} style="background: var(--bg-surface); border: 1px solid var(--border-light); color: var(--text-primary); border-radius: 0.35rem; padding: 0.25rem 0.5rem; font-size: 0.75rem; outline: none; cursor: pointer;">
+                                                        <option value="ALL">All Risks</option>
+                                                        <option value="Critical">Critical</option>
+                                                        <option value="High">High</option>
+                                                        <option value="Medium">Medium</option>
+                                                        <option value="Low">Low</option>
+                                                    </select>
+                                                    <button type="button" data-page="approvals" onclick={navigate}>View all</button>
+                                                </div>
+                                            </header>
+                                            <table class="beta-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th onclick={handleApprovalSort} data-field="id" style="cursor: pointer; user-select: none;">Request ID {approvalSortIdArrow}</th>
+                                                        <th onclick={handleApprovalSort} data-field="type" style="cursor: pointer; user-select: none;">Type {approvalSortTypeArrow}</th>
+                                                        <th onclick={handleApprovalSort} data-field="action" style="cursor: pointer; user-select: none;">Runbook / Action {approvalSortActionArrow}</th>
+                                                        <th onclick={handleApprovalSort} data-field="risk" style="cursor: pointer; user-select: none;">Risk {approvalSortRiskArrow}</th>
+                                                        <th style="text-align: right;">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <template if:true={hasPendingApprovals}>
+                                                        <template for:each={pendingApprovalRows} for:item="row">
+                                                            <tr key={row.id} onclick={openReviewModalFromRow} data-id={row.id} style="cursor: pointer;">
+                                                                <td><a class="link-id" data-page="approvals" onclick={navigate}>{row.id}</a></td>
+                                                                <td>{row.type}</td>
+                                                                <td>{row.action}</td>
+                                                                <td><span class={row.riskClass}>{row.risk}</span></td>
+                                                                <td style="text-align: right;"><button class="review-button" type="button" onclick={openReviewModalFromButton} data-id={row.id}>Review</button></td>
+                                                            </tr>
+                                                        </template>
+                                                    </template>
+                                                    <template if:false={hasPendingApprovals}>
+                                                        <tr>
+                                                            <td colspan="5" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                                                                <lightning-icon icon-name="utility:check" size="small" variant="success" style="margin-right: 0.5rem;"></lightning-icon>
+                                                                No pending approvals in queue.
+                                                            </td>
+                                                        </tr>
+                                                    </template>
+                                                </tbody>
+                                            </table>
+                                            <div class="card-pagination" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.25rem; border-top: 1px solid var(--border-light); font-size: 0.75rem; color: var(--text-muted);">
+                                                <span>Page {approvalPage} of {approvalTotalPages}</span>
+                                                <div style="display: flex; gap: 0.5rem;">
+                                                    <button class="pagination-btn" onclick={handleApprovalPrev} disabled={isApprovalPrevDisabled} style="padding: 0.25rem 0.5rem; border-radius: 0.25rem; border: 1px solid var(--border-light); background: var(--bg-surface); cursor: pointer; color: var(--text-primary);">Prev</button>
+                                                    <button class="pagination-btn" onclick={handleApprovalNext} disabled={isApprovalNextDisabled} style="padding: 0.25rem 0.5rem; border-radius: 0.25rem; border: 1px solid var(--border-light); background: var(--bg-surface); cursor: pointer; color: var(--text-primary);">Next</button>
+                                                </div>
+                                            </div>
+                                        </article>
+
+                                        <article class="dashboard-card critical-card">
+                                            <template if:true={latestCriticalIncident}>
+                                                <header class="card-header-row">
+                                                    <div>
+                                                        <p class="card-eyebrow">Latest Critical Incident</p>
+                                                        <h3>{latestCriticalIncident.Incident_Type__c}</h3>
+                                                    </div>
+                                                    <span class="risk-pill critical">Critical</span>
+                                                </header>
+                                                <div class="incident-brief">
+                                                    <div>
+                                                        <lightning-icon icon-name="utility:sparkles" size="x-small"></lightning-icon>
+                                                        <span>AI Summary</span>
+                                                        <p>{latestCriticalIncident.AI_Summary__c}</p>
+                                                    </div>
+                                                    <div>
+                                                        <lightning-icon icon-name="utility:strategy" size="x-small"></lightning-icon>
+                                                        <span>Recommended Action</span>
+                                                        <p>{latestCriticalIncident.Recommended_Action__c}</p>
+                                                    </div>
+                                                    <div>
+                                                        <lightning-icon icon-name="utility:notebook" size="x-small"></lightning-icon>
+                                                        <span>Runbook Key</span>
+                                                        <p class="mono">{latestCriticalIncident.Runbook_Key__c}</p>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                            <template if:false={latestCriticalIncident}>
+                                                <div class="empty-state" style="padding: 2rem; text-align: center; color: #a1a1aa;">
+                                                    <lightning-icon icon-name="utility:check" size="large" variant="success"></lightning-icon>
+                                                    <p style="margin-top: 1rem;">No critical incidents at this time.</p>
+                                                </div>
+                                            </template>
+                                            <footer class="incident-actions">
+                                                <button type="button" data-page="incidents" onclick={navigate}>View Incident</button>
+                                                <button class="primary" type="button" data-page="runbooks" onclick={navigate}>Open Runbook</button>
+                                            </footer>
+                                        </article>
+                                    </section>
+
+                                    <section class="lower-grid">
+                                        <article class="dashboard-card table-card">
+                                            <header class="card-header-row">
+                                                <h3>Recent Incidents</h3>
+                                                <div class="card-header-actions" style="display: flex; align-items: center; gap: 0.5rem;">
+                                                    <select class="filter-dropdown" onchange={handleIncidentFilterRiskChange} style="background: var(--bg-surface); border: 1px solid var(--border-light); color: var(--text-primary); border-radius: 0.35rem; padding: 0.25rem 0.5rem; font-size: 0.75rem; outline: none; cursor: pointer;">
+                                                        <option value="ALL">All Risks</option>
+                                                        <option value="Critical">Critical</option>
+                                                        <option value="High">High</option>
+                                                        <option value="Medium">Medium</option>
+                                                        <option value="Low">Low</option>
+                                                    </select>
+                                                    <select class="filter-dropdown" onchange={handleIncidentFilterStatusChange} style="background: var(--bg-surface); border: 1px solid var(--border-light); color: var(--text-primary); border-radius: 0.35rem; padding: 0.25rem 0.5rem; font-size: 0.75rem; outline: none; cursor: pointer;">
+                                                        <option value="ALL">All Statuses</option>
+                                                        <option value="Open">Open</option>
+                                                        <option value="In Progress">In Progress</option>
+                                                        <option value="Resolved">Resolved</option>
+                                                        <option value="Approval Required">Approval Required</option>
+                                                    </select>
+                                                    <select class="filter-dropdown" onchange={handleIncidentFilterEnvChange} style="background: var(--bg-surface); border: 1px solid var(--border-light); color: var(--text-primary); border-radius: 0.35rem; padding: 0.25rem 0.5rem; font-size: 0.75rem; outline: none; cursor: pointer;">
+                                                        <option value="ALL">All Envs</option>
+                                                        <option value="Production">Production</option>
+                                                        <option value="Sandbox">Sandbox</option>
+                                                    </select>
+                                                    <button type="button" data-page="incidents" onclick={navigate}>View all</button>
+                                                </div>
+                                            </header>
+                                            <table class="beta-table compact">
+                                                <thead>
+                                                    <tr>
+                                                        <th onclick={handleIncidentSort} data-field="id" style="cursor: pointer; user-select: none;">Incident {incidentSortIdArrow}</th>
+                                                        <th onclick={handleIncidentSort} data-field="type" style="cursor: pointer; user-select: none;">Type {incidentSortTypeArrow}</th>
+                                                        <th onclick={handleIncidentSort} data-field="env" style="cursor: pointer; user-select: none;">Environment {incidentSortEnvArrow}</th>
+                                                        <th onclick={handleIncidentSort} data-field="risk" style="cursor: pointer; user-select: none;">Risk {incidentSortRiskArrow}</th>
+                                                        <th onclick={handleIncidentSort} data-field="status" style="cursor: pointer; user-select: none;">Status {incidentSortStatusArrow}</th>
+                                                        <th onclick={handleIncidentSort} data-field="runbook" style="cursor: pointer; user-select: none;">Runbook {incidentSortRunbookArrow}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <template if:true={hasRecentIncidents}>
+                                                        <template for:each={recentIncidentRows} for:item="row">
+                                                            <tr key={row.id}>
+                                                                <td><a class="link-id" data-page="incidents" onclick={navigate}>{row.id}</a></td>
+                                                                <td>{row.type}</td>
+                                                                <td><span class={row.envClass}>{row.env}</span></td>
+                                                                <td><span class={row.riskClass}>{row.risk}</span></td>
+                                                                <td><span class={row.statusClass}>{row.status}</span></td>
+                                                                <td><a class="link-id" data-page="runbooks" onclick={navigate}>{row.runbook}</a></td>
+                                                            </tr>
+                                                        </template>
+                                                    </template>
+                                                    <template if:false={hasRecentIncidents}>
+                                                        <tr>
+                                                            <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                                                                <lightning-icon icon-name="utility:info" size="small" style="margin-right: 0.5rem;"></lightning-icon>
+                                                                No recent incidents found.
+                                                            </td>
+                                                        </tr>
+                                                    </template>
+                                                </tbody>
+                                            </table>
+                                            <div class="card-pagination" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.25rem; border-top: 1px solid var(--border-light); font-size: 0.75rem; color: var(--text-muted);">
+                                                <span>Page {incidentPage} of {incidentTotalPages}</span>
+                                                <div style="display: flex; gap: 0.5rem;">
+                                                    <button class="pagination-btn" onclick={handleIncidentPrev} disabled={isIncidentPrevDisabled} style="padding: 0.25rem 0.5rem; border-radius: 0.25rem; border: 1px solid var(--border-light); background: var(--bg-surface); cursor: pointer; color: var(--text-primary);">Prev</button>
+                                                    <button class="pagination-btn" onclick={handleIncidentNext} disabled={isIncidentNextDisabled} style="padding: 0.25rem 0.5rem; border-radius: 0.25rem; border: 1px solid var(--border-light); background: var(--bg-surface); cursor: pointer; color: var(--text-primary);">Next</button>
+                                                </div>
+                                            </div>
+                                        </article>
+
+                                        <aside class="side-stack">
+                                            <article class="dashboard-card timeline-card">
+                                                <header class="card-header-row">
+                                                    <h3>Replay Timeline</h3>
+                                                    <button type="button" data-page="actions" onclick={navigate}>Full timeline</button>
+                                                </header>
+                                                <div class="timeline">
+                                                    <template for:each={timelineEvents} for:item="event">
+                                                        <div key={event.name} class="timeline-row timeline-event-expandable" data-name={event.name} onclick={handleEventClick} style="cursor: pointer;">
+                                                            <span class="timeline-node"></span>
+                                                            <div style="flex: 1; min-width: 0;">
+                                                                <strong>{event.name}</strong>
+                                                                <small>{event.time}</small>
+                                                                <template if:true={event.isExpanded}>
+                                                                    <p class="timeline-event-details fade-in" style="font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.35rem; line-height: 1.3;">{event.details}</p>
+                                                                </template>
+                                                            </div>
+                                                            <lightning-icon icon-name={event.icon} size="xx-small"></lightning-icon>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </article>
+
+                                            <article class="dashboard-card system-card">
+                                                <header class="card-header-row">
+                                                    <h3>System Health</h3>
+                                                    <button type="button" data-page="integrations" onclick={navigate}>View details</button>
+                                                </header>
+                                                <template for:each={systemHealthRows} for:item="row">
+                                                    <div key={row.name} class="system-row">
+                                                        <lightning-icon icon-name={row.icon} size="small"></lightning-icon>
+                                                        <span>{row.name}</span>
+                                                        <small class={row.statusClass}>{row.status}</small>
+                                                        <strong class={row.valueClass}>{row.value}</strong>
+                                                    </div>
+                                                </template>
+                                            </article>
+                                        </aside>
+                                    </section>
+                                </div>
+                            </template>
+                        </template>
+                    </template>
+                    <template if:true={isApprovals}>
+                        <c-zentom-approval-queue></c-zentom-approval-queue>
+                    </template>
+                    <template if:true={isAnalytics}>
+                        <c-zentom-analytics-charts></c-zentom-analytics-charts>
+                    </template>
+
+                    <template if:true={isIncidents}>
+                        <c-sentinel-flow-portal-incidents-page></c-sentinel-flow-portal-incidents-page>
+                    </template>
+                    <template if:true={isSettings}>
+                        <c-sentinel-flow-portal-settings></c-sentinel-flow-portal-settings>
+                    </template>
+                    <template if:true={isActions}>
+                        <c-zentom-action-center></c-zentom-action-center>
+                    </template>
+                    <template if:true={isRunbooks}>
+                        <div class="coming-soon-page">
+                            <lightning-icon icon-name="standard:article" size="large"></lightning-icon>
+                            <h2>Runbooks</h2>
+                            <p>Create, manage, and execute operational runbooks for incident response and automation workflows.</p>
+                            <span class="coming-badge">Coming Soon</span>
+                        </div>
+                    </template>
+                    <template if:true={isPolicies}>
+                        <div class="coming-soon-page">
+                            <lightning-icon icon-name="standard:contract" size="large"></lightning-icon>
+                            <h2>Policies</h2>
+                            <p>Define governance policies, approval thresholds, and risk evaluation rules for your org.</p>
+                            <span class="coming-badge">Coming Soon</span>
+                        </div>
+                    </template>
+                    <template if:true={isCases}>
+                        <div class="coming-soon-page">
+                            <lightning-icon icon-name="standard:case" size="large"></lightning-icon>
+                            <h2>Cases</h2>
+                            <p>Track all Salesforce Cases created by SentinelFlow incidents and AI-driven recommendations.</p>
+                            <span class="coming-badge">Coming Soon</span>
+                        </div>
+                    </template>
+                    <template if:true={isReports}>
+                        <c-zentom-analytics-charts></c-zentom-analytics-charts>
+                    </template>
+                    <template if:true={isIntegrations}>
+                        <c-sentinel-flow-portal-integrations-page></c-sentinel-flow-portal-integrations-page>
+                    </template>
+                </section>
+
+                <!-- Governance Quick Review Modal -->
+                <template if:true={isReviewModalOpen}>
+                    <div class="slds-modal slds-fade-in-open custom-modal-backdrop" style="position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px);">
+                        <div class="slds-modal__container custom-modal-content" style="background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 0.75rem; width: 100%; max-width: 32rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); overflow: hidden;">
+                            
+                            <!-- Modal Header -->
+                            <header style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, var(--bg-surface), var(--nav-hover-bg));">
+                                <h2 style="font-size: 1.1rem; font-weight: 800; color: var(--text-primary); margin: 0;">Governance Request Review</h2>
+                                <button class="close-btn" onclick={closeReviewModal} style="background: transparent; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.2rem; line-height: 1;">&times;</button>
+                            </header>
+                            
+                            <!-- Modal Body -->
+                            <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                                
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <div>
+                                        <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Request ID</span>
+                                        <p style="font-size: 0.9rem; font-weight: 800; color: var(--brand-primary); margin: 0.2rem 0 0 0;">{selectedReviewRow.id}</p>
+                                    </div>
+                                    <div>
+                                        <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Type</span>
+                                        <p style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary); margin: 0.2rem 0 0 0;">{selectedReviewRow.type}</p>
+                                    </div>
+                                </div>
+                                
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <div>
+                                        <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Risk Level</span>
+                                        <p style="margin: 0.2rem 0 0 0;"><span class={selectedReviewRow.riskClass}>{selectedReviewRow.risk}</span></p>
+                                    </div>
+                                    <div>
+                                        <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Suggested Action</span>
+                                        <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary); margin: 0.2rem 0 0 0;">{selectedReviewRow.action}</p>
+                                    </div>
+                                </div>
+
+                                <div style="border-top: 1px dashed var(--border-light); padding-top: 0.75rem;">
+                                    <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Policy Gate</span>
+                                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0.2rem 0 0 0; line-height: 1.4;">Zentom AI evaluated this action as safe, but the policy gate requires manual approval for critical actions.</p>
+                                </div>
+
+                                <div style="border-top: 1px dashed var(--border-light); padding-top: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                                    <template if:true={isApproving}>
+                                        <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-primary);">Approver Name Confirmation</label>
+                                        <input type="text" placeholder="Type your full name to confirm approval" value={approvalApproverName} oninput={handleApproverNameChange} style="background: var(--bg-surface); border: 1px solid var(--border-light); color: var(--text-primary); border-radius: 0.35rem; padding: 0.5rem; font-size: 0.85rem; outline: none;" />
+                                    </template>
+                                    <template if:false={isApproving}>
+                                        <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-primary);">Rejection Reason</label>
+                                        <textarea placeholder="Provide the reason for rejecting this action suggestion" value={rejectionReason} oninput={handleRejectionReasonChange} style="background: var(--bg-surface); border: 1px solid var(--border-light); color: var(--text-primary); border-radius: 0.35rem; padding: 0.5rem; font-size: 0.85rem; min-height: 4rem; outline: none; font-family: sans-serif; resize: vertical;"></textarea>
+                                    </template>
+                                </div>
+
+                            </div>
+                            
+                            <!-- Modal Footer -->
+                            <footer style="padding: 1rem 1.5rem; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 0.75rem; background: linear-gradient(180deg, var(--bg-surface), var(--nav-hover-bg));">
+                                <button onclick={closeReviewModal} style="padding: 0.5rem 1rem; border-radius: 0.35rem; border: 1px solid var(--border-light); background: var(--bg-surface); color: var(--text-secondary); font-size: 0.8rem; font-weight: 600; cursor: pointer;">Cancel</button>
+                                
+                                <template if:true={isApproving}>
+                                    <button onclick={toggleApprovalMode} style="padding: 0.5rem 1rem; border-radius: 0.35rem; border: 1px solid transparent; background: transparent; color: var(--color-danger-text); font-size: 0.8rem; font-weight: 600; cursor: pointer;">Reject instead</button>
+                                    <button onclick={submitApproval} disabled={isSubmitApprovalDisabled} style="padding: 0.5rem 1.25rem; border-radius: 0.35rem; border: none; background: var(--color-success-text); color: white; font-size: 0.8rem; font-weight: 700; cursor: pointer; box-shadow: 0 2px 4px rgba(34, 197, 94, 0.25);">Approve Execution</button>
+                                </template>
+                                <template if:false={isApproving}>
+                                    <button onclick={toggleApprovalMode} style="padding: 0.5rem 1rem; border-radius: 0.35rem; border: 1px solid transparent; background: transparent; color: var(--color-success-text); font-size: 0.8rem; font-weight: 600; cursor: pointer;">Approve instead</button>
+                                    <button onclick={submitRejection} disabled={isSubmitRejectionDisabled} style="padding: 0.5rem 1.25rem; border-radius: 0.35rem; border: none; background: var(--color-danger-text); color: white; font-size: 0.8rem; font-weight: 700; cursor: pointer; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.25);">Reject Recommendation</button>
+                                </template>
+                            </footer>
+                            
+                        </div>
+                    </div>
+                </template>
+            </main>
+        </div>
+    </section>
+</template>

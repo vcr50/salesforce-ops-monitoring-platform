@@ -8,6 +8,9 @@
  */
 public with sharing class RateLimiter {
 
+    @TestVisible
+    private static Map<String, Integer> mockCacheMap;
+
     public static Boolean isRateLimited(Id tenantId, String endpointName) {
         // Bypass rate limiting if feature flag is disabled
         if (!FeatureFlag.isEnabled('RATE_LIMITING', tenantId)) {
@@ -19,6 +22,19 @@ public with sharing class RateLimiter {
         String cacheKey = 'local.SentinelCache.' + tenantId + '_' + endpointName + '_' + currentMinute;
 
         try {
+            if (Test.isRunningTest() && mockCacheMap != null) {
+                if (mockCacheMap.containsKey(cacheKey)) {
+                    Integer currentCount = mockCacheMap.get(cacheKey);
+                    if (currentCount >= limitPerMin) {
+                        return true;
+                    }
+                    mockCacheMap.put(cacheKey, currentCount + 1);
+                } else {
+                    mockCacheMap.put(cacheKey, 1);
+                }
+                return false;
+            }
+
             if (Cache.Org.contains(cacheKey)) {
                 Integer currentCount = (Integer) Cache.Org.get(cacheKey);
                 if (currentCount >= limitPerMin) {
@@ -38,4 +54,3 @@ public with sharing class RateLimiter {
         }
     }
 }
-

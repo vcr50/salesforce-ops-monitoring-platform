@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Prediction__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <label>Sentinel Prediction</label>
+    <referenceTo>Sentinel_Prediction__c</referenceTo>
+    <relationshipLabel>Sentinel Anomaly Signals</relationshipLabel>
+    <relationshipName>Sentinel_Anomaly_Signals</relationshipName>
+    <required>false</required>
+    <type>Lookup</type>
+</CustomField>

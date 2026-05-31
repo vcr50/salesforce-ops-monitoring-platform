@@ -52,4 +52,3 @@ public with sharing class PipedriveConnector extends ConnectorBase {
         }
     }
 }
-

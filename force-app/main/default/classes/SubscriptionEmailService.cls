@@ -78,4 +78,3 @@ public with sharing class SubscriptionEmailService {
         return String.isBlank(value) ? '' : value.escapeHtml4();
     }
 }
-

@@ -64,7 +64,7 @@ public abstract with sharing class ConnectorBase {
             CircuitBreaker.recordFailure(endpointId);
             
             // 5. Trigger Incident Auto-Creation for Zentom Orchestration
-            createIncident(endpointId, logId, e.getMessage());
+            // (Handled automatically by IntegrationLogTrigger)
             
             throw new ConnectorException('Connector call failed: ' + e.getMessage());
         }
@@ -88,24 +88,4 @@ public abstract with sharing class ConnectorBase {
         insert as user log;
         return log.Id;
     }
-    
-    /**
-     * @description Creates an Incident automatically when a connector call fails.
-     */
-    private void createIncident(Id endpointId, Id logId, String errorMsg) {
-        SecurityGate.requireCreateAccess('Incident__c', new Set<String>{
-            'Integration_Endpoint__c', 'Integration_Log__c', 'Severity__c', 'Status__c', 'Description__c', 'Self_Heal_Attempted__c'
-        });
-
-        Incident__c inc = new Incident__c(
-            Integration_Endpoint__c = endpointId,
-            Integration_Log__c      = logId,
-            Severity__c             = 'High',
-            Status__c               = 'Open',
-            Description__c          = 'Connector Failure: ' + errorMsg,
-            Self_Heal_Attempted__c  = false
-        );
-        insert as user inc;
-    }
 }
-

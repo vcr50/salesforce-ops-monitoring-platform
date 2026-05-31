@@ -8,6 +8,7 @@ from celery import shared_task
 from app.models.schemas import ZentomDecision, AIModel, ExecutionMode
 from app.engines import context, risk, router, policy, execution, replay
 from app.core.config import WEBHOOK_SECRET
+from app.core.actions import normalize_action
 
 logger = logging.getLogger("zentom.celery")
 
@@ -76,13 +77,15 @@ async def _run_pipeline_async(task_id: str, request: dict):
     task_type = request.get("taskType", "TRIAGE")
     user_prompt = request.get("userPrompt", "")
     workflow_stage = request.get("workflowStage", "Triage")
+    org_id = request.get("org_id", "default")
     
     try:
         # GATE 1: Context Assembly
         ctx_packet = context.assemble_context(
             incident_id=incident_id, 
             mock_arr=mock_arr, 
-            mock_error_signature=mock_error_signature
+            mock_error_signature=mock_error_signature,
+            org_id=org_id,
         )
         
         # GATE 2: Risk Evaluation
@@ -117,6 +120,8 @@ async def _run_pipeline_async(task_id: str, request: dict):
             )
         else:
             raise ValueError("Invalid model routed.")
+        
+        decision.proposed_action = normalize_action(decision.proposed_action)
             
         # GATE 3: Policy Validation
         policy_eval = policy.evaluate_action(
@@ -147,7 +152,8 @@ async def _run_pipeline_async(task_id: str, request: dict):
             risk=risk_score,
             policy=policy_eval,
             final_action=decision.proposed_action,
-            confidence_score=decision.confidence_score
+            confidence_score=decision.confidence_score,
+            org_id=org_id,
         )
         
         # EXECUTION PREPARATION
@@ -157,7 +163,8 @@ async def _run_pipeline_async(task_id: str, request: dict):
             confidence_score=decision.confidence_score,
             risk=risk_score,
             mode=policy_eval.mode,
-            policy_reasoning=policy_eval.policyReasoning
+            policy_reasoning=policy_eval.policyReasoning,
+            org_id=org_id,
         )
         
         return {

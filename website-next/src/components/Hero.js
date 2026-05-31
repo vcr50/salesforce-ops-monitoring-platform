@@ -66,30 +66,17 @@ export default function Hero() {
           every recovery outcome.
         </p>
         <div className="hero-cta">
-          <a href="#pricing" className="btn btn-primary btn-lg">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            Start Free Trial
+          <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000c4aTQAQ" target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            INSTALL IN SALESFORCE
           </a>
           <a href="#demo" className="btn btn-outline btn-lg">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            Watch Demo
+            WATCH DEMO
           </a>
         </div>
-        <div className="hero-stats">
-          <div className="hero-stat">
-            <span className="hero-stat-value"><CountUp end={99.9} /></span><span className="hero-stat-suffix">%</span>
-            <span className="hero-stat-label">Uptime SLA</span>
-          </div>
-          <div className="hero-stat-divider"></div>
-          <div className="hero-stat">
-            <span className="hero-stat-value"><CountUp end={85} /></span><span className="hero-stat-suffix">%</span>
-            <span className="hero-stat-label">Faster Resolution</span>
-          </div>
-          <div className="hero-stat-divider"></div>
-          <div className="hero-stat">
-            <span className="hero-stat-value"><CountUp end={10} /></span><span className="hero-stat-suffix">+</span>
-            <span className="hero-stat-label">Early Adopters</span>
-          </div>
+        <div style={{ marginTop: '2rem', color: '#8b9bb4', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontFamily: 'monospace' }}>
+          v3.0 Package ID: <span style={{ padding: '4px 8px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px', color: '#00e5ff' }}>04tdL000000c4aTQAQ</span>
         </div>
       </div>
       <div className="hero-dashboard-preview">

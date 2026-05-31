@@ -1,0 +1,622 @@
+<template>
+    <section class="dashboard">
+        <!-- ── Header ──────────────────────────────────────────────── -->
+        <header class="dashboard-header">
+            <div>
+                <p class="eyebrow">Salesforce Operations Control Tower</p>
+                <h1>SentinelFlow Command Center</h1>
+                <p class="header-subtitle">Live incident radar, approval clearance, action tracking, and replay evidence powered by the Zentom AI OS.</p>
+            </div>
+            <div class="header-actions">
+                <!-- Near-realtime freshness pill (streaming when active, polling when not) -->
+                <template if:true={streamingActive}>
+                    <span class="freshness-pill freshness-pill-live" title="Live streaming telemetry active">
+                        <span class="freshness-dot freshness-dot-live"></span>
+                        Live · {lastEventTypeLabel}
+                    </span>
+                </template>
+                <template if:false={streamingActive}>
+                    <span class="freshness-pill" title="Auto-refreshes every 60 seconds">
+                        <span class="freshness-dot"></span>
+                        Polling · {freshnessLabel}
+                    </span>
+                </template>
+                <div class="refresh-meta">
+                    <span class="range-label">Last refreshed</span>
+                    <strong>{lastRefreshedLabel}</strong>
+                </div>
+                <lightning-button-icon
+                    icon-name="utility:refresh"
+                    alternative-text="Refresh dashboard"
+                    title="Refresh dashboard"
+                    onclick={handleRefresh}
+                ></lightning-button-icon>
+            </div>
+        </header>
+
+        <!-- ── Milestone 43: Filter Panel ─────────────────────────── -->
+        <div class="filter-bar">
+            <button class={filterToggleClass} onclick={handleToggleFilters}>
+                <lightning-icon icon-name="utility:filterList" size="x-small"></lightning-icon>
+                <span>Filters</span>
+                <template if:true={hasActiveFilters}>
+                    <span class="filter-count-badge">{activeFilterCount}</span>
+                </template>
+            </button>
+            <template if:true={hasActiveFilters}>
+                <button class="filter-clear-btn" onclick={handleClearFilters}>
+                    <lightning-icon icon-name="utility:close" size="x-small"></lightning-icon>
+                    Clear filters
+                </button>
+            </template>
+        </div>
+
+        <template if:true={isFilterOpen}>
+            <div class="filters-container">
+                <div class="filter-presets">
+                    <label class="filter-label">Preset Views</label>
+                    <lightning-combobox
+                        name="presetView"
+                        value={presetView}
+                        options={presetOptions}
+                        onchange={handlePresetChange}
+                        variant="label-hidden"
+                    ></lightning-combobox>
+                </div>
+                
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Time Range</label>
+                        <lightning-combobox
+                            name="filterTimeRange"
+                            value={dateRange}
+                            options={timeRangeOptions}
+                            onchange={handleRangeChange}
+                            variant="label-hidden"
+                        ></lightning-combobox>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Risk Level</label>
+                        <lightning-combobox
+                            name="filterRisk"
+                            value={filterRisk}
+                            options={riskOptions}
+                            onchange={handleFilterRiskChange}
+                            variant="label-hidden"
+                        ></lightning-combobox>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Incident Status</label>
+                        <lightning-combobox
+                            name="filterStatus"
+                            value={filterStatus}
+                            options={statusOptions}
+                            onchange={handleFilterStatusChange}
+                            variant="label-hidden"
+                        ></lightning-combobox>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Environment</label>
+                        <lightning-combobox
+                            name="filterEnvironment"
+                            value={filterEnvironment}
+                            options={environmentOptions}
+                            onchange={handleFilterEnvironmentChange}
+                            variant="label-hidden"
+                        ></lightning-combobox>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Incident Type</label>
+                        <lightning-combobox
+                            name="filterType"
+                            value={filterType}
+                            options={typeOptions}
+                            onchange={handleFilterTypeChange}
+                            variant="label-hidden"
+                        ></lightning-combobox>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">AI Status</label>
+                        <lightning-combobox
+                            name="filterAiStatus"
+                            value={filterAiStatus}
+                            options={aiStatusOptions}
+                            onchange={handleFilterAiStatusChange}
+                            variant="label-hidden"
+                        ></lightning-combobox>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template if:true={data}>
+            <!-- ── Control Tower Strip ─────────────────────────────── -->
+            <section class="tower-strip" aria-label="Control tower focus areas">
+                <div>
+                    <span>Org posture</span>
+                    <strong>{data.summary.orgHealthStatus}</strong>
+                </div>
+                <div>
+                    <span>Awaiting clearance</span>
+                    <strong>{data.summary.pendingApprovals}</strong>
+                    <span class={approvalTrendClass}>{approvalTrendLabel}</span>
+                </div>
+                <div>
+                    <span>Critical traffic</span>
+                    <strong>{data.summary.criticalIncidents}</strong>
+                    <span class={criticalTrendClass}>{criticalTrendLabel}</span>
+                </div>
+                <div>
+                    <span>Cleared actions</span>
+                    <strong>{data.summary.executedActions}</strong>
+                </div>
+                <div>
+                    <span>Flight recorder</span>
+                    <strong>{data.summary.recentReplayEvents}</strong>
+                </div>
+            </section>
+
+            <!-- ── Org Health Card ────────────────────────────────── -->
+            <article class={orgHealthClass}>
+                <div class="health-main">
+                    <div>
+                        <span class="section-label">Org Health Radar</span>
+                        <div class="health-score">
+                            <strong>{data.summary.orgHealthScore}</strong>
+                            <span>/ 100</span>
+                        </div>
+                    </div>
+                    <div class="health-status">{data.summary.orgHealthStatus}</div>
+                </div>
+                <p class="health-reason">{data.summary.orgHealthReason}</p>
+                <div class="health-meta">
+                    <span>{summaryTotalIncidents} incidents</span>
+                    <span>{summaryPendingApprovals} pending approvals</span>
+                    <span>{summaryCriticalIncidents} critical</span>
+                    <span>{lastRefreshedLabel}</span>
+                </div>
+            </article>
+
+            <!-- ── Milestone 52: Cost & Value Insights Grid ─────────── -->
+            <span class="section-label slds-m-top_large">Estimated Value Realization</span>
+            <section class="value-insights-grid" aria-label="Estimated value insights">
+                <article class="metric-card">
+                    <div class="card-header-flex">
+                        <span class="card-title">Successful Recoveries</span>
+                        <lightning-icon icon-name="utility:info" size="x-small" class="info-icon" title="Count of incidents successfully auto-healed or resolved through automated operations without manual engineer intervention."></lightning-icon>
+                    </div>
+                    <strong class="card-value">{costRecoveries}</strong>
+                    <p class="card-subtitle">Incidents auto-healed</p>
+                </article>
+                <article class="metric-card">
+                    <div class="card-header-flex">
+                        <span class="card-title">Estimated Hours Saved</span>
+                        <lightning-icon icon-name="utility:info" size="x-small" class="info-icon" title="Productive engineering hours reclaimed. Formula: Successful Recoveries × Manual Resolution Time (default: 2.0 hours)."></lightning-icon>
+                    </div>
+                    <strong class="card-value">{costHoursSaved} hrs</strong>
+                    <p class="card-subtitle">Engineering triage bypassed</p>
+                </article>
+                <article class="metric-card highlight">
+                    <div class="card-header-flex">
+                        <span class="card-title">Estimated Cost Savings</span>
+                        <lightning-icon icon-name="utility:info" size="x-small" class="info-icon" title="Explainable cost savings derived from reclaimed hours and avoided Salesforce Cases. Formula: (Hours Saved × Engineering Rate) + (Cases Avoided × Cost Per Case). Settings: Rate = $80/hr, Cost Per Case = $150."></lightning-icon>
+                    </div>
+                    <strong class="card-value">{costSavingsTotal}</strong>
+                    <p class="card-subtitle">Estimated resource savings</p>
+                </article>
+                <article class="metric-card">
+                    <div class="card-header-flex">
+                        <span class="card-title">Cases Avoided / Work Reduced</span>
+                        <lightning-icon icon-name="utility:info" size="x-small" class="info-icon" title="Incidents resolved autonomously without escalating or generating an external Salesforce Support Case."></lightning-icon>
+                    </div>
+                    <strong class="card-value">{costCasesAvoided}</strong>
+                    <p class="card-subtitle">Support escalations prevented</p>
+                </article>
+                <article class="metric-card">
+                    <div class="card-header-flex">
+                        <span class="card-title">MTTR Improvement</span>
+                        <lightning-icon icon-name="utility:info" size="x-small" class="info-icon" title="Mean Time to Resolution reduction percentage compared against manual historic baseline of 240 minutes. Formula: ((Baseline MTTR - Actual Avg MTTR) / Baseline MTTR) × 100."></lightning-icon>
+                    </div>
+                    <strong class="card-value">{costMttrPercent}</strong>
+                    <p class="card-subtitle">MTTR reduction vs baseline</p>
+                </article>
+            </section>
+
+            <!-- ── Milestone 55: Prediction Engine UI ──────────────── -->
+            <span class="section-label slds-m-top_large">Predictive Operational Intelligence</span>
+            <section class="prediction-grid" aria-label="Prediction intelligence">
+                <template if:true={hasPredictions}>
+                    <template for:each={predictions} for:item="prediction">
+                        <article class={prediction.cardClass} key={prediction.id}>
+                            <header class="prediction-header">
+                                <lightning-icon icon-name={prediction.iconName} size="small" class="prediction-icon"></lightning-icon>
+                                <div class="prediction-header-text">
+                                    <template if:true={prediction.isCritical}>
+                                        <h3 class="prediction-score-title critical-text">Critical Anomaly: Imminent Outage Risk ({prediction.predictionScore}%)</h3>
+                                    </template>
+                                    <template if:false={prediction.isCritical}>
+                                        <h3 class="prediction-score-title warning-text">Warning: Potential Operational Threat ({prediction.predictionScore}%)</h3>
+                                    </template>
+                                    <span class="prediction-confidence">Confidence: {prediction.confidenceScore}%</span>
+                                </div>
+                            </header>
+                            <div class="prediction-body">
+                                <strong class="prediction-summary-title">Summary: {prediction.summary}</strong>
+                                <div class="prediction-explanation">
+                                    <em>Why this may happen:</em>
+                                    <p>{prediction.explanation}</p>
+                                </div>
+                                <div class="prediction-mitigation">
+                                    <em>Recommended Mitigation:</em>
+                                    <p><strong>Suggested Runbook:</strong> {prediction.recommendedRunbook}</p>
+                                </div>
+                            </div>
+                            <footer class="prediction-footer">
+                                <p class="prediction-safety">
+                                    <lightning-icon icon-name="utility:warning" size="xx-small" class="safety-icon"></lightning-icon>
+                                    Zentom AI predicts possible operational risk. No action is executed without policy &amp; human approval.
+                                </p>
+                                <div class="prediction-actions">
+                                    <lightning-button label="Review Details" variant="base" data-id={prediction.id} onclick={handleReviewPrediction} class="slds-m-right_small"></lightning-button>
+                                    <template if:true={prediction.hasIncident}>
+                                        <lightning-button label="View Linked Incident" variant="brand" data-incident-id={prediction.incidentId} onclick={handleViewIncident} class="slds-m-right_small"></lightning-button>
+                                    </template>
+                                    <template if:false={prediction.hasIncident}>
+                                        <lightning-button label="Dismiss" variant="neutral" data-id={prediction.id} onclick={handleDismissPrediction} class="slds-m-right_small"></lightning-button>
+                                        <lightning-button label="Request Approval" variant="brand" data-id={prediction.id} onclick={handleRequestApproval} class="slds-m-right_small"></lightning-button>
+                                    </template>
+                                    <lightning-button label="Mark Useful" variant="neutral" data-id={prediction.id} onclick={handleMarkUseful} class="slds-m-right_small"></lightning-button>
+                                    <lightning-button label="Mark Noisy" variant="neutral" data-id={prediction.id} onclick={handleMarkNoisy}></lightning-button>
+                                </div>
+                            </footer>
+                        </article>
+                    </template>
+                </template>
+                <template if:false={hasPredictions}>
+                    <article class="prediction-card empty-prediction">
+                        <lightning-icon icon-name="utility:success" size="small"></lightning-icon>
+                        <p>No imminent operational risks predicted. The SentinelFlow system is stable.</p>
+                    </article>
+                </template>
+            </section>
+
+            <!-- ── KPI Metric Grid ─────────────────────────────────── -->
+            <section class="kpi-grid" aria-label="Dashboard summary metrics">
+                <article class="metric">
+                    <lightning-icon icon-name="utility:record" size="x-small"></lightning-icon>
+                    <span>Live Incidents</span>
+                    <strong>{summaryTotalIncidents}</strong>
+                    <p>Traffic in view</p>
+                </article>
+                <article class="metric critical">
+                    <lightning-icon icon-name="utility:warning" size="x-small"></lightning-icon>
+                    <span>Critical Traffic</span>
+                    <strong>{summaryCriticalIncidents}</strong>
+                    <p class={criticalTrendClass}>{criticalTrendLabel}</p>
+                </article>
+                <article class="metric warning">
+                    <lightning-icon icon-name="utility:approval" size="x-small"></lightning-icon>
+                    <span>Awaiting Clearance</span>
+                    <strong>{summaryPendingApprovals}</strong>
+                    <p class={approvalTrendClass}>{approvalTrendLabel}</p>
+                </article>
+                <article class="metric success">
+                    <lightning-icon icon-name="utility:success" size="x-small"></lightning-icon>
+                    <span>Cleared Actions</span>
+                    <strong>{summaryExecutedActions}</strong>
+                    <p>Governed action</p>
+                </article>
+                <article class="metric success">
+                    <lightning-icon icon-name="standard:case" size="x-small"></lightning-icon>
+                    <span>Cases Created</span>
+                    <strong>{data.summary.recentCasesCreated}</strong>
+                    <p>Salesforce Cases</p>
+                </article>
+                <article class="metric danger">
+                    <lightning-icon icon-name="utility:error" size="x-small"></lightning-icon>
+                    <span>Failed Actions</span>
+                    <strong>{failedExecutionLabel}</strong>
+                    <p>Derived from incidents</p>
+                </article>
+                <article class="metric success">
+                    <lightning-icon icon-name="utility:metrics" size="x-small"></lightning-icon>
+                    <span>Avg AI Confidence</span>
+                    <strong>{data.summary.avgAiConfidence}%</strong>
+                    <p>AI Reasoning</p>
+                </article>
+                <article class="metric danger">
+                    <lightning-icon icon-name="utility:error" size="x-small"></lightning-icon>
+                    <span>Error Log Count</span>
+                    <strong>{data.summary.errorLogCount}</strong>
+                    <p>Audit trail errors</p>
+                </article>
+                <article class="metric">
+                    <lightning-icon icon-name="utility:preview" size="x-small"></lightning-icon>
+                    <span>Flight Recorder</span>
+                    <strong>{summaryReplayEvents}</strong>
+                    <p>Audit trail</p>
+                </article>
+                <article class="metric runbook">
+                    <lightning-icon icon-name="utility:flow" size="x-small"></lightning-icon>
+                    <span>Top Runbook</span>
+                    <strong>{topRunbook}</strong>
+                    <p>Most observed</p>
+                </article>
+            </section>
+
+            <!-- ── Clearance Queue + Tower Systems ───────────────── -->
+            <section class="content-grid">
+                <article class="panel panel-priority">
+                    <header class="panel-header">
+                        <div>
+                            <span class="section-label">Clearance Queue</span>
+                            <h2>Pending approvals</h2>
+                        </div>
+                        <span class="panel-count">{data.summary.pendingApprovals}</span>
+                    </header>
+                    <template if:true={hasPendingApprovals}>
+                        <div class="approval-list">
+                            <template for:each={pendingApprovals} for:item="incident">
+                                <div class="approval-row" key={incident.id}>
+                                    <div>
+                                        <button class="link primary-link" data-id={incident.id} onclick={openIncident}>
+                                            {incident.name}
+                                        </button>
+                                        <p>{incident.incidentType}</p>
+                                    </div>
+                                    <span class={incident.riskClass}>{incident.riskLabel}</span>
+                                    <div class="approval-detail">
+                                        <span>{incident.policyDecision}</span>
+                                        <span>{incident.recommendedActionLabel}</span>
+                                        <template if:true={incident.escalationNeeded}>
+                                            <span class="badge warning-badge slds-m-top_xx-small" title={incident.escalationReason}>Escalation Needed</span>
+                                        </template>
+                                    </div>
+                                    <div class="approval-action">
+                                        <lightning-button
+                                            label="Review"
+                                            variant="brand"
+                                            data-id={incident.id}
+                                            onclick={openIncident}
+                                        ></lightning-button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                    <template if:false={hasPendingApprovals}>
+                        <p class="empty">No incidents are waiting for clearance.</p>
+                    </template>
+                </article>
+
+                <article class="panel system-panel">
+                    <header class="panel-header">
+                        <div>
+                            <span class="section-label">Tower Systems</span>
+                            <h2>API and execution posture</h2>
+                        </div>
+                        <span class={systemHealthClass}>{systemHealthLabel}</span>
+                    </header>
+                    <div class="system-list">
+                        <div>
+                            <span>Zentom API status</span>
+                            <strong>Loaded</strong>
+                        </div>
+                        <div>
+                            <span>Hosted DB status</span>
+                            <strong>{hostedDbStatusLabel}</strong>
+                        </div>
+                        <div>
+                            <span>Latest error log</span>
+                            <strong>{latestErrorLogLabel}</strong>
+                        </div>
+                        <div>
+                            <span>Error count</span>
+                            <strong>{failedExecutionLabel}</strong>
+                        </div>
+                        <div>
+                            <span>Poll interval</span>
+                            <strong>{pollIntervalLabel}</strong>
+                        </div>
+                        <div>
+                            <span>Live streaming</span>
+                            <strong>{streamingStatusLabel}</strong>
+                        </div>
+                        <div>
+                            <span>Freshness</span>
+                            <strong>{freshnessLabel}</strong>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <!-- ── Live Traffic Board (filtered) ─────────────────── -->
+            <section class="panel">
+                <header class="panel-header">
+                    <div>
+                        <span class="section-label">Live Traffic Board</span>
+                        <h2>Recent incidents</h2>
+                    </div>
+                    <span class="panel-subtitle">{activeRangeLabel}</span>
+                </header>
+                <template if:true={hasFilteredIncidents}>
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th onclick={handleSort} data-field="Name">Incident{sortIndicators.Name}</th>
+                                    <th onclick={handleSort} data-field="Incident_Type__c">Type{sortIndicators.Incident_Type__c}</th>
+                                    <th onclick={handleSort} data-field="Environment__c">Environment{sortIndicators.Environment__c}</th>
+                                    <th onclick={handleSort} data-field="Risk_Level__c">Risk{sortIndicators.Risk_Level__c}</th>
+                                    <th onclick={handleSort} data-field="Policy_Decision__c">Policy{sortIndicators.Policy_Decision__c}</th>
+                                    <th onclick={handleSort} data-field="Status__c">Status{sortIndicators.Status__c}</th>
+                                    <th onclick={handleSort} data-field="Runbook_Key__c">Runbook{sortIndicators.Runbook_Key__c}</th>
+                                    <th onclick={handleSort} data-field="Approval_Status__c">Approval{sortIndicators.Approval_Status__c}</th>
+                                    <th onclick={handleSort} data-field="CreatedDate">Created{sortIndicators.CreatedDate}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={filteredIncidents} for:item="incident">
+                                    <tr key={incident.id}>
+                                        <td>
+                                            <button class="link primary-link" data-id={incident.id} onclick={openIncident}>
+                                                {incident.name}
+                                            </button>
+                                        </td>
+                                        <td>{incident.incidentType}</td>
+                                        <td>{incident.environmentLabel}</td>
+                                        <td><span class={incident.riskClass}>{incident.riskLabel}</span></td>
+                                        <td>{incident.policyDecision}</td>
+                                        <td><span class={incident.statusClass}>{incident.status}</span></td>
+                                        <td>{incident.runbookKey}</td>
+                                        <td>{incident.approvalStatus}</td>
+                                        <td>{incident.createdLabel}</td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Pagination Footer (Milestone 50) -->
+                    <div class="pagination-controls">
+                        <div class="pagination-meta">
+                            Showing {startIndex} - {endIndex} of {totalRecords} incidents
+                        </div>
+                        <div class="pagination-buttons">
+                            <lightning-button-icon
+                                icon-name="utility:left"
+                                onclick={handlePrevPage}
+                                disabled={isFirstPage}
+                                alternative-text="Previous Page"
+                                variant="border-filled"
+                                size="small"
+                            ></lightning-button-icon>
+                            <span class="page-indicator">Page {pageNumber} of {totalPages}</span>
+                            <lightning-button-icon
+                                icon-name="utility:right"
+                                onclick={handleNextPage}
+                                disabled={isLastPage}
+                                alternative-text="Next Page"
+                                variant="border-filled"
+                                size="small"
+                            ></lightning-button-icon>
+                        </div>
+                        <div class="pagination-size">
+                            <lightning-combobox
+                                label="Show"
+                                value={pageSize}
+                                options={pageSizeOptions}
+                                onchange={handlePageSizeChange}
+                                variant="label-hidden"
+                            ></lightning-combobox>
+                        </div>
+                    </div>
+                </template>
+                <template if:false={hasFilteredIncidents}>
+                    <p class="empty">No incidents match the current filters.</p>
+                </template>
+            </section>
+
+            <!-- ── Cleared Actions + Case Outcomes ───────────────── -->
+            <section class="content-grid">
+                <article class="panel">
+                    <header class="panel-header">
+                        <div>
+                            <span class="section-label">Cleared Actions</span>
+                            <h2>Executed actions</h2>
+                        </div>
+                    </header>
+                    <template if:true={hasRecentExecutions}>
+                        <template for:each={recentExecutions} for:item="incident">
+                            <div class="compact-row execution-row" key={incident.id}>
+                                <button class="link primary-link" data-id={incident.id} onclick={openIncident}>{incident.name}</button>
+                                <span>{incident.executionAction}</span>
+                                <span>
+                                    <template if:true={incident.createdCaseId}>
+                                        <button class="link" data-id={incident.createdCaseId} onclick={openCase}>
+                                            {incident.caseLabel}
+                                        </button>
+                                    </template>
+                                    <template if:false={incident.createdCaseId}>
+                                        {incident.caseLabel}
+                                    </template>
+                                </span>
+                                <span class={incident.executionClass}>{incident.executionStatus}</span>
+                            </div>
+                        </template>
+                    </template>
+                    <template if:false={hasRecentExecutions}>
+                        <p class="empty">No cleared actions in this range.</p>
+                    </template>
+                </article>
+
+                <article class="panel">
+                    <header class="panel-header">
+                        <div>
+                            <span class="section-label">Case Outcomes</span>
+                            <h2>Created cases</h2>
+                        </div>
+                    </header>
+                    <template if:true={hasRecentCasesCreated}>
+                        <template for:each={recentCasesCreated} for:item="incident">
+                            <div class="compact-row case-row" key={incident.id}>
+                                <button class="link primary-link" data-id={incident.id} onclick={openIncident}>{incident.name}</button>
+                                <button class="link" data-id={incident.createdCaseId} onclick={openCase}>
+                                    {incident.caseLabel}
+                                </button>
+                                <span>{incident.executionAction}</span>
+                                <span>{incident.executedLabel}</span>
+                            </div>
+                        </template>
+                    </template>
+                    <template if:false={hasRecentCasesCreated}>
+                        <p class="empty">No cases created in this range.</p>
+                    </template>
+                </article>
+            </section>
+
+            <!-- ── Flight Recorder ───────────────────────────────── -->
+            <section class="panel">
+                <header class="panel-header">
+                    <div>
+                        <span class="section-label">Flight Recorder</span>
+                        <h2>Replay timeline</h2>
+                    </div>
+                    <span class="panel-subtitle">{data.summary.recentReplayEvents} audit events</span>
+                </header>
+                <template if:true={hasRecentReplayEvents}>
+                    <div class="timeline">
+                        <template for:each={recentReplayEvents} for:item="event">
+                            <div class="timeline-row" key={event.id}>
+                                <span class="timeline-marker"></span>
+                                <div>
+                                    <button class="link primary-link" data-id={event.incidentId} onclick={openIncident}>
+                                        {event.incidentName}
+                                    </button>
+                                    <p>{event.eventType}</p>
+                                </div>
+                                <span class={event.decisionClass}>{event.decision}</span>
+                                <span>{event.createdLabel}</span>
+                                <div class="timeline-actions slds-m-left_auto slds-p-left_small">
+                                    <lightning-button-icon icon-name="utility:download" variant="bare" title="Export CSV" class="slds-m-left_xx-small" data-id={event.incidentId} onclick={handleExportCsv}></lightning-button-icon>
+                                    <lightning-button-icon icon-name="utility:copy" variant="bare" title="Copy Summary" class="slds-m-left_xx-small" data-id={event.incidentId} onclick={handleCopySummary}></lightning-button-icon>
+                                    <lightning-button-icon icon-name="utility:new_window" variant="bare" title="Open Incident" class="slds-m-left_xx-small" data-id={event.incidentId} onclick={openIncident}></lightning-button-icon>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+                <template if:false={hasRecentReplayEvents}>
+                    <p class="empty">No replay events in this range.</p>
+                </template>
+            </section>
+        </template>
+
+        <template if:true={errorMessage}>
+            <div class="error">{errorMessage}</div>
+        </template>
+
+        <template if:true={showLoading}>
+            <lightning-spinner alternative-text="Loading dashboard" size="medium"></lightning-spinner>
+        </template>
+    </section>
+</template>

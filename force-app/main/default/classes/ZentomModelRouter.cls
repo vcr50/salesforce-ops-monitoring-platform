@@ -19,7 +19,8 @@ public with sharing class ZentomModelRouter {
         }
         
         // Risk & Business Impact logic
-        if (risk.totalScore > 70.0 || context.accountARR >= 50000) {
+        Decimal revenueRiskThreshold = SystemSettings.get('Revenue_Risk_Threshold', 50000);
+        if (risk.totalScore > 70.0 || context.accountARR >= revenueRiskThreshold) {
             // High risk or high ARR warrants deep reasoning model
             return AIModel.DEEPSEEK_R1;
         }
@@ -28,4 +29,3 @@ public with sharing class ZentomModelRouter {
         return AIModel.LLAMA_3;
     }
 }
-

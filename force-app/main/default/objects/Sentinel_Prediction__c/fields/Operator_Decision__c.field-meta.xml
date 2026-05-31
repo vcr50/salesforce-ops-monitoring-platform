@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Operator_Decision__c</fullName>
+    <label>Operator Decision</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Pending</fullName>
+                <default>true</default>
+                <label>Pending</label>
+            </value>
+            <value>
+                <fullName>Confirmed</fullName>
+                <default>false</default>
+                <label>Confirmed</label>
+            </value>
+            <value>
+                <fullName>Dismissed</fullName>
+                <default>false</default>
+                <label>Dismissed</label>
+            </value>
+            <value>
+                <fullName>Useful</fullName>
+                <default>false</default>
+                <label>Useful</label>
+            </value>
+            <value>
+                <fullName>False Positive</fullName>
+                <default>false</default>
+                <label>False Positive</label>
+            </value>
+            <value>
+                <fullName>Approved Mitigation</fullName>
+                <default>false</default>
+                <label>Approved Mitigation</label>
+            </value>
+            <value>
+                <fullName>Dismissed - False Positive</fullName>
+                <default>false</default>
+                <label>Dismissed - False Positive</label>
+            </value>
+            <value>
+                <fullName>Dismissed - Ignore</fullName>
+                <default>false</default>
+                <label>Dismissed - Ignore</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

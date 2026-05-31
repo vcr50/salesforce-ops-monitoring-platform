@@ -1,10 +1,3 @@
-/**
- * LicenseCacheServiceTest
- * Tests for the Platform Cache license layer.
- *
- * @author  Tomcodex
- * @version 2.7
- */
 @IsTest
 private class LicenseCacheServiceTest {
 
@@ -24,19 +17,26 @@ private class LicenseCacheServiceTest {
     @IsTest
     static void testResolveWithCache() {
         LicenseService.clearCache();
+        LicenseCacheService.mockPartitionMap = new Map<String, Object>();
 
         Test.startTest();
         LicenseService.LicenseInfo info = LicenseCacheService.resolveWithCache();
+        
+        // Resolve again to test cache hit path
+        LicenseService.LicenseInfo cachedInfo = LicenseCacheService.resolveWithCache();
         Test.stopTest();
 
         System.assertNotEquals(null, info, 'Should resolve license info');
         System.assertEquals('Professional', info.plan);
         System.assertEquals(true, info.isActive);
+        System.assertNotEquals(null, cachedInfo, 'Should hit cache path');
+        System.assertEquals('Professional', cachedInfo.plan);
     }
 
     @IsTest
     static void testInvalidateAndResolve() {
         LicenseService.clearCache();
+        LicenseCacheService.mockPartitionMap = new Map<String, Object>();
 
         // Initial resolve
         LicenseService.LicenseInfo first = LicenseCacheService.resolveWithCache();
@@ -67,4 +67,3 @@ private class LicenseCacheServiceTest {
         System.assert(available == true || available == false);
     }
 }
-

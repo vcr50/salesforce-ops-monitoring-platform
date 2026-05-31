@@ -30,4 +30,3 @@ global with sharing class SentinelFlowPostInstallHandler implements InstallHandl
         FlowHealthSchedulable.scheduleEveryFifteenMinutes();
     }
 }
-

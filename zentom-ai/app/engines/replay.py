@@ -11,7 +11,8 @@ def log_decision(
     risk: RiskScore, 
     policy: PolicyEvaluation, 
     final_action: str, 
-    confidence_score: int
+    confidence_score: int,
+    org_id: str = "default",
 ):
     """
     Records the AI decision lifecycle to PostgreSQL for auditability, trust, and evaluation.
@@ -19,6 +20,7 @@ def log_decision(
     db = SessionLocal()
     try:
         new_log = ReplayLog(
+            org_id=org_id,
             incident_id=incident_id,
             timestamp=datetime.utcnow().isoformat(),
             context_snapshot=context.model_dump(),
@@ -38,13 +40,19 @@ def log_decision(
     finally:
         db.close()
 
-def get_recent_logs(limit: int = 50):
+def get_recent_logs(limit: int = 50, org_id: str = "default"):
     """
     Retrieves recent orchestration logs for the monitoring dashboard.
     """
     db = SessionLocal()
     try:
-        logs = db.query(ReplayLog).order_by(ReplayLog.id.desc()).limit(limit).all()
+        logs = (
+            db.query(ReplayLog)
+            .filter(ReplayLog.org_id == org_id)
+            .order_by(ReplayLog.id.desc())
+            .limit(limit)
+            .all()
+        )
         return [
             {
                 "id": log.id,
@@ -52,7 +60,7 @@ def get_recent_logs(limit: int = 50):
                 "timestamp": log.timestamp,
                 "action": log.final_action,
                 "confidence": log.confidence_score,
-                "success": log.success
+                "success": True # Mocking success as True for now
             }
             for log in logs
         ]

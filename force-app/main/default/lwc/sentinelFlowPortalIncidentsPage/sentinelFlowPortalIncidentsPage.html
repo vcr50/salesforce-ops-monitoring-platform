@@ -18,48 +18,79 @@
             </div>
         </template>
 
-        <!-- ─── Header ───────────────────────────────────────────────── -->
-        <div class="page-header">
-            <div class="header-left">
-                <div class="header-eyebrow">
-                    <span class="live-pulse"></span>
-                    <span class="live-label">LIVE</span>
+        <!-- ─── KPI Summary Cards ─────────────────────────────────────── -->
+        <div class="kpi-row">
+            <div class="kpi-mini">
+                <div class="kpi-mini-icon blue">
+                    <lightning-icon icon-name="utility:listing_fill" size="xx-small"></lightning-icon>
                 </div>
-                <h1 class="page-title">Incidents</h1>
-                <p class="page-sub">AI-powered incident queue · Auto-refreshes every 10s</p>
+                <div class="kpi-mini-body">
+                    <span class="kpi-mini-val">{totalCount}</span>
+                    <span class="kpi-mini-label">Total</span>
+                </div>
             </div>
-            <div class="header-actions">
+            <div class="kpi-mini">
+                <div class="kpi-mini-icon red">
+                    <lightning-icon icon-name="utility:error" size="xx-small"></lightning-icon>
+                </div>
+                <div class="kpi-mini-body">
+                    <span class="kpi-mini-val">{criticalCount}</span>
+                    <span class="kpi-mini-label">Critical</span>
+                </div>
+            </div>
+            <div class="kpi-mini">
+                <div class="kpi-mini-icon amber">
+                    <lightning-icon icon-name="utility:rotate" size="xx-small"></lightning-icon>
+                </div>
+                <div class="kpi-mini-body">
+                    <span class="kpi-mini-val">{activeCount}</span>
+                    <span class="kpi-mini-label">Active</span>
+                </div>
+            </div>
+            <div class="kpi-mini">
+                <div class="kpi-mini-icon green">
+                    <lightning-icon icon-name="utility:success" size="xx-small"></lightning-icon>
+                </div>
+                <div class="kpi-mini-body">
+                    <span class="kpi-mini-val">{resolvedCount}</span>
+                    <span class="kpi-mini-label">Resolved</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── Toolbar ───────────────────────────────────────────────── -->
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <div class="filter-chips">
+                    <template for:each={filters} for:item="filter">
+                        <button key={filter.label} class={filter.cssClass} data-val={filter.value} onclick={handleFilterClick}>
+                            {filter.label}
+                        </button>
+                    </template>
+                </div>
+            </div>
+            <div class="toolbar-right">
+                <div class="search-wrap">
+                    <lightning-icon icon-name="utility:search" size="xx-small" class="search-icon-lwc"></lightning-icon>
+                    <input class="search-input" type="text" placeholder="Search incidents…" oninput={handleSearch} />
+                </div>
                 <button class="btn-simulate" onclick={simulateFailure} disabled={isSimulating}>
                     <template if:true={isSimulating}>
                         <span class="spinner-red"></span> Injecting…
                     </template>
                     <template if:false={isSimulating}>
-                        🚨 Simulate Failure
+                        <lightning-icon icon-name="utility:warning" size="xx-small"></lightning-icon>
+                        Simulate
                     </template>
                 </button>
                 <button class="btn-ghost" onclick={exportToCSV}>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    Export CSV
+                    <lightning-icon icon-name="utility:download" size="xx-small"></lightning-icon>
+                    Export
                 </button>
                 <button class="btn-primary" onclick={refreshData}>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                    <lightning-icon icon-name="utility:refresh" size="xx-small"></lightning-icon>
                     Refresh
                 </button>
-            </div>
-        </div>
-
-        <!-- ─── Filter Bar ────────────────────────────────────────────── -->
-        <div class="filter-bar">
-            <div class="filter-chips">
-                <template for:each={filters} for:item="filter">
-                    <button key={filter.label} class={filter.cssClass} data-val={filter.value} onclick={handleFilterClick}>
-                        {filter.label}
-                    </button>
-                </template>
-            </div>
-            <div class="search-wrap">
-                <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input class="search-input" type="text" placeholder="Search incidents, integrations…" oninput={handleSearch} />
             </div>
         </div>
 
@@ -115,8 +146,15 @@
                                 <template if:false={hasIncidents}>
                                     <tr>
                                         <td colspan="7" class="empty-state">
-                                            <div class="empty-icon">✓</div>
-                                            <div>No incidents match the current filter</div>
+                                            <div class="empty-wrap">
+                                                <lightning-icon icon-name="utility:shield" size="large" class="empty-shield"></lightning-icon>
+                                                <h3>All Clear</h3>
+                                                <p>No incidents match the current filter. Your systems are healthy.</p>
+                                                <button class="btn-simulate-sm" onclick={simulateFailure} disabled={isSimulating}>
+                                                    <lightning-icon icon-name="utility:warning" size="xx-small"></lightning-icon>
+                                                    Simulate an incident
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 </template>

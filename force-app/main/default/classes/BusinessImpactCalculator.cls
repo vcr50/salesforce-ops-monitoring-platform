@@ -14,7 +14,7 @@
 @SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class BusinessImpactCalculator {
 
-    private static final Decimal THRESHOLD_CRITICAL = 50000;
+    private static final Decimal THRESHOLD_CRITICAL = SystemSettings.get('Revenue_Risk_Threshold', 50000);
     private static final Decimal THRESHOLD_HIGH     = 10000;
     private static final Decimal THRESHOLD_MEDIUM   = 1000;
 
@@ -189,4 +189,3 @@ public with sharing class BusinessImpactCalculator {
 
     public class ImpactCalculationException extends Exception {}
 }
-

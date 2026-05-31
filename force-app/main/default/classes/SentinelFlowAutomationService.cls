@@ -182,4 +182,3 @@ public with sharing class SentinelFlowAutomationService {
         return 'High';
     }
 }
-

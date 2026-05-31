@@ -27,7 +27,17 @@ build/
 
 # Test coverage
 coverage/
+coverage-results/
 .nyc_output/
+
+# Test output artifacts
+scratch/
+test-results/
+test-results*.json
+test-results*.txt
+test-run.txt
+*.test-result.json
+*.test-result.txt
 
 # Logs
 logs/

@@ -2,7 +2,12 @@ from typing import List
 from app.models.schemas import ContextPacket
 from app.engines.memory import retrieve_memory
 
-def assemble_context(incident_id: str, mock_arr: float = 150000.0, mock_error_signature: str = "") -> ContextPacket:
+def assemble_context(
+    incident_id: str,
+    mock_arr: float = 150000.0,
+    mock_error_signature: str = "",
+    org_id: str = "default",
+) -> ContextPacket:
     """
     Assembles full situational awareness before any AI reasoning.
     Now wired to the real Memory Engine for RAG retrieval.
@@ -11,7 +16,7 @@ def assemble_context(incident_id: str, mock_arr: float = 150000.0, mock_error_si
     
     # 1. Memory Engine (Real RAG vector search)
     if mock_error_signature:
-        memory_result = retrieve_memory(mock_error_signature)
+        memory_result = retrieve_memory(mock_error_signature, org_id=org_id)
         if memory_result["found"]:
             similar_incidents.append(
                 f"Memory Match: {memory_result['resolution']} "

@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* ═══════════════════════════════════════════════════════════
    SentinelFlow Landing Page — Premium Dark Theme
    ═══════════════════════════════════════════════════════════ */

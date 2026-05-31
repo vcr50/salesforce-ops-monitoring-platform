@@ -5,7 +5,7 @@ from app.models.database import SessionLocal, RecoveryWorkflow
 logger = logging.getLogger("zentom.verification")
 
 
-def verify_execution(workflow_id: int, success: bool, details: str = "") -> dict:
+def verify_execution(workflow_id: int, success: bool, details: str = "", org_id: str = "default") -> dict:
     """
     Post-execution verification. Closes the recovery workflow loop.
     
@@ -14,7 +14,12 @@ def verify_execution(workflow_id: int, success: bool, details: str = "") -> dict
     """
     db = SessionLocal()
     try:
-        workflow = db.query(RecoveryWorkflow).filter(RecoveryWorkflow.id == workflow_id).first()
+        workflow = (
+            db.query(RecoveryWorkflow)
+            .filter(RecoveryWorkflow.id == workflow_id)
+            .filter(RecoveryWorkflow.org_id == org_id)
+            .first()
+        )
         
         if not workflow:
             return {"error": f"Workflow #{workflow_id} not found", "verified": False}

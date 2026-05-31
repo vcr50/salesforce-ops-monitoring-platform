@@ -15,7 +15,7 @@ private class ExecutiveIntelligenceControllerTest {
         
         List<Incident__c> incs = new List<Incident__c>();
         incs.add(new Incident__c(
-            Status__c = 'New',
+            Status__c = 'Analyzing',
             Severity__c = 'Critical',
             Revenue_at_Risk__c = 150000
         ));
@@ -34,16 +34,19 @@ private class ExecutiveIntelligenceControllerTest {
 
         List<Universal_Event__c> events = new List<Universal_Event__c>();
         events.add(new Universal_Event__c(
+            Event_Key__c = 'TEST-EVT-001',
             Workflow_Stage__c = 'Payment',
             Revenue_Risk__c = 200000,
             Status__c = 'New'
         ));
         events.add(new Universal_Event__c(
+            Event_Key__c = 'TEST-EVT-002',
             Workflow_Stage__c = 'Payment',
             Revenue_Risk__c = 50000,
             Status__c = 'New'
         ));
         events.add(new Universal_Event__c(
+            Event_Key__c = 'TEST-EVT-003',
             Workflow_Stage__c = 'Fulfillment',
             Revenue_Risk__c = 30000,
             Status__c = 'New'
@@ -84,4 +87,3 @@ private class ExecutiveIntelligenceControllerTest {
         System.assertEquals(1, metrics.topWorkflowRisks[1].failureCount);
     }
 }
-

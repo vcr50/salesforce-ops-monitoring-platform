@@ -52,4 +52,3 @@ private class SubscriptionRestApiTest {
         System.assertEquals(400, RestContext.response.statusCode);
     }
 }
-

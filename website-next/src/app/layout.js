@@ -11,10 +11,18 @@ export const metadata = {
   },
 };
 
+import { ThemeProvider } from "@/components/ThemeProvider";
+import ZentomMascot from "@/components/ZentomMascot";
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          {children}
+          <ZentomMascot />
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

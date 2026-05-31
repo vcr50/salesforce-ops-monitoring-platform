@@ -49,9 +49,10 @@ public with sharing class ZentomGetIncidentDetailsAction {
                 // Inject Revenue Pulse data for AI Guardian Gate
                 if (inc.Revenue_at_Risk__c != null) {
                     res.revenueRisk = inc.Revenue_at_Risk__c;
+                    Decimal threshold = SystemSettings.get('Revenue_Risk_Threshold', 50000);
                     res.technicalLog += '\n\n--- AI GUARDIAN CONTEXT ---\n' +
                                         'REVENUE AT RISK: $' + inc.Revenue_at_Risk__c + '\n' +
-                                        'If this value > $50000, autonomous execution MUST be blocked.';
+                                        'If this value > $' + threshold.setScale(0).toPlainString() + ', autonomous execution MUST be blocked.';
                 }
             }
             results.add(res);
@@ -82,4 +83,3 @@ public with sharing class ZentomGetIncidentDetailsAction {
         public Decimal revenueRisk;
     }
 }
-

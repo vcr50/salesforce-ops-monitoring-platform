@@ -6,4 +6,3 @@ public class Block2 {
         System.debug('Print the value of sum: ' + sum);
     }
 }
-

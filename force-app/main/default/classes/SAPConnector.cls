@@ -23,4 +23,3 @@ public with sharing class SAPConnector extends ConnectorBase {
         // Handle SAP-specific response validation and parsing (e.g. OData error formats)
     }
 }
-

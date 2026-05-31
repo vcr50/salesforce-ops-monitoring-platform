@@ -207,4 +207,3 @@ public with sharing class SentinelFlowCopilotController {
             'Or try one of the quick actions below.';
     }
 }
-

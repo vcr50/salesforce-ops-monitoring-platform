@@ -54,4 +54,3 @@ public with sharing class MarketoConnector extends ConnectorBase {
         }
     }
 }
-

@@ -7,10 +7,12 @@
                 <span class="brand-mark">
                     <img src={logoUrl} alt="SentinelFlow" />
                 </span>
+                <!-- 
                 <div>
                     <h1>SentinelFlow</h1>
                     <p>Autonomous operations cockpit</p>
-                </div>
+                </div> 
+                -->
             </div>
 
             <div class="header-actions">
@@ -58,7 +60,19 @@
                     </button>
                     <button class={copilotNavClass} data-page="copilot" onclick={navigate}>
                         <span class="zai-icon">Zai</span>
-                        <span>Zentom</span>
+                        <span>Zentom AI</span>
+                    </button>
+                    <button class={workflowNavClass} data-page="workflow" onclick={navigate}>
+                        <lightning-icon icon-name="utility:flow" size="x-small"></lightning-icon>
+                        <span>Workflow Map</span>
+                    </button>
+                    <button class={complianceNavClass} data-page="compliance" onclick={navigate}>
+                        <lightning-icon icon-name="utility:shield" size="x-small"></lightning-icon>
+                        <span>Compliance</span>
+                    </button>
+                    <button class={founderNavClass} data-page="founder" onclick={navigate}>
+                        <lightning-icon icon-name="utility:strategy" size="x-small"></lightning-icon>
+                        <span>Founder Mode</span>
                     </button>
                     <button class={settingsNavClass} data-page="settings" onclick={navigate}>
                         <lightning-icon icon-name="utility:settings" size="x-small"></lightning-icon>
@@ -78,7 +92,7 @@
                     </div>
                     <div class="runtime-row">
                         <span>Zentom AI</span>
-                        <span class="mini-status warn"></span>
+                        <span class="mini-status ok"></span>
                     </div>
                 </div>
             </aside>
@@ -96,22 +110,28 @@
 
                 <section class="content-surface">
                     <template if:true={isHome}>
-                        <c-sentinel-flow-guardian-home theme={theme}></c-sentinel-flow-guardian-home>
+                        <c-zentom-mission-control></c-zentom-mission-control>
                     </template>
                     <template if:true={isIncidents}>
-                        <c-sentinel-flow-portal-incidents-page></c-sentinel-flow-portal-incidents-page>
-                    </template>
-                    <template if:true={isIntegrations}>
-                        <c-sentinel-flow-portal-integrations-page></c-sentinel-flow-portal-integrations-page>
+                        <c-zentom-approval-queue></c-zentom-approval-queue>
                     </template>
                     <template if:true={isImpact}>
-                        <c-sentinel-flow-portal-impact-panel></c-sentinel-flow-portal-impact-panel>
+                        <c-zentom-analytics-charts></c-zentom-analytics-charts>
                     </template>
                     <template if:true={isCopilot}>
-                        <c-sentinel-flow-portal-copilot></c-sentinel-flow-portal-copilot>
+                        <c-zentom-analytics-charts></c-zentom-analytics-charts>
                     </template>
-                    <template if:true={isSettings}>
-                        <c-sentinel-flow-portal-settings></c-sentinel-flow-portal-settings>
+                    <template if:false={isHome}>
+                        <template if:false={isIncidents}>
+                            <template if:false={isImpact}>
+                                <template if:false={isCopilot}>
+                                    <div class="glass-card" style="padding:40px; text-align:center; margin-top:20px;">
+                                        <h3>Integration in Progress</h3>
+                                        <p style="color:#9090a0;">This module is being connected to live org data by Zentom AI.</p>
+                                    </div>
+                                </template>
+                            </template>
+                        </template>
                     </template>
                 </section>
             </main>

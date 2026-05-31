@@ -165,4 +165,3 @@ global without sharing class UniversalEventWebhookApi {
         return Schema.getGlobalDescribe().get('Universal_Event__c').getDescribe().fields.getMap().containsKey('Tenant__c');
     }
 }
-

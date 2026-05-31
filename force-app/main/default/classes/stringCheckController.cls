@@ -11,4 +11,3 @@ public class stringCheckController {
         return false;
     }
 }
-

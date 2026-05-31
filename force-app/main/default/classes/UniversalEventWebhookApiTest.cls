@@ -123,4 +123,3 @@ private class UniversalEventWebhookApiTest {
         System.assertEquals(400, res.statusCode);
     }
 }
-

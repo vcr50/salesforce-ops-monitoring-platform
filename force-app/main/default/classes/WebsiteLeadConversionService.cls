@@ -146,4 +146,3 @@ public with sharing class WebsiteLeadConversionService {
         return String.isBlank(value) ? null : value.trim();
     }
 }
-

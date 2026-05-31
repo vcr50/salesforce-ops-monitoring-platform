@@ -1,0 +1,2183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SentinelFlow Command Center - Interactive Prototype</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        primary: { 50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8' },
+                        navy: { 900:'#0a1628',800:'#0f1f3d',700:'#111d35' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; margin: 0; background: #f1f5f9; overflow: hidden; }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.2); border-radius: 10px; }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            background: linear-gradient(180deg, #0c1929 0%, #0f1f3d 35%, #111d35 65%, #0a1628 100%);
+            position: relative; overflow: hidden;
+        }
+        .sidebar::before {
+            content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%;
+            background: radial-gradient(ellipse at 30% 20%, rgba(56,189,248,0.07) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(139,92,246,0.05) 0%, transparent 50%);
+            animation: aurora 15s ease-in-out infinite alternate; pointer-events:none;
+        }
+        @keyframes aurora {
+            0%{transform:translate(0,0) rotate(0deg)} 50%{transform:translate(-5%,3%) rotate(1deg)} 100%{transform:translate(3%,-5%) rotate(-1deg)}
+        }
+        .particle { position:absolute; border-radius:50%; opacity:0; animation:float 10s ease-in-out infinite; pointer-events:none; }
+        .particle:nth-child(1){width:3px;height:3px;background:rgba(56,189,248,0.35);left:15%;top:25%;animation-delay:0s;animation-duration:10s}
+        .particle:nth-child(2){width:2px;height:2px;background:rgba(139,92,246,0.4);left:75%;top:45%;animation-delay:2s;animation-duration:12s}
+        .particle:nth-child(3){width:4px;height:4px;background:rgba(56,189,248,0.2);left:50%;top:70%;animation-delay:4s;animation-duration:9s}
+        .particle:nth-child(4){width:2px;height:2px;background:rgba(244,114,182,0.3);left:30%;top:85%;animation-delay:6s;animation-duration:11s}
+        .particle:nth-child(5){width:3px;height:3px;background:rgba(34,211,238,0.25);left:85%;top:15%;animation-delay:3s;animation-duration:13s}
+        @keyframes float {
+            0%,100%{opacity:0;transform:translateY(0) scale(1)} 20%{opacity:1} 50%{opacity:.8;transform:translateY(-30px) scale(1.4)} 80%{opacity:.3}
+        }
+        .snav {
+            display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius:12px; cursor:pointer;
+            position:relative; transition:all .3s cubic-bezier(.4,0,.2,1); color:rgba(148,163,184,.9);
+            font-weight:600; font-size:13.5px; overflow:hidden; text-decoration:none;
+        }
+        .snav::before {
+            content:''; position:absolute; inset:0; border-radius:12px; opacity:0;
+            background:linear-gradient(135deg,rgba(56,189,248,.08),rgba(139,92,246,.06));
+            backdrop-filter:blur(8px); transition:opacity .3s ease;
+        }
+        .snav:hover::before{opacity:1} .snav:hover{color:#e2e8f0;transform:translateX(4px)}
+        .snav:hover .sicon{color:#38bdf8;filter:drop-shadow(0 0 4px rgba(56,189,248,.4))}
+        .sicon{width:20px;height:20px;flex-shrink:0;transition:all .3s ease;color:rgba(100,116,139,.7);position:relative;z-index:1}
+        .snav span{position:relative;z-index:1}
+        .snav-active {
+            color:#fff!important;
+            background:linear-gradient(135deg,rgba(37,99,235,.85),rgba(79,70,229,.7));
+            box-shadow:0 4px 20px rgba(37,99,235,.35),0 0 40px rgba(79,70,229,.12),inset 0 1px 0 rgba(255,255,255,.1);
+            border:1px solid rgba(96,165,250,.25);
+        }
+        .snav-active::before{display:none} .snav-active:hover{transform:translateX(0)}
+        .snav-active .sicon{color:white!important;filter:drop-shadow(0 0 6px rgba(255,255,255,.3))!important;animation:iconPulse 3s ease-in-out infinite}
+        @keyframes iconPulse{0%,100%{filter:drop-shadow(0 0 4px rgba(255,255,255,.2))}50%{filter:drop-shadow(0 0 10px rgba(255,255,255,.5))}}
+        .snav-active::after {
+            content:''; position:absolute; left:0; top:20%; bottom:20%; width:3px;
+            border-radius:0 4px 4px 0; background:linear-gradient(180deg,#38bdf8,#818cf8);
+            box-shadow:0 0 12px rgba(56,189,248,.6);
+        }
+        .badge-glow{animation:badgePulse 2s ease-in-out infinite}
+        @keyframes badgePulse{0%,100%{box-shadow:0 0 4px rgba(239,68,68,.3)}50%{box-shadow:0 0 12px rgba(239,68,68,.6),0 0 24px rgba(239,68,68,.2)}}
+        .ssub {
+            display:flex;align-items:center;gap:10px;padding:8px 14px 8px 46px;cursor:pointer;
+            color:rgba(100,116,139,.65);font-weight:600;font-size:13px;border-radius:8px;
+            transition:all .25s ease;position:relative;text-decoration:none;
+        }
+        .ssub::before{content:'';position:absolute;left:30px;top:50%;width:6px;height:1px;background:rgba(100,116,139,.3);transition:all .25s ease}
+        .ssub:hover{color:#cbd5e1;background:rgba(56,189,248,.05)} .ssub:hover::before{width:10px;background:rgba(56,189,248,.5)}
+        .ssub-active {
+            color:#fff!important;
+            background:rgba(56,189,248,.08);
+            border-left:2px solid #38bdf8;
+            border-radius:0 8px 8px 0;
+        }
+        .ssub-active::before { width:10px; background:#38bdf8; }
+        .sep{height:1px;margin:12px 16px;background:linear-gradient(90deg,transparent,rgba(56,189,248,.15),rgba(139,92,246,.1),transparent)}
+        .slabel{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.15em;color:rgba(100,116,139,.4);padding:0 14px;margin-bottom:8px}
+        .glass{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);backdrop-filter:blur(12px);border-radius:14px;padding:12px 14px;cursor:pointer;transition:all .3s ease}
+        .glass:hover{background:rgba(255,255,255,.06);border-color:rgba(56,189,248,.15);box-shadow:0 4px 20px rgba(0,0,0,.2)}
+
+        /* ===== HEADER ===== */
+        .top-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border-bottom: 1px solid rgba(56,189,248,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        /* ===== CARDS ===== */
+        .gcard {
+            background: white; border-radius: 16px; border: 1px solid rgba(226,232,240,0.8);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.02);
+            transition: all 0.35s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden;
+        }
+        .gcard::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:3px;
+            background: linear-gradient(90deg, transparent, rgba(59,130,246,0.3), transparent);
+            opacity: 0; transition: opacity 0.35s ease;
+        }
+        .gcard:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.08); border-color: rgba(59,130,246,0.2); }
+        .gcard:hover::before { opacity: 1; }
+
+        /* Stat card animated accent */
+        .stat-card { position:relative; overflow:hidden; }
+        .stat-card::after {
+            content:''; position:absolute; bottom:0; left:0; right:0; height:3px;
+            background: var(--accent, linear-gradient(90deg, #3b82f6, #6366f1));
+            transform: scaleX(0); transform-origin: left; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+        }
+        .stat-card:hover::after { transform: scaleX(1); }
+
+        /* ===== HEALTH RING ===== */
+        .health-ring { position: relative; width: 80px; height: 80px; }
+        .health-ring svg { transform: rotate(-90deg); }
+        .health-ring-bg { fill: none; stroke: #e2e8f0; stroke-width: 6; }
+        .health-ring-fill { fill: none; stroke: url(#healthGrad); stroke-width: 6; stroke-linecap: round;
+            stroke-dasharray: 226.2; stroke-dashoffset: 63.3; /* 72% default */
+            transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== TABLE ===== */
+        .data-table { width: 100%; text-align: left; font-size: 13px; border-collapse: collapse; }
+        .data-table thead { background: linear-gradient(135deg, #f8fafc, #f1f5f9); }
+        .data-table th { padding: 14px 20px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; border-bottom: 1px solid #e2e8f0; }
+        .data-table td { padding: 14px 20px; border-bottom: 1px solid #f1f5f9; transition: all 0.2s ease; }
+        .data-table tbody tr { transition: all 0.25s ease; }
+        .data-table tbody tr:hover { background: linear-gradient(90deg, rgba(59,130,246,0.03), rgba(99,102,241,0.02)); }
+        .data-table tbody tr:hover td { border-bottom-color: rgba(59,130,246,0.1); }
+
+        /* ===== TIMELINE ===== */
+        .tl-dot { width:10px; height:10px; border-radius:50%; border:2px solid; position:absolute; left:-5px; top:6px; background:white; transition:all .3s ease; }
+        .tl-item:hover .tl-dot { transform: scale(1.4); }
+        .tl-done .tl-dot { border-color: #22c55e; box-shadow: 0 0 8px rgba(34,197,94,0.3); }
+        .tl-pending .tl-dot { border-color: #94a3b8; }
+        .tl-item { position:relative; padding-left:24px; padding-bottom:20px; }
+
+        /* ===== CRITICAL CARD ===== */
+        .critical-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+            border: 1px solid rgba(239,68,68,0.15);
+            position: relative; overflow: hidden;
+        }
+        .critical-card::before {
+            content:''; position:absolute; top:-40px; right:-40px; width:120px; height:120px;
+            background: radial-gradient(circle, rgba(239,68,68,0.08) 0%, transparent 70%);
+            animation: critPulse 4s ease-in-out infinite;
+        }
+        @keyframes critPulse { 0%,100%{transform:scale(1);opacity:0.5} 50%{transform:scale(1.3);opacity:1} }
+
+        /* ===== SYSTEM HEALTH BARS ===== */
+        .sys-bar { height: 4px; border-radius: 4px; background: #e2e8f0; overflow: hidden; flex: 1; }
+        .sys-bar-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease-in-out, background 0.4s ease; }
+
+        /* ===== COUNT-UP ANIMATION ===== */
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+        .animate-in { animation: fadeInUp 0.5s ease-out forwards; }
+        .delay-1 { animation-delay: 0.05s; opacity: 0; }
+        .delay-2 { animation-delay: 0.1s; opacity: 0; }
+        .delay-3 { animation-delay: 0.15s; opacity: 0; }
+        .delay-4 { animation-delay: 0.2s; opacity: 0; }
+
+        /* Accessibility: focus indicator */
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible {
+            outline: 2px solid #3b82f6 !important;
+            outline-offset: 2px !important;
+        }
+
+        /* Responsive Mobile Drawer */
+        @media (max-width: 1024px) {
+            .sidebar {
+                position: fixed !important;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                transform: translateX(-100%);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 1000 !important;
+            }
+            .sidebar.mobile-open {
+                transform: translateX(0) !important;
+                box-shadow: 10px 0 35px rgba(10, 22, 40, 0.4) !important;
+            }
+        }
+
+        /* Pills and Badges Styling */
+        .risk-pill { padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; border: 1px solid; display: inline-block; text-transform: capitalize; }
+        .risk-pill.critical { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+        .risk-pill.high { background: #fee2e2; color: #ea580c; border-color: #fcd34d; }
+        .risk-pill.medium { background: #fff7ed; color: #ea580c; border-color: #fed7aa; }
+        .risk-pill.low { background: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
+
+        .env-pill { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; border: 1px solid; display: inline-block; }
+        .env-pill.production { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+        .env-pill.sandbox { background: #f8fafc; color: #475569; border-color: #e2e8f0; }
+
+        .status-pill { padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; display: inline-block; }
+        .status-pill.open { background: #fee2e2; color: #dc2626; }
+        .status-pill.in-progress { background: #dbeafe; color: #1e40af; }
+        .status-pill.resolved { background: #dcfce7; color: #15803d; }
+        .status-pill.approval-required { background: #fff8e1; color: #f57f17; }
+
+        /* Toast Styling */
+        #toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            pointer-events: none;
+        }
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            border-radius: 12px;
+            background: #0f172a;
+            color: #f1f5f9;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: toastIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+                       toastOut 0.3s ease-in 3.5s forwards;
+            pointer-events: auto;
+            max-width: 400px;
+        }
+        .toast-success { border-color: rgba(34, 197, 94, 0.3); background: #064e3b; color: #ecfdf5; }
+        .toast-info { border-color: rgba(59, 130, 246, 0.3); background: #1e3a8a; color: #eff6ff; }
+        .toast-error { border-color: rgba(239, 68, 68, 0.3); background: #7f1d1d; color: #fef2f2; }
+        @keyframes toastIn { to { opacity: 1; transform: translateY(0); } }
+        @keyframes toastOut { to { opacity: 0; transform: translateY(-20px); } }
+
+        /* Mascot Styling */
+        .mascot-container {
+            position: relative;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.5), rgba(15, 23, 42, 0.8));
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+        .mascot-glow {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, transparent 70%);
+            top: -20px; left: -20px;
+            animation: pulse-glow 4s ease-in-out infinite alternate;
+        }
+        @keyframes pulse-glow { 0% { transform: scale(1); opacity:0.5; } 100% { transform: scale(1.3); opacity:0.9; } }
+
+        .page-view { transition: opacity 0.2s ease-in-out; }
+        .page-view.hidden { display: none !important; }
+    </style>
+</head>
+<body class="flex flex-col h-screen w-screen antialiased text-slate-800 bg-[#f8fafc]">
+
+    <!-- ★ SIMULATED TOAST CONTAINER ★ -->
+    <div id="toast-container"></div>
+
+    <!-- ★ BACKDROP FOR MOBILE SIDEBAR ★ -->
+    <div id="sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[900]" style="display:none; transition: opacity 0.3s ease; opacity: 0;"></div>
+
+    <!-- ★ ENHANCED TOP HEADER ★ -->
+    <header class="top-header h-16 flex items-center px-5 justify-between shrink-0 z-20 relative">
+        <div class="flex items-center gap-4 w-[260px] md:w-[300px]">
+            <!-- Mobile Menu Toggle Burger -->
+            <button onclick="toggleSidebar()" class="lg:hidden text-slate-400 hover:text-white p-1 focus:outline-none rounded" aria-label="Toggle Navigation Sidebar">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white shrink-0" style="background:linear-gradient(135deg,#3b82f6,#6366f1);box-shadow:0 4px 12px rgba(59,130,246,0.3)">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <div class="hidden sm:block">
+                <div style="font-size:9px;font-weight:700;color:rgba(148,163,184,0.6);letter-spacing:0.15em;text-transform:uppercase">SentinelFlow Beta 2.0</div>
+                <div style="font-size:15px;font-weight:800;color:#e2e8f0;letter-spacing:-0.01em">Command Center</div>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="flex-1 max-w-2xl px-6">
+            <div class="relative group">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                    <svg class="w-4 h-4 text-slate-500 group-focus-within:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </div>
+                <input type="text" id="dashboardSearch" placeholder="Search incidents, actions, cases, runbooks..."
+                    style="width:100%;padding:9px 40px 9px 36px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:10px;font-size:13px;color:#cbd5e1;outline:none;transition:all .3s ease"
+                    onfocus="this.style.background='rgba(255,255,255,0.1)';this.style.borderColor='rgba(56,189,248,0.3)';this.style.boxShadow='0 0 20px rgba(56,189,248,0.08)'"
+                    onblur="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.boxShadow='none'"
+                    oninput="handleGlobalSearch(this.value)">
+                <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    <kbd style="padding:2px 6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:4px;font-size:10px;font-weight:600;color:rgba(148,163,184,0.5)">/</kbd>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="flex items-center gap-3">
+            <button style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:linear-gradient(135deg,rgba(56,189,248,0.1),rgba(139,92,246,0.08));border:1px solid rgba(56,189,248,0.15);border-radius:8px;font-size:10px;font-weight:700;color:#7dd3fc;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;transition:all .3s ease"
+                onmouseover="this.style.borderColor='rgba(56,189,248,0.3)'" onmouseout="this.style.borderColor='rgba(56,189,248,0.15)'">
+                <svg class="w-3.5 h-3.5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                <span class="hidden md:inline">Powered by Zentom AI</span>
+            </button>
+            <div style="width:1px;height:24px;background:rgba(255,255,255,0.08);margin:0 4px"></div>
+            <div id="header-health-status" style="display:flex;align-items:center;gap:6px;padding:5px 10px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:8px;font-size:11px;font-weight:700;color:#86efac;cursor:pointer">
+                <span id="header-health-dot" style="width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,0.5);animation:badgePulse 2s infinite"></span> <span id="header-health-text">Optimal</span>
+            </div>
+            <div id="header-clock" style="padding:5px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;font-size:11px;font-weight:700;color:rgba(203,213,225,0.7);font-family:monospace">11:43</div>
+            <button onclick="triggerReload()" style="padding:7px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:rgba(148,163,184,0.5);cursor:pointer;transition:all .2s"
+                onmouseover="this.style.color='#7dd3fc';this.style.borderColor='rgba(56,189,248,0.2)'" onmouseout="this.style.color='rgba(148,163,184,0.5)';this.style.borderColor='rgba(255,255,255,0.08)'" title="Refresh Posture">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            </button>
+            <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:white;cursor:pointer;box-shadow:0 0 0 2px rgba(56,189,248,0.2);transition:all .3s"
+                onmouseover="this.style.boxShadow='0 0 0 3px rgba(56,189,248,0.4)'" onmouseout="this.style.boxShadow='0 0 0 2px rgba(56,189,248,0.2)'">VR</div>
+        </div>
+    </header>
+
+    <!-- MAIN WORKSPACE -->
+    <div class="flex flex-1 overflow-hidden relative">
+
+        <!-- ★ SIDEBAR ★ -->
+        <aside id="sidebar-nav" class="w-[260px] sidebar flex flex-col h-full shrink-0 z-10">
+            <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
+
+            <div style="padding:20px 16px 16px;position:relative;z-index:1">
+                <div class="glass">
+                    <div style="display:flex;align-items:center;gap:12px">
+                        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(59,130,246,.3)">
+                            <svg style="width:18px;height:18px;color:white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </div>
+                        <div>
+                            <div style="display:flex;align-items:center;gap:6px">
+                                <span style="font-size:14px;font-weight:800;color:#e2e8f0">SentinelFlow</span>
+                                <span style="font-size:9px;font-weight:700;color:#38bdf8;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.2);padding:1px 5px;border-radius:4px;line-height:1">v1.1.0</span>
+                            </div>
+                            <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;background:linear-gradient(90deg,#38bdf8,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-top:3px">Powered by Zentom AI</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav style="flex:1;overflow-y:auto;padding:4px 12px;position:relative;z-index:1" class="scrollbar-hide">
+                <div class="slabel" style="margin-top:4px">Main</div>
+                <a href="javascript:void(0)" onclick="switchPage('command')" class="snav snav-active" data-page="command" style="margin-bottom:4px">
+                    <svg class="sicon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="javascript:void(0)" onclick="switchPage('incidents')" class="snav" data-page="incidents" style="margin-bottom:4px">
+                    <svg class="sicon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    <span>Incidents</span>
+                </a>
+                <a href="javascript:void(0)" onclick="switchPage('approvals')" class="snav" data-page="approvals" style="margin-bottom:2px; justify-content:space-between">
+                    <div style="display:flex;align-items:center;gap:12px">
+                        <svg class="sicon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span>Approvals</span>
+                    </div>
+                    <span id="sidebar-approvals-badge" class="badge-glow" style="background:linear-gradient(135deg,#ef4444,#f97316);color:white;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;position:relative;z-index:1">3</span>
+                </a>
+                <a href="javascript:void(0)" onclick="switchPage('actions')" class="ssub" data-page="actions" style="margin-bottom:2px">Actions</a>
+                <a href="javascript:void(0)" onclick="switchPage('runbooks')" class="ssub" data-page="runbooks" style="margin-bottom:4px">Runbooks</a>
+                
+                <div class="sep"></div>
+                <div class="slabel">Governance</div>
+                <a href="javascript:void(0)" onclick="switchPage('policies')" class="snav" data-page="policies" style="margin-bottom:4px">
+                    <svg class="sicon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                    <span>Policies</span>
+                </a>
+                <a href="javascript:void(0)" onclick="switchPage('cases')" class="snav" data-page="cases" style="margin-bottom:4px">
+                    <svg class="sicon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    <span>Cases</span>
+                </a>
+                
+                <div class="sep"></div>
+                <div class="slabel">Insights</div>
+                <a href="javascript:void(0)" onclick="switchPage('reports')" class="snav" data-page="reports" style="margin-bottom:4px">
+                    <svg class="sicon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg>
+                    <span>Reports</span>
+                </a>
+                <a href="javascript:void(0)" onclick="switchPage('integrations')" class="snav" data-page="integrations" style="margin-bottom:4px">
+                    <svg class="sicon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    <span>Integrations</span>
+                </a>
+                
+                <div class="sep"></div>
+                <a href="javascript:void(0)" onclick="switchPage('settings')" class="snav" data-page="settings">
+                    <svg class="sicon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <!-- Mascot Indicator -->
+            <div class="px-4 mb-2" style="position:relative;z-index:1;">
+                <div class="mascot-container">
+                    <div class="mascot-glow"></div>
+                    <!-- Mascot Robot Head SVG -->
+                    <svg class="w-9 h-9 text-sky-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m18 0h-2M5 15H3m18 0h-2M6 7h12a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2z"/>
+                        <circle cx="9" cy="12" r="1.5" fill="currentColor"></circle>
+                        <circle cx="15" cy="12" r="1.5" fill="currentColor"></circle>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 15h6"/>
+                    </svg>
+                    <span style="font-size:11px;font-weight:800;color:#e2e8f0;">Zentom Co-Pilot</span>
+                    <span style="font-size:9px;color:#64748b;margin-top:2px;">Online & Ready</span>
+                </div>
+            </div>
+
+            <!-- Sidebar Footer -->
+            <div style="padding:16px;position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.04)">
+                <div class="glass">
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <div style="width:30px;height:30px;border-radius:8px;background:rgba(56,189,248,.1);display:flex;align-items:center;justify-content:center">
+                                <svg style="width:14px;height:14px;color:#38bdf8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            </div>
+                            <div>
+                                <div style="font-size:12px;font-weight:700;color:#cbd5e1;line-height:1">Salesforce Org</div>
+                                <div style="font-size:10px;color:rgba(100,116,139,.6);margin-top:4px;font-weight:500">Acme Corporation</div>
+                            </div>
+                        </div>
+                        <svg style="width:14px;height:14px;color:rgba(100,116,139,.4)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ★ MAIN CONTENT ★ -->
+        <main class="flex-1 overflow-y-auto relative" style="background:linear-gradient(180deg,#f8fafc,#f1f5f9)">
+            <div class="max-w-[1400px] mx-auto p-8 space-y-7">
+
+                <!-- Page Header -->
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 animate-in delay-1">
+                    <div>
+                        <div id="header-eyebrow" style="display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:700;background:linear-gradient(135deg,#e0e7ff,#ede9fe);color:#4f46e5;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">
+                            <svg class="w-3 h-3 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            Beta 2.0 Airport-Tower View
+                        </div>
+                        <h1 id="page-title" style="font-size:28px;font-weight:900;color:#0f172a;letter-spacing:-0.02em;line-height:1.1">Operations Command Center</h1>
+                        <p id="page-summary" style="font-size:14px;color:#64748b;font-weight:500;margin-top:6px">Health, incidents, approvals, replay, and governed actions in one control surface.</p>
+                    </div>
+                    <div class="gcard" style="padding:16px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:130px">
+                        <span id="critical-badge-count" style="font-size:36px;font-weight:900;color:#0f172a;line-height:1;background:linear-gradient(135deg,#ef4444,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent">2</span>
+                        <span style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.08em;margin-top:8px;display:flex;align-items:center;gap:4px">
+                            <span style="width:6px;height:6px;border-radius:50%;background:#ef4444;box-shadow:0 0 6px rgba(239,68,68,.4);animation:badgePulse 2s infinite"></span> Active critical
+                        </span>
+                    </div>
+                </div>
+
+                <!-- ★ SKELETON LOADER VIEW ★ -->
+                <div id="skeleton-loader-view" class="hidden space-y-7 animate-pulse">
+                    <!-- Skeleton Health Banner -->
+                    <div class="gcard" style="padding:28px 32px;height:12rem;background:white;display:flex;flex-direction:column;gap:1.5rem;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div style="display:flex;gap:1rem;align-items:center;">
+                                <div style="width:80px;height:80px;border-radius:50%;background:#e2e8f0;"></div>
+                                <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                                    <div style="width:120px;height:12px;background:#e2e8f0;border-radius:4px;"></div>
+                                    <div style="width:180px;height:24px;background:#e2e8f0;border-radius:4px;"></div>
+                                </div>
+                            </div>
+                            <div style="width:150px;height:40px;background:#e2e8f0;border-radius:4px;"></div>
+                        </div>
+                        <div style="width:100%;height:8px;background:#e2e8f0;border-radius:4px;"></div>
+                    </div>
+                    <!-- Skeleton KPI Cards -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+                        <div class="gcard" style="height:6rem;background:white;display:flex;align-items:center;padding:1rem;gap:1rem;"><div style="width:40px;height:40px;border-radius:50%;background:#e2e8f0;"></div><div style="display:flex;flex-direction:column;gap:0.5rem;flex:1;"><div style="width:50%;height:10px;background:#e2e8f0;border-radius:4px;"></div><div style="width:80%;height:18px;background:#e2e8f0;border-radius:4px;"></div></div></div>
+                        <div class="gcard" style="height:6rem;background:white;display:flex;align-items:center;padding:1rem;gap:1rem;"><div style="width:40px;height:40px;border-radius:50%;background:#e2e8f0;"></div><div style="display:flex;flex-direction:column;gap:0.5rem;flex:1;"><div style="width:50%;height:10px;background:#e2e8f0;border-radius:4px;"></div><div style="width:80%;height:18px;background:#e2e8f0;border-radius:4px;"></div></div></div>
+                        <div class="gcard" style="height:6rem;background:white;display:flex;align-items:center;padding:1rem;gap:1rem;"><div style="width:40px;height:40px;border-radius:50%;background:#e2e8f0;"></div><div style="display:flex;flex-direction:column;gap:0.5rem;flex:1;"><div style="width:50%;height:10px;background:#e2e8f0;border-radius:4px;"></div><div style="width:80%;height:18px;background:#e2e8f0;border-radius:4px;"></div></div></div>
+                        <div class="gcard" style="height:6rem;background:white;display:flex;align-items:center;padding:1rem;gap:1rem;"><div style="width:40px;height:40px;border-radius:50%;background:#e2e8f0;"></div><div style="display:flex;flex-direction:column;gap:0.5rem;flex:1;"><div style="width:50%;height:10px;background:#e2e8f0;border-radius:4px;"></div><div style="width:80%;height:18px;background:#e2e8f0;border-radius:4px;"></div></div></div>
+                        <div class="gcard" style="height:6rem;background:white;display:flex;align-items:center;padding:1rem;gap:1rem;"><div style="width:40px;height:40px;border-radius:50%;background:#e2e8f0;"></div><div style="display:flex;flex-direction:column;gap:0.5rem;flex:1;"><div style="width:50%;height:10px;background:#e2e8f0;border-radius:4px;"></div><div style="width:80%;height:18px;background:#e2e8f0;border-radius:4px;"></div></div></div>
+                    </div>
+                </div>
+
+                <!-- ★ VIEW: COMMAND CENTER (DASHBOARD) ★ -->
+                <div id="view-command" class="page-view space-y-7">
+                    <!-- Health Score Banner -->
+                    <div class="gcard animate-in delay-2" style="padding:28px 32px;background:linear-gradient(135deg,#ffffff,#f8fafc)">
+                        <svg width="0" height="0"><defs><linearGradient id="healthGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#ef4444"/><stop offset="40%" style="stop-color:#f59e0b"/><stop offset="100%" style="stop-color:#22c55e"/></linearGradient></defs></svg>
+                        <div class="flex flex-col lg:flex-row gap-8 items-center justify-between">
+                            <div class="flex items-center gap-7 lg:pr-10 lg:border-r border-slate-200 w-full lg:w-auto">
+                                <!-- Animated Ring -->
+                                <div class="health-ring shrink-0">
+                                    <svg width="80" height="80" viewBox="0 0 80 80">
+                                        <circle class="health-ring-bg" cx="40" cy="40" r="36"/>
+                                        <circle id="overall-health-ring" class="health-ring-fill" cx="40" cy="40" r="36"/>
+                                    </svg>
+                                    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column">
+                                        <span id="overall-health-score-text" style="font-size:22px;font-weight:900;color:#0f172a;line-height:1">72</span>
+                                        <span style="font-size:8px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.1em">/100</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="font-size:10px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.15em">Overall Health Score</div>
+                                    <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
+                                        <span id="health-score-large-number" style="font-size:48px;font-weight:900;color:#0f172a;line-height:1;letter-spacing:-0.03em">72</span>
+                                        <span style="font-size:18px;font-weight:700;color:#cbd5e1">/100</span>
+                                        <span id="overall-health-badge" style="margin-left:8px;padding:4px 12px;background:linear-gradient(135deg,#dcfce7,#bbf7d0);color:#15803d;border-radius:6px;font-size:11px;font-weight:700;border:1px solid rgba(34,197,94,0.2)">Watch</span>
+                                    </div>
+                                    <p style="font-size:13px;color:#64748b;margin-top:10px;font-weight:500;line-height:1.5">Critical incidents are active. Review approvals and replay evidence before action.</p>
+                                </div>
+                            </div>
+                            <div class="flex-1 w-full lg:max-w-2xl lg:pl-6">
+                                <div class="flex justify-between" style="font-size:10px;font-weight:700;color:#cbd5e1;margin-bottom:8px"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+                                <div style="width:100%;height:8px;background:#e2e8f0;border-radius:8px;position:relative;overflow:visible;margin-bottom:24px">
+                                    <div id="overall-health-progress-bar" style="position:absolute;inset:0;width:72%;border-radius:8px;background:linear-gradient(90deg,#ef4444,#f59e0b,#22c55e);box-shadow:0 2px 8px rgba(34,197,94,0.2)"></div>
+                                    <div id="overall-health-progress-pin" style="position:absolute;top:50%;transform:translateY(-50%);left:calc(72% - 8px);width:16px;height:16px;background:white;border:3px solid #2563eb;border-radius:50%;box-shadow:0 2px 8px rgba(37,99,235,0.3)"></div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-x-12 gap-y-4" style="font-size:13px">
+                                    <div class="flex justify-between items-center"><div class="flex items-center gap-2.5"><span style="width:10px;height:10px;border-radius:3px;background:#22c55e"></span><span style="color:#475569;font-weight:600">System Health</span></div><span id="factor-system-health" style="font-weight:800;color:#0f172a;background:#f1f5f9;padding:2px 8px;border-radius:4px;font-size:12px">100/100</span></div>
+                                    <div class="flex justify-between items-center"><div class="flex items-center gap-2.5"><span style="width:10px;height:10px;border-radius:3px;background:#3b82f6"></span><span style="color:#475569;font-weight:600">Incident Impact</span></div><span id="factor-incident-impact" style="font-weight:800;color:#0f172a;background:#f1f5f9;padding:2px 8px;border-radius:4px;font-size:12px">70/100</span></div>
+                                    <div class="flex justify-between items-center"><div class="flex items-center gap-2.5"><span style="width:10px;height:10px;border-radius:3px;background:#22c55e"></span><span style="color:#475569;font-weight:600">Response Efficiency</span></div><span id="factor-response-efficiency" style="font-weight:800;color:#0f172a;background:#f1f5f9;padding:2px 8px;border-radius:4px;font-size:12px">85/100</span></div>
+                                    <div class="flex justify-between items-center"><div class="flex items-center gap-2.5"><span style="width:10px;height:10px;border-radius:3px;background:#f59e0b"></span><span style="color:#475569;font-weight:600">Approval Backlog</span></div><span id="factor-approval-backlog" style="font-weight:800;color:#0f172a;background:#f1f5f9;padding:2px 8px;border-radius:4px;font-size:12px">85/100</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stat Cards -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 animate-in delay-3">
+                        <div onclick="switchPage('incidents')" class="gcard stat-card p-5 cursor-pointer" style="--accent:linear-gradient(90deg,#f59e0b,#f97316)">
+                            <div class="flex items-center gap-4">
+                                <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#fef3c7,#fde68a);display:flex;align-items:center;justify-content:center;color:#d97706">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                                </div>
+                                <div>
+                                    <div style="font-size:10px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em">Open Incidents</div>
+                                    <div class="flex items-baseline gap-2" style="margin-top:4px"><span id="kpi-open-incidents" style="font-size:26px;font-weight:900;color:#0f172a">9</span><span style="font-size:10px;font-weight:700;color:#22c55e">↗ 12%</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div onclick="switchPage('incidents')" class="gcard stat-card p-5 cursor-pointer" style="--accent:linear-gradient(90deg,#ef4444,#dc2626);background:linear-gradient(135deg,#fff,#fef2f2)">
+                            <div class="flex items-center gap-4">
+                                <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#fee2e2,#fecaca);display:flex;align-items:center;justify-content:center;color:#dc2626">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                                </div>
+                                <div>
+                                    <div style="font-size:10px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em">Critical</div>
+                                    <div class="flex items-baseline gap-2" style="margin-top:4px"><span id="kpi-critical-incidents" style="font-size:26px;font-weight:900;color:#dc2626">2</span><span style="font-size:9px;font-weight:700;color:#ef4444;background:#fef2f2;padding:1px 6px;border-radius:4px;border:1px solid #fecaca">Triage</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div onclick="switchPage('approvals')" class="gcard stat-card p-5 cursor-pointer" style="--accent:linear-gradient(90deg,#8b5cf6,#6366f1)">
+                            <div class="flex items-center gap-4">
+                                <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#ede9fe,#ddd6fe);display:flex;align-items:center;justify-content:center;color:#7c3aed">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                </div>
+                                <div>
+                                    <div style="font-size:10px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em">Pending Approvals</div>
+                                    <div class="flex items-baseline gap-2" style="margin-top:4px"><span id="kpi-pending-approvals" style="font-size:26px;font-weight:900;color:#0f172a">3</span><span style="font-size:10px;font-weight:700;color:#8b5cf6">Review</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div onclick="switchPage('actions')" class="gcard stat-card p-5 cursor-pointer" style="--accent:linear-gradient(90deg,#22c55e,#16a34a)">
+                            <div class="flex items-center gap-4">
+                                <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#dcfce7,#bbf7d0);display:flex;align-items:center;justify-content:center;color:#16a34a">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                </div>
+                                <div>
+                                    <div style="font-size:10px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em">Executed Actions</div>
+                                    <div class="flex items-baseline gap-2" style="margin-top:4px"><span id="kpi-executed-actions" style="font-size:26px;font-weight:900;color:#0f172a">3</span><span style="font-size:10px;font-weight:700;color:#22c55e">↗ 18%</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div onclick="switchPage('cases')" class="gcard stat-card p-5 cursor-pointer" style="--accent:linear-gradient(90deg,#3b82f6,#6366f1)">
+                            <div class="flex items-center gap-4">
+                                <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);display:flex;align-items:center;justify-content:center;color:#2563eb">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                </div>
+                                <div>
+                                    <div style="font-size:10px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em">Cases Created</div>
+                                    <div class="flex items-baseline gap-2" style="margin-top:4px"><span style="font-size:26px;font-weight:900;color:#0f172a">3</span><span style="font-size:10px;font-weight:700;color:#94a3b8">Active</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Grid (Tables + Stack) -->
+                    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 animate-in delay-4">
+                        <!-- Left Column -->
+                        <div class="xl:col-span-2 space-y-6">
+                            <!-- Pending Approval Queue Card -->
+                            <div class="gcard" style="overflow:hidden">
+                                <div style="padding:20px 24px;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#fafbfc,#f8fafc)">
+                                    <div>
+                                        <div style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.15em;margin-bottom:4px">Human Governance</div>
+                                        <div class="flex items-center gap-3">
+                                            <h3 style="font-size:16px;font-weight:900;color:#0f172a;margin:0">Pending Approval Queue</h3>
+                                            <span id="dashboard-approvals-count" style="background:linear-gradient(135deg,#dbeafe,#c7d2fe);color:#4338ca;font-size:11px;font-weight:800;padding:2px 10px;border-radius:20px">3</span>
+                                        </div>
+                                    </div>
+                                    <button onclick="switchPage('approvals')" style="font-size:11px;font-weight:700;color:#3b82f6;background:white;border:1px solid #e2e8f0;padding:7px 16px;border-radius:8px;cursor:pointer;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.04)" onmouseover="this.style.borderColor='#3b82f6';this.style.background='#eff6ff'" onmouseout="this.style.borderColor='#e2e8f0';this.style.background='white'">View all</button>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="data-table" id="dashboard-approvals-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Request ID</th>
+                                                <th>Type</th>
+                                                <th>Runbook / Action</th>
+                                                <th>Risk</th>
+                                                <th style="text-align:right">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Dynamic Rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Recent Incidents Card -->
+                            <div class="gcard" style="overflow:hidden">
+                                <div style="padding:20px 24px;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#fafbfc,#f8fafc)">
+                                    <h3 style="font-size:16px;font-weight:900;color:#0f172a;margin:0">Recent Incidents</h3>
+                                    <button onclick="switchPage('incidents')" style="font-size:11px;font-weight:700;color:#3b82f6;background:white;border:1px solid #e2e8f0;padding:7px 16px;border-radius:8px;cursor:pointer;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.04)" onmouseover="this.style.borderColor='#3b82f6';this.style.background='#eff6ff'" onmouseout="this.style.borderColor='#e2e8f0';this.style.background='white'">View all</button>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="data-table" id="dashboard-incidents-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Incident</th>
+                                                <th>Type</th>
+                                                <th>Environment</th>
+                                                <th>Risk</th>
+                                                <th>Status</th>
+                                                <th>Runbook</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Dynamic Rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column (Timeline & Health) -->
+                        <div class="space-y-6">
+                            <!-- Replay Timeline Card -->
+                            <div class="gcard p-6">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                                    <h3 style="font-size:15px;font-weight:900;color:#0f172a;margin:0">Replay Timeline</h3>
+                                    <button onclick="switchPage('actions')" style="font-size:11px;font-weight:700;color:#3b82f6;background:none;border:none;cursor:pointer;">Full timeline</button>
+                                </div>
+                                <div class="timeline" id="replay-timeline-container">
+                                    <!-- Dynamic Timeline Events -->
+                                </div>
+                            </div>
+
+                            <!-- System Health Card -->
+                            <div class="gcard p-6">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                                    <h3 style="font-size:15px;font-weight:900;color:#0f172a;margin:0">System Health</h3>
+                                    <button onclick="switchPage('settings')" style="font-size:11px;font-weight:700;color:#3b82f6;background:none;border:none;cursor:pointer;">View details</button>
+                                </div>
+                                <div class="space-y-4">
+                                    <!-- API -->
+                                    <div class="flex items-center gap-3.5">
+                                        <div style="width:36px;height:36px;border-radius:10px;background:#eff6ff;display:flex;align-items:center;justify-content:center;color:#2563eb">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+                                        </div>
+                                        <div style="flex:1">
+                                            <div style="font-size:13px;font-weight:700;color:#0f172a">API Gateway</div>
+                                            <div id="health-api-status" style="font-size:10px;font-weight:700;margin-top:2px;text-transform:uppercase;letter-spacing:.05em;color:#22c55e">All systems operational</div>
+                                        </div>
+                                        <div class="sys-bar" style="max-width:80px">
+                                            <div id="health-api-bar-fill" class="sys-bar-fill" style="width:99.98%; background:linear-gradient(90deg,#22c55e,#4ade80)"></div>
+                                        </div>
+                                        <span id="health-api-value" style="font-size:13.5px;font-weight:900;color:#0f172a;min-width:60px;text-align:right">99.98%</span>
+                                    </div>
+                                    <!-- Database -->
+                                    <div class="flex items-center gap-3.5">
+                                        <div style="width:36px;height:36px;border-radius:10px;background:#e0f2fe;display:flex;align-items:center;justify-content:center;color:#0288d1">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
+                                        </div>
+                                        <div style="flex:1">
+                                            <div style="font-size:13px;font-weight:700;color:#0f172a">Database Core</div>
+                                            <div id="health-database-status" style="font-size:10px;font-weight:700;margin-top:2px;text-transform:uppercase;letter-spacing:.05em;color:#22c55e">All systems operational</div>
+                                        </div>
+                                        <div class="sys-bar" style="max-width:80px">
+                                            <div id="health-database-bar-fill" class="sys-bar-fill" style="width:99.95%; background:linear-gradient(90deg,#22c55e,#4ade80)"></div>
+                                        </div>
+                                        <span id="health-database-value" style="font-size:13.5px;font-weight:900;color:#0f172a;min-width:60px;text-align:right">99.95%</span>
+                                    </div>
+                                    <!-- Error Log -->
+                                    <div class="flex items-center gap-3.5">
+                                        <div style="width:36px;height:36px;border-radius:10px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#64748b">
+                                            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                                        </div>
+                                        <div style="flex:1">
+                                            <div style="font-size:13px;font-weight:700;color:#0f172a">Error Log</div>
+                                            <div id="health-errors-status" style="font-size:10px;font-weight:700;margin-top:2px;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8">No critical errors</div>
+                                        </div>
+                                        <div class="sys-bar" style="max-width:80px">
+                                            <div id="health-errors-bar-fill" class="sys-bar-fill" style="width:0%; background:#94a3b8"></div>
+                                        </div>
+                                        <span id="health-errors-value" style="font-size:13.5px;font-weight:900;color:#0f172a;min-width:60px;text-align:right">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- End View: Command Center -->
+
+                <!-- ★ VIEW: INCIDENTS ★ -->
+                <div id="view-incidents" class="page-view hidden space-y-7">
+                    <div class="gcard" style="overflow:hidden">
+                        <div style="padding:20px 24px;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#fafbfc,#f8fafc)" class="flex-wrap gap-4">
+                            <div>
+                                <h3 style="font-size:17px;font-weight:900;color:#0f172a;margin:0">Incident Directory</h3>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:12px;" class="flex-wrap">
+                                <select id="incident-filter-risk" onchange="applyIncidentFilters()" style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;outline:none;cursor:pointer;">
+                                    <option value="ALL">All Risks</option>
+                                    <option value="Critical">Critical</option>
+                                    <option value="High">High</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Low">Low</option>
+                                </select>
+                                <select id="incident-filter-status" onchange="applyIncidentFilters()" style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;outline:none;cursor:pointer;">
+                                    <option value="ALL">All Statuses</option>
+                                    <option value="Open">Open</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Resolved">Resolved</option>
+                                    <option value="Approval Required">Approval Required</option>
+                                </select>
+                                <select id="incident-filter-env" onchange="applyIncidentFilters()" style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;outline:none;cursor:pointer;">
+                                    <option value="ALL">All Envs</option>
+                                    <option value="Production">Production</option>
+                                    <option value="Sandbox">Sandbox</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="data-table" id="incidents-table">
+                                <thead>
+                                    <tr>
+                                        <th style="cursor:pointer; user-select:none;" onclick="sortIncidents('id')">Incident <span id="sort-incident-id">↕</span></th>
+                                        <th style="cursor:pointer; user-select:none;" onclick="sortIncidents('type')">Type <span id="sort-incident-type">↕</span></th>
+                                        <th style="cursor:pointer; user-select:none;" onclick="sortIncidents('env')">Environment <span id="sort-incident-env">↕</span></th>
+                                        <th style="cursor:pointer; user-select:none;" onclick="sortIncidents('risk')">Risk <span id="sort-incident-risk">↕</span></th>
+                                        <th style="cursor:pointer; user-select:none;" onclick="sortIncidents('status')">Status <span id="sort-incident-status">↕</span></th>
+                                        <th style="cursor:pointer; user-select:none;" onclick="sortIncidents('runbook')">Runbook <span id="sort-incident-runbook">↕</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="padding:14px 20px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;" class="text-slate-500 font-semibold text-xs">
+                            <span id="incidents-page-info">Page 1 of 1</span>
+                            <div style="display:flex;gap:8px;">
+                                <button onclick="prevIncidentsPage()" id="btn-prev-incidents" style="padding:6px 12px;border:1px solid #e2e8f0;border-radius:6px;background:white;cursor:pointer;font-weight:700;transition:all .2s;">Prev</button>
+                                <button onclick="nextIncidentsPage()" id="btn-next-incidents" style="padding:6px 12px;border:1px solid #e2e8f0;border-radius:6px;background:white;cursor:pointer;font-weight:700;transition:all .2s;">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ★ VIEW: APPROVALS ★ -->
+                <div id="view-approvals" class="page-view hidden space-y-7">
+                    <div class="gcard" style="overflow:hidden">
+                        <div style="padding:20px 24px;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#fafbfc,#f8fafc)">
+                            <div>
+                                <h3 style="font-size:17px;font-weight:900;color:#0f172a;margin:0">Human Governance Queue</h3>
+                            </div>
+                            <div>
+                                <select id="approval-filter-risk" onchange="applyApprovalFilters()" style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;outline:none;cursor:pointer;">
+                                    <option value="ALL">All Risks</option>
+                                    <option value="Critical">Critical</option>
+                                    <option value="High">High</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Low">Low</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="data-table" id="approvals-page-table">
+                                <thead>
+                                    <tr>
+                                        <th style="cursor:pointer; user-select:none;" onclick="sortApprovals('id')">Request ID <span id="sort-approval-id">↕</span></th>
+                                        <th style="cursor:pointer; user-select:none;" onclick="sortApprovals('type')">Type <span id="sort-approval-type">↕</span></th>
+                                        <th style="cursor:pointer; user-select:none;" onclick="sortApprovals('action')">Runbook / Action <span id="sort-approval-action">↕</span></th>
+                                        <th style="cursor:pointer; user-select:none;" onclick="sortApprovals('risk')">Risk <span id="sort-approval-risk">↕</span></th>
+                                        <th style="text-align:right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="padding:14px 20px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;" class="text-slate-500 font-semibold text-xs">
+                            <span id="approvals-page-info">Page 1 of 1</span>
+                            <div style="display:flex;gap:8px;">
+                                <button onclick="prevApprovalsPage()" id="btn-prev-approvals" style="padding:6px 12px;border:1px solid #e2e8f0;border-radius:6px;background:white;cursor:pointer;font-weight:700;transition:all .2s;">Prev</button>
+                                <button onclick="nextApprovalsPage()" id="btn-next-approvals" style="padding:6px 12px;border:1px solid #e2e8f0;border-radius:6px;background:white;cursor:pointer;font-weight:700;transition:all .2s;">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ★ VIEW: ACTIONS ★ -->
+                <div id="view-actions" class="page-view hidden space-y-7">
+                    <div class="gcard" style="padding:24px;">
+                        <h3 style="font-size:17px;font-weight:900;color:#0f172a;margin-bottom:16px">Executed Governance Actions</h3>
+                        <div class="overflow-x-auto">
+                            <table class="data-table" id="actions-table">
+                                <thead>
+                                    <tr>
+                                        <th>Action ID</th>
+                                        <th>Action Type</th>
+                                        <th>Target Resource</th>
+                                        <th>Executed By</th>
+                                        <th>Status</th>
+                                        <th>Timestamp</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="actions-table-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ★ VIEW: RUNBOOKS ★ -->
+                <div id="view-runbooks" class="page-view hidden space-y-7">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="gcard p-6 flex flex-col justify-between">
+                            <div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                                    <span style="font-size:10px;font-weight:800;color:#3b82f6;text-transform:uppercase;letter-spacing:0.05em;">RB-PAY-007</span>
+                                    <span style="padding:2px 8px;background:#e1f5fe;color:#0288d1;border-radius:4px;font-size:10px;font-weight:700;">Guarded</span>
+                                </div>
+                                <h4 style="font-size:15px;font-weight:800;color:#0f172a;margin-bottom:8px">Restart Payment Service</h4>
+                                <p style="font-size:12px;color:#64748b;line-height:1.5;margin-bottom:16px">Gracefully restarts the payment processing nodes, flushes active API connections, and updates logs.</p>
+                            </div>
+                            <div style="border-top:1px solid #f1f5f9;padding-top:12px;display:flex;justify-content:space-between;align-items:center;">
+                                <span style="font-size:11px;color:#94a3b8;font-weight:600">SLA: 45 seconds</span>
+                                <button onclick="triggerActionSimulator('RB-PAY-007')" style="color:#3b82f6;font-size:12px;font-weight:700;background:none;border:none;cursor:pointer;">Simulate Playbook</button>
+                            </div>
+                        </div>
+                        <div class="gcard p-6 flex flex-col justify-between">
+                            <div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                                    <span style="font-size:10px;font-weight:800;color:#10b981;text-transform:uppercase;letter-spacing:0.05em;">RB-APP-002</span>
+                                    <span style="padding:2px 8px;background:#e8f5e9;color:#2e7d32;border-radius:4px;font-size:10px;font-weight:700;">Autonomous</span>
+                                </div>
+                                <h4 style="font-size:15px;font-weight:800;color:#0f172a;margin-bottom:8px">Scale App Instance</h4>
+                                <p style="font-size:12px;color:#64748b;line-height:1.5;margin-bottom:16px">Spins up additional application nodes when CPU utilisation exceeds 85% for more than 5 minutes.</p>
+                            </div>
+                            <div style="border-top:1px solid #f1f5f9;padding-top:12px;display:flex;justify-content:space-between;align-items:center;">
+                                <span style="font-size:11px;color:#94a3b8;font-weight:600">SLA: 120 seconds</span>
+                                <button onclick="triggerActionSimulator('RB-APP-002')" style="color:#3b82f6;font-size:12px;font-weight:700;background:none;border:none;cursor:pointer;">Simulate Playbook</button>
+                            </div>
+                        </div>
+                        <div class="gcard p-6 flex flex-col justify-between">
+                            <div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                                    <span style="font-size:10px;font-weight:800;color:#f59e0b;text-transform:uppercase;letter-spacing:0.05em;">RB-CACHE-003</span>
+                                    <span style="padding:2px 8px;background:#fff8e1;color:#f57f17;border-radius:4px;font-size:10px;font-weight:700;">Approval Required</span>
+                                </div>
+                                <h4 style="font-size:15px;font-weight:800;color:#0f172a;margin-bottom:8px">Clear Redis Cache</h4>
+                                <p style="font-size:12px;color:#64748b;line-height:1.5;margin-bottom:16px">Clears the Redis cache store. Requires manual authorization because it causes temporary DB load spikes.</p>
+                            </div>
+                            <div style="border-top:1px solid #f1f5f9;padding-top:12px;display:flex;justify-content:space-between;align-items:center;">
+                                <span style="font-size:11px;color:#94a3b8;font-weight:600">SLA: 15 seconds</span>
+                                <button onclick="triggerActionSimulator('RB-CACHE-003')" style="color:#3b82f6;font-size:12px;font-weight:700;background:none;border:none;cursor:pointer;">Simulate Playbook</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ★ VIEW: POLICIES ★ -->
+                <div id="view-policies" class="page-view hidden space-y-7">
+                    <div class="gcard p-6">
+                        <h3 style="font-size:17px;font-weight:900;color:#0f172a;margin-bottom:16px">Governance Policy Rules</h3>
+                        <div class="space-y-4">
+                            <div style="display:flex;align-items:center;justify-content:space-between;padding:16px;border:1px solid #f1f5f9;border-radius:10px;" class="flex-wrap gap-4">
+                                <div>
+                                    <h4 style="font-size:14px;font-weight:800;color:#0f172a;margin-bottom:4px">Critical Service Disruptions</h4>
+                                    <p style="font-size:11.5px;color:#64748b;margin:0">Require human authorization for all actions on production servers.</p>
+                                </div>
+                                <span style="padding:4px 10px;background:#fee2e2;color:#ef4444;border:1px solid #fecaca;border-radius:6px;font-size:10px;font-weight:700;">Human Gate</span>
+                            </div>
+                            <div style="display:flex;align-items:center;justify-content:space-between;padding:16px;border:1px solid #f1f5f9;border-radius:10px;" class="flex-wrap gap-4">
+                                <div>
+                                    <h4 style="font-size:14px;font-weight:800;color:#0f172a;margin-bottom:4px">Minor Resource Scaling</h4>
+                                    <p style="font-size:11.5px;color:#64748b;margin:0">Allow Zentom AI to scale resources automatically outside peak hours.</p>
+                                </div>
+                                <span style="padding:4px 10px;background:#dcfce7;color:#15803d;border:1px solid #bbf7d0;border-radius:6px;font-size:10px;font-weight:700;">Fully Autonomous</span>
+                            </div>
+                            <div style="display:flex;align-items:center;justify-content:space-between;padding:16px;border:1px solid #f1f5f9;border-radius:10px;" class="flex-wrap gap-4">
+                                <div>
+                                    <h4 style="font-size:14px;font-weight:800;color:#0f172a;margin-bottom:4px">Data Mutation Guardrail</h4>
+                                    <p style="font-size:11.5px;color:#64748b;margin:0">Block all write operations to the archive databases during sync windows.</p>
+                                </div>
+                                <span style="padding:4px 10px;background:#fef3c7;color:#d97706;border:1px solid #fde68a;border-radius:6px;font-size:10px;font-weight:700;">Blocked</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ★ VIEW: CASES ★ -->
+                <div id="view-cases" class="page-view hidden space-y-7">
+                    <div class="gcard" style="padding:24px">
+                        <h3 style="font-size:17px;font-weight:900;color:#0f172a;margin-bottom:16px">Salesforce Incident Cases</h3>
+                        <div class="overflow-x-auto">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Case Number</th>
+                                        <th>Subject</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Linked Incident</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cases-table-body">
+                                    <!-- Dynamic Cases -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ★ VIEW: REPORTS ★ -->
+                <div id="view-reports" class="page-view hidden space-y-7">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="gcard p-6">
+                            <h4 style="font-size:14px;font-weight:800;color:#0f172a;margin-bottom:16px">Incident Trends (Last 7 Days)</h4>
+                            <!-- Premium SVG Chart -->
+                            <svg viewBox="0 0 500 200" style="width:100%;height:auto;background:#fafbfc;border:1px solid #f1f5f9;border-radius:10px;">
+                                <defs>
+                                    <linearGradient id="chartGradBlue" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.3"></stop>
+                                        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"></stop>
+                                    </linearGradient>
+                                </defs>
+                                <line x1="40" y1="160" x2="480" y2="160" stroke="#cbd5e1" stroke-width="1"></line>
+                                <line x1="40" y1="20" x2="40" y2="160" stroke="#cbd5e1" stroke-width="1"></line>
+                                <path d="M 40 140 L 110 110 L 180 130 L 250 80 L 320 90 L 390 50 L 460 70" fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"></path>
+                                <path d="M 40 140 L 110 110 L 180 130 L 250 80 L 320 90 L 390 50 L 460 70 L 460 160 L 40 160 Z" fill="url(#chartGradBlue)"></path>
+                                <circle cx="40" cy="140" r="4" fill="#3b82f6"></circle>
+                                <circle cx="110" cy="110" r="4" fill="#3b82f6"></circle>
+                                <circle cx="180" cy="130" r="4" fill="#3b82f6"></circle>
+                                <circle cx="250" cy="80" r="4" fill="#3b82f6"></circle>
+                                <circle cx="320" cy="90" r="4" fill="#3b82f6"></circle>
+                                <circle cx="390" cy="50" r="4" fill="#3b82f6"></circle>
+                                <circle cx="460" cy="70" r="4" fill="#3b82f6"></circle>
+                            </svg>
+                        </div>
+                        <div class="gcard p-6">
+                            <h4 style="font-size:14px;font-weight:800;color:#0f172a;margin-bottom:16px">Average Recovery Time by Severity</h4>
+                            <svg viewBox="0 0 500 200" style="width:100%;height:auto;background:#fafbfc;border:1px solid #f1f5f9;border-radius:10px;">
+                                <line x1="40" y1="160" x2="480" y2="160" stroke="#cbd5e1" stroke-width="1"></line>
+                                <rect x="80" y="40" width="40" height="120" rx="4" fill="#ef4444" style="opacity:0.85"></rect>
+                                <text x="100" y="30" font-size="10" font-weight="700" text-anchor="middle" fill="#0f172a">12 mins</text>
+                                <text x="100" y="180" font-size="10" font-weight="700" text-anchor="middle" fill="#64748b">Critical</text>
+                                <rect x="180" y="80" width="40" height="80" rx="4" fill="#f59e0b" style="opacity:0.85"></rect>
+                                <text x="200" y="70" font-size="10" font-weight="700" text-anchor="middle" fill="#0f172a">25 mins</text>
+                                <text x="200" y="180" font-size="10" font-weight="700" text-anchor="middle" fill="#64748b">High</text>
+                                <rect x="280" y="110" width="40" height="50" rx="4" fill="#3b82f6" style="opacity:0.85"></rect>
+                                <text x="300" y="100" font-size="10" font-weight="700" text-anchor="middle" fill="#0f172a">42 mins</text>
+                                <text x="300" y="180" font-size="10" font-weight="700" text-anchor="middle" fill="#64748b">Medium</text>
+                                <rect x="380" y="130" width="40" height="30" rx="4" fill="#10b981" style="opacity:0.85"></rect>
+                                <text x="400" y="120" font-size="10" font-weight="700" text-anchor="middle" fill="#0f172a">68 mins</text>
+                                <text x="400" y="180" font-size="10" font-weight="700" text-anchor="middle" fill="#64748b">Low</text>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ★ VIEW: INTEGRATIONS ★ -->
+                <div id="view-integrations" class="page-view hidden space-y-7">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="gcard p-6 flex flex-col justify-between">
+                            <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:16px;">
+                                <div>
+                                    <h4 style="font-size:15px;font-weight:800;color:#0f172a;margin-bottom:4px">Slack Channels</h4>
+                                    <p style="font-size:11px;color:#64748b;margin:0">Post alerts and triggers to Ops channels.</p>
+                                </div>
+                                <div style="width:36px;height:36px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#4a154b;font-weight:800;font-size:16px;">S</div>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #f1f5f9;padding-top:12px;">
+                                <span id="slack-status-label" style="font-size:11px;font-weight:700;color:#22c55e">Connected</span>
+                                <input type="checkbox" checked onchange="toggleIntegration('Slack', this)" style="cursor:pointer;width:34px;height:18px;border-radius:10px;accent-color:#3b82f6;">
+                            </div>
+                        </div>
+                        <div class="gcard p-6 flex flex-col justify-between">
+                            <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:16px;">
+                                <div>
+                                    <h4 style="font-size:15px;font-weight:800;color:#0f172a;margin-bottom:4px">Splunk Telemetry</h4>
+                                    <p style="font-size:11px;color:#64748b;margin:0">Ingest logs and trace records instantly.</p>
+                                </div>
+                                <div style="width:36px;height:36px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#fc5200;font-weight:800;font-size:16px;">Sp</div>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #f1f5f9;padding-top:12px;">
+                                <span id="splunk-status-label" style="font-size:11px;font-weight:700;color:#22c55e">Connected</span>
+                                <input type="checkbox" checked onchange="toggleIntegration('Splunk', this)" style="cursor:pointer;width:34px;height:18px;border-radius:10px;accent-color:#3b82f6;">
+                            </div>
+                        </div>
+                        <div class="gcard p-6 flex flex-col justify-between">
+                            <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:16px;">
+                                <div>
+                                    <h4 style="font-size:15px;font-weight:800;color:#0f172a;margin-bottom:4px">Datadog APM</h4>
+                                    <p style="font-size:11px;color:#64748b;margin:0">Performance traces and metric overlays.</p>
+                                </div>
+                                <div style="width:36px;height:36px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#632ca6;font-weight:800;font-size:16px;">D</div>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #f1f5f9;padding-top:12px;">
+                                <span id="datadog-status-label" style="font-size:11px;font-weight:700;color:#64748b">Disconnected</span>
+                                <input type="checkbox" onchange="toggleIntegration('Datadog', this)" style="cursor:pointer;width:34px;height:18px;border-radius:10px;accent-color:#3b82f6;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ★ VIEW: SETTINGS ★ -->
+                <div id="view-settings" class="page-view hidden space-y-7">
+                    <div class="gcard p-6">
+                        <h3 style="font-size:17px;font-weight:900;color:#0f172a;margin-bottom:16px">System Settings & Simulator</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <label style="font-size:12px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:10px;">Zentom AI Posture Mode</label>
+                                <div style="display:flex;gap:12px;" class="flex-wrap">
+                                    <button onclick="changePosture('Conservative', this)" class="posture-pill gcard" style="padding:10px 20px;font-size:13px;font-weight:700;border-color:#3b82f6;background:#eff6ff;color:#2563eb;cursor:pointer;">Conservative</button>
+                                    <button onclick="changePosture('Balanced', this)" class="posture-pill gcard" style="padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;">Balanced</button>
+                                    <button onclick="changePosture('Aggressive', this)" class="posture-pill gcard" style="padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;">Aggressive</button>
+                                </div>
+                            </div>
+                            <div style="border-top:1px solid #f1f5f9;padding-top:20px;">
+                                <label for="error-simulator-slider" style="font-size:12px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:6px;">Simulated System Errors (Error Log Count)</label>
+                                <div style="display:flex;align-items:center;gap:16px;" class="flex-wrap">
+                                    <input type="range" id="error-simulator-slider" min="0" max="40" value="0" oninput="simulateErrorLogChange(this.value)" style="flex:1;max-width:300px;cursor:pointer;">
+                                    <span id="error-simulator-value" style="font-size:16px;font-weight:900;color:#0f172a;background:#f1f5f9;padding:4px 12px;border-radius:6px;min-width:40px;text-align:center">0</span>
+                                    <p style="font-size:11.5px;color:#64748b;margin:0">Adjust slider to simulate system health warnings (0-5: OK, 6-15: Warning, >15: Critical).</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- ★ SIMULATED REVIEW MODAL ★ -->
+    <div id="simulated-review-modal" class="hidden" style="position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px);">
+        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; width: 100%; max-width: 500px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); overflow: hidden; margin: 16px;">
+            <!-- Modal Header -->
+            <header style="padding: 20px 24px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, white, #f8fafc);">
+                <h2 style="font-size: 17px; font-weight: 900; color: #0f172a; margin: 0;">Governance Request Review</h2>
+                <button onclick="closeReviewModal()" style="background: transparent; border: none; cursor: pointer; color: #94a3b8; font-size: 24px; line-height: 1; outline: none;">&times;</button>
+            </header>
+            
+            <!-- Modal Body -->
+            <div style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div>
+                        <span style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">Request ID</span>
+                        <p id="modal-request-id" style="font-size: 14px; font-weight: 800; color: #2563eb; margin: 4px 0 0 0;">APR-2025-000231</p>
+                    </div>
+                    <div>
+                        <span style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">Type</span>
+                        <p id="modal-type" style="font-size: 13.5px; font-weight: 600; color: #0f172a; margin: 4px 0 0 0;">Runbook</p>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div>
+                        <span style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">Risk Level</span>
+                        <p style="margin: 4px 0 0 0;" id="modal-risk-badge-container"><span class="risk-pill high">High</span></p>
+                    </div>
+                    <div>
+                        <span style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">Suggested Action</span>
+                        <p id="modal-action" style="font-size: 13.5px; font-weight: 700; color: #0f172a; margin: 4px 0 0 0;">RB-PAY-007 - Restart Payment Service</p>
+                    </div>
+                </div>
+
+                <div style="border-top: 1px dashed #e2e8f0; padding-top: 12px;">
+                    <span style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">Policy Gate</span>
+                    <p style="font-size: 12.5px; color: #64748b; margin: 4px 0 0 0; line-height: 1.4;">Zentom AI evaluated this action as safe, but the policy gate requires manual approval for critical actions.</p>
+                </div>
+
+                <!-- Input Confirmation -->
+                <div id="modal-input-section" style="border-top: 1px dashed #e2e8f0; padding-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+                    <label id="modal-input-label" style="font-size: 12.5px; font-weight: 700; color: #0f172a;">Approver Name Confirmation</label>
+                    <input type="text" id="modal-input-approver" placeholder="Type your full name to confirm approval" style="background: white; border: 1px solid #cbd5e1; color: #0f172a; border-radius: 6px; padding: 8px 12px; font-size: 13px; outline: none;" oninput="validateModalForm()" />
+                    <textarea id="modal-input-reason" placeholder="Provide the reason for rejecting this action suggestion" style="display:none; background: white; border: 1px solid #cbd5e1; color: #0f172a; border-radius: 6px; padding: 8px 12px; font-size: 13px; min-height: 80px; outline: none; font-family: sans-serif; resize: vertical;" oninput="validateModalForm()"></textarea>
+                </div>
+            </div>
+            
+            <!-- Modal Footer -->
+            <footer style="padding: 16px 24px; border-top: 1px solid #f1f5f9; display: flex; justify-content: flex-end; gap: 12px; background: linear-gradient(180deg, white, #f8fafc);">
+                <button onclick="closeReviewModal()" style="padding: 8px 16px; border-radius: 6px; border: 1px solid #cbd5e1; background: white; color: #64748b; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all .2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">Cancel</button>
+                
+                <span id="modal-action-buttons" style="display: flex; gap: 12px; align-items: center;">
+                    <button onclick="toggleModalMode(false)" id="btn-modal-reject-mode" style="padding: 8px 16px; border-radius: 6px; border: 1px solid transparent; background: transparent; color: #ef4444; font-size: 12.5px; font-weight: 600; cursor: pointer;">Reject instead</button>
+                    <button onclick="submitModalDecision(true)" id="btn-modal-submit" disabled style="padding: 8px 20px; border-radius: 6px; border: none; background: #22c55e; color: white; font-size: 12.5px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2); opacity: 0.5;">Approve Execution</button>
+                </span>
+            </footer>
+        </div>
+    </div>
+
+    <!-- JavaScript logic -->
+    <script>
+    // ===== CONFIGURATION & PAGE META =====
+    const PAGE_META = {
+        command: { title: 'Operations Command Center', eyebrow: 'Unified Operations Dashboard', summary: 'Health, incidents, approvals, replay, and governed actions in one control surface.' },
+        incidents: { title: 'Incident Operations', eyebrow: 'Triage and evidence', summary: 'Inspect incidents, root cause, risk, and remediation state.' },
+        approvals: { title: 'Human Governance Queue', eyebrow: 'Triage authorizations', summary: 'Review and audit pending actions flagged for verification.' },
+        actions: { title: 'Action Management', eyebrow: 'Automated operations', summary: 'Audit log of actions executed autonomously or with human confirmation.' },
+        runbooks: { title: 'Runbook Library', eyebrow: 'Operational playbooks', summary: 'View, test, and execute standard runbooks for systems failure.' },
+        policies: { title: 'Governance Policies', eyebrow: 'Risk and compliance', summary: 'Configure approval boundaries and AI autonomy limits.' },
+        cases: { title: 'Case Management', eyebrow: 'Salesforce ticket integration', summary: 'List of Salesforce cases synchronized from automated operations.' },
+        reports: { title: 'Operational Reports', eyebrow: 'Analytics and insights', summary: 'Operational charts, SLA tracking, and resolution telemetry.' },
+        integrations: { title: 'Integration Hub', eyebrow: 'Connected systems', summary: 'Manage hooks and connection states to alerting platforms.' },
+        settings: { title: 'System Settings', eyebrow: 'Admin controls', summary: 'Adjust co-pilot response modes and simulation parameters.' }
+    };
+
+    // ===== CENTRAL STATE =====
+    let currentPage = 'command';
+    let globalSearchKey = '';
+    let globalErrorLogCount = 0;
+    let overallHealthScore = 92;
+
+    // Seeding lists
+    let approvalsList = [
+        { id: 'APR-2025-000231', type: 'Runbook', action: 'RB-PAY-007 - Restart Payment Service', risk: 'High', riskClass: 'risk-pill high' },
+        { id: 'APR-2025-000230', type: 'Action', action: 'Scale APP-SVC-02', risk: 'Medium', riskClass: 'risk-pill medium' },
+        { id: 'APR-2025-000229', type: 'Runbook', action: 'RB-CACHE-003 - Clear Redis Cache', risk: 'Low', riskClass: 'risk-pill low' }
+    ];
+
+    let incidentsList = [
+        { id: 'INC-2025-00123', type: 'API Rate Limit', env: 'Production', envClass: 'env-pill production', risk: 'Medium', riskClass: 'risk-pill medium', status: 'In Progress', statusClass: 'status-pill in-progress', runbook: 'API Rate Limit Runbook' },
+        { id: 'INC-2025-00122', type: 'Workflow Failure', env: 'Production', envClass: 'env-pill production', risk: 'Low', riskClass: 'risk-pill low', status: 'Resolved', statusClass: 'status-pill resolved', runbook: 'Workflow Failure Runbook' },
+        { id: 'INC-2025-00120', type: 'Login Anomaly', env: 'Sandbox', envClass: 'env-pill sandbox', risk: 'High', riskClass: 'risk-pill high', status: 'Approval Required', statusClass: 'status-pill approval-required', runbook: 'Login Anomaly Runbook' },
+        { id: 'INC-2025-00119', type: 'CPU Spike', env: 'Production', envClass: 'env-pill production', risk: 'Critical', riskClass: 'risk-pill critical', status: 'Open', statusClass: 'status-pill open', runbook: 'RB-APP-002 - Scale App Instance' },
+        { id: 'INC-2025-00118', type: 'Database Latency', env: 'Production', envClass: 'env-pill production', risk: 'High', riskClass: 'risk-pill high', status: 'Resolved', statusClass: 'status-pill resolved', runbook: 'DB Connection Flush' },
+        { id: 'INC-2025-00117', type: 'Memory Leak', env: 'Sandbox', envClass: 'env-pill sandbox', risk: 'Medium', riskClass: 'risk-pill medium', status: 'In Progress', statusClass: 'status-pill in-progress', runbook: 'App Node Restart' },
+        { id: 'INC-2025-00116', type: 'Integration Failure', env: 'Production', envClass: 'env-pill production', risk: 'Low', riskClass: 'risk-pill low', status: 'Resolved', statusClass: 'status-pill resolved', runbook: 'Retry Sync Queue' }
+    ];
+
+    let timelineEventsList = [
+        { name: 'Incident Ingestion', time: '10:14 AM', details: 'Incident data verified and stored in database.', iconClass: 'tl-done', expanded: false },
+        { name: 'Risk Calculation', time: '10:14 AM', details: 'Risk score evaluated at 7.2 based on priority.', iconClass: 'tl-done', expanded: false },
+        { name: 'Policy Evaluation', time: '10:14 AM', details: 'Policy gate triggered: Approval required.', iconClass: 'tl-done', expanded: false },
+        { name: 'AI Recommendation', time: '10:14 AM', details: 'Zentom AI recommended: Runbook RB-PAY-007.', iconClass: 'tl-done', expanded: false }
+    ];
+
+    let executedActionsList = [
+        { id: 'ACT-0091', type: 'Service Restart', target: 'Payment Gateway API', by: 'Zentom AI (Auto)', status: 'Success', statusClass: 'bg-green-100 text-green-700 border border-green-200', time: '10:18 AM' },
+        { id: 'ACT-0090', type: 'Scale Up', target: 'Web Server Pool', by: 'Human Approved (vrdev)', status: 'Success', statusClass: 'bg-green-100 text-green-700 border border-green-200', time: '09:42 AM' },
+        { id: 'ACT-0089', type: 'Cache Clear', target: 'Redis Cluster Main', by: 'Zentom AI (Auto)', status: 'Failed', statusClass: 'bg-red-100 text-red-700 border border-red-200', time: '08:15 AM' }
+    ];
+
+    let casesList = [
+        { id: '500dL00000abc01', subject: 'High Payment Failure Rate Alert', priority: 'Critical', pClass: 'text-red-600 font-bold', status: 'New', statusClass: 'text-amber-600 font-bold', incident: 'INC-2025-00120' },
+        { id: '500dL00000abc02', subject: 'Database Pool Near Exhaustion', priority: 'High', pClass: 'text-orange-500 font-bold', status: 'Working', statusClass: 'text-blue-500 font-bold', incident: 'INC-2025-00123' },
+        { id: '500dL00000abc03', subject: 'Slow API Response Warning', priority: 'Medium', pClass: 'text-slate-600 font-bold', status: 'Closed', statusClass: 'text-green-600 font-bold', incident: 'INC-2025-00122' }
+    ];
+
+    // Table State (Filters & Sorting & Pagination)
+    let approvalFilterRisk = 'ALL';
+    let approvalSortField = 'id';
+    let approvalSortAsc = true;
+    let approvalPage = 1;
+    const approvalPageSize = 3;
+
+    let incidentFilterRisk = 'ALL';
+    let incidentFilterStatus = 'ALL';
+    let incidentFilterEnv = 'ALL';
+    let incidentSortField = 'id';
+    let incidentSortAsc = true;
+    let incidentPage = 1;
+    const incidentPageSize = 5;
+
+    // Modal State
+    let selectedReviewRow = null;
+    let isApprovingMode = true; // true = approve, false = reject
+
+    // ===== PAGE ROUTING =====
+    function switchPage(pageName) {
+        if (!PAGE_META[pageName]) return;
+        currentPage = pageName;
+        
+        triggerPageLoadAnimation(() => {
+            // Update sidebar highlighting
+            const snavs = document.querySelectorAll('.snav, .ssub');
+            snavs.forEach(nav => {
+                const isSub = nav.classList.contains('ssub');
+                if (nav.dataset.page === pageName) {
+                    nav.classList.add(isSub ? 'ssub-active' : 'snav-active');
+                    if (isSub) nav.style.color = '#fff';
+                } else {
+                    nav.classList.remove(isSub ? 'ssub-active' : 'snav-active');
+                    if (isSub) nav.style.color = '';
+                }
+            });
+
+            // Update page headers
+            const meta = PAGE_META[pageName];
+            document.getElementById('header-eyebrow').innerHTML = `
+                <svg class="w-3 h-3 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                ${meta.eyebrow}
+            `;
+            document.getElementById('page-title').innerText = meta.title;
+            document.getElementById('page-summary').innerText = meta.summary;
+
+            // Show page container
+            document.querySelectorAll('.page-view').forEach(view => {
+                view.classList.add('hidden');
+            });
+            document.getElementById(`view-${pageName}`).classList.remove('hidden');
+
+            // Render specific components
+            if (pageName === 'command') {
+                renderDashboardApprovalsTable();
+                renderDashboardIncidentsTable();
+                renderTimeline();
+            } else if (pageName === 'incidents') {
+                renderIncidentsTable();
+            } else if (pageName === 'approvals') {
+                renderApprovalsPageTable();
+            } else if (pageName === 'actions') {
+                renderActionsTable();
+            } else if (pageName === 'cases') {
+                renderCasesTable();
+            }
+
+            // Close mobile sidebar if open
+            const sidebar = document.getElementById('sidebar-nav');
+            if (sidebar.classList.contains('mobile-open')) {
+                toggleSidebar();
+            }
+        });
+    }
+
+    // ===== PAGE LOAD ANIMATION (SKELETON LOADER) =====
+    function triggerPageLoadAnimation(callback) {
+        const loader = document.getElementById('skeleton-loader-view');
+        const views = document.querySelectorAll('.page-view');
+        
+        // Hide all views & show loader
+        views.forEach(v => v.classList.add('hidden'));
+        loader.classList.remove('hidden');
+        
+        setTimeout(() => {
+            loader.classList.add('hidden');
+            if (callback) callback();
+        }, 450);
+    }
+
+    function triggerReload() {
+        triggerPageLoadAnimation(() => {
+            showToast('Sync Successful', 'Telemetry records updated successfully.', 'success');
+            switchPage(currentPage);
+        });
+    }
+
+    // ===== TOAST NOTIFICATIONS =====
+    function showToast(title, message, variant = 'info') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${variant}`;
+        
+        let iconSvg = '';
+        if (variant === 'success') {
+            iconSvg = '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+        } else if (variant === 'error') {
+            iconSvg = '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>';
+        } else {
+            iconSvg = '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+        }
+
+        toast.innerHTML = `
+            ${iconSvg}
+            <div>
+                <strong style="display:block; font-weight: 800;">${title}</strong>
+                <span style="font-size: 11px; opacity: 0.95;">${message}</span>
+            </div>
+        `;
+        container.appendChild(toast);
+        
+        // Remove from DOM after animation completes (3.8s total)
+        setTimeout(() => {
+            toast.remove();
+        }, 3800);
+    }
+
+    // ===== MOBILE SIDEBAR =====
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar-nav');
+        const backdrop = document.getElementById('sidebar-backdrop');
+        
+        if (sidebar.classList.contains('mobile-open')) {
+            sidebar.classList.remove('mobile-open');
+            backdrop.style.opacity = '0';
+            setTimeout(() => { backdrop.style.display = 'none'; }, 300);
+        } else {
+            sidebar.classList.add('mobile-open');
+            backdrop.style.display = 'block';
+            setTimeout(() => { backdrop.style.opacity = '1'; }, 10);
+        }
+    }
+
+    // ===== APPROVALS COMPONENT =====
+    function applyApprovalFilters() {
+        approvalFilterRisk = document.getElementById('approval-filter-risk').value;
+        approvalPage = 1;
+        renderApprovalsPageTable();
+    }
+
+    function sortApprovals(field) {
+        if (approvalSortField === field) {
+            approvalSortAsc = !approvalSortAsc;
+        } else {
+            approvalSortField = field;
+            approvalSortAsc = true;
+        }
+        renderApprovalsPageTable();
+    }
+
+    function prevApprovalsPage() {
+        if (approvalPage > 1) {
+            approvalPage--;
+            renderApprovalsPageTable();
+        }
+    }
+
+    function nextApprovalsPage() {
+        const total = getFilteredApprovals().length;
+        if (approvalPage * approvalPageSize < total) {
+            approvalPage++;
+            renderApprovalsPageTable();
+        }
+    }
+
+    function getFilteredApprovals() {
+        let items = approvalsList.map(a => ({...a}));
+        
+        // Search
+        if (globalSearchKey) {
+            const sk = globalSearchKey.toLowerCase();
+            items = items.filter(i => 
+                i.id.toLowerCase().includes(sk) ||
+                i.type.toLowerCase().includes(sk) ||
+                i.action.toLowerCase().includes(sk) ||
+                i.risk.toLowerCase().includes(sk)
+            );
+        }
+
+        // Risk Filter
+        if (approvalFilterRisk !== 'ALL') {
+            items = items.filter(i => i.risk.toLowerCase() === approvalFilterRisk.toLowerCase());
+        }
+
+        // Sorting
+        items.sort((a, b) => {
+            let valA = a[approvalSortField] || '';
+            let valB = b[approvalSortField] || '';
+            if (approvalSortField === 'risk') {
+                const priority = { critical: 4, high: 3, medium: 2, low: 1 };
+                valA = priority[a.risk.toLowerCase()] || 0;
+                valB = priority[b.risk.toLowerCase()] || 0;
+            }
+            if (valA < valB) return approvalSortAsc ? -1 : 1;
+            if (valA > valB) return approvalSortAsc ? 1 : -1;
+            return 0;
+        });
+
+        return items;
+    }
+
+    function renderDashboardApprovalsTable() {
+        const tbody = document.querySelector('#dashboard-approvals-table tbody');
+        tbody.innerHTML = '';
+        
+        if (approvalsList.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 2rem; color: #94a3b8;"><span style="color:#22c55e;">✔</span> No pending reviews in queue.</td></tr>`;
+            return;
+        }
+
+        approvalsList.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.style.cursor = 'pointer';
+            tr.onclick = (e) => {
+                if (e.target.tagName !== 'BUTTON') {
+                    openReviewModal(row.id);
+                }
+            };
+            tr.innerHTML = `
+                <td style="font-weight:700;color:#2563eb;">${row.id}</td>
+                <td style="color:#64748b;font-weight:500;">${row.type}</td>
+                <td style="color:#1e293b;font-weight:600;font-size:12px;">${row.action}</td>
+                <td><span class="${row.riskClass}">${row.risk}</span></td>
+                <td style="text-align:right;"><button onclick="openReviewModal('${row.id}')" style="color:#2563eb;background:white;border:1px solid #bfdbfe;border-radius:8px;padding:6px 16px;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 1px 2px rgba(0,0,0,.04)" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='white'">Review</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+        
+        updateApprovalBadges();
+    }
+
+    function renderApprovalsPageTable() {
+        const items = getFilteredApprovals();
+        const tbody = document.querySelector('#approvals-page-table tbody');
+        tbody.innerHTML = '';
+        
+        // Sorting arrows
+        const fields = ['id', 'type', 'action', 'risk'];
+        fields.forEach(f => {
+            const span = document.getElementById(`sort-approval-${f}`);
+            if (span) {
+                if (approvalSortField === f) {
+                    span.innerText = approvalSortAsc ? '▲' : '▼';
+                    span.style.color = '#3b82f6';
+                } else {
+                    span.innerText = '↕';
+                    span.style.color = '#94a3b8';
+                }
+            }
+        });
+
+        if (items.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 2rem; color: #94a3b8;">No pending approvals match your filter parameters.</td></tr>`;
+            document.getElementById('approvals-page-info').innerText = 'Page 1 of 1';
+            document.getElementById('btn-prev-approvals').disabled = true;
+            document.getElementById('btn-next-approvals').disabled = true;
+            return;
+        }
+
+        const totalPages = Math.ceil(items.length / approvalPageSize);
+        if (approvalPage > totalPages) approvalPage = totalPages;
+
+        const start = (approvalPage - 1) * approvalPageSize;
+        const pageItems = items.slice(start, start + approvalPageSize);
+
+        pageItems.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.style.cursor = 'pointer';
+            tr.onclick = (e) => {
+                if (e.target.tagName !== 'BUTTON') {
+                    openReviewModal(row.id);
+                }
+            };
+            tr.innerHTML = `
+                <td style="font-weight:700;color:#2563eb;">${row.id}</td>
+                <td style="color:#64748b;font-weight:500;">${row.type}</td>
+                <td style="color:#1e293b;font-weight:600;font-size:12px;">${row.action}</td>
+                <td><span class="${row.riskClass}">${row.risk}</span></td>
+                <td style="text-align:right;"><button onclick="openReviewModal('${row.id}')" style="color:#2563eb;background:white;border:1px solid #bfdbfe;border-radius:8px;padding:6px 16px;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 1px 2px rgba(0,0,0,.04)" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='white'">Review</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('approvals-page-info').innerText = `Page ${approvalPage} of ${totalPages}`;
+        document.getElementById('btn-prev-approvals').disabled = (approvalPage === 1);
+        document.getElementById('btn-next-approvals').disabled = (approvalPage === totalPages);
+    }
+
+    function updateApprovalBadges() {
+        const count = approvalsList.length;
+        document.getElementById('sidebar-approvals-badge').innerText = count;
+        document.getElementById('dashboard-approvals-count').innerText = count;
+        document.getElementById('kpi-pending-approvals').innerText = count;
+        
+        // Update approval backlog sub-score
+        const score = Math.max(100 - count * 10, 50);
+        document.getElementById('factor-approval-backlog').innerText = `${score}/100`;
+        recalculateOverallHealthScore();
+    }
+
+    // ===== INCIDENTS COMPONENT =====
+    function applyIncidentFilters() {
+        incidentFilterRisk = document.getElementById('incident-filter-risk').value;
+        incidentFilterStatus = document.getElementById('incident-filter-status').value;
+        incidentFilterEnv = document.getElementById('incident-filter-env').value;
+        incidentPage = 1;
+        renderIncidentsTable();
+    }
+
+    function sortIncidents(field) {
+        if (incidentSortField === field) {
+            incidentSortAsc = !incidentSortAsc;
+        } else {
+            incidentSortField = field;
+            incidentSortAsc = true;
+        }
+        renderIncidentsTable();
+    }
+
+    function prevIncidentsPage() {
+        if (incidentPage > 1) {
+            incidentPage--;
+            renderIncidentsTable();
+        }
+    }
+
+    function nextIncidentsPage() {
+        const total = getFilteredIncidents().length;
+        if (incidentPage * incidentPageSize < total) {
+            incidentPage++;
+            renderIncidentsTable();
+        }
+    }
+
+    function getFilteredIncidents() {
+        let items = incidentsList.map(i => ({...i}));
+
+        // Search
+        if (globalSearchKey) {
+            const sk = globalSearchKey.toLowerCase();
+            items = items.filter(i => 
+                i.id.toLowerCase().includes(sk) ||
+                i.type.toLowerCase().includes(sk) ||
+                i.env.toLowerCase().includes(sk) ||
+                i.risk.toLowerCase().includes(sk) ||
+                i.status.toLowerCase().includes(sk) ||
+                i.runbook.toLowerCase().includes(sk)
+            );
+        }
+
+        // Filters
+        if (incidentFilterRisk !== 'ALL') {
+            items = items.filter(i => i.risk.toLowerCase() === incidentFilterRisk.toLowerCase());
+        }
+        if (incidentFilterStatus !== 'ALL') {
+            items = items.filter(i => i.status.toLowerCase() === incidentFilterStatus.toLowerCase());
+        }
+        if (incidentFilterEnv !== 'ALL') {
+            items = items.filter(i => i.env.toLowerCase() === incidentFilterEnv.toLowerCase());
+        }
+
+        // Sorting
+        items.sort((a, b) => {
+            let valA = a[incidentSortField] || '';
+            let valB = b[incidentSortField] || '';
+            if (incidentSortField === 'risk') {
+                const priority = { critical: 4, high: 3, medium: 2, low: 1 };
+                valA = priority[a.risk.toLowerCase()] || 0;
+                valB = priority[b.risk.toLowerCase()] || 0;
+            }
+            if (valA < valB) return incidentSortAsc ? -1 : 1;
+            if (valA > valB) return incidentSortAsc ? 1 : -1;
+            return 0;
+        });
+
+        return items;
+    }
+
+    function renderDashboardIncidentsTable() {
+        const tbody = document.querySelector('#dashboard-incidents-table tbody');
+        tbody.innerHTML = '';
+        
+        // Show first 3 incidents on dashboard
+        const preview = incidentsList.slice(0, 3);
+
+        preview.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="font-weight:700;color:#2563eb;cursor:pointer;" onclick="switchPage('incidents')">${row.id}</td>
+                <td style="color:#475569;font-weight:600;font-size:12px;">${row.type}</td>
+                <td><span class="${row.envClass}">${row.env}</span></td>
+                <td><span class="${row.riskClass}">${row.risk}</span></td>
+                <td><span class="${row.statusClass}">${row.status}</span></td>
+                <td style="font-weight:700;color:#2563eb;font-size:12px;cursor:pointer;" onclick="switchPage('runbooks')">${row.runbook}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+        
+        updateIncidentKPIs();
+    }
+
+    function renderIncidentsTable() {
+        const items = getFilteredIncidents();
+        const tbody = document.querySelector('#incidents-table tbody');
+        tbody.innerHTML = '';
+
+        // Sorting arrows
+        const fields = ['id', 'type', 'env', 'risk', 'status', 'runbook'];
+        fields.forEach(f => {
+            const span = document.getElementById(`sort-incident-${f}`);
+            if (span) {
+                if (incidentSortField === f) {
+                    span.innerText = incidentSortAsc ? '▲' : '▼';
+                    span.style.color = '#3b82f6';
+                } else {
+                    span.innerText = '↕';
+                    span.style.color = '#94a3b8';
+                }
+            }
+        });
+
+        if (items.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 2rem; color: #94a3b8;">No incidents match your filter parameters.</td></tr>`;
+            document.getElementById('incidents-page-info').innerText = 'Page 1 of 1';
+            document.getElementById('btn-prev-incidents').disabled = true;
+            document.getElementById('btn-next-incidents').disabled = true;
+            return;
+        }
+
+        const totalPages = Math.ceil(items.length / incidentPageSize);
+        if (incidentPage > totalPages) incidentPage = totalPages;
+
+        const start = (incidentPage - 1) * incidentPageSize;
+        const pageItems = items.slice(start, start + incidentPageSize);
+
+        pageItems.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="font-weight:700;color:#2563eb;">${row.id}</td>
+                <td style="color:#475569;font-weight:600;font-size:12px;">${row.type}</td>
+                <td><span class="${row.envClass}">${row.env}</span></td>
+                <td><span class="${row.riskClass}">${row.risk}</span></td>
+                <td><span class="${row.statusClass}">${row.status}</span></td>
+                <td style="font-weight:700;color:#2563eb;font-size:12px;cursor:pointer;" onclick="switchPage('runbooks')">${row.runbook}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('incidents-page-info').innerText = `Page ${incidentPage} of ${totalPages}`;
+        document.getElementById('btn-prev-incidents').disabled = (incidentPage === 1);
+        document.getElementById('btn-next-incidents').disabled = (incidentPage === totalPages);
+    }
+
+    function updateIncidentKPIs() {
+        const total = incidentsList.filter(i => i.status !== 'Resolved').length;
+        const critical = incidentsList.filter(i => (i.risk.toLowerCase() === 'critical' || i.risk.toLowerCase() === 'high') && i.status !== 'Resolved').length;
+        
+        document.getElementById('kpi-open-incidents').innerText = total;
+        document.getElementById('kpi-critical-incidents').innerText = critical;
+        document.getElementById('critical-badge-count').innerText = critical;
+        
+        // Incident Impact sub-score
+        const score = Math.max(100 - critical * 15, 40);
+        document.getElementById('factor-incident-impact').innerText = `${score}/100`;
+        recalculateOverallHealthScore();
+    }
+
+    // ===== TIMELINE COMPONENT (CLICK TO EXPAND) =====
+    function renderTimeline() {
+        const container = document.getElementById('replay-timeline-container');
+        container.innerHTML = '';
+
+        timelineEventsList.forEach((event, index) => {
+            const item = document.createElement('div');
+            item.className = `tl-item ${event.iconClass} cursor-pointer`;
+            item.onclick = () => toggleTimelineEvent(index);
+            
+            let detailsHtml = '';
+            if (event.expanded) {
+                detailsHtml = `
+                    <p class="timeline-details animate-in text-slate-500 text-[11px] leading-relaxed mt-1" style="animation-duration:0.2s;">
+                        ${event.details} <span style="font-size:9.5px;color:#94a3b8;display:block;margin-top:2px;">Operator: Zentom System Log</span>
+                    </p>
+                `;
+            }
+
+            item.innerHTML = `
+                <span class="tl-dot"></span>
+                <div style="display:flex; justify-content:space-between; align-items:start;">
+                    <div>
+                        <strong class="text-[12.5px] text-slate-700 block">${event.name}</strong>
+                        <small class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">${event.time}</small>
+                        ${detailsHtml}
+                    </div>
+                    <svg class="w-3.5 h-3.5 text-slate-400 ${event.expanded ? 'rotate-180' : ''} transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    function toggleTimelineEvent(index) {
+        timelineEventsList[index].expanded = !timelineEventsList[index].expanded;
+        renderTimeline();
+    }
+
+    // ===== SYSTEM HEALTH AND ERROR SIMULATION =====
+    function simulateErrorLogChange(val) {
+        globalErrorLogCount = parseInt(val);
+        document.getElementById('error-simulator-value').innerText = val;
+        document.getElementById('health-errors-value').innerText = val;
+        
+        const apiStatus = document.getElementById('health-api-status');
+        const apiBar = document.getElementById('health-api-bar-fill');
+        const apiVal = document.getElementById('health-api-value');
+
+        const dbStatus = document.getElementById('health-database-status');
+        const dbBar = document.getElementById('health-database-bar-fill');
+        const dbVal = document.getElementById('health-database-value');
+
+        const errStatus = document.getElementById('health-errors-status');
+        const errBar = document.getElementById('health-errors-bar-fill');
+
+        if (globalErrorLogCount === 0) {
+            // Perfect health
+            apiStatus.innerText = 'All systems operational';
+            apiStatus.style.color = '#22c55e';
+            apiBar.style.width = '99.98%';
+            apiBar.style.background = 'linear-gradient(90deg,#22c55e,#4ade80)';
+            apiVal.innerText = '99.98%';
+
+            dbStatus.innerText = 'All systems operational';
+            dbStatus.style.color = '#22c55e';
+            dbBar.style.width = '99.95%';
+            dbBar.style.background = 'linear-gradient(90deg,#22c55e,#4ade80)';
+            dbVal.innerText = '99.95%';
+
+            errStatus.innerText = 'No critical errors';
+            errStatus.style.color = '#94a3b8';
+            errBar.style.width = '0%';
+            errBar.style.background = '#94a3b8';
+
+            document.getElementById('header-health-status').style.background = 'rgba(34,197,94,0.1)';
+            document.getElementById('header-health-status').style.borderColor = 'rgba(34,197,94,0.2)';
+            document.getElementById('header-health-status').style.color = '#86efac';
+            document.getElementById('header-health-dot').style.background = '#22c55e';
+            document.getElementById('header-health-text').innerText = 'Optimal';
+        } else if (globalErrorLogCount <= 15) {
+            // Warnings elevated
+            apiStatus.innerText = 'Slightly elevated latency';
+            apiStatus.style.color = '#f59e0b';
+            apiBar.style.width = '98.42%';
+            apiBar.style.background = 'linear-gradient(90deg,#f59e0b,#fbbf24)';
+            apiVal.innerText = '98.42%';
+
+            dbStatus.innerText = 'All systems operational';
+            dbStatus.style.color = '#22c55e';
+            dbBar.style.width = '99.95%';
+            dbBar.style.background = 'linear-gradient(90deg,#22c55e,#4ade80)';
+            dbVal.innerText = '99.95%';
+
+            errStatus.innerText = 'System warnings';
+            errStatus.style.color = '#f59e0b';
+            errBar.style.width = `${globalErrorLogCount * 2.5}%`;
+            errBar.style.background = '#f59e0b';
+
+            document.getElementById('header-health-status').style.background = 'rgba(245,158,11,0.1)';
+            document.getElementById('header-health-status').style.borderColor = 'rgba(245,158,11,0.2)';
+            document.getElementById('header-health-status').style.color = '#fde047';
+            document.getElementById('header-health-dot').style.background = '#f59e0b';
+            document.getElementById('header-health-text').innerText = 'Warnings';
+        } else {
+            // Critical load
+            apiStatus.innerText = 'Experiencing high load';
+            apiStatus.style.color = '#ef4444';
+            apiBar.style.width = '92.15%';
+            apiBar.style.background = 'linear-gradient(90deg,#ef4444,#f87171)';
+            apiVal.innerText = '92.15%';
+
+            dbStatus.innerText = 'Database pool exhausted';
+            dbStatus.style.color = '#ef4444';
+            dbBar.style.width = '97.20%';
+            dbBar.style.background = 'linear-gradient(90deg,#ef4444,#f87171)';
+            dbVal.innerText = '97.20%';
+
+            errStatus.innerText = 'Errors detected';
+            errStatus.style.color = '#ef4444';
+            errBar.style.width = `${globalErrorLogCount * 2.5}%`;
+            errBar.style.background = '#ef4444';
+
+            document.getElementById('header-health-status').style.background = 'rgba(239,68,68,0.1)';
+            document.getElementById('header-health-status').style.borderColor = 'rgba(239,68,68,0.2)';
+            document.getElementById('header-health-status').style.color = '#fca5a5';
+            document.getElementById('header-health-dot').style.background = '#ef4444';
+            document.getElementById('header-health-text').innerText = 'Critical';
+        }
+
+        // System Health Factor sub-score
+        const sysHealthScore = Math.max(100 - globalErrorLogCount * 2, 70);
+        document.getElementById('factor-system-health').innerText = `${sysHealthScore}/100`;
+        
+        recalculateOverallHealthScore();
+    }
+
+    function recalculateOverallHealthScore() {
+        const sys = parseInt(document.getElementById('factor-system-health').innerText);
+        const imp = parseInt(document.getElementById('factor-incident-impact').innerText);
+        const eff = parseInt(document.getElementById('factor-response-efficiency').innerText);
+        const bcl = parseInt(document.getElementById('factor-approval-backlog').innerText);
+        
+        overallHealthScore = Math.round((sys + imp + eff + bcl) / 4);
+
+        // Update overall score views
+        document.getElementById('overall-health-score-text').innerText = overallHealthScore;
+        document.getElementById('health-score-large-number').innerText = overallHealthScore;
+        
+        const badge = document.getElementById('overall-health-badge');
+        if (overallHealthScore >= 90) {
+            badge.innerText = 'Optimal';
+            badge.style.background = 'linear-gradient(135deg,#dcfce7,#bbf7d0)';
+            badge.style.color = '#15803d';
+            badge.style.borderColor = 'rgba(34,197,94,0.2)';
+        } else if (overallHealthScore >= 70) {
+            badge.innerText = 'Watch';
+            badge.style.background = 'linear-gradient(135deg,#fef3c7,#fde68a)';
+            badge.style.color = '#d97706';
+            badge.style.borderColor = 'rgba(245,158,11,0.2)';
+        } else {
+            badge.innerText = 'Disrupted';
+            badge.style.background = 'linear-gradient(135deg,#fee2e2,#fecaca)';
+            badge.style.color = '#dc2626';
+            badge.style.borderColor = 'rgba(239,68,68,0.2)';
+        }
+
+        // Circular ring fill offset
+        const ring = document.getElementById('overall-health-ring');
+        if (ring) {
+            const circ = 226.2;
+            const offset = circ - (overallHealthScore / 100) * circ;
+            ring.style.strokeDashoffset = offset;
+        }
+
+        // Progress bar style
+        document.getElementById('overall-health-progress-bar').style.width = `${overallHealthScore}%`;
+        document.getElementById('overall-health-progress-pin').style.left = `calc(${overallHealthScore}% - 8px)`;
+    }
+
+    // ===== ACTION CENTER AND SIMULATOR =====
+    function renderActionsTable() {
+        const tbody = document.getElementById('actions-table-body');
+        tbody.innerHTML = '';
+        executedActionsList.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="font-weight:700;color:#2563eb;">${row.id}</td>
+                <td style="color:#0f172a;font-weight:600">${row.type}</td>
+                <td style="color:#64748b">${row.target}</td>
+                <td style="color:#64748b">${row.by}</td>
+                <td><span class="px-2.5 py-0.5 rounded text-xs font-bold ${row.statusClass}">${row.status}</span></td>
+                <td style="font-family:monospace;color:#94a3b8">${row.time}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+        document.getElementById('kpi-executed-actions').innerText = executedActionsList.length;
+    }
+
+    function triggerActionSimulator(runbookKey) {
+        showToast('Running Telemetry', `Simulating runbook ${runbookKey} execution...`, 'info');
+        
+        setTimeout(() => {
+            const randId = `ACT-00${Math.floor(Math.random() * 90) + 10}`;
+            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            let actionType = 'Diagnostics Cache';
+            let targetRes = 'Server Node Pool';
+            if (runbookKey === 'RB-PAY-007') {
+                actionType = 'Graceful Restart';
+                targetRes = 'Payment Service API';
+            } else if (runbookKey === 'RB-APP-002') {
+                actionType = 'Scale Up';
+                targetRes = 'App SVC Nodes';
+            } else if (runbookKey === 'RB-CACHE-003') {
+                actionType = 'Clear Cache';
+                targetRes = 'Redis Cache Main';
+            }
+
+            const newAction = {
+                id: randId,
+                type: actionType,
+                target: targetRes,
+                by: 'Zentom AI (Autonomous)',
+                status: 'Success',
+                statusClass: 'bg-green-100 text-green-700 border border-green-200',
+                time: timeStr
+            };
+
+            executedActionsList.unshift(newAction);
+            
+            // Add timeline event
+            timelineEventsList.unshift({
+                name: `Autonomous Runbook: ${runbookKey}`,
+                time: timeStr,
+                details: `Successfully completed action simulation for ${actionType} on ${targetRes}.`,
+                iconClass: 'tl-done',
+                expanded: false
+            });
+
+            showToast('Simulated Runbook Finished', `${actionType} completed successfully.`, 'success');
+            
+            // Increment KPI & render
+            renderActionsTable();
+            renderTimeline();
+        }, 1200);
+    }
+
+    // ===== CASES COMPONENT =====
+    function renderCasesTable() {
+        const tbody = document.getElementById('cases-table-body');
+        tbody.innerHTML = '';
+        casesList.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="font-weight:700;color:#2563eb;">${row.id}</td>
+                <td style="color:#0f172a;font-weight:600">${row.subject}</td>
+                <td><span class="${row.pClass}">${row.priority}</span></td>
+                <td><span class="${row.statusClass}">${row.status}</span></td>
+                <td style="font-weight:700;color:#2563eb;">${row.incident}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+        document.getElementById('kpi-executed-actions').innerText = executedActionsList.length;
+    }
+
+    // ===== INTEGRATIONS TAB CONNECT/TOGGLE =====
+    function toggleIntegration(name, checkbox) {
+        const label = document.getElementById(`${name.toLowerCase()}-status-label`);
+        if (checkbox.checked) {
+            label.innerText = 'Connected';
+            label.style.color = '#22c55e';
+            showToast('Integration Connected', `${name} notifications are now active.`, 'success');
+        } else {
+            label.innerText = 'Disconnected';
+            label.style.color = '#64748b';
+            showToast('Integration Disconnected', `${name} notifications disabled.`, 'info');
+        }
+    }
+
+    // ===== SETTINGS POSTURE =====
+    function changePosture(name, btn) {
+        document.querySelectorAll('.posture-pill').forEach(p => {
+            p.style.borderColor = '';
+            p.style.background = '';
+            p.style.color = '';
+        });
+        btn.style.borderColor = '#3b82f6';
+        btn.style.background = '#eff6ff';
+        btn.style.color = '#2563eb';
+        showToast('Guardrails Mode Updated', `Zentom AI co-pilot posture changed to ${name}.`, 'info');
+    }
+
+    // ===== GLOBAL SEARCH BAR FILTERING =====
+    function handleGlobalSearch(query) {
+        globalSearchKey = query;
+        if (currentPage === 'command') {
+            filterDashboardRows(query);
+        } else if (currentPage === 'incidents') {
+            incidentPage = 1;
+            renderIncidentsTable();
+        } else if (currentPage === 'approvals') {
+            approvalPage = 1;
+            renderApprovalsPageTable();
+        }
+    }
+
+    function filterDashboardRows(query) {
+        const sk = query.toLowerCase();
+        const rows = document.querySelectorAll('.data-table tbody tr');
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            row.style.display = text.includes(sk) ? '' : 'none';
+        });
+    }
+
+    // ===== GOVERNANCE REVIEW MODAL SIMULATOR =====
+    function openReviewModal(rowId) {
+        let row = approvalsList.find(a => a.id === rowId);
+        if (!row) return;
+
+        selectedReviewRow = row;
+        isApprovingMode = true; // reset to approve mode
+        
+        document.getElementById('modal-request-id').innerText = row.id;
+        document.getElementById('modal-type').innerText = row.type;
+        document.getElementById('modal-action').innerText = row.action;
+        
+        const badgeContainer = document.getElementById('modal-risk-badge-container');
+        badgeContainer.innerHTML = `<span class="${row.riskClass}">${row.risk}</span>`;
+
+        // Reset Inputs
+        document.getElementById('modal-input-approver').value = '';
+        document.getElementById('modal-input-reason').value = '';
+        
+        // Reset Modes
+        document.getElementById('modal-input-label').innerText = 'Approver Name Confirmation';
+        document.getElementById('modal-input-approver').style.display = 'block';
+        document.getElementById('modal-input-reason').style.display = 'none';
+
+        // Reset Button States
+        document.getElementById('btn-modal-reject-mode').innerText = 'Reject instead';
+        document.getElementById('btn-modal-reject-mode').style.color = '#ef4444';
+        
+        const submitBtn = document.getElementById('btn-modal-submit');
+        submitBtn.innerText = 'Approve Execution';
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.5';
+        submitBtn.style.background = '#22c55e';
+        submitBtn.style.boxShadow = '0 2px 4px rgba(34, 197, 94, 0.2)';
+
+        // Open Modal
+        document.getElementById('simulated-review-modal').classList.remove('hidden');
+    }
+
+    function closeReviewModal() {
+        document.getElementById('simulated-review-modal').classList.add('hidden');
+        selectedReviewRow = null;
+    }
+
+    function toggleModalMode(approve = null) {
+        if (approve === null) {
+            isApprovingMode = !isApprovingMode;
+        } else {
+            isApprovingMode = approve;
+        }
+
+        const approverInput = document.getElementById('modal-input-approver');
+        const reasonInput = document.getElementById('modal-input-reason');
+        const inputLabel = document.getElementById('modal-input-label');
+        const submitBtn = document.getElementById('btn-modal-submit');
+        const modeBtn = document.getElementById('btn-modal-reject-mode');
+
+        if (isApprovingMode) {
+            inputLabel.innerText = 'Approver Name Confirmation';
+            approverInput.style.display = 'block';
+            reasonInput.style.display = 'none';
+            modeBtn.innerText = 'Reject instead';
+            modeBtn.style.color = '#ef4444';
+            submitBtn.innerText = 'Approve Execution';
+            submitBtn.style.background = '#22c55e';
+            submitBtn.style.boxShadow = '0 2px 4px rgba(34, 197, 94, 0.2)';
+        } else {
+            inputLabel.innerText = 'Rejection Reason';
+            approverInput.style.display = 'none';
+            reasonInput.style.display = 'block';
+            modeBtn.innerText = 'Approve instead';
+            modeBtn.style.color = '#22c55e';
+            submitBtn.innerText = 'Reject Recommendation';
+            submitBtn.style.background = '#ef4444';
+            submitBtn.style.boxShadow = '0 2px 4px rgba(239, 68, 68, 0.2)';
+        }
+
+        validateModalForm();
+    }
+
+    function validateModalForm() {
+        const submitBtn = document.getElementById('btn-modal-submit');
+        let isValid = false;
+
+        if (isApprovingMode) {
+            const name = document.getElementById('modal-input-approver').value.trim();
+            isValid = name.length > 2;
+        } else {
+            const reason = document.getElementById('modal-input-reason').value.trim();
+            isValid = reason.length > 5;
+        }
+
+        if (isValid) {
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.5';
+        }
+    }
+
+    function submitModalDecision(approved) {
+        if (!selectedReviewRow) return;
+        const rowId = selectedReviewRow.id;
+        const type = selectedReviewRow.type;
+        const action = selectedReviewRow.action;
+        
+        closeReviewModal();
+        
+        // Remove from list
+        approvalsList = approvalsList.filter(a => a.id !== rowId);
+        
+        // Update arrays & dashboard UI
+        const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        if (isApprovingMode) {
+            showToast('Governance Action Approved', `Action for ${rowId} confirmed and scheduled for execution.`, 'success');
+            
+            // Add to executed list
+            executedActionsList.unshift({
+                id: `ACT-00${Math.floor(Math.random() * 90) + 10}`,
+                type: type === 'Runbook' ? 'Runbook Run' : 'Action Execution',
+                target: action,
+                by: 'Human Approved (vrdev)',
+                status: 'Success',
+                statusClass: 'bg-green-100 text-green-700 border border-green-200',
+                time: timeStr
+            });
+
+            // Add timeline event
+            timelineEventsList.unshift({
+                name: `Human Approved: ${rowId}`,
+                time: timeStr,
+                details: `Operational playbook for ${action} manually authorized.`,
+                iconClass: 'tl-done',
+                expanded: false
+            });
+        } else {
+            showToast('Recommendation Rejected', `Remediation action proposal for ${rowId} has been declined.`, 'info');
+            
+            // Add timeline event
+            timelineEventsList.unshift({
+                name: `Human Rejected: ${rowId}`,
+                time: timeStr,
+                details: `Proposed runbook action declined. Policy gate reverted.`,
+                iconClass: 'tl-pending',
+                expanded: false
+            });
+        }
+
+        // Re-render
+        renderDashboardApprovalsTable();
+        renderTimeline();
+        
+        if (currentPage === 'approvals') {
+            renderApprovalsPageTable();
+        }
+    }
+
+    // ===== INIT =====
+    window.addEventListener('load', () => {
+        // Focus search input when '/' is pressed
+        window.addEventListener('keydown', (event) => {
+            if (event.key === '/' && document.activeElement && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                event.preventDefault();
+                const searchInput = document.getElementById('dashboardSearch');
+                if (searchInput) {
+                    searchInput.focus();
+                }
+            }
+        });
+
+        // Set live clock
+        setInterval(() => {
+            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('header-clock').innerText = timeStr;
+        }, 10000);
+
+        // Seeding initial cases list
+        renderCasesTable();
+
+        // Seeding default dashboard views
+        renderDashboardApprovalsTable();
+        renderDashboardIncidentsTable();
+        renderTimeline();
+    });
+    </script>
+</body>
+</html>

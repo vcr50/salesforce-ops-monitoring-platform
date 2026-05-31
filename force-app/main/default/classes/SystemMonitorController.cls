@@ -8,11 +8,69 @@
 @SuppressWarnings('PMD.ApexCRUDViolation, PMD.ApexDoc')
 public with sharing class SystemMonitorController {
 
+    
+    public class DashboardData {
+        @AuraEnabled public Integer openIncidentsCount;
+        @AuraEnabled public Integer criticalIncidentsCount;
+        @AuraEnabled public Integer pendingApprovalsCount;
+        @AuraEnabled public Integer executedActionsCount;
+        @AuraEnabled public Integer casesCreatedCount;
+        
+        @AuraEnabled public List<Sentinel_Incident__c> pendingApprovals;
+        @AuraEnabled public List<Sentinel_Incident__c> recentIncidents;
+        @AuraEnabled public Sentinel_Incident__c latestCriticalIncident;
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static DashboardData getDashboardData() {
+        DashboardData data = new DashboardData();
+        
+        data.openIncidentsCount = [SELECT COUNT() FROM Sentinel_Incident__c WHERE Status__c NOT IN ('Resolved', 'Closed')];
+        data.criticalIncidentsCount = [SELECT COUNT() FROM Sentinel_Incident__c WHERE Risk_Level__c = 'Critical' AND Status__c NOT IN ('Resolved', 'Closed')];
+        data.pendingApprovalsCount = [SELECT COUNT() FROM Sentinel_Incident__c WHERE Status__c = 'Approval Required'];
+        data.executedActionsCount = [SELECT COUNT() FROM Zentom_Policy_Decision__c];
+        data.casesCreatedCount = [SELECT COUNT() FROM Sentinel_Incident__c WHERE Created_Case__c != null];
+        
+        data.pendingApprovals = [
+            SELECT Id, Name, Incident_Type__c, Runbook_Title__c, Risk_Level__c, Recommended_Action__c 
+            FROM Sentinel_Incident__c 
+            WHERE Status__c = 'Approval Required' 
+            ORDER BY CreatedDate DESC 
+            LIMIT 5
+        ];
+        
+        data.recentIncidents = [
+            SELECT Id, Name, Incident_Type__c, Environment__c, Risk_Level__c, Status__c, Runbook_Title__c 
+            FROM Sentinel_Incident__c 
+            ORDER BY CreatedDate DESC 
+            LIMIT 5
+        ];
+        
+        List<Sentinel_Incident__c> criticals = [
+            SELECT Id, Name, Incident_Type__c, AI_Summary__c, Recommended_Action__c, Runbook_Key__c 
+            FROM Sentinel_Incident__c 
+            WHERE Risk_Level__c = 'Critical' 
+            ORDER BY CreatedDate DESC 
+            LIMIT 1
+        ];
+        if (!criticals.isEmpty()) {
+            data.latestCriticalIncident = criticals[0];
+        }
+        
+        return data;
+    }
+
     public class SystemHealth {
         @AuraEnabled public String  status; // Healthy, Degraded, Critical
         @AuraEnabled public Integer errorCount1H;
         @AuraEnabled public Integer failedJobs;
         @AuraEnabled public Integer activeIncidents;
+    }
+
+    public class UserContext {
+        @AuraEnabled public String userName;
+        @AuraEnabled public String userProfile;
+        @AuraEnabled public String organizationName;
     }
 
     public class RuntimeFabricStatus {
@@ -204,5 +262,26 @@ public with sharing class SystemMonitorController {
             LIMIT 20
         ];
     }
-}
 
+    @AuraEnabled(cacheable=true)
+    public static UserContext getUserContext() {
+        UserContext ctx = new UserContext();
+        ctx.userName = UserInfo.getName();
+        
+        List<Profile> profiles = [SELECT Name FROM Profile WHERE Id = :UserInfo.getProfileId() LIMIT 1];
+        if (!profiles.isEmpty()) {
+            ctx.userProfile = profiles[0].Name;
+        } else {
+            ctx.userProfile = 'User';
+        }
+
+        List<Organization> orgs = [SELECT Name FROM Organization LIMIT 1];
+        if (!orgs.isEmpty()) {
+            ctx.organizationName = orgs[0].Name;
+        } else {
+            ctx.organizationName = 'Tomcodex Labs';
+        }
+        
+        return ctx;
+    }
+}

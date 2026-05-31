@@ -57,4 +57,3 @@ private class SubscriptionEmailServiceTest {
         System.assertEquals(0, SubscriptionEmailService.installationEmailSendAttempts);
     }
 }
-

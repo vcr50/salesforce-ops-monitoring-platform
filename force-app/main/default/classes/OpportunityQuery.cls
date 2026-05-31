@@ -3,4 +3,3 @@ public class OpportunityQuery {
         System.debug('Your Wish is,vijay');
     }
 }
-

@@ -1,5 +1,5 @@
 /*
- * Your global styles here
+ * SentinelFlow Experience Cloud global styles
  */
 html,
 body {
@@ -7,21 +7,38 @@ body {
 }
 
 html {
-    background: #0b132b;
+    background: #f5f7fb;
 }
 
 body {
     margin: 0;
-    background: #0b132b;
+    background: #f5f7fb;
     overflow-x: hidden;
 }
 
+/* Full-bleed app shell inside the portal */
 .comm-page-custom-main,
 .comm-content-header,
 .siteforceContentArea,
 .cb-section,
 .cb-section_column,
 .experience-region,
-.dxp-content-layout {
-    background: #0b132b !important;
+.dxp-content-layout,
+.comm-layout-column,
+.comm-page-content,
+.contentRegion {
+    background: #f5f7fb !important;
+    max-width: 100% !important;
+}
+
+.siteforceContentArea,
+.comm-page-content,
+.contentRegion {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.cb-section_column {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }

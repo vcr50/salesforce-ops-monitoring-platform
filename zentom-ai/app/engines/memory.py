@@ -19,7 +19,14 @@ def generate_embedding(text: str) -> list:
     embedding = model.encode(text)
     return embedding.tolist()
 
-def index_incident(incident_id: str, error_signature: str, resolution: str, confidence_score: float = 0.0, was_successful: bool = True):
+def index_incident(
+    incident_id: str,
+    error_signature: str,
+    resolution: str,
+    confidence_score: float = 0.0,
+    was_successful: bool = True,
+    org_id: str = "default",
+):
     """
     Embed and store a resolved incident into PostgreSQL pgvector table.
     """
@@ -28,6 +35,7 @@ def index_incident(incident_id: str, error_signature: str, resolution: str, conf
     db = SessionLocal()
     try:
         new_memory = IncidentMemory(
+            org_id=org_id,
             incident_id=incident_id,
             error_signature=error_signature,
             resolution=resolution,
@@ -46,7 +54,7 @@ def index_incident(incident_id: str, error_signature: str, resolution: str, conf
     finally:
         db.close()
 
-def retrieve_memory(error_signature: str, top_k: int = 3) -> dict:
+def retrieve_memory(error_signature: str, top_k: int = 3, org_id: str = "default") -> dict:
     """
     Search for similar past incidents using pgvector's cosine distance operator (<=>).
     """
@@ -61,6 +69,7 @@ def retrieve_memory(error_signature: str, top_k: int = 3) -> dict:
                 IncidentMemory.embedding.cosine_distance(query_embedding).label("distance")
             )
             .filter(IncidentMemory.was_successful == True)
+            .filter(IncidentMemory.org_id == org_id)
             .order_by(IncidentMemory.embedding.cosine_distance(query_embedding))
             .limit(top_k)
             .all()

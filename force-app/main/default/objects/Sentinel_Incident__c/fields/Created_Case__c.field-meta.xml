@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Created_Case__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <label>Created Case</label>
+    <referenceTo>Case</referenceTo>
+    <relationshipLabel>Sentinel Incidents</relationshipLabel>
+    <relationshipName>Sentinel_Incidents</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

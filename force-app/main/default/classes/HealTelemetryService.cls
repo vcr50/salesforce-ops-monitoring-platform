@@ -155,4 +155,3 @@ public with sharing class HealTelemetryService {
         ];
     }
 }
-

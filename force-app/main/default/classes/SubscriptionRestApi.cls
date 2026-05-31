@@ -71,4 +71,3 @@ global with sharing class SubscriptionRestApi {
         }
     }
 }
-

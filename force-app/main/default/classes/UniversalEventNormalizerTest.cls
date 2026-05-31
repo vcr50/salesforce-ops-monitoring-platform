@@ -57,6 +57,7 @@ private class UniversalEventNormalizerTest {
                    Integration_Log__c
             FROM Universal_Event__c
             WHERE Integration_Log__c = :log.Id
+            AND Source_Object__c = 'Integration_Log__c'
         ];
 
         System.assertEquals(1, events.size(), 'Should create one universal event per log');
@@ -100,14 +101,14 @@ private class UniversalEventNormalizerTest {
         Integration_Log__c log = createFailedLog('SAP_ERP_API', 'Timeout');
         insert log;
 
-        Integer countBefore = [SELECT COUNT() FROM Universal_Event__c WHERE Integration_Log__c = :log.Id];
+        Integer countBefore = [SELECT COUNT() FROM Universal_Event__c WHERE Integration_Log__c = :log.Id AND Source_Object__c = 'Integration_Log__c'];
         System.assertEquals(1, countBefore, 'First insert should create one event');
 
         // Update the log — trigger calls normalizer again
         log.Error_Message__c = 'Updated error';
         update log;
 
-        Integer countAfter = [SELECT COUNT() FROM Universal_Event__c WHERE Integration_Log__c = :log.Id];
+        Integer countAfter = [SELECT COUNT() FROM Universal_Event__c WHERE Integration_Log__c = :log.Id AND Source_Object__c = 'Integration_Log__c'];
         System.assertEquals(1, countAfter, 'Upsert should NOT create a duplicate');
     }
 
@@ -303,4 +304,3 @@ private class UniversalEventNormalizerTest {
         System.assert(events[0].Business_Impact__c.contains('Lead_Assignment_Flow'));
     }
 }
-

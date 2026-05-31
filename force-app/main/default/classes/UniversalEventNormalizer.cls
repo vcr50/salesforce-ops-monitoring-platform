@@ -326,4 +326,3 @@ public inherited sharing class UniversalEventNormalizer {
         String highestSeverity = 'Low';
     }
 }
-

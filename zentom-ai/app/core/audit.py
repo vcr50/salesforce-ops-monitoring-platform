@@ -17,6 +17,7 @@ def log_event(
     detail: str = "",
     ip_address: str = "",
     success: bool = True,
+    org_id: str = "default",
 ):
     """
     Persists a structured audit event to PostgreSQL.
@@ -32,6 +33,7 @@ def log_event(
     db = SessionLocal()
     try:
         entry = AuditLog(
+            org_id=org_id,
             timestamp=datetime.utcnow().isoformat(),
             event_type=event_type,
             actor=actor,
@@ -57,11 +59,17 @@ def log_event(
         db.close()
 
 
-def get_recent_audit_logs(limit: int = 100):
+def get_recent_audit_logs(limit: int = 100, org_id: str = "default"):
     """Retrieves recent audit logs for the dashboard."""
     db = SessionLocal()
     try:
-        logs = db.query(AuditLog).order_by(AuditLog.id.desc()).limit(limit).all()
+        logs = (
+            db.query(AuditLog)
+            .filter(AuditLog.org_id == org_id)
+            .order_by(AuditLog.id.desc())
+            .limit(limit)
+            .all()
+        )
         return [
             {
                 "id": log.id,

@@ -33,8 +33,7 @@ export default function Navbar() {
         </div>
         
         <div className="nav-actions">
-          <a href="#pricing" className="btn btn-ghost">Start Free Trial</a>
-          <a href="#demo" className="btn btn-primary">Book a Demo</a>
+          <a href="https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000c4aTQAQ" target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ borderColor: '#00e5ff', color: '#00e5ff' }}>INSTALL PACKAGE</a>
         </div>
         
         <button 

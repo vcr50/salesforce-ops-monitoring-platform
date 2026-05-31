@@ -9,8 +9,20 @@
 public with sharing class SystemSettings {
 
     private static Map<String, Decimal> settingsCache = new Map<String, Decimal>();
+    private static Map<String, Decimal> overrides = new Map<String, Decimal>();
+
+    public static void setOverride(String name, Decimal value) {
+        overrides.put(name, value);
+    }
+
+    public static void clearOverrides() {
+        overrides.clear();
+    }
 
     public static Decimal get(String settingName, Decimal defaultValue) {
+        if (overrides.containsKey(settingName)) {
+            return overrides.get(settingName);
+        }
         if (settingsCache.containsKey(settingName)) {
             return settingsCache.get(settingName);
         }
@@ -35,4 +47,3 @@ public with sharing class SystemSettings {
         return Integer.valueOf(get(settingName, defaultValue));
     }
 }
-

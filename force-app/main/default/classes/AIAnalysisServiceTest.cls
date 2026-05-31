@@ -152,4 +152,3 @@ private class AIAnalysisServiceTest {
         System.assert(threw, 'Expected AIAnalysisException for null Id');
     }
 }
-

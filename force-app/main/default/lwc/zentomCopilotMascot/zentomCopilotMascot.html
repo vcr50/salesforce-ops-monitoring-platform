@@ -1,0 +1,45 @@
+<template>
+    <template if:true={isMascotEnabled}>
+        <div class="mascot-container" data-state={currentState}>
+            
+            <!-- Speech Bubble -->
+            <template if:true={showMessage}>
+                <div class="speech-bubble fade-in">
+                    <div class="message-text">{currentMessage}</div>
+                    <div class="bubble-tail"></div>
+                </div>
+            </template>
+
+            <!-- GIF Popup Modal -->
+            <template if:true={showGifPopup}>
+                <div class="gif-popup fade-in">
+                    <div class="popup-header">
+                        <strong>Zentom Copilot</strong>
+                        <button onclick={pokeMascot}>×</button>
+                    </div>
+                    <div class="popup-body" style="position: relative; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+                        <p style="margin-top: 1rem;">Analyzing current page context...</p>
+                    </div>
+                    <div class="popup-tail"></div>
+                </div>
+            </template>
+            
+            <!-- Mascot Character -->
+            <div class="character-wrapper" onclick={pokeMascot}>
+                <img src={currentImageUrl} alt="Zentom Guardian" class="mascot-image" />
+                <div class="shadow"></div>
+            </div>
+
+            <!-- Controls -->
+            <div class="mascot-controls">
+                <button class="control-btn" title="Turn off Zentom Copilot" onclick={disableMascot}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                        <line x1="12" y1="2" x2="12" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </template>
+</template>

@@ -10,6 +10,8 @@ private class RateLimiterTest {
     @IsTest
     static void testIsRateLimited_Allow() {
         Tenant__c tenant = [SELECT Id FROM Tenant__c LIMIT 1];
+        
+        RateLimiter.mockCacheMap = new Map<String, Integer>();
 
         Test.startTest();
         Boolean isLimited = RateLimiter.isRateLimited(tenant.Id, 'TestEndpoint');
@@ -22,22 +24,46 @@ private class RateLimiterTest {
     static void testIsRateLimited_Block() {
         Tenant__c tenant = [SELECT Id FROM Tenant__c LIMIT 1];
         
-        // Temporarily lower the limit for testing using SystemSettings fallback or similar,
-        // but since we can't easily mock Cache or SystemSettings, we'll just run it until it blocks,
-        // or just accept coverage from the allow case if looping 100 times is too much.
-        // For coverage, we'll loop 101 times to trigger the block.
+        RateLimiter.mockCacheMap = new Map<String, Integer>();
         
+        // Loop to hit the limit
         Test.startTest();
         Boolean isLimited = false;
-        for (Integer i = 0; i < 101; i++) {
+        for (Integer i = 0; i < 105; i++) {
             isLimited = RateLimiter.isRateLimited(tenant.Id, 'TestEndpoint');
             if (isLimited) break;
         }
         Test.stopTest();
 
-        // It might not block if FeatureFlag is disabled in tests, but coverage is hit!
-        // We just assert not null to ensure it ran.
-        System.assertNotEquals(null, isLimited);
+        System.assertEquals(true, isLimited, 'Should be rate limited after exceeding limit');
+    }
+
+    @IsTest
+    static void testIsRateLimited_Bypass() {
+        Tenant__c tenant = [SELECT Id FROM Tenant__c LIMIT 1];
+        
+        // Mock FeatureFlag to return false for RATE_LIMITING
+        String jsonStr = '[{"DeveloperName":"RATE_LIMITING", "Is_Enabled__c":false, "Tenant_ID__c":null}]';
+        FeatureFlag.mockFlags = (List<Feature_Flag__mdt>) JSON.deserialize(jsonStr, List<Feature_Flag__mdt>.class);
+        
+        Test.startTest();
+        Boolean isLimited = RateLimiter.isRateLimited(tenant.Id, 'TestEndpoint');
+        Test.stopTest();
+
+        System.assertEquals(false, isLimited, 'Should bypass rate limiting if flag is disabled');
+    }
+
+    @IsTest
+    static void testIsRateLimited_CacheExceptionFallback() {
+        Tenant__c tenant = [SELECT Id FROM Tenant__c LIMIT 1];
+        
+        // Don't set mockCacheMap so it tries Cache.Org and catches exception in test orgs without cache space
+        RateLimiter.mockCacheMap = null;
+
+        Test.startTest();
+        Boolean isLimited = RateLimiter.isRateLimited(tenant.Id, 'TestEndpoint');
+        Test.stopTest();
+
+        System.assertEquals(false, isLimited, 'Should fail-open and allow request on Cache exception');
     }
 }
-

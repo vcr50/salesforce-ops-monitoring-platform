@@ -37,6 +37,9 @@ public with sharing class LicenseService {
     // ─── Transaction cache ───
     private static LicenseInfo cachedLicenseInfo;
 
+    @TestVisible private static String mockNamespace;
+    @TestVisible private static List<SObject> mockLicenses;
+
     /**
      * Immutable value object representing the resolved license state.
      */
@@ -149,12 +152,17 @@ public with sharing class LicenseService {
             }
 
             // Query PackageLicense — available in all orgs with managed packages
-            List<SObject> licenses = Database.query(
-                'SELECT Status, ExpirationDate, AllowedLicenses, UsedLicenses ' +
-                'FROM PackageLicense ' +
-                'WHERE NamespacePrefix = :namespace ' +
-                'LIMIT 1'
-            );
+            List<SObject> licenses = new List<SObject>();
+            if (Test.isRunningTest() && mockLicenses != null) {
+                licenses = mockLicenses;
+            } else {
+                licenses = Database.query(
+                    'SELECT Status, ExpirationDate, AllowedLicenses, UsedLicenses ' +
+                    'FROM PackageLicense ' +
+                    'WHERE NamespacePrefix = :namespace ' +
+                    'LIMIT 1'
+                );
+            }
 
             if (licenses.isEmpty()) {
                 return null;
@@ -162,7 +170,13 @@ public with sharing class LicenseService {
 
             SObject pkgLicense = licenses[0];
             String licenseStatus = (String) pkgLicense.get('Status');
-            Date expirationDate = (Date) pkgLicense.get('ExpirationDate');
+            Object exp = pkgLicense.get('ExpirationDate');
+            Date expirationDate = null;
+            if (exp instanceof Datetime) {
+                expirationDate = ((Datetime) exp).date();
+            } else if (exp instanceof Date) {
+                expirationDate = (Date) exp;
+            }
 
             Boolean isActive = licenseStatus == 'Active';
             Boolean isExpired = !isActive || (expirationDate != null && expirationDate < Date.today());
@@ -306,6 +320,9 @@ public with sharing class LicenseService {
      * Safely detect the managed package namespace.
      */
     private static String getNamespace() {
+        if (Test.isRunningTest() && mockNamespace != null) {
+            return mockNamespace;
+        }
         try {
             // In a managed package, this class's name will be prefixed
             String className = LicenseService.class.getName();
@@ -318,4 +335,3 @@ public with sharing class LicenseService {
         return null;
     }
 }
-

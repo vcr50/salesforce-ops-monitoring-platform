@@ -80,13 +80,8 @@ global with sharing class ZentomWebhookListener {
             // ── STEP 4: Execute if cleared by Policy Engine ──
             if (agentforceReady == true) {
                 try {
-                    ZentomPolicyEngine.ExecutionMode mode = ZentomPolicyEngine.ExecutionMode.valueOf(executionMode);
-                    
-                    ZentomRiskEngine.RiskScore risk = new ZentomRiskEngine.RiskScore();
-                    risk.totalScore = riskScore;
-                    
                     ZentomExecutionController.executeAction(
-                        Id.valueOf(incidentId), action, confidence, risk, mode
+                        Id.valueOf(incidentId), action, confidence, executionMode
                     );
                     
                     // ── STEP 5: Send evaluation feedback ──

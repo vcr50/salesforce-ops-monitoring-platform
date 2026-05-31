@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Policy_Evaluations</fullName>
+    <columns>NAME</columns>
+    <columns>Incident__c</columns>
+    <columns>Event_Type__c</columns>
+    <columns>Decision__c</columns>
+    <columns>Trace_Id__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Event_Type__c</field>
+        <operation>equals</operation>
+        <value>ZENTOM_POLICY_EVALUATED</value>
+    </filters>
+    <label>Policy Evaluations</label>
+</ListView>

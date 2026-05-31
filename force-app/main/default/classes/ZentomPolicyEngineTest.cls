@@ -44,4 +44,3 @@ private class ZentomPolicyEngineTest {
         System.assertEquals(false, result.requiresApproval, 'Approval is not required');
     }
 }
-

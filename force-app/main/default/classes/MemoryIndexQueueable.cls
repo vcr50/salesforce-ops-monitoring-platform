@@ -102,4 +102,3 @@ public with sharing class MemoryIndexQueueable implements Queueable, Database.Al
         return JSON.serialize(payload);
     }
 }
-

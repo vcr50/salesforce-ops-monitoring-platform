@@ -304,4 +304,3 @@ public with sharing class SubscriptionService {
         }
     }
 }
-

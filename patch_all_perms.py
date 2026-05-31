@@ -1,8 +1,8 @@
 import os
 import xml.etree.ElementTree as ET
 
-objects_dir = r"d:\New folder\VJ SFDC\force-app\main\default\objects"
-perms_dir = r"d:\New folder\VJ SFDC\force-app\main\default\permissionsets"
+objects_dir = r"d:\TomCodeX Inc\SentinelFlow\force-app\main\default\objects"
+perms_dir = r"d:\TomCodeX Inc\SentinelFlow\force-app\main\default\permissionsets"
 
 all_objects = [d for d in os.listdir(objects_dir) if d.endswith("__c") or d.endswith("__mdt") or d.endswith("__e")]
 ET.register_namespace('', "http://soap.sforce.com/2006/04/metadata")
@@ -44,7 +44,8 @@ for perm_file_name in os.listdir(perms_dir):
     for op in obj_perms:
         obj_name = op.find('{http://soap.sforce.com/2006/04/metadata}object').text
         if obj_name.endswith("__e") or obj_name.endswith("__mdt"):
-            existing_obj_names.remove(obj_name)
+            if obj_name in existing_obj_names:
+                existing_obj_names.remove(obj_name)
         else:
             new_obj_perms.append(op)
     obj_perms = new_obj_perms

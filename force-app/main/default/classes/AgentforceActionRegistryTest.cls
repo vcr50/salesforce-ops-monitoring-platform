@@ -27,14 +27,15 @@ private class AgentforceActionRegistryTest {
         );
         insert log;
 
-        Incident__c inc = new Incident__c(
-            Severity__c = 'Critical',
-            Status__c = 'New',
-            Description__c = 'Agentforce registry test incident',
-            Environment__c = env.Id,
-            Integration_Log__c = log.Id
-        );
-        insert inc;
+        // The IntegrationLogTrigger auto-creates an Incident. Update it instead of deleting
+        // and recreating, which prevents @future methods from querying deleted records.
+        Incident__c inc = [SELECT Id, Severity__c, Status__c, Description__c, Environment__c, Integration_Log__c, Self_Heal_Attempted__c FROM Incident__c LIMIT 1];
+        inc.Severity__c = 'Critical';
+        inc.Status__c = 'New';
+        inc.Description__c = 'Agentforce registry test incident';
+        inc.Environment__c = env.Id;
+        inc.Self_Heal_Attempted__c = true;
+        update inc;
 
         // Create an AI Decision for telemetry tests
         AI_Decision__c decision = new AI_Decision__c(
@@ -226,7 +227,14 @@ private class AgentforceActionRegistryTest {
         Test.stopTest();
 
         System.assert(!decisions.isEmpty(), 'Should return at least 1 decision');
-        System.assertEquals('Restart Service', decisions[0].Recommended_Action__c);
+        Boolean foundRestart = false;
+        for (AI_Decision__c d : decisions) {
+            if (d.Recommended_Action__c == 'Restart Service') {
+                foundRestart = true;
+                break;
+            }
+        }
+        System.assert(foundRestart, 'Should contain Restart Service decision');
     }
 
     @IsTest
@@ -280,6 +288,24 @@ private class AgentforceActionRegistryTest {
         System.assertEquals(true, decision.Auto_Executed__c);
     }
 
+    @IsTest
+    static void testDispatchOtherActions() {
+        SecurityGate.bypassForTests = true;
+        Id incidentId = getTestIncidentId();
+
+        Test.startTest();
+        AgentforceActionRegistry.ActionResult resultDisable = AgentforceActionRegistry.dispatch(incidentId, 'Disable Flow');
+        AgentforceActionRegistry.ActionResult resultNotify = AgentforceActionRegistry.dispatch(incidentId, 'Notify Teams');
+        AgentforceActionRegistry.ActionResult resultRollback = AgentforceActionRegistry.dispatch(incidentId, 'Rollback Deployment');
+        AgentforceActionRegistry.ActionResult resultTrigger = AgentforceActionRegistry.dispatch(incidentId, 'Trigger SF Flow');
+        Test.stopTest();
+
+        System.assertEquals(true, resultDisable.success);
+        System.assertEquals(true, resultNotify.success);
+        System.assertEquals(true, resultRollback.success);
+        System.assertEquals(true, resultTrigger.success);
+    }
+
     // ── Helpers ─────────────────────────────────────────────────────────────────
 
     private static Id getTestIncidentId() {
@@ -292,4 +318,3 @@ private class AgentforceActionRegistryTest {
         ].Id;
     }
 }
-

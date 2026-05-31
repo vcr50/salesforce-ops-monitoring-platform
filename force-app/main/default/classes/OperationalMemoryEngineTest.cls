@@ -32,7 +32,8 @@ private class OperationalMemoryEngineTest {
             Incident__c = inc.Id,
             Action_Taken__c = 'Retry',
             Result__c = 'Succeeded',
-            Retry_Attempt__c = 1
+            Retry_Attempt__c = 1,
+            Playbook_Name__c = 'Test Playbook'
         );
         insert heal;
 
@@ -53,4 +54,3 @@ private class OperationalMemoryEngineTest {
         System.assert(jsonPayload.contains('95'));
     }
 }
-

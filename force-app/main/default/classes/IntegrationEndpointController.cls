@@ -186,4 +186,3 @@ public with sharing class IntegrationEndpointController {
             && fields.get(fieldApiName).getDescribe().isCreateable();
     }
 }
-

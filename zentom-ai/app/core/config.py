@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Database
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./zentom.db")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://zentom_user:zentom_password@localhost:5432/zentom_db")
 
 # AI API Keys
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "")
