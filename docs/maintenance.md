@@ -1043,3 +1043,9 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Documented clear step-by-step Setup UI guidance to link the `sentinelflow` namespace to the `astrosoft` Dev Hub.
 - Documented post-linking CLI commands to verify successful registry linkage, update the `sfdx-project.json` file, and create the new Managed 2GP package.
 - **71C Status**: BLOCKED. First 2GP package version candidate creation remains blocked until the external linkage is established, project configuration updated, and the managed package created.
+
+### 71B-11 — Namespace Link Verification + Managed Package Creation: Staged / In Progress
+- Planned query verification of the namespace prefix linkage `sentinelflow` to the `astrosoft` Dev Hub.
+- Planned updates to `sfdx-project.json` for namespace prefix configuration and managed package directory routing.
+- Planned creation commands for registering the new Managed 2GP package.
+- **71C Status**: BLOCKED. First 2GP package version candidate creation remains blocked until the namespace linkage is validated and the Managed 2GP package is created.

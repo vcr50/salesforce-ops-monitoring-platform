@@ -903,7 +903,14 @@
 - [x] Formulate Setup UI linking handshake guide for system administrator
 - [x] Record package update and packaging creation CLI commands for post-linking step
 
+## 71B-11 — Namespace Link Verification + Managed Package Creation
+- [ ] Verify `sentinelflow` namespace is linked to Dev Hub `astrosoft` via query
+- [ ] Update `sfdx-project.json` to define namespace prefix `"sentinelflow"`
+- [ ] Create Managed 2GP package named `"SentinelFlow Managed"` using CLI
+- [ ] Record the new managed package ID alias in `sfdx-project.json`
+- [ ] Verify managed package alias registration in Dev Hub
+
 ## 71C — First 2GP Package Version Candidate
-- [ ] BLOCKED: Do not create package version candidate until namespace, managed package registries, and Dev Hub registry linkages are complete
+- [ ] BLOCKED: Do not create package version candidate until namespace is linked, project configuration is updated, and Managed 2GP package exists
 
 
