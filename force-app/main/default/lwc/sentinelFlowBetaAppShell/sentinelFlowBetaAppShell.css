@@ -330,11 +330,12 @@ h1 {
 
 .side-brand {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.65rem;
     margin-top: auto;
     padding: 1rem 0.35rem 0.45rem;
     border-top: 1px solid var(--border-light);
+    min-width: 0;
 }
 
 .side-logo {
@@ -359,20 +360,28 @@ h1 {
     object-fit: contain;
 }
 
+.side-brand > div {
+    min-width: 0;
+    max-width: calc(100% - 3.2rem);
+}
+
 .side-brand strong {
-    display: block;
+    display: inline;
     color: var(--text-primary);
-    font-size: 1rem;
+    font-size: 0.88rem;
     font-weight: 850;
     line-height: 1.1;
+    overflow-wrap: anywhere;
 }
 
 .side-brand small {
     display: block;
     color: var(--text-link);
-    font-size: 0.68rem;
+    font-size: 0.62rem;
     font-weight: 700;
-    margin-top: 0.1rem;
+    margin-top: 0.18rem;
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 .sidebar-footer {
