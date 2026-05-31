@@ -1207,3 +1207,15 @@ Action Center handles any downstream execution
 - **Package Timing**: Do not run `sf package create --package-type Managed` until namespace registration and Dev Hub linking are complete.
 - **71C Unblock Criteria**: Namespace confirmed, namespace linked to Dev Hub, `sfdx-project.json` namespace updated, Managed 2GP package created, managed alias present, `main` clean, and no artifacts/secrets in package scope.
 - **Status**: 71C remains BLOCKED.
+
+---
+
+## Milestone 71B-4 - UI/UX AppExchange Readiness Audit
+
+- **Completed Deliverable**: Authored the UI/UX AppExchange readiness audit: [`docs/v1.2.0-ui-ux-appexchange-readiness-audit.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-ui-ux-appexchange-readiness-audit.md).
+- **Placeholder Findings**: Cases, Policies, and Runbooks currently display "Coming Soon" and should not ship as visible active modules.
+- **Settings Finding**: Settings page readability is weak due to low contrast, overlay-like visual treatment, and unclear active tab styling.
+- **Empty-State Finding**: Placeholder empty states feel unfinished and need stronger hierarchy, release status, and CTA treatment if retained.
+- **Navigation Rule**: Clickable tabs must lead to functional pages; future modules should be hidden or disabled with clear tooltip/context.
+- **Recommended Sequence**: 71B-5 hide or complete placeholder tabs, 71B-6 clean up Settings page visuals, 71B-7 run final UI smoke test, then 71C.
+- **Status**: 71C remains BLOCKED until placeholder tabs are hidden/completed and Settings readability is fixed.

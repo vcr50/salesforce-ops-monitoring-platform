@@ -980,3 +980,13 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Documented that Managed 2GP package creation must not run until namespace registration and Dev Hub linking are complete.
 - Defined final unblock criteria for 71C: namespace confirmed, namespace linked to Dev Hub, `sfdx-project.json` namespace updated, new Managed 2GP package created, managed package alias present, `main` clean, and package scope free of artifacts/secrets.
 - **71C Status**: BLOCKED until namespace registration and publisher setup actions are completed.
+
+### 71B-4 - UI/UX AppExchange Readiness Audit: Complete with Action Required
+- Created the UI/UX AppExchange readiness audit [`docs/v1.2.0-ui-ux-appexchange-readiness-audit.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-ui-ux-appexchange-readiness-audit.md).
+- Recorded current screenshot findings: Cases, Policies, and Runbooks display "Coming Soon" and should not remain visible as active product modules in default navigation.
+- Recorded Settings page readability issue: dark overlay-like visual treatment, weak field contrast, and unclear active styling require cleanup.
+- Recorded empty-state concern: large blank layouts, weak hierarchy, and disconnected CTA treatment feel unfinished.
+- Established navigation rule: clickable tab equals functional page; future modules should be hidden or disabled with clear context.
+- Recommended hiding incomplete tabs from default navigation for v1.2.0 unless minimum functional versions are completed.
+- Defined follow-up sequence: 71B-5 Hide or Complete Placeholder Tabs, 71B-6 Settings Page Visual Cleanup, 71B-7 Final UI Smoke Test, then 71C.
+- **71C Status**: BLOCKED until placeholder tabs are hidden or completed and Settings readability is fixed.

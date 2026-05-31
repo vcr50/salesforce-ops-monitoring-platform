@@ -825,4 +825,17 @@
 - [ ] Add managed package alias
 - [ ] Confirm clean `main` and package-scope hygiene before 71C
 
+## 71B-4 - UI/UX AppExchange Readiness Audit
+- [x] Create UI/UX AppExchange readiness audit `docs/v1.2.0-ui-ux-appexchange-readiness-audit.md`
+- [x] Record screenshot issues: Cases, Policies, and Runbooks show "Coming Soon"
+- [x] Record Settings page readability and dark overlay/contrast issue
+- [x] Record weak empty-state design issue
+- [x] Define navigation expectation rule: clickable tab must be functional
+- [x] Recommend hiding incomplete tabs from default navigation for v1.2.0
+- [x] Define follow-up sequence: 71B-5 hide/complete placeholder tabs, 71B-6 Settings cleanup, 71B-7 final UI smoke test
+- [ ] Hide or complete placeholder tabs before packaging
+- [ ] Fix Settings UI readability before packaging
+- [ ] Run final UI smoke test before 71C
+- [ ] Keep 71C blocked until placeholder tabs are hidden/completed and Settings readability is fixed
+
 
