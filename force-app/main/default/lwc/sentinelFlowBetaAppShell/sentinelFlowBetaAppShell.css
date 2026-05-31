@@ -333,7 +333,7 @@ h1 {
     align-items: center;
     gap: 0.65rem;
     margin-top: auto;
-    padding: 1rem 0.35rem 0.85rem;
+    padding: 1rem 0.35rem 0.45rem;
     border-top: 1px solid var(--border-light);
 }
 
@@ -374,19 +374,14 @@ h1 {
 
 .sidebar-footer {
     margin-top: 0;
-    padding: 0 0.35rem;
+    padding: 0 0.35rem 0.25rem;
     color: var(--text-secondary);
-    font-size: 0.66rem;
+    font-size: 0.65rem;
     line-height: 1.45;
 }
 
 .sidebar-footer span {
     display: block;
-}
-
-.sidebar-footer span:first-child {
-    color: var(--text-primary);
-    font-weight: 800;
 }
 
 .nav-list {
@@ -1565,18 +1560,13 @@ h1 {
 .app-footer {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    justify-content: center;
     margin-top: 1rem;
     padding: 1rem 0.25rem 0;
     border-top: 1px solid var(--border-light);
     color: var(--text-secondary);
     font-size: 0.78rem;
-    font-weight: 700;
-}
-
-.app-footer span:first-child {
-    color: var(--text-primary);
+    font-weight: 650;
 }
 
 /* ── System Health Threshold Colors ────────────────────────────────── */
