@@ -910,6 +910,14 @@
 - [ ] BLOCKED: Record the new managed package ID alias in `sfdx-project.json`
 - [ ] BLOCKED: Verify managed package alias registration in Dev Hub
 
+## 71B-12 — Default Dev Hub Configuration + Namespace Access Final Check ✅
+- [x] Configure default target Dev Hub alias `astrosoft` locally
+- [x] Verify default Dev Hub setting via config query (target-dev-hub = astrosoft)
+- [x] Verify default Dev Hub indicator (🌳) is active in `sf org list`
+- [x] Document direct Setup home URL path `/lightning/setup/DevHub/home`
+- [x] Finalize verdict on Namespace Registry accessibility bounds for the target org
+- [x] Retain package strategy in BLOCKED state and defer metadata updates
+
 ## 71C — First 2GP Package Version Candidate
 - [ ] BLOCKED: Do not create package version candidate until namespace is linked, project configuration is updated, and Managed 2GP package exists (blocked by Dev Hub namespace registry access)
 

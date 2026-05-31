@@ -1048,3 +1048,9 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Verified that the local CLI config has `astrosoft` (`vjdev@asap.com`) registered as a Dev Hub but it is not set as the local default Dev Hub (absent `🌳` default marker).
 - Evaluated Setup UI access for Dev Hub namespace registry configuration. Documented that direct URL navigation (`/lightning/setup/DevHub/home`) is required for setup testing; if access is denied, the user lacks DX Namespace Registry permissions or the capability is restricted for this org type.
 - **71C Status**: BLOCKED. First 2GP package version candidate creation remains blocked until the namespace linkage is validated and the Managed 2GP package is created.
+
+### 71B-12 — Default Dev Hub Configuration + Namespace Access Final Check: Complete
+- Configured `astrosoft` (`vjdev@asap.com`) as the local default Dev Hub via `sf config set target-dev-hub=astrosoft`.
+- Verified that `sf config get target-dev-hub` returns `astrosoft` and that `sf org list` displays the default Dev Hub marker (`🌳,🍁`).
+- Documented that if accessing `/lightning/setup/DevHub/home` is still blocked or unavailable externally, it indicates that the current Dev Hub org does not support Namespace Registry connection.
+- **71C Status**: BLOCKED. First 2GP package version candidate creation remains blocked until the namespace linkage is validated and the Managed 2GP package is created.

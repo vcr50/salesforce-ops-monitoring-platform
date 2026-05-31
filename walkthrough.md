@@ -1294,3 +1294,13 @@ Action Center handles any downstream execution
 - **Scope & Objective**: Verify the linkage of the `sentinelflow` namespace.
 - **Current Block Status**: The user's Setup UI Quick Find does not expose the Namespace Registries link. Direct navigation to `/lightning/setup/DevHub/home` is required; if denied access, this indicates that the `vjdev@asap.com` user profile lacks DX Namespace Registry permissions, or Dev Hub setup is restricted in the target Partner Business Org.
 - **71C Status**: BLOCKED. Packaged 2GP creation is blocked until Dev Hub namespace linkage is completed externally and the package is registered.
+
+---
+
+## Milestone 71B-12 - Default Dev Hub Configuration + Namespace Access Final Check
+
+- **CLI Configuration**: Configured `astrosoft` (`vjdev@asap.com`) as the local default Dev Hub via `sf config set target-dev-hub=astrosoft`.
+- **Default Hub Verification**: Confirmed that `sf config get target-dev-hub` returns `astrosoft` and that `sf org list` displays the default Dev Hub marker (`🌳,🍁`).
+- **Namespace Access Verdict**: If accessing `/lightning/setup/DevHub/home` is still blocked or unavailable externally, it indicates that the current Dev Hub org does not support Namespace Registry connection.
+- **Actionable Correction**: The packaging pipeline requires a proper Partner Business Org (PBO) Dev Hub with active registry capabilities, or partner support activation.
+- **71C Status**: BLOCKED. Stays blocked until namespace linking and Managed 2GP package creation can proceed on an enabled Dev Hub.
