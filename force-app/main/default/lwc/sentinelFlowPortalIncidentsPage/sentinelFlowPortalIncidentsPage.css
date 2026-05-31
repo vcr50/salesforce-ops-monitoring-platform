@@ -211,6 +211,11 @@
     cursor: pointer; transition: 0.2s;
 }
 .btn-primary:hover { background: var(--sf-blue-dark); transform: translateY(-1px); }
+.btn-primary:disabled {
+    opacity: 0.78;
+    cursor: progress;
+    transform: none;
+}
 
 .btn-ghost {
     display: flex; align-items: center; gap: 6px;
@@ -237,6 +242,16 @@
     display: inline-block; width: 11px; height: 11px;
     border: 2px solid rgba(252,165,165,0.3);
     border-top-color: var(--sf-danger-text); border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+.spinner-white {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border: 2px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
     animation: spin 0.7s linear infinite;
 }
 

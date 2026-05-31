@@ -1,4 +1,4 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getOpenIncidents from '@salesforce/apex/SentinelFlowPortalController.getOpenIncidents';
 import healIncident    from '@salesforce/apex/SentinelFlowPortalController.healIncident';
@@ -62,6 +62,7 @@ export default class SentinelFlowPortalIncidentsPage extends LightningElement {
     @track isAnalysing       = false;
     @track isHealing         = false;
     @track isSimulating      = false;
+    @track isRefreshing      = false;
     @track aiReady           = false;
 
     // Alert banner state
@@ -122,11 +123,15 @@ export default class SentinelFlowPortalIncidentsPage extends LightningElement {
     }
 
     // ── Public API ─────────────────────────────────────────────────────────
-    refreshData() { this.fetchData(); }
+    @api
+    refreshData(showToast = true) {
+        return this.fetchData({ showToast });
+    }
 
     // ── Data Fetching ──────────────────────────────────────────────────────
-    fetchData() {
-        getOpenIncidents()
+    fetchData(options = {}) {
+        this.isRefreshing = true;
+        return getOpenIncidents()
             .then(result => {
                 this.rawData = result;
                 this.allIncidents = result.map(inc => this._processRow(inc));
@@ -138,8 +143,19 @@ export default class SentinelFlowPortalIncidentsPage extends LightningElement {
                     }
                 }
                 this.applyFilters();
+                if (options.showToast) {
+                    this._toast('Incidents Refreshed', 'Incident Operations data is up to date.', 'success');
+                }
             })
-            .catch(err => console.error('Incidents fetch error', err));
+            .catch(err => {
+                console.error('Incidents fetch error', err);
+                if (options.showToast) {
+                    this._toast('Refresh Error', err.body?.message || 'Could not refresh incidents', 'error');
+                }
+            })
+            .finally(() => {
+                this.isRefreshing = false;
+            });
     }
 
     _processRow(inc) {
@@ -193,9 +209,39 @@ export default class SentinelFlowPortalIncidentsPage extends LightningElement {
         })
         .catch(err => {
             console.error('Simulate error', err);
-            this._toast('Simulation Error', err.body?.message || 'Failed to create incident', 'error');
+            this._createLocalSimulation(scenario);
+            this._toast('Simulation Preview', 'A local preview incident was created because live simulation is unavailable.', 'warning');
             this.isSimulating = false;
         });
+    }
+
+    _createLocalSimulation(scenario) {
+        const tempId = `sim-${Date.now()}`;
+        const tempIncident = this._processRow({
+            id: tempId,
+            name: scenario.name,
+            description: scenario.description,
+            severity: scenario.severity,
+            status: scenario.status,
+            integrationLogName: scenario.integrationLogName,
+            usersAffected: scenario.usersAffected,
+            revenueAtRisk: scenario.revenueAtRisk,
+            rootCause: scenario.rootCause,
+            recommendedAction: scenario.recommendedAction,
+            aiConfidence: scenario.aiConfidence
+        });
+
+        this.rawData = [tempIncident, ...this.rawData];
+        this.allIncidents = [tempIncident, ...this.allIncidents];
+        this._simulatedIds.add(tempId);
+        this._timelines[tempId] = [];
+        this._addTimelineEvent(tempId, 'incident_created', `Preview incident created - ${scenario.description}`);
+        this.selectedIncident = tempIncident;
+        this.aiReady = true;
+        this.alertMessage = `${scenario.name}: ${scenario.description}`;
+        this._alertIncidentId = tempId;
+        this.showAlert = true;
+        this.applyFilters();
     }
 
     dismissAlert() {
@@ -453,7 +499,10 @@ export default class SentinelFlowPortalIncidentsPage extends LightningElement {
 
     // ── CSV Export ─────────────────────────────────────────────────────────
     exportToCSV() {
-        if (!this.filteredIncidents?.length) return;
+        if (!this.filteredIncidents?.length) {
+            this._toast('Nothing to Export', 'No incidents match the current filters.', 'info');
+            return;
+        }
         const headers = ['ID','Description','Severity','Status','Integration','Users Affected','Revenue at Risk','Root Cause','Recommended Action'];
         const rows = this.filteredIncidents.map(i => [
             `"${i.name||''}"`, `"${(i.description||'').replace(/"/g,'""')}"`,
@@ -470,6 +519,8 @@ export default class SentinelFlowPortalIncidentsPage extends LightningElement {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        this._toast('Export Ready', 'Incident CSV export has started.', 'success');
     }
 
     // ── Helpers ────────────────────────────────────────────────────────────

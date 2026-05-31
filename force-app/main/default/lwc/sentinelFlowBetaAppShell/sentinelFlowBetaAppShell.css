@@ -324,6 +324,8 @@ h1 {
 .workspace {
     align-items: stretch;
     min-height: calc(100vh - 10rem);
+    overflow: visible;
+    position: relative;
 }
 
 .sidebar {
@@ -338,6 +340,9 @@ h1 {
     color: var(--text-primary);
     border-right: 1px solid var(--border-light);
     transition: background 0.4s ease, border-color 0.4s ease;
+    position: relative;
+    overflow: visible;
+    z-index: 30;
 }
 
 .side-brand {
@@ -549,6 +554,8 @@ h1 {
     min-width: 0;
     padding: 1rem;
     overflow: auto;
+    position: relative;
+    z-index: 1;
 }
 
 .hero-panel {
@@ -1445,6 +1452,7 @@ h1 {
     align-items: center;
     padding: 1.5rem 0;
     cursor: pointer;
+    z-index: 80;
 }
 
 .mascot-glow-bg {

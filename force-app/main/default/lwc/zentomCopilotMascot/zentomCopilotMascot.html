@@ -24,11 +24,11 @@
                         </div>
                         <p class="copilot-summary">Zentom Copilot is staged for guided incident triage, policy context, and runbook recommendations.</p>
                         <div class="copilot-actions">
-                            <button type="button" disabled>Analyze page context</button>
-                            <button type="button" disabled>Suggest next action</button>
-                            <button type="button" disabled>Draft operator note</button>
+                            <button type="button" data-action="context" onclick={handlePreviewAction}>Analyze page context</button>
+                            <button type="button" data-action="nextAction" onclick={handlePreviewAction}>Suggest next action</button>
+                            <button type="button" data-action="note" onclick={handlePreviewAction}>Draft operator note</button>
                         </div>
-                        <p class="future-note">Full conversational actions are wired for a future release.</p>
+                        <p class="future-note">{previewNote}</p>
                     </div>
                     <div class="popup-tail"></div>
                 </div>

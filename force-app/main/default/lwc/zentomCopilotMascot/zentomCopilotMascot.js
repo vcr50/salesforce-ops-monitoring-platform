@@ -9,6 +9,7 @@ export default class ZentomCopilotMascot extends LightningElement {
     @track currentMessage = '';
     @track showMessage = false;
     @track showGifPopup = false;
+    @track previewNote = 'Preview actions are active. Full conversational automation is reserved for a future release.';
 
     pollingInterval;
     lastLogId = null;
@@ -118,9 +119,23 @@ export default class ZentomCopilotMascot extends LightningElement {
         if (this.showGifPopup) {
             this.setState('thinking');
             this.showMessage = false; // Hide regular speech bubble if popup is open
+            this.previewNote = 'Preview actions are active. Full conversational automation is reserved for a future release.';
         } else {
             this.setState('idle');
         }
+    }
+
+    handlePreviewAction(event) {
+        const action = event.currentTarget.dataset.action;
+        const messages = {
+            context: 'Preview: current page context analyzed for incident triage signals.',
+            nextAction: 'Preview: next operator action prepared for Guardian Gate review.',
+            note: 'Preview: operator note drafted for the incident handoff.'
+        };
+
+        this.setState('thinking');
+        this.previewNote = messages[action] || 'Preview action acknowledged.';
+        this.say(this.previewNote, 2500);
     }
 
     disableMascot() {

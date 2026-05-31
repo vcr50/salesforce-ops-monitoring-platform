@@ -87,9 +87,14 @@
                     <lightning-icon icon-name="utility:download" size="xx-small"></lightning-icon>
                     Export
                 </button>
-                <button class="btn-primary" onclick={refreshData}>
-                    <lightning-icon icon-name="utility:refresh" size="xx-small"></lightning-icon>
-                    Refresh
+                <button class="btn-primary" onclick={refreshData} disabled={isRefreshing}>
+                    <template if:true={isRefreshing}>
+                        <span class="spinner-white"></span> Refreshing...
+                    </template>
+                    <template if:false={isRefreshing}>
+                        <lightning-icon icon-name="utility:refresh" size="xx-small"></lightning-icon>
+                        Refresh
+                    </template>
                 </button>
             </div>
         </div>

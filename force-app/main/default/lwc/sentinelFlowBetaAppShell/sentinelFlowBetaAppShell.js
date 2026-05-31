@@ -257,6 +257,12 @@ export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningE
         if (this.wiredHealthResult) {
             promises.push(refreshApex(this.wiredHealthResult));
         }
+        if (this.currentPage === 'incidents') {
+            const incidentsPage = this.template.querySelector('c-sentinel-flow-portal-incidents-page');
+            if (incidentsPage?.refreshData) {
+                promises.push(incidentsPage.refreshData(false));
+            }
+        }
         try {
             await Promise.all(promises);
             this.dispatchEvent(
