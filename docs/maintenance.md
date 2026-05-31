@@ -1035,3 +1035,11 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Confirmed that the page layout renders cleanly without any floating canvas elements blocking navigation or overlapping widgets.
 - **71B-9 Runtime UI Smoke Test Verdict: PASS ✅** — UI is clean, compliant, and ready for AppExchange staging.
 - **71C Status**: BLOCKED until namespace confirmation, Dev Hub namespace linking, Managed 2GP package creation/selection, safe `sfdx-project.json` update, and clean `main` are complete.
+
+### 71B-10 — Namespace / Managed Package External Blocker Closure: Complete
+- Created the external blocker closure document [`docs/v1.2.0-namespace-managed-package-external-blocker-closure.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-namespace-managed-package-external-blocker-closure.md).
+- Verified that the Dev Hub `astrosoft` (`vjdev@asap.com`) contains 0 registered or linked namespaces, and query on the `NamespaceRegistry` object returned 0 records.
+- Verified that standard Developer Org `tomcodex-cto` (`cto@tomcodex.com`) is the registered namespace org, holding active namespace prefix `sentinelflow`.
+- Documented clear step-by-step Setup UI guidance to link the `sentinelflow` namespace to the `astrosoft` Dev Hub.
+- Documented post-linking CLI commands to verify successful registry linkage, update the `sfdx-project.json` file, and create the new Managed 2GP package.
+- **71C Status**: BLOCKED. First 2GP package version candidate creation remains blocked until the external linkage is established, project configuration updated, and the managed package created.

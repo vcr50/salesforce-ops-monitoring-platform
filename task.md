@@ -895,6 +895,14 @@
 - [x] Verify no Agentforce branding remains in active views
 - [x] Record runtime final UI smoke test verdict: PASS
 
+## 71B-10 — Namespace / Managed Package External Blocker Closure ✅
+- [x] Create external blocker closure document `docs/v1.2.0-namespace-managed-package-external-blocker-closure.md`
+- [x] Query Dev Hub `astrosoft` namespace registries (returns 0 records)
+- [x] Query Namespace Org `tomcodex-cto` prefix (confirmed as `"sentinelflow"`)
+- [x] Verify namespace prefix `sentinelflow` is registered but not yet linked to Dev Hub `astrosoft`
+- [x] Formulate Setup UI linking handshake guide for system administrator
+- [x] Record package update and packaging creation CLI commands for post-linking step
+
 ## 71C — First 2GP Package Version Candidate
 - [ ] BLOCKED: Do not create package version candidate until namespace, managed package registries, and Dev Hub registry linkages are complete
 

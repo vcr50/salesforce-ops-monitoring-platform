@@ -1275,3 +1275,14 @@ Action Center handles any downstream execution
 - **No Agentforce Branding**: Verified that login screens, incident table details, and architecture tab graphs have all references to `"Agentforce"` replaced with `"Salesforce Native"` or `"Zentom AI Core/Engine"`.
 - **Final UI Verdict**: PASS for runtime final UI smoke test.
 - **71C Status**: BLOCKED until namespace confirmation, Dev Hub namespace linking, Managed 2GP package creation/selection, safe `sfdx-project.json` update, and clean `main` are complete.
+
+---
+
+## Milestone 71B-10 - Namespace / Managed Package External Blocker Closure
+
+- **Completed Deliverable**: Authored the external blocker closure document: [`docs/v1.2.0-namespace-managed-package-external-blocker-closure.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-namespace-managed-package-external-blocker-closure.md).
+- **Registry Inquiries**:
+  - Queried standard Namespace registries inside Dev Hub `astrosoft` (`vjdev@asap.com`) which returned 0 records (no linked namespaces).
+  - Verified Namespace Org `tomcodex-cto` (`cto@tomcodex.com`) holds the registered namespace prefix `sentinelflow`.
+- **Resolution Plan**: Formulated a detailed Setup UI instructions guide for the system administrator to perform the OAuth handshake and link the `sentinelflow` namespace to the `astrosoft` Dev Hub.
+- **71C Status**: BLOCKED. First 2GP package candidate creation remains blocked until the external linkage is established, project config namespace updated, and the new package created.
