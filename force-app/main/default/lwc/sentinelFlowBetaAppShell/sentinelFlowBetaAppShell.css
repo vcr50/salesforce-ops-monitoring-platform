@@ -340,9 +340,11 @@ h1 {
 .side-logo {
     width: 2.55rem;
     height: 2.55rem;
+    min-width: 2.55rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    flex: 0 0 2.55rem;
     padding: 0.18rem;
     border-radius: 0.8rem;
     background: var(--brand-bg-light);
@@ -353,6 +355,7 @@ h1 {
 .side-logo img {
     width: 100%;
     height: 100%;
+    display: block;
     object-fit: contain;
 }
 
