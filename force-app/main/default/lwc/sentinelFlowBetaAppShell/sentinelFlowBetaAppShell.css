@@ -360,18 +360,30 @@ h1 {
     object-fit: contain;
 }
 
-.side-brand > div {
+.side-brand-copy {
     min-width: 0;
+    flex: 1 1 auto;
     max-width: calc(100% - 3.2rem);
 }
 
+.side-brand-title {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.3rem;
+    width: 100%;
+}
+
 .side-brand strong {
-    display: inline;
+    display: block;
+    min-width: 0;
     color: var(--text-primary);
-    font-size: 0.88rem;
-    font-weight: 450;
+    font-size: 0.82rem;
+    font-weight: 250;
     line-height: 1.1;
-    overflow-wrap: anywhere;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .side-brand small {
@@ -380,8 +392,15 @@ h1 {
     font-size: 0.62rem;
     font-weight: 700;
     margin-top: 0.18rem;
-    white-space: normal;
-    overflow-wrap: anywhere;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.side-brand .version-badge {
+    padding: 0.04rem 0.28rem;
+    font-size: 0.55rem;
+    margin-left: 0;
 }
 
 .sidebar-footer {
