@@ -941,3 +941,13 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Documented namespace and Dev Hub assumptions, metadata packaging scope, excluded metadata, permission set strategy, validation checklist, package version creation steps, risks, and success criteria.
 - **Packaging Baseline Rule**: Do not start packaging from a feature branch. All 2GP staging must begin from `main` after merge and tag confirmation.
 - **Current Status**: Milestone 71A initiated. Live GitHub Actions confirmation and Dev Hub namespace verification remain open before first package version creation.
+
+### 71B - Dev Hub / Namespace Verification: Complete with Action Required
+- Created the official Dev Hub and namespace verification document [`docs/v1.2.0-devhub-namespace-verification.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-devhub-namespace-verification.md).
+- Verified Git baseline: current branch `main`, `origin/main` at `35e070c`, and `v1.2.0` resolving to product release commit `c869da7e5ec61d2c5ef84261795685f8bebf24ce`.
+- Verified Salesforce CLI authentication for Dev Hub alias `astrosoft` with connected status confirmed. Sensitive token/password CLI output was intentionally not recorded.
+- Verified `sfdx-project.json` contains package directory `force-app`, default package `SentinelFlow`, package Id alias `0HodL0000003WMjSAM`, and package version aliases through `SentinelFlow@3.0.0-4`.
+- Verified package directory `force-app/main/default` contains expected Salesforce metadata categories including Apex, LWC, objects, permission sets, named credentials, static resources, tabs, and applications.
+- Verified local artifacts and secrets are not present in Salesforce packaging scope.
+- **Action Required**: Namespace prefix is blank and Dev Hub package list shows `SentinelFlow` as `Unlocked`, not managed. Do not create the AppExchange managed package version candidate until namespace and managed package strategy are confirmed.
+- **Recommendation**: Resolve namespace/package type setup, then proceed to Milestone 71C - First 2GP Package Version Candidate from `main`.

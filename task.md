@@ -761,4 +761,17 @@
 - [ ] Confirm live GitHub Actions runs on `main` after merge push
 - [ ] Confirm Dev Hub alias and namespace linkage before package version creation
 
+## 71B - Dev Hub / Namespace Verification
+- [x] Create the Dev Hub and namespace verification document `docs/v1.2.0-devhub-namespace-verification.md`
+- [x] Verify current branch is `main`
+- [x] Verify `origin/main` resolves to `35e070c`
+- [x] Verify `v1.2.0` resolves to product release commit `c869da7`
+- [x] Verify Salesforce CLI authentication for Dev Hub alias `astrosoft`
+- [x] Inspect `sfdx-project.json` package directory, namespace, and package aliases
+- [x] Verify package directory `force-app` exists with Salesforce metadata
+- [x] Check for local artifacts and committed secrets in packaging scope
+- [ ] Resolve namespace strategy; current `sfdx-project.json` namespace is blank
+- [ ] Resolve package type strategy; current Dev Hub package listing shows `SentinelFlow` as `Unlocked`
+- [ ] Proceed to 71C only after managed package and namespace strategy are confirmed
+
 

@@ -1159,3 +1159,16 @@ Action Center handles any downstream execution
 - **Access Strategy**: Permission set separation remains the subscriber access model, preserving least privilege, CRUD/FLS enforcement, and audit log mutation controls.
 - **Open Gates**: Live GitHub Actions confirmation on `main` and Dev Hub namespace verification remain required before first package version creation.
 - **Status**: Milestone 71A initiated. 2GP packaging must start from `main`, not from a feature branch.
+
+---
+
+## Milestone 71B - Dev Hub / Namespace Verification
+
+- **Completed Deliverable**: Authored the Dev Hub and namespace verification report: [`docs/v1.2.0-devhub-namespace-verification.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-devhub-namespace-verification.md).
+- **Git Verification**: Confirmed current branch `main`, `origin/main` at `35e070c`, and release tag `v1.2.0` at `c869da7e5ec61d2c5ef84261795685f8bebf24ce`.
+- **Dev Hub Verification**: Confirmed Salesforce CLI authentication for Dev Hub alias `astrosoft`.
+- **Package Alias Verification**: Confirmed `SentinelFlow` package alias `0HodL0000003WMjSAM` and version aliases are present in `sfdx-project.json`.
+- **Package Directory Verification**: Confirmed `force-app` is the default package directory and contains the expected Salesforce metadata structure.
+- **Artifact Hygiene**: Confirmed no local test artifacts or committed secrets are present in Salesforce packaging scope.
+- **Blocking Finding**: Namespace prefix is blank and the Dev Hub package listing shows `SentinelFlow` as `Unlocked`, not managed.
+- **Recommendation**: Resolve namespace and managed 2GP package strategy before Milestone 71C. Package creation must still run from `main` with `v1.2.0` as the release reference.
