@@ -1060,6 +1060,13 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Shifted focus to non-blocked parallel track assets for AppExchange Listing preparation.
 - **71C Status**: BLOCKED. Stays blocked until namespace linking and Managed 2GP package creation can proceed on an enabled Dev Hub.
 
+### 71B-14 — Deploy Latest UI Cleanup to Salesforce Org: Complete
+- Executed validate-only deployment check command against target org `astrosoft` (`vjdev@asap.com`), verifying that all 358 Apex tests pass cleanly (Deploy ID `0AfdL00000bIXWUSA4`).
+- Executed Quick Deploy using validated job ID to successfully deploy and activate all updated metadata assets on `astrosoft` (Deploy ID `0AfdL00000bIZzhSAG`).
+- Confirmed recent UI fixes (placeholder tabs hidden, settings page contrast, Agentforce references replaced) are fully active in the target org.
+- **71C Status**: BLOCKED. Stays blocked until namespace linking and Managed 2GP package creation can proceed on an enabled Dev Hub.
+
+
 ### 72A — Security Review Submission Checklist: Complete
 - Created the official security review submission checklist [`docs/v1.2.0-security-review-submission-checklist.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-security-review-submission-checklist.md).
 - Documented SAST/DAST scanner requirements (`sf scanner`, OWASP ZAP), external endpointsNamed Credentials, user account credentials (admin and least-privilege roles), and sharing model / GRC safety compliance gates.

@@ -1315,6 +1315,16 @@ Action Center handles any downstream execution
 
 ---
 
+## Milestone 71B-14 - Deploy Latest UI Cleanup to Salesforce Org
+
+- **Objective**: Deploy all recent UI cleanup changes (hidden placeholder tabs, improved settings contrast, removed Agentforce naming references) from the repository to the active Salesforce developer org `astrosoft`.
+- **Validation**: Executed `sf project deploy validate` with all 358 local Apex unit tests passing successfully (Deploy ID `0AfdL00000bIXWUSA4`).
+- **Deployment**: Performed quick deployment utilizing the validated job ID to successfully deploy and activate all updated metadata assets on `astrosoft` (`vjdev@asap.com`) (Deploy ID `0AfdL00000bIZzhSAG`).
+- **Status**: Completed and fully active.
+
+---
+
+
 ## Milestone 72A - Security Review Submission Checklist
 
 - **Completed Deliverable**: Verified and tracked the official checklist: [`docs/v1.2.0-security-review-submission-checklist.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-security-review-submission-checklist.md).

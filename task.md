@@ -925,6 +925,11 @@
 - [x] Freeze packaging work until namespace registry access is resolved, and move to non-blocked AppExchange prep tasks
 - [x] Retain package strategy in BLOCKED state and defer metadata updates
 
+## Milestone 71B-14 — Deploy Latest UI Cleanup to Salesforce Org
+- [x] Run validate-only deployment check to astrosoft (vjdev@asap.com) and execute local unit tests
+- [x] Execute deployment of the UI cleanup (placeholder tabs hidden, settings contrast, Agentforce wording removal) using Quick Deploy
+- [x] Verify metadata successfully deployed to the active Salesforce org
+
 ## Milestone 72A — Security Review Submission Checklist
 - [x] Verify docs/v1.2.0-security-review-submission-checklist.md contains SAST/DAST scanning targets, user permissions, sharing models, and architectural controls
 - [x] Enforce security and FLS/CRUD validation disclosures
