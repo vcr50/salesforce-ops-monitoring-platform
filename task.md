@@ -962,6 +962,17 @@
 - [x] Confirm UI/UX fixes (hidden placeholders, no floating copilot overlays, settings page cleanup)
 - [x] Push design concept changes to Git repository
 
+## Milestone 71B-16 — Implement Premium UI Theme Tokens
+- [x] Convert the design blueprint into reusable CSS theme variables
+- [x] Implement light mode tokens (soft-gray contrast, card surfaces, borders, text colors, status badges, buttons)
+- [x] Implement dark mode tokens (Samsung One UI style night palette, charcoal/graphite variables, border/text adjustments)
+- [x] Align sidebar/topbar styling and card backgrounds across modes
+- [x] Refactor Settings LWC CSS (sentinelFlowPortalSettings.css) to eliminate day-mode fallback residues
+- [x] Validate changes on the target Salesforce org (astrosoft)
+- [x] Verify that 100% of unit tests pass
+- [x] Document premium theme token implementation in docs/v1.2.0-premium-ui-theme-token-implementation.md
+- [x] Update docs/maintenance.md and walkthrough.md with implementation results
+
 
 
 

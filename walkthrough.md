@@ -1379,3 +1379,13 @@ Action Center handles any downstream execution
   2. *Operations Command Center (Light Mode)*: Day-mode contrast surfaces with soft card shadows.
   3. *Incident Operations Workspace (Dark Mode)*: Balanced data tables, severity chips, and a right-aligned detail drawer.
 - **UX Remediation**: Verified that obsolete placeholder templates ("Coming Soon") and floating mascot overlaps are disabled, matching AppExchange-ready guidelines.
+
+---
+
+## Milestone 71B-16 — Implement Premium UI Theme Tokens
+
+- **Completed Deliverable**: Deployed reusable, premium CSS design tokens to support seamless day/night theme transitions on `sentinelFlowBetaAppShell.css` and `sentinelFlowPortalSettings.css`.
+- **Light Theme Variables**: Defined clean white/soft-gray parameters (`--bg-main: #f4f6fa`, `--bg-surface: #ffffff`, `--border-light: #e2e8f0`, `--text-primary: #1e293b`).
+- **One UI Dark Mode Palette**: Modeled night styling with dark charcoal surfaces (`--bg-main: #16191d`, `--bg-surface: #24282e`, `--border-light: #3b424d`, `--text-primary: #e3e8f0`).
+- **Settings Page Refactoring**: Removed residual hardcoded light colors on active tabs (`.tab-btn.tab-active`) and select controls, guaranteeing clean rendering across all settings tabs in dark mode.
+- **Verification & Compliance**: Verified all changes compile successfully and run local Apex unit tests without regressions on the target org. Confirmed packaging block (71C) remains strictly active.

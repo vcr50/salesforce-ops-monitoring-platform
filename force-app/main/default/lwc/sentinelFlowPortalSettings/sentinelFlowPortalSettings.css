@@ -4,7 +4,7 @@
     --settings-card-bg: var(--bg-surface, #ffffff);
     --settings-card-strong-bg: var(--bg-alt, #f8fafc);
     --settings-input-bg: var(--card-bg, #ffffff);
-    --settings-input-focus-bg: #ffffff;
+    --settings-input-focus-bg: var(--bg-surface, #ffffff);
     --settings-border: var(--border-light, #d9e2ec);
     --settings-border-strong: var(--border-blue, #bfd7ff);
     --settings-text: var(--text-primary, #172033);
@@ -84,9 +84,9 @@
 }
 
 .tab-btn.tab-active {
-    background: #ffffff;
+    background: var(--settings-card-bg);
     color: var(--settings-primary-strong);
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08), inset 0 0 0 1px var(--settings-border-strong);
+    box-shadow: 0 2px 8px var(--shadow-light, rgba(0, 0, 0, 0.08)), inset 0 0 0 1px var(--settings-border-strong);
 }
 
 .tab-btn:focus-visible,
@@ -177,7 +177,7 @@
     box-shadow: 0 0 0 3px rgba(10, 107, 255, 0.16);
 }
 
-.form-field select option { background: #ffffff; color: #172033; }
+.form-field select option { background: var(--settings-card-bg); color: var(--settings-text-strong); }
 
 /* ── Card Actions ───────────────────────────────────────────────────────── */
 .card-actions {
@@ -354,7 +354,7 @@
 .number-input  { width: 70px; background: var(--settings-input-bg); border: 1px solid var(--settings-border); border-radius: 7px; padding: 7px 10px; color: var(--settings-text-strong); font-size: 13px; text-align: center; }
 .input-suffix  { font-size: 12px; color: var(--settings-text-muted); }
 .select-input  { background: var(--settings-input-bg); border: 1px solid var(--settings-border); border-radius: 7px; padding: 7px 10px; color: var(--settings-text-strong); font-size: 13px; }
-.select-input option { background: #ffffff; color: #172033; }
+.select-input option { background: var(--settings-card-bg); color: var(--settings-text-strong); }
 
 /* ── Webhook Input ──────────────────────────────────────────────────────── */
 .slack-row     { flex-wrap: wrap; }
