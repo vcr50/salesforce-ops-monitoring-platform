@@ -971,3 +971,12 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Confirmed the managed package create command was not run because namespace is not confirmed.
 - Documented the future `sfdx-project.json` update plan: add confirmed namespace, add managed package alias, preserve unlocked alias as historical/internal reference, and keep `force-app` as package directory.
 - **Readiness Verdict**: NOT READY for 71C. Namespace, managed package creation/selection, managed alias, and clean package verification remain required.
+
+### 71B-3 - Namespace Registration / Publisher Setup Action Plan: Complete
+- Created the namespace registration action plan [`docs/v1.2.0-namespace-registration-action-plan.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-namespace-registration-action-plan.md).
+- Documented the current blocker: Dev Hub `astrosoft` is connected, existing package `SentinelFlow` / `0HodL0000003WMjSAM` is `Unlocked`, and `Organization.NamespacePrefix` is `null`.
+- Documented required namespace decision, namespace org requirement, Namespace Registry linking steps, and AppExchange publisher setup dependency.
+- Documented that `sfdx-project.json` must not be updated until the namespace is confirmed and linked to the Dev Hub.
+- Documented that Managed 2GP package creation must not run until namespace registration and Dev Hub linking are complete.
+- Defined final unblock criteria for 71C: namespace confirmed, namespace linked to Dev Hub, `sfdx-project.json` namespace updated, new Managed 2GP package created, managed package alias present, `main` clean, and package scope free of artifacts/secrets.
+- **71C Status**: BLOCKED until namespace registration and publisher setup actions are completed.

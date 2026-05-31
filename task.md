@@ -807,4 +807,22 @@
 - [ ] Re-run package alias verification
 - [ ] Keep 71C blocked until 71B-2 blockers are resolved
 
+## 71B-3 - Namespace Registration / Publisher Setup Action Plan
+- [x] Create namespace registration action plan `docs/v1.2.0-namespace-registration-action-plan.md`
+- [x] Document current blocker: Dev Hub connected, existing package is unlocked, namespace is not confirmed
+- [x] Document required namespace decision before managed package creation
+- [x] Document Dev Hub / Partner Business Org requirement
+- [x] Document namespace org requirement
+- [x] Document Namespace Registry linking steps
+- [x] Document AppExchange publisher setup dependency
+- [x] Document `sfdx-project.json` update timing
+- [x] Document managed package creation timing
+- [x] Document verification checklist, risks, and final unblock criteria for 71C
+- [ ] Confirm namespace
+- [ ] Link namespace to Dev Hub
+- [ ] Update `sfdx-project.json` namespace
+- [ ] Create new Managed 2GP package
+- [ ] Add managed package alias
+- [ ] Confirm clean `main` and package-scope hygiene before 71C
+
 

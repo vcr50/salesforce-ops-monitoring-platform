@@ -1195,3 +1195,15 @@ Action Center handles any downstream execution
 - **Package Create Decision**: Did not run `sf package create` because namespace is not confirmed.
 - **sfdx-project.json Decision**: Did not update namespace or aliases prematurely; documented the future update plan.
 - **Readiness Verdict**: 71C remains BLOCKED until namespace, managed package, managed alias, clean `main`, and package-scope hygiene are fully verified.
+
+---
+
+## Milestone 71B-3 - Namespace Registration / Publisher Setup Action Plan
+
+- **Completed Deliverable**: Authored the namespace registration action plan: [`docs/v1.2.0-namespace-registration-action-plan.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-namespace-registration-action-plan.md).
+- **Current Blocker**: Dev Hub `astrosoft` is connected, but `Organization.NamespacePrefix` is `null` and the existing `SentinelFlow` package is `Unlocked`.
+- **Required Setup**: Confirm namespace, namespace org, Dev Hub Namespace Registry linking, and AppExchange publisher alignment.
+- **Configuration Timing**: Do not update `sfdx-project.json` until namespace is confirmed and linked.
+- **Package Timing**: Do not run `sf package create --package-type Managed` until namespace registration and Dev Hub linking are complete.
+- **71C Unblock Criteria**: Namespace confirmed, namespace linked to Dev Hub, `sfdx-project.json` namespace updated, Managed 2GP package created, managed alias present, `main` clean, and no artifacts/secrets in package scope.
+- **Status**: 71C remains BLOCKED.
