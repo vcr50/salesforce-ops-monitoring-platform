@@ -1389,3 +1389,18 @@ Action Center handles any downstream execution
 - **One UI Dark Mode Palette**: Modeled night styling with dark charcoal surfaces (`--bg-main: #16191d`, `--bg-surface: #24282e`, `--border-light: #3b424d`, `--text-primary: #e3e8f0`).
 - **Settings Page Refactoring**: Removed residual hardcoded light colors on active tabs (`.tab-btn.tab-active`) and select controls, guaranteeing clean rendering across all settings tabs in dark mode.
 - **Verification & Compliance**: Verified all changes compile successfully and run local Apex unit tests without regressions on the target org. Confirmed packaging block (71C) remains strictly active.
+
+---
+
+## Milestone 71B-17 — Apply Premium Layout to Dashboard and Integrations
+
+- **Completed Deliverable**: Deployed full visual layout updates to the primary Dashboard and the Integrations workspace to reflect premium Samsung One UI layouts.
+- **Interactive Dashboard Enhancements**:
+  - Replaced hardcoded KPI colors with dark-theme adaptive styling overlays (e.g., `.kpi-icon.purple` gets an elegant semi-transparent purple backdrop in dark mode).
+  - Aligned card buttons and headers with interactive hovers (`transition: border-color 0.2s, background 0.2s`) using `--border-blue` and `--nav-hover-bg` tokens.
+  - Linked timeline connectors and nodes to `--border-blue` and `--brand-secondary`.
+- **Integrations Workspace Redesign**:
+  - Eliminated static `#13131a` card mock backgrounds in `sentinelFlowPortalIntegrationsPage.css`.
+  - Harmonized connected service cards and table layouts to dynamically shift colors based on Light/Dark mode state.
+  - Integrated the UNIX Live Stream terminal simulator into the premium theme, guaranteeing clean code contrast.
+- **Validation**: Confirmed all LWC styles compile and deploy successfully to `astrosoft` (`vjdev@asap.com`) with Deploy ID `0AfdL00000bIhpBSAS`. Verified all 358 local unit tests pass cleanly. Retained 71C in strict frozen state.

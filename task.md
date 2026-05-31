@@ -973,6 +973,15 @@
 - [x] Document premium theme token implementation in docs/v1.2.0-premium-ui-theme-token-implementation.md
 - [x] Update docs/maintenance.md and walkthrough.md with implementation results
 
+## Milestone 71B-17 — Apply Premium Layout to Dashboard and Integrations
+- [x] Align dashboard widgets, KPI icons, and interactive elements inside the app shell
+- [x] Adapt dashboard timeline nodes and row connectors to brand and border tokens
+- [x] Refactor integrations page CSS (sentinelFlowPortalIntegrationsPage.css) with premium design tokens
+- [x] Harmonize integrations cards, logs table, and developer live-stream terminal layouts across Light/Dark modes
+- [x] Validate changes on the target Salesforce org (astrosoft)
+- [x] Verify that 100% of unit tests pass
+- [x] Update docs/maintenance.md and walkthrough.md with implementation results
+
 
 
 

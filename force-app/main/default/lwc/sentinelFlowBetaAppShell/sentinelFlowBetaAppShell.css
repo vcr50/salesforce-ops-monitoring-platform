@@ -732,6 +732,7 @@ h1 {
 .kpi-icon.amber { background: var(--color-warning-bg); color: var(--color-warning-text); }
 .kpi-icon.green { background: var(--color-success-bg); color: var(--color-success-text); }
 .kpi-icon.purple { background: #f3e8ff; color: #7e22ce; }
+:host(.dark-theme) .kpi-icon.purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
 
 .kpi-card p {
     color: var(--text-muted);
@@ -802,13 +803,21 @@ h1 {
 .incident-actions button,
 .review-button {
     min-height: 2rem;
-    border: 1px solid #bfdbfe;
+    border: 1px solid var(--border-blue, #bfdbfe);
     border-radius: 0.35rem;
     background: var(--bg-surface);
     color: var(--text-link);
     font-size: 0.75rem;
     font-weight: 800;
     cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.card-header-row button:hover,
+.incident-actions button:hover,
+.review-button:hover {
+    border-color: var(--brand-primary);
+    background: var(--nav-hover-bg);
 }
 
 .beta-table {
@@ -935,7 +944,7 @@ h1 {
     width: 0.7rem;
     height: 0.7rem;
     margin-top: 0.25rem;
-    border: 2px solid #60a5fa;
+    border: 2px solid var(--brand-secondary, #60a5fa);
     border-radius: 999px;
     background: var(--bg-surface);
 }
@@ -947,7 +956,7 @@ h1 {
     top: 1rem;
     bottom: -0.2rem;
     width: 1px;
-    background: #bfdbfe;
+    background: var(--border-blue, #bfdbfe);
 }
 
 .timeline-row strong {
