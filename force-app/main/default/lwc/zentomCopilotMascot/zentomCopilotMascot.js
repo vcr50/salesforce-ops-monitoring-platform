@@ -4,7 +4,7 @@ import getAuditLogs from '@salesforce/apex/ZentomDashboardController.getAuditLog
 import ZENTOM_MASCOT_ASSETS from '@salesforce/resourceUrl/zentom_mascot_assets';
 
 export default class ZentomCopilotMascot extends LightningElement {
-    @track isMascotEnabled = true;
+    @track isMascotEnabled = false;
     @track currentState = 'idle'; // idle, angry, excited, thinking
     @track currentMessage = '';
     @track showMessage = false;

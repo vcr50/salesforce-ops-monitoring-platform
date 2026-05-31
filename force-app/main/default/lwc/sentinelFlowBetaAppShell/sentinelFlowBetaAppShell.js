@@ -82,6 +82,7 @@ const DISABLED_FUTURE_PAGES = new Set(['cases', 'policies', 'runbooks']);
 
 export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningElement) {
     logoUrl = sentinelFlowPulseLogo;
+    showZentomCopilot = false;
     @track currentPage = 'command';
     @track currentTime = '';
     @track healthLabel = 'Checking';

@@ -130,11 +130,13 @@
                     </button>
                 </nav>
 
-                <div class="sidebar-mascot-container">
-                    <div class="mascot-glow-bg"></div>
-                    <c-zentom-copilot-mascot></c-zentom-copilot-mascot>
-                    <div class="mascot-tooltip">Ask Zentom AI <lightning-icon icon-name="utility:sparkles" size="xx-small"></lightning-icon></div>
-                </div>
+                <template if:true={showZentomCopilot}>
+                    <div class="sidebar-mascot-container">
+                        <div class="mascot-glow-bg"></div>
+                        <c-zentom-copilot-mascot></c-zentom-copilot-mascot>
+                        <div class="mascot-tooltip">Ask Zentom AI <lightning-icon icon-name="utility:sparkles" size="xx-small"></lightning-icon></div>
+                    </div>
+                </template>
 
                 <div class="side-brand" style="margin-top: 1.5rem; padding-bottom: 0;">
                     <span class="side-logo">

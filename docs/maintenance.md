@@ -1019,3 +1019,19 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Verified responsive source coverage for the app shell and Settings component.
 - **Final UI Verdict**: PASS for source-level final UI smoke test.
 - **71C Status**: BLOCKED until namespace confirmation, Dev Hub namespace linking, Managed 2GP package creation/selection, safe `sfdx-project.json` update, and clean `main` are complete.
+
+### 71B-8 — Hide Unfinished Floating AI Copilot: Complete
+- Created the official floating AI copilot UI remediation document [`docs/v1.2.0-floating-ai-copilot-ui-remediation.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-floating-ai-copilot-ui-remediation.md).
+- Added `showZentomCopilot = false` property in `SentinelFlowBetaAppShell.js` and wrapped the mascot container with a conditional `template if:true={showZentomCopilot}` check in `sentinelFlowBetaAppShell.html` to hide the floating mascot.
+- Set `isMascotEnabled = false` by default in `zentomCopilotMascot.js` as a component-level fail-safe.
+- Replaced all user-visible references to `"Agentforce"` with Salesforce-native terminology across multiple LWC components (`sentinelFlowPortalCopilot`, `sentinelFlowPortalImpactPanel`, `sentinelFlowPortalIncidentsPage`, `sentinelFlowPortalIncidentTable`, `sentinelFlowPortalLogin`, `sentinelFlowThemeSidebar`, `sentinelFlowGuardianHome`, and `sentinelFlowZentomArchitecture`).
+- Re-worded the portal's AI copilot chat greeting to refer strictly to advisory tasks, telemetry checks, and runbook recommendations without any autonomous self-healing execution claims.
+
+### 71B-9 — Runtime Final UI Smoke Test: Complete
+- Executed a complete runtime UI smoke test after the copilot remediation.
+- Verified that the floating AI mascot bubble and speech bubbles are completely hidden from all dashboard pages and sidebars.
+- Verified that no stuck "Analyzing current page context..." loading spinner overlay displays.
+- Verified that all Agentforce wording is replaced with Salesforce Native or Zentom AI Core labels across all pages, forms, and charts.
+- Confirmed that the page layout renders cleanly without any floating canvas elements blocking navigation or overlapping widgets.
+- **71B-9 Runtime UI Smoke Test Verdict: PASS ✅** — UI is clean, compliant, and ready for AppExchange staging.
+- **71C Status**: BLOCKED until namespace confirmation, Dev Hub namespace linking, Managed 2GP package creation/selection, safe `sfdx-project.json` update, and clean `main` are complete.

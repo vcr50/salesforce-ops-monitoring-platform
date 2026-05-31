@@ -9,7 +9,7 @@ export default class SentinelFlowPortalCopilot extends LightningElement {
             id: 'msg-1',
             isUser: false,
             msgClass: 'msg-row ai',
-            content: 'Hello, I am Zentom Hybrid AI for SentinelFlow. Zentom Gen AI handles reasoning and governance, while Agentforce executes trusted Salesforce actions. How can I help you resolve incidents today?'
+            content: 'Hello, I am Zentom Gen AI for SentinelFlow. I can help you analyze telemetry, check logs, and recommend runbooks. How can I help you resolve incidents today?'
         }
     ];
 

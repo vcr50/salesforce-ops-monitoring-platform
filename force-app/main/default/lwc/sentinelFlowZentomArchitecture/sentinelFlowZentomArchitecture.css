@@ -232,7 +232,7 @@
 .flow-salesforce::before { background: linear-gradient(90deg, #00a1e0, #0070d2); }
 .flow-core::before { background: linear-gradient(90deg, #7b52ff, #9b7bff); }
 .flow-zentom::before { background: linear-gradient(90deg, #7b52ff, #00d2ff, #10b981); }
-.flow-agentforce::before { background: linear-gradient(90deg, #f59e0b, #ec4899); }
+.flow-salesforce-native::before { background: linear-gradient(90deg, #f59e0b, #ec4899); }
 
 .flow-layer-header {
     display: flex;

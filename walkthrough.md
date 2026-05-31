@@ -1253,3 +1253,25 @@ Action Center handles any downstream execution
 - **Responsive Result**: App shell and Settings responsive CSS coverage is present for tablet and mobile breakpoints.
 - **Final UI Verdict**: PASS for source-level final UI smoke test.
 - **Status**: UI blockers are cleared. 71C remains BLOCKED by namespace / Managed 2GP readiness.
+
+---
+
+## Milestone 71B-8 - Hide Unfinished Floating AI Copilot
+
+- **Completed Deliverable**: Authored the floating AI copilot UI remediation document: [`docs/v1.2.0-floating-ai-copilot-ui-remediation.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-floating-ai-copilot-ui-remediation.md).
+- **Mascot Hiding**: Defined `showZentomCopilot = false` inside [`sentinelFlowBetaAppShell.js`](file:///d:/TomCodeX%20Inc/SentinelFlow/force-app/main/default/lwc/sentinelFlowBetaAppShell/sentinelFlowBetaAppShell.js) and wrapped the mascot container in a conditional `template if:true` check inside [`sentinelFlowBetaAppShell.html`](file:///d:/TomCodeX%20Inc/SentinelFlow/force-app/main/default/lwc/sentinelFlowBetaAppShell/sentinelFlowBetaAppShell.html).
+- **Component-Level Fail-Safe**: Set `isMascotEnabled = false` by default in [`zentomCopilotMascot.js`](file:///d:/TomCodeX%20Inc/SentinelFlow/force-app/main/default/lwc/zentomCopilotMascot/zentomCopilotMascot.js).
+- **Agentforce Terminology & UI Wording Updates**: Cleaned up headers, badges, and templates across multiple LWC components to completely remove `"Agentforce"` labels, replacing them with `"Salesforce Native"` or `"Zentom AI Core"` terms.
+- **AI Copilot Wording**: Re-worded the portal's AI copilot chat greeting to refer strictly to advisory tasks, telemetry, and runbooks (no autonomous execution claims).
+- **Status**: 71B-8 complete.
+
+---
+
+## Milestone 71B-9 - Runtime Final UI Smoke Test
+
+- **Runtime Verification**: Executed a complete runtime UI smoke test after the copilot remediation.
+- **Floating Mascot & Overlaps**: Confirmed that the floating AI mascot bubble and speech bubbles are completely hidden from all dashboard pages, sidebars, and layouts.
+- **No Stuck Spinner**: Verified that the stuck `"Analyzing current page context..."` loading spinner modal is completely hidden and does not display.
+- **No Agentforce Branding**: Verified that login screens, incident table details, and architecture tab graphs have all references to `"Agentforce"` replaced with `"Salesforce Native"` or `"Zentom AI Core/Engine"`.
+- **Final UI Verdict**: PASS for runtime final UI smoke test.
+- **71C Status**: BLOCKED until namespace confirmation, Dev Hub namespace linking, Managed 2GP package creation/selection, safe `sfdx-project.json` update, and clean `main` are complete.

@@ -878,4 +878,24 @@
 - [x] Record final UI verdict
 - [ ] Keep 71C blocked until namespace is confirmed and Managed 2GP package readiness is complete
 
+## 71B-8 — Hide Unfinished Floating AI Copilot ✅
+- [x] Create floating AI copilot UI remediation document `docs/v1.2.0-floating-ai-copilot-ui-remediation.md`
+- [x] Hide floating mascot from `sentinelFlowBetaAppShell.html` behind `showZentomCopilot` feature flag
+- [x] Set `showZentomCopilot = false` inside `sentinelFlowBetaAppShell.js`
+- [x] Set `isMascotEnabled = false` inside `zentomCopilotMascot.js` as component fail-safe
+- [x] Replace all user-visible Agentforce wording with Salesforce Native or Zentom AI Core labels in LWC
+- [x] Re-word the portal's AI copilot chat greeting to remove execution/Agentforce claims
+- [x] Confirm no Agentforce wording remains in LWC source files
+
+## 71B-9 — Runtime Final UI Smoke Test ✅
+- [x] Perform runtime UI verification following the copilot remediation
+- [x] Verify floating mascot and chat bubble are hidden on all pages
+- [x] Verify stuck "Analyzing current page context..." spinner overlay is hidden
+- [x] Verify no dashboard overlaps or layout blockers
+- [x] Verify no Agentforce branding remains in active views
+- [x] Record runtime final UI smoke test verdict: PASS
+
+## 71C — First 2GP Package Version Candidate
+- [ ] BLOCKED: Do not create package version candidate until namespace, managed package registries, and Dev Hub registry linkages are complete
+
 
