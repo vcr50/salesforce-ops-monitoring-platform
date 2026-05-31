@@ -999,3 +999,11 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Removed "Coming Soon" placeholder templates and unused placeholder styling from LWC source.
 - Verified no `Coming Soon` strings and no `data-page="cases"`, `data-page="policies"`, or `data-page="runbooks"` routes remain in LWC source.
 - **71C Status**: BLOCKED until Settings UI readability is fixed, final UI smoke test passes, and namespace / Managed 2GP blockers are resolved.
+
+### 71B-6 - Settings Page Visual Cleanup: Complete
+- Created the Settings UI cleanup document [`docs/v1.2.0-settings-ui-cleanup.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-settings-ui-cleanup.md).
+- Updated `sentinelFlowPortalSettings` styling to remove dark/overlay-like fallbacks from the default Settings experience.
+- Added Settings-scoped light-mode variables for readable text, cards, inputs, borders, and primary actions while continuing to inherit shell design variables.
+- Improved form labels, input/select/number/webhook controls, focus states, card backgrounds, subscription metrics, endpoint rows, secondary buttons, and active Settings tab styling.
+- Confirmed this cleanup does not change package metadata, namespace, managed package aliases, Apex, objects, permission sets, or `sfdx-project.json`.
+- **71C Status**: BLOCKED until final UI smoke test passes and namespace / Managed 2GP blockers are resolved.

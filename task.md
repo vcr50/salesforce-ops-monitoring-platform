@@ -848,8 +848,19 @@
 - [x] Replace dashboard Runbook links/actions with functional Incident routing
 - [x] Remove "Coming Soon" placeholder templates and styling from LWC source
 - [x] Verify no `Coming Soon` strings or future-module routes remain in LWC source
-- [ ] Fix Settings UI readability before packaging
+- [x] Fix Settings UI readability before packaging
 - [ ] Run final UI smoke test before 71C
 - [ ] Keep 71C blocked until Settings cleanup, UI smoke test, and namespace / Managed 2GP blockers are resolved
+
+## 71B-6 - Settings Page Visual Cleanup
+- [x] Create Settings UI cleanup document `docs/v1.2.0-settings-ui-cleanup.md`
+- [x] Inspect the embedded Settings LWC rendered by the app shell
+- [x] Replace dark/overlay-like Settings page fallbacks with readable light-mode defaults
+- [x] Improve form field, select, number input, and webhook input contrast
+- [x] Improve label visibility and active Settings tab clarity
+- [x] Clean card backgrounds, borders, spacing, and disabled-looking visual treatment
+- [x] Confirm no package metadata, namespace, or `sfdx-project.json` changes were made
+- [ ] Run final UI smoke test before 71C
+- [ ] Keep 71C blocked until UI smoke test and namespace / Managed 2GP blockers are resolved
 
 

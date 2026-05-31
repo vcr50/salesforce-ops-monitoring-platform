@@ -1231,3 +1231,13 @@ Action Center handles any downstream execution
 - **Placeholder Cleanup**: Removed the "Coming Soon" templates and unused placeholder styling from the LWC source.
 - **Verification**: Confirmed no `Coming Soon` strings or future-module `data-page` routes remain in LWC source.
 - **Status**: 71B-5 complete. 71C remains BLOCKED until Settings cleanup, final UI smoke test, and namespace / Managed 2GP blockers are resolved.
+
+---
+
+## Milestone 71B-6 - Settings Page Visual Cleanup
+
+- **Completed Deliverable**: Authored the Settings UI cleanup document: [`docs/v1.2.0-settings-ui-cleanup.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-settings-ui-cleanup.md).
+- **Root Finding**: The Settings page readability issue was in `sentinelFlowPortalSettings`, whose CSS used dark fallback values for cards, text, and form fields even in the default light-mode shell.
+- **UI Fix**: Reworked Settings-scoped visual variables, card styling, labels, form fields, focus states, tab bar, subscription metrics, endpoint rows, and action buttons for readable AppExchange-ready light mode.
+- **Packaging Impact**: No namespace, package alias, metadata model, Apex, permission set, or `sfdx-project.json` change was made.
+- **Status**: 71B-6 complete. 71C remains BLOCKED until final UI smoke test and namespace / Managed 2GP blockers are resolved.
