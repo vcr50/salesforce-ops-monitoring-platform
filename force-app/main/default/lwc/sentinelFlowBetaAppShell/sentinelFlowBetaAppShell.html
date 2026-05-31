@@ -35,15 +35,15 @@
                         </span>
                     </span>
                 </button>
-                <div class="powered-chip">
+                <button class="powered-chip" type="button" data-page="command" onclick={navigate} title="Open Command Center">
                     <lightning-icon icon-name="utility:sparkles" size="x-small"></lightning-icon>
                     <span>Powered by Zentom AI</span>
-                </div>
-                <div class={healthClass}>
+                </button>
+                <button class={healthClass} type="button" data-page="incidents" onclick={navigate} title="Open critical incidents">
                     <span class="status-dot"></span>
                     <span>{healthLabel}</span>
-                </div>
-                <div class="time-chip">{currentTime}</div>
+                </button>
+                <button class="time-chip" type="button" onclick={refreshView} title="Refresh dashboard time">{currentTime}</button>
                 <button class="icon-button" type="button" onclick={refreshView} title="Refresh" aria-label="Refresh">
                     <lightning-icon icon-name="utility:refresh" size="x-small"></lightning-icon>
                 </button>

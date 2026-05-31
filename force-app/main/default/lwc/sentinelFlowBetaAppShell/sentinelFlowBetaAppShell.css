@@ -248,6 +248,18 @@ h1 {
     border-radius: 0.5rem;
     font-size: 0.78rem;
     font-weight: 750;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.health-chip:hover,
+.time-chip:hover,
+.icon-button:hover,
+.powered-chip:hover {
+    border-color: var(--brand-primary);
+    background: var(--nav-hover-bg);
+    color: var(--text-link);
 }
 
 .health-chip,
