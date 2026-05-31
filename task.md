@@ -745,4 +745,18 @@
 - [x] Update `walkthrough.md` with readiness checklist summary
 - [x] Commit all log changes to version control and push to remote
 
+# Milestone 71 - 2GP Packaging Staging
+
+## 71A - 2GP Packaging Baseline Plan
+- [x] Merge release branch `codex-sentinelflow-marketing-zentom-bot` into `main`
+- [x] Push merged `main` release baseline to origin
+- [x] Retarget `v1.2.0` tag to the merged release commit on `main`
+- [x] Create the 2GP packaging baseline plan document `docs/v1.2.0-2gp-packaging-baseline-plan.md`
+- [x] Confirm packaging must begin from `main`, not from a feature branch
+- [x] Document source branch baseline, source release tag, package type decision, namespace and Dev Hub assumptions
+- [x] Document metadata packaging scope, excluded metadata, and permission set/package access strategy
+- [x] Document pre-package validation checklist, package version creation steps, known risks, and success criteria
+- [ ] Confirm live GitHub Actions runs on `main` after merge push
+- [ ] Confirm Dev Hub alias and namespace linkage before package version creation
+
 

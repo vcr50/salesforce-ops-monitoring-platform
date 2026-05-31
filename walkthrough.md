@@ -1144,3 +1144,17 @@ Action Center handles any downstream execution
 - **Status**: Milestone 70 — SentinelFlow + Zentom AI v1.2.0 Enterprise Stable.
 
 
+---
+
+## Milestone 71 - 2GP Packaging Staging
+
+### 71A - 2GP Packaging Baseline Plan
+
+- **Completed Deliverable**: Authored the 2GP packaging baseline plan: [`docs/v1.2.0-2gp-packaging-baseline-plan.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-2gp-packaging-baseline-plan.md).
+- **Baseline**: Packaging source branch is `main`, release merge commit is `c869da7e5ec61d2c5ef84261795685f8bebf24ce`, and release tag is `v1.2.0`.
+- **Package Decision**: Staging will use a Salesforce Second-Generation Managed Package (2GP) for AppExchange managed package preparation.
+- **Scope**: Defined runtime Salesforce metadata scope across Apex, LWC, objects, platform events, permission sets, custom metadata, credentials, tabs, apps, pages, and static resources.
+- **Exclusions**: Local test outputs, scratch artifacts, generated logs, credentials, cache folders, non-runtime diagnostics, and development-only assets are excluded unless explicitly approved.
+- **Access Strategy**: Permission set separation remains the subscriber access model, preserving least privilege, CRUD/FLS enforcement, and audit log mutation controls.
+- **Open Gates**: Live GitHub Actions confirmation on `main` and Dev Hub namespace verification remain required before first package version creation.
+- **Status**: Milestone 71A initiated. 2GP packaging must start from `main`, not from a feature branch.

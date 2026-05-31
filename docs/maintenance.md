@@ -927,3 +927,16 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - **Final Status**: Milestone 70 — SentinelFlow + Zentom AI v1.2.0 Enterprise Stable.
 
 
+---
+
+## Milestone 71 - 2GP Packaging Staging
+
+### 71A - 2GP Packaging Baseline Plan: Initiated
+- Created the official 2GP packaging baseline plan document [`docs/v1.2.0-2gp-packaging-baseline-plan.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-2gp-packaging-baseline-plan.md).
+- Confirmed the release branch `codex-sentinelflow-marketing-zentom-bot` has been merged into `main`.
+- Pushed `main` to origin at release merge commit `c869da7e5ec61d2c5ef84261795685f8bebf24ce`.
+- Retargeted the `v1.2.0` release tag to the merged `main` release commit for packaging traceability.
+- Documented the package type decision: Second-Generation Managed Package (2GP) for AppExchange managed package staging.
+- Documented namespace and Dev Hub assumptions, metadata packaging scope, excluded metadata, permission set strategy, validation checklist, package version creation steps, risks, and success criteria.
+- **Packaging Baseline Rule**: Do not start packaging from a feature branch. All 2GP staging must begin from `main` after merge and tag confirmation.
+- **Current Status**: Milestone 71A initiated. Live GitHub Actions confirmation and Dev Hub namespace verification remain open before first package version creation.
