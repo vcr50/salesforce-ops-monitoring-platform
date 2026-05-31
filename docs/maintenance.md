@@ -1054,3 +1054,28 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Verified that `sf config get target-dev-hub` returns `astrosoft` and that `sf org list` displays the default Dev Hub marker (`🌳,🍁`).
 - Documented that if accessing `/lightning/setup/DevHub/home` is still blocked or unavailable externally, it indicates that the current Dev Hub org does not support Namespace Registry connection.
 - **71C Status**: BLOCKED. First 2GP package version candidate creation remains blocked until the namespace linkage is validated and the Managed 2GP package is created.
+
+### 71B-13 — Packaging Blocker Hold / AppExchange Prep Parallel Track: Complete
+- Froze all Managed 2GP package creation tasks (`71C`) and sfdx-project.json modifications due to Namespace Registry accessibility restrictions.
+- Shifted focus to non-blocked parallel track assets for AppExchange Listing preparation.
+- **71C Status**: BLOCKED. Stays blocked until namespace linking and Managed 2GP package creation can proceed on an enabled Dev Hub.
+
+### 72A — Security Review Submission Checklist: Complete
+- Created the official security review submission checklist [`docs/v1.2.0-security-review-submission-checklist.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-security-review-submission-checklist.md).
+- Documented SAST/DAST scanner requirements (`sf scanner`, OWASP ZAP), external endpointsNamed Credentials, user account credentials (admin and least-privilege roles), and sharing model / GRC safety compliance gates.
+- **Verdict**: Marked as BLOCKED pending namespace and Managed 2GP package creation.
+
+### 73A — AppExchange Product Description: Complete
+- Created the product description copy document [`docs/v1.2.0-appexchange-product-description.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-appexchange-product-description.md).
+- Formulated the tagline, short/long descriptions, key features, pricing tiers ($1,500/month Enterprise, Free Developer Sandbox), and trial strategies.
+- Enforced strict compliant wording rules using "Estimated" ROI estimates (*Estimated MTTR reduction*, *Estimated cost savings*, *Estimated operational value*) and avoiding any guaranteed ROI/savings or autonomous critical remediation claims.
+
+### 73B — AppExchange Screenshots / Listing Assets: Complete
+- Created the listing assets plan [`docs/v1.2.0-appexchange-screenshots-listing-assets.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-appexchange-screenshots-listing-assets.md).
+- Outlined dimensions and formats for icons, cover banners, and promo cards.
+- Documented target pages to capture (Dashboard, Prediction details, Guardian Gate approvals, Settings, Keyset pagination list, GRC audit trail) and mock annotations overlays.
+
+### 73C — Demo Video Script: Complete
+- Created the product demo video script [`docs/v1.2.0-appexchange-demo-video-script.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-appexchange-demo-video-script.md).
+- Structured visual cues, audio narrations, and timing sync markers for a 2-minute video across 5 distinct scenes demonstrating real-time ingestion, explainable predictions, approvals, keyset scrolling, and GRC audit records.
+

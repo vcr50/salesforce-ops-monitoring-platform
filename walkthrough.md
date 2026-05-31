@@ -1304,3 +1304,56 @@ Action Center handles any downstream execution
 - **Namespace Access Verdict**: If accessing `/lightning/setup/DevHub/home` is still blocked or unavailable externally, it indicates that the current Dev Hub org does not support Namespace Registry connection.
 - **Actionable Correction**: The packaging pipeline requires a proper Partner Business Org (PBO) Dev Hub with active registry capabilities, or partner support activation.
 - **71C Status**: BLOCKED. Stays blocked until namespace linking and Managed 2GP package creation can proceed on an enabled Dev Hub.
+
+---
+
+## Milestone 71B-13 - Packaging Blocker Hold / AppExchange Prep Parallel Track
+
+- **Strategy**: Froze managed package version staging (`71C`) due to Namespace Registry accessibility bounds, and shifted focus to parallel AppExchange listing prep tasks to maximize pipeline velocity.
+- **Outcome**: Successfully prepared listing descriptions, assets map, demo video scripts, and security checklists without modifying the local project packaging settings (`sfdx-project.json`).
+- **Status**: Completed parallel track execution.
+
+---
+
+## Milestone 72A - Security Review Submission Checklist
+
+- **Completed Deliverable**: Verified and tracked the official checklist: [`docs/v1.2.0-security-review-submission-checklist.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-security-review-submission-checklist.md).
+- **Checks Configured**: Mapped out endpoints, TLS 1.2+ requirements, Named Credentials (`SentinelFlow_Backend`), third-party signature checks (Stripe/Razorpay), and sensitive credentials security (environment variables).
+- **Scanner Guidelines**: Detailed code scanning checks via `sf scanner` (PMD, ESLint, RetireJS) and external DAST (OWASP ZAP).
+- **Access Policies**: Documented `SentinelFlow_Admin` and `SentinelFlow_Operator` permission sets, write-once audit log policy on `Sentinel_Audit_Log__c`, and FLS user modes in controllers.
+- **Verdict**: Submission status is marked as **BLOCKED** pending the resolution of the namespace managed 2GP package creation.
+
+---
+
+## Milestone 73A - AppExchange Product Description
+
+- **Completed Deliverable**: Authored the AppExchange marketing details: [`docs/v1.2.0-appexchange-product-description.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-appexchange-product-description.md).
+- **Copy Details**: Defined standard app names, taglines, short description (119 characters), and 4,000-character long description highlighting Command Center, Zentom AI Prediction Engine, Guardian Gate approvals, and Keyset pagination.
+- **Compliance Alignment**: Used strictly compliant phrasing for ROI value claims (*Estimated MTTR reduction*, *Estimated cost savings*, *Estimated operational value*) to prevent corporate compliance issues. Completely avoided claims of guaranteed ROI/savings or fully autonomous critical remediation.
+- **Pricing Details**: Highlighted a $1,500/month Enterprise tier and a free Developer sandbox tier.
+
+---
+
+## Milestone 73B - AppExchange Screenshots / Listing Assets
+
+- **Completed Deliverable**: Authored the screenshots and graphic assets planning document: [`docs/v1.2.0-appexchange-screenshots-listing-assets.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-appexchange-screenshots-listing-assets.md).
+- **Dimension Guidelines**: Documented requirements for app icons, cover banners, and search promo cards.
+- **Screenshots Inventory**: Planned visual layouts and mock overlay annotations for:
+  1. *Command Center Dashboard*: Highlighting glassmorphic layout and Estimated Savings tooltips.
+  2. *Zentom AI Prediction Engine*: Highlighting warning cards, prediction scoring weights, and explainability text.
+  3. *Guardian Gate (Governed Auto-Heal)*: Showing review queues and "Request Approval" dialog.
+  4. *Accessible Settings UI*: Visualizing thresholds adjustment forms and contrast updates.
+  5. *Keyset Pagination Grid*: Visualizing cursor-based infinite scrolling tables.
+  6. *GRC Trace Audit Trail*: Highlighting write-once columns and Trace UUID tracking.
+
+---
+
+## Milestone 73C - Demo Video Script
+
+- **Completed Deliverable**: Authored the product demonstration script: [`docs/v1.2.0-appexchange-demo-video-script.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-appexchange-demo-video-script.md).
+- **Script Layout**: Mapped 2-minute visual sequences, spoken audio narratives, and sync timings across 5 scenes:
+  1. *Intro & Command Center*: Spoken overview of streaming telemetry and glassmorphic dashboards.
+  2. *AI Prediction Explainability*: Step-by-step display of warning card ingestion and explainability panel detail view.
+  3. *Guardian Gate*: Demonstration of operator validation queues, "Request Approval" action buttons, and savepoint rollbacks.
+  4. *Keyset Pagination & GRC Audits*: Showing scrolling incident history lists and write-once compliance audit logs.
+  5. *Outro*: Logo fade out with AppExchange developer sandbox trial CTA.

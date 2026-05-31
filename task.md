@@ -921,4 +921,35 @@
 ## 71C — First 2GP Package Version Candidate
 - [ ] BLOCKED: Do not create package version candidate until namespace is linked, project configuration is updated, and Managed 2GP package exists (blocked by Dev Hub namespace registry access)
 
+## Milestone 71B-13 — Packaging Blocker Hold / AppExchange Prep Parallel Track
+- [x] Freeze packaging work until namespace registry access is resolved, and move to non-blocked AppExchange prep tasks
+- [x] Retain package strategy in BLOCKED state and defer metadata updates
+
+## Milestone 72A — Security Review Submission Checklist
+- [x] Verify docs/v1.2.0-security-review-submission-checklist.md contains SAST/DAST scanning targets, user permissions, sharing models, and architectural controls
+- [x] Enforce security and FLS/CRUD validation disclosures
+- [x] Ensure packaging verdict is marked as BLOCKED
+
+## Milestone 73A — AppExchange Product Description
+- [x] Create docs/v1.2.0-appexchange-product-description.md
+- [x] Formulate AppExchange Listing Name, Tagline, One-Line Description
+- [x] Write Short Description (max 120 characters) and Long Description (max 4000 characters)
+- [x] Formulate Value Proposition and key features
+- [x] Apply compliant "Estimated" ROI wording for all savings claims (e.g. Estimated MTTR reduction, Estimated cost savings, Estimated operational value)
+- [x] Avoid guaranteed ROI, guaranteed savings, fully autonomous critical remediation, approval bypass claims
+- [x] Define Pricing Overview
+
+## Milestone 73B — AppExchange Screenshots / Listing Assets
+- [x] Create docs/v1.2.0-appexchange-screenshots-listing-assets.md
+- [x] Outline target UI screens to capture (Dashboard, Incidents, Approvals, Settings)
+- [x] Detail mock annotations, callouts, and captions
+- [x] Define graphic asset specifications, dimensions, and formats (e.g., logo, cover image, listing tiles)
+
+## Milestone 73C — Demo Video Script
+- [x] Create docs/v1.2.0-appexchange-demo-video-script.md
+- [x] Define script flow, speaking notes, UI navigation sequences, and audio/video sync markers
+- [x] Showcase real-time telemetry, AI predictions, and Guardian Gate approvals
+
+
+
 
