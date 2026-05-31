@@ -369,7 +369,7 @@ h1 {
     display: inline;
     color: var(--text-primary);
     font-size: 0.88rem;
-    font-weight: 850;
+    font-weight: 450;
     line-height: 1.1;
     overflow-wrap: anywhere;
 }
