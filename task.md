@@ -838,4 +838,18 @@
 - [ ] Run final UI smoke test before 71C
 - [ ] Keep 71C blocked until placeholder tabs are hidden/completed and Settings readability is fixed
 
+## 71B-5 - Hide or Complete Placeholder Tabs
+- [x] Create placeholder tab remediation document `docs/v1.2.0-ui-placeholder-tab-remediation.md`
+- [x] Hide Cases tab from default navigation
+- [x] Hide Policies tab from default navigation
+- [x] Hide Runbooks tab from default navigation
+- [x] Add default-off future module flags for Cases, Policies, and Runbooks
+- [x] Guard disabled future routes from standard navigation
+- [x] Replace dashboard Runbook links/actions with functional Incident routing
+- [x] Remove "Coming Soon" placeholder templates and styling from LWC source
+- [x] Verify no `Coming Soon` strings or future-module routes remain in LWC source
+- [ ] Fix Settings UI readability before packaging
+- [ ] Run final UI smoke test before 71C
+- [ ] Keep 71C blocked until Settings cleanup, UI smoke test, and namespace / Managed 2GP blockers are resolved
+
 

@@ -990,3 +990,12 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Recommended hiding incomplete tabs from default navigation for v1.2.0 unless minimum functional versions are completed.
 - Defined follow-up sequence: 71B-5 Hide or Complete Placeholder Tabs, 71B-6 Settings Page Visual Cleanup, 71B-7 Final UI Smoke Test, then 71C.
 - **71C Status**: BLOCKED until placeholder tabs are hidden or completed and Settings readability is fixed.
+
+### 71B-5 - Hide or Complete Placeholder Tabs: Complete
+- Created the placeholder tab remediation document [`docs/v1.2.0-ui-placeholder-tab-remediation.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-ui-placeholder-tab-remediation.md).
+- Updated `sentinelFlowBetaAppShell` to hide Cases, Policies, and Runbooks from default navigation using default-off future module flags.
+- Added route guarding so disabled future pages cannot be reached from standard navigation; disabled future route requests fall back to the functional Incidents page.
+- Replaced dashboard Runbook links and actions with functional Incident routing.
+- Removed "Coming Soon" placeholder templates and unused placeholder styling from LWC source.
+- Verified no `Coming Soon` strings and no `data-page="cases"`, `data-page="policies"`, or `data-page="runbooks"` routes remain in LWC source.
+- **71C Status**: BLOCKED until Settings UI readability is fixed, final UI smoke test passes, and namespace / Managed 2GP blockers are resolved.

@@ -1219,3 +1219,15 @@ Action Center handles any downstream execution
 - **Navigation Rule**: Clickable tabs must lead to functional pages; future modules should be hidden or disabled with clear tooltip/context.
 - **Recommended Sequence**: 71B-5 hide or complete placeholder tabs, 71B-6 clean up Settings page visuals, 71B-7 run final UI smoke test, then 71C.
 - **Status**: 71C remains BLOCKED until placeholder tabs are hidden/completed and Settings readability is fixed.
+
+---
+
+## Milestone 71B-5 - Hide or Complete Placeholder Tabs
+
+- **Completed Deliverable**: Authored the placeholder tab remediation document: [`docs/v1.2.0-ui-placeholder-tab-remediation.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-ui-placeholder-tab-remediation.md).
+- **Navigation Fix**: Hid Cases, Policies, and Runbooks from the default `sentinelFlowBetaAppShell` navigation using default-off future module flags.
+- **Route Guard**: Added disabled future-page guard logic so standard navigation cannot land on placeholder pages.
+- **Internal Link Fix**: Replaced Runbook dashboard links/actions with functional Incident routing.
+- **Placeholder Cleanup**: Removed the "Coming Soon" templates and unused placeholder styling from the LWC source.
+- **Verification**: Confirmed no `Coming Soon` strings or future-module `data-page` routes remain in LWC source.
+- **Status**: 71B-5 complete. 71C remains BLOCKED until Settings cleanup, final UI smoke test, and namespace / Managed 2GP blockers are resolved.

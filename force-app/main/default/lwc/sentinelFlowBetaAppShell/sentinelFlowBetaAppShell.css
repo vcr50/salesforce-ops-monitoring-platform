@@ -1411,49 +1411,6 @@ h1 {
     box-shadow: 0 12px 30px var(--shadow-light), 0 0 0 1px var(--border-blue);
 }
 
-/* Coming Soon Placeholder Pages */
-.coming-soon-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 4rem 2rem;
-    min-height: 50vh;
-    gap: 1rem;
-    animation: fadeInUp 0.5s ease;
-}
-
-.coming-soon-page h2 {
-    font-size: 1.75rem;
-    font-weight: 800;
-    color: var(--text-dark);
-    margin: 0;
-}
-
-.coming-soon-page p {
-    max-width: 28rem;
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin: 0;
-}
-
-.coming-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.4rem 1.25rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    background: linear-gradient(135deg, var(--brand-primary), var(--brand-teal));
-    color: #fff;
-    box-shadow: 0 4px 14px var(--glow-ai);
-    margin-top: 0.5rem;
-}
-
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -1515,8 +1472,7 @@ h1 {
 .glass-user-dropdown,
 .global-search,
 .icon-button,
-.main-content,
-.coming-soon-page {
+.main-content {
     transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 

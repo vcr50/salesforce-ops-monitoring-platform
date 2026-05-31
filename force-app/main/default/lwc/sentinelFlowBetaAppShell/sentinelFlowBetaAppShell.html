@@ -98,18 +98,24 @@
                         <lightning-icon icon-name="standard:action_list_component" size="small"></lightning-icon>
                         <span>Actions</span>
                     </button>
-                    <button class={runbooksNavClass} data-page="runbooks" onclick={navigate}>
-                        <lightning-icon icon-name="standard:article" size="small"></lightning-icon>
-                        <span>Runbooks</span>
-                    </button>
-                    <button class={policiesNavClass} data-page="policies" onclick={navigate}>
-                        <lightning-icon icon-name="standard:contract" size="small"></lightning-icon>
-                        <span>Policies</span>
-                    </button>
-                    <button class={casesNavClass} data-page="cases" onclick={navigate}>
-                        <lightning-icon icon-name="standard:case" size="small"></lightning-icon>
-                        <span>Cases</span>
-                    </button>
+                    <template if:true={showRunbooks}>
+                        <button class={runbooksNavClass} data-page="runbooks" onclick={navigate}>
+                            <lightning-icon icon-name="standard:article" size="small"></lightning-icon>
+                            <span>Runbooks</span>
+                        </button>
+                    </template>
+                    <template if:true={showPolicies}>
+                        <button class={policiesNavClass} data-page="policies" onclick={navigate}>
+                            <lightning-icon icon-name="standard:contract" size="small"></lightning-icon>
+                            <span>Policies</span>
+                        </button>
+                    </template>
+                    <template if:true={showCases}>
+                        <button class={casesNavClass} data-page="cases" onclick={navigate}>
+                            <lightning-icon icon-name="standard:case" size="small"></lightning-icon>
+                            <span>Cases</span>
+                        </button>
+                    </template>
                     <button class={reportsNavClass} data-page="reports" onclick={navigate}>
                         <lightning-icon icon-name="standard:report" size="small"></lightning-icon>
                         <span>Reports</span>
@@ -359,7 +365,7 @@
                                             </template>
                                             <footer class="incident-actions">
                                                 <button type="button" data-page="incidents" onclick={navigate}>View Incident</button>
-                                                <button class="primary" type="button" data-page="runbooks" onclick={navigate}>Open Runbook</button>
+                                                <button class="primary" type="button" data-page="incidents" onclick={navigate}>View Incident Details</button>
                                             </footer>
                                         </article>
                                     </section>
@@ -411,7 +417,7 @@
                                                                 <td><span class={row.envClass}>{row.env}</span></td>
                                                                 <td><span class={row.riskClass}>{row.risk}</span></td>
                                                                 <td><span class={row.statusClass}>{row.status}</span></td>
-                                                                <td><a class="link-id" data-page="runbooks" onclick={navigate}>{row.runbook}</a></td>
+                                                                <td><a class="link-id" data-page="incidents" onclick={navigate}>{row.runbook}</a></td>
                                                             </tr>
                                                         </template>
                                                     </template>
@@ -492,30 +498,6 @@
                     </template>
                     <template if:true={isActions}>
                         <c-zentom-action-center></c-zentom-action-center>
-                    </template>
-                    <template if:true={isRunbooks}>
-                        <div class="coming-soon-page">
-                            <lightning-icon icon-name="standard:article" size="large"></lightning-icon>
-                            <h2>Runbooks</h2>
-                            <p>Create, manage, and execute operational runbooks for incident response and automation workflows.</p>
-                            <span class="coming-badge">Coming Soon</span>
-                        </div>
-                    </template>
-                    <template if:true={isPolicies}>
-                        <div class="coming-soon-page">
-                            <lightning-icon icon-name="standard:contract" size="large"></lightning-icon>
-                            <h2>Policies</h2>
-                            <p>Define governance policies, approval thresholds, and risk evaluation rules for your org.</p>
-                            <span class="coming-badge">Coming Soon</span>
-                        </div>
-                    </template>
-                    <template if:true={isCases}>
-                        <div class="coming-soon-page">
-                            <lightning-icon icon-name="standard:case" size="large"></lightning-icon>
-                            <h2>Cases</h2>
-                            <p>Track all Salesforce Cases created by SentinelFlow incidents and AI-driven recommendations.</p>
-                            <span class="coming-badge">Coming Soon</span>
-                        </div>
                     </template>
                     <template if:true={isReports}>
                         <c-zentom-analytics-charts></c-zentom-analytics-charts>

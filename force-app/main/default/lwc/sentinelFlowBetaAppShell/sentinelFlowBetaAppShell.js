@@ -72,6 +72,14 @@ const PAGE_META = {
     }
 };
 
+const FUTURE_MODULE_FLAGS = {
+    showCases: false,
+    showPolicies: false,
+    showRunbooks: false
+};
+
+const DISABLED_FUTURE_PAGES = new Set(['cases', 'policies', 'runbooks']);
+
 export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningElement) {
     logoUrl = sentinelFlowPulseLogo;
     @track currentPage = 'command';
@@ -215,7 +223,8 @@ export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningE
     }
 
     navigate(event) {
-        this.currentPage = event.currentTarget.dataset.page || 'command';
+        const requestedPage = event.currentTarget.dataset.page || 'command';
+        this.currentPage = this.isPageEnabled(requestedPage) ? requestedPage : 'incidents';
         this.isSidebarOpen = false; // close mobile sidebar on navigation
     }
 
@@ -971,6 +980,18 @@ export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningE
         return this.navClass('actions');
     }
 
+    get showRunbooks() {
+        return FUTURE_MODULE_FLAGS.showRunbooks;
+    }
+
+    get showPolicies() {
+        return FUTURE_MODULE_FLAGS.showPolicies;
+    }
+
+    get showCases() {
+        return FUTURE_MODULE_FLAGS.showCases;
+    }
+
     get runbooksNavClass() {
         return this.navClass('runbooks');
     }
@@ -996,15 +1017,15 @@ export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningE
     }
 
     get isRunbooks() {
-        return this.currentPage === 'runbooks';
+        return this.showRunbooks && this.currentPage === 'runbooks';
     }
 
     get isPolicies() {
-        return this.currentPage === 'policies';
+        return this.showPolicies && this.currentPage === 'policies';
     }
 
     get isCases() {
-        return this.currentPage === 'cases';
+        return this.showCases && this.currentPage === 'cases';
     }
 
     get isReports() {
@@ -1017,5 +1038,21 @@ export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningE
 
     navClass(pageName) {
         return this.currentPage === pageName ? 'nav-item active' : 'nav-item';
+    }
+
+    isPageEnabled(pageName) {
+        if (!DISABLED_FUTURE_PAGES.has(pageName)) {
+            return true;
+        }
+        if (pageName === 'cases') {
+            return this.showCases;
+        }
+        if (pageName === 'policies') {
+            return this.showPolicies;
+        }
+        if (pageName === 'runbooks') {
+            return this.showRunbooks;
+        }
+        return false;
     }
 }
