@@ -1151,7 +1151,8 @@ Action Center handles any downstream execution
 ### 71A - 2GP Packaging Baseline Plan
 
 - **Completed Deliverable**: Authored the 2GP packaging baseline plan: [`docs/v1.2.0-2gp-packaging-baseline-plan.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-2gp-packaging-baseline-plan.md).
-- **Baseline**: Packaging source branch is `main`, release merge commit is `c869da7e5ec61d2c5ef84261795685f8bebf24ce`, and release tag is `v1.2.0`.
+- **Baseline**: Packaging source branch is `main`, current main commit is `e9d2bb4`, and product release commit/tag is `c869da7e5ec61d2c5ef84261795685f8bebf24ce` / `v1.2.0`.
+- **CI Hardening**: `.github/workflows/ci.yml` now includes release ref handling and an always-eligible docs sanity job to prevent "No jobs were run" on main/release refs.
 - **Package Decision**: Staging will use a Salesforce Second-Generation Managed Package (2GP) for AppExchange managed package preparation.
 - **Scope**: Defined runtime Salesforce metadata scope across Apex, LWC, objects, platform events, permission sets, custom metadata, credentials, tabs, apps, pages, and static resources.
 - **Exclusions**: Local test outputs, scratch artifacts, generated logs, credentials, cache folders, non-runtime diagnostics, and development-only assets are excluded unless explicitly approved.

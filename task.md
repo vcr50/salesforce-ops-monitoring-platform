@@ -753,6 +753,8 @@
 - [x] Retarget `v1.2.0` tag to the merged release commit on `main`
 - [x] Create the 2GP packaging baseline plan document `docs/v1.2.0-2gp-packaging-baseline-plan.md`
 - [x] Confirm packaging must begin from `main`, not from a feature branch
+- [x] Document current `main` commit `e9d2bb4` and product release commit/tag `c869da7` / `v1.2.0`
+- [x] Document CI hardening note for release refs and the always-on docs sanity job
 - [x] Document source branch baseline, source release tag, package type decision, namespace and Dev Hub assumptions
 - [x] Document metadata packaging scope, excluded metadata, and permission set/package access strategy
 - [x] Document pre-package validation checklist, package version creation steps, known risks, and success criteria
