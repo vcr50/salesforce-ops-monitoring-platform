@@ -1172,3 +1172,14 @@ Action Center handles any downstream execution
 - **Artifact Hygiene**: Confirmed no local test artifacts or committed secrets are present in Salesforce packaging scope.
 - **Blocking Finding**: Namespace prefix is blank and the Dev Hub package listing shows `SentinelFlow` as `Unlocked`, not managed.
 - **Recommendation**: Resolve namespace and managed 2GP package strategy before Milestone 71C. Package creation must still run from `main` with `v1.2.0` as the release reference.
+
+---
+
+## Milestone 71B-1 - Managed 2GP Package / Namespace Strategy Fix
+
+- **Completed Deliverable**: Authored the managed 2GP package strategy document: [`docs/v1.2.0-managed-2gp-package-strategy.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-managed-2gp-package-strategy.md).
+- **Blocker Summary**: `sfdx-project.json` namespace is blank and the existing `SentinelFlow` package `0HodL0000003WMjSAM` is `Unlocked`.
+- **AppExchange Requirement**: Security review must use a Managed 2GP package path.
+- **Recommended Strategy**: Create a new Managed 2GP package for AppExchange, keep the unlocked package only as historical/internal reference, and do not reuse the unlocked package alias for the managed package.
+- **Required Decisions**: Confirm namespace from Dev Hub namespace registry, create/select the managed package, update `sfdx-project.json`, verify aliases, and keep `main` clean.
+- **71C Status**: BLOCKED until namespace and managed package strategy are confirmed.

@@ -951,3 +951,13 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Verified local artifacts and secrets are not present in Salesforce packaging scope.
 - **Action Required**: Namespace prefix is blank and Dev Hub package list shows `SentinelFlow` as `Unlocked`, not managed. Do not create the AppExchange managed package version candidate until namespace and managed package strategy are confirmed.
 - **Recommendation**: Resolve namespace/package type setup, then proceed to Milestone 71C - First 2GP Package Version Candidate from `main`.
+
+### 71B-1 - Managed 2GP Package / Namespace Strategy Fix: Strategy Documented
+- Created the managed 2GP package strategy document [`docs/v1.2.0-managed-2gp-package-strategy.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-managed-2gp-package-strategy.md).
+- Recorded the blocker: `sfdx-project.json` namespace is blank, existing package `SentinelFlow` / `0HodL0000003WMjSAM` is `Unlocked`, and AppExchange/security review requires a managed 2GP package path.
+- Recommended creating a new Managed 2GP package for AppExchange rather than converting or reusing the existing unlocked package.
+- Confirmed the unlocked package should remain only as historical/internal packaging reference.
+- Documented required decisions: confirm namespace from Dev Hub namespace registry, create/select Managed 2GP package, update `sfdx-project.json`, and verify package aliases.
+- Documented Dev Hub/package commands for `sf org display`, `sf package list`, `sf package create`, and future `sf package version create`.
+- Documented migration risks and security review implications for managed subscriber distribution.
+- **71C Status**: BLOCKED. No package version candidate until namespace, managed package, aliases, and clean `main` are confirmed.

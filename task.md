@@ -774,4 +774,23 @@
 - [ ] Resolve package type strategy; current Dev Hub package listing shows `SentinelFlow` as `Unlocked`
 - [ ] Proceed to 71C only after managed package and namespace strategy are confirmed
 
+## 71B-1 - Managed 2GP Package / Namespace Strategy Fix
+- [x] Create the managed 2GP package strategy document `docs/v1.2.0-managed-2gp-package-strategy.md`
+- [x] Record current blocker summary: blank namespace and existing `SentinelFlow` package is `Unlocked`
+- [x] Record existing package details: `SentinelFlow`, package Id `0HodL0000003WMjSAM`, package type `Unlocked`
+- [x] Record required AppExchange target: Managed 2GP for security review path
+- [x] Recommend creating a new Managed 2GP package instead of converting or reusing the existing unlocked package
+- [x] Document required namespace decision from Dev Hub namespace registry
+- [x] Document required `sfdx-project.json` changes for namespace and managed package alias
+- [x] Document Dev Hub and package commands for package list, package create, and future package version create
+- [x] Document migration risks, security review implications, success criteria, and 71C recommendation
+- [ ] Confirm namespace from Dev Hub namespace registry
+- [ ] Create or select Managed 2GP package for AppExchange
+- [ ] Update `sfdx-project.json` with confirmed namespace and managed package alias
+- [ ] Verify managed package alias with `sf package list --target-dev-hub <DEV_HUB_ALIAS>`
+- [ ] Keep 71C blocked until namespace, managed package, aliases, and clean `main` are confirmed
+
+## 71C - First 2GP Package Version Candidate
+- [ ] BLOCKED: Do not create package version candidate until 71B-1 success criteria are complete
+
 
