@@ -11,6 +11,12 @@
     --sf-soft: var(--text-muted, #8e8e93);
     --sf-glass-blur: var(--glass-blur, blur(20px) saturate(180%));
     --sf-card-bg: var(--card-bg, rgba(44,44,46,0.5));
+    --sf-danger-text: var(--color-danger-text, #b91c1c);
+    --sf-danger: var(--color-danger, #dc2626);
+    --sf-warning-text: var(--color-warning-text, #b45309);
+    --sf-warning: var(--color-warning, #d97706);
+    --sf-success-text: var(--color-success-text, #047857);
+    --sf-success: var(--color-success, #059669);
 }
 
 .approval-queue-container {
@@ -261,9 +267,9 @@
     font-weight: 800;
 }
 
-.score-high { color: #10b981; }
-.score-med { color: #f59e0b; }
-.score-low { color: #ef4444; }
+.score-high { color: var(--sf-success-text); }
+.score-med { color: var(--sf-warning-text); }
+.score-low { color: var(--sf-danger-text); }
 
 .policy-box {
     background: rgba(239, 68, 68, 0.05);
@@ -436,7 +442,7 @@
 }
 
 .stat-value {
-    color: var(--color-warning-text, #f59e0b);
+    color: var(--sf-warning-text);
 }
 
 .refresh-btn {
@@ -476,17 +482,17 @@
 .ttl-badge {
     background: rgba(245, 158, 11, 0.1);
     border-color: rgba(245, 158, 11, 0.2);
-    color: #f59e0b;
+    color: var(--sf-warning-text);
 }
 
 .policy-box {
     background: rgba(239, 68, 68, 0.05);
     border-color: rgba(239, 68, 68, 0.2);
-    border-left-color: #ef4444;
+    border-left-color: var(--sf-danger);
 }
 
 .policy-header {
-    color: #ef4444;
+    color: var(--sf-danger-text);
 }
 
 .btn {
@@ -495,7 +501,7 @@
 
 .btn-reject {
     border-color: var(--sf-line);
-    color: #ef4444;
+    color: var(--sf-danger-text);
 }
 
 .btn-reject:hover {
@@ -503,7 +509,7 @@
 }
 
 .btn-approve {
-    color: #10b981;
+    color: var(--sf-success-text);
 }
 
 .btn-approve:hover {

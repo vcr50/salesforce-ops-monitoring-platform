@@ -370,6 +370,25 @@ h1 {
     margin-top: 0.1rem;
 }
 
+.sidebar-footer {
+    margin-top: 1rem;
+    padding: 0.85rem 0.35rem 0;
+    border-top: 1px solid var(--border-light);
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    line-height: 1.45;
+}
+
+.sidebar-footer strong,
+.sidebar-footer span {
+    display: block;
+}
+
+.sidebar-footer strong {
+    color: var(--text-primary);
+    font-weight: 850;
+}
+
 .nav-list {
     display: grid;
     gap: 0.25rem;
@@ -823,6 +842,7 @@ h1 {
 .beta-table {
     width: 100%;
     border-collapse: collapse;
+    color: var(--text-primary);
 }
 
 .beta-table th,
@@ -831,6 +851,15 @@ h1 {
     border-bottom: 1px solid var(--border-alt);
     text-align: left;
     font-size: 0.78rem;
+}
+
+.beta-table td {
+    color: var(--text-primary);
+    font-weight: 650;
+}
+
+.beta-table tbody tr:hover td {
+    background: var(--nav-hover-bg);
 }
 
 .beta-table th {
@@ -858,6 +887,12 @@ h1 {
     font-weight: 800;
 }
 
+.status-pill {
+    background: var(--bg-alt);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
+}
+
 .risk-pill.high,
 .risk-pill.critical {
     background: var(--color-danger-bg);
@@ -866,7 +901,7 @@ h1 {
 
 .risk-pill.medium {
     background: var(--color-warning-bg);
-    color: #c2410c;
+    color: var(--color-warning-text);
 }
 
 .risk-pill.low,
@@ -879,6 +914,12 @@ h1 {
 .env-pill {
     background: var(--brand-bg-alt);
     color: var(--brand-primary);
+}
+
+.status-pill.new,
+.status-pill.action-created {
+    background: var(--bg-alt);
+    color: var(--text-secondary);
 }
 
 .critical-card {
@@ -1521,6 +1562,23 @@ h1 {
     margin-left: 0.2rem;
 }
 
+.app-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 1rem 0.25rem 0;
+    border-top: 1px solid var(--border-light);
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.app-footer span:first-child {
+    color: var(--text-primary);
+}
+
 /* ── System Health Threshold Colors ────────────────────────────────── */
 .system-row small.status-ok {
     color: var(--color-success-text) !important;
@@ -1592,12 +1650,12 @@ h1 {
     color: #3730a3 !important;
     border: 1px solid #c7d2fe;
 }
-.dark-theme .env-pill.production {
+:host(.dark-theme) .env-pill.production {
     background: rgba(30, 64, 175, 0.2) !important;
     color: #93c5fd !important;
     border: 1px solid rgba(147, 197, 253, 0.3);
 }
-.dark-theme .env-pill.sandbox {
+:host(.dark-theme) .env-pill.sandbox {
     background: rgba(55, 48, 163, 0.2) !important;
     color: #c7d2fe !important;
     border: 1px solid rgba(199, 210, 254, 0.3);
@@ -1608,6 +1666,16 @@ h1 {
     background: rgba(239, 68, 68, 0.1) !important;
     color: #ef4444 !important;
     border: 1px solid rgba(239, 68, 68, 0.2);
+}
+.status-pill.new {
+    background: rgba(148, 163, 184, 0.12) !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border-light);
+}
+.status-pill.action-created {
+    background: rgba(59, 130, 246, 0.1) !important;
+    color: var(--text-link) !important;
+    border: 1px solid rgba(59, 130, 246, 0.2);
 }
 .status-pill.in-progress {
     background: rgba(59, 130, 246, 0.1) !important;
