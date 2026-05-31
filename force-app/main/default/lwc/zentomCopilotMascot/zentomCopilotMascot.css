@@ -186,8 +186,8 @@
 }
 
 .popup-body {
-    padding: 12px;
-    text-align: center;
+    padding: 14px;
+    text-align: left;
 }
 
 .ai-gif {
@@ -201,6 +201,57 @@
     font-size: 0.85rem;
     color: var(--text-secondary, #40516b);
     line-height: 1.4;
+}
+
+.copilot-status-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 0.65rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    background: var(--brand-bg-alt, rgba(1, 118, 213, 0.12));
+    color: var(--text-link, #0176d3);
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.status-pulse {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 999px;
+    background: var(--text-link, #0176d3);
+    box-shadow: 0 0 0 4px rgba(1, 118, 213, 0.12);
+}
+
+.copilot-summary {
+    color: var(--text-primary, #172033) !important;
+    font-weight: 650;
+}
+
+.copilot-actions {
+    display: grid;
+    gap: 0.45rem;
+    margin: 0.75rem 0;
+}
+
+.copilot-actions button {
+    min-height: 1.9rem;
+    border: 1px solid var(--border-light, #d9e2ef);
+    border-radius: 0.45rem;
+    background: var(--bg-alt, #f8fafc);
+    color: var(--text-secondary, #40516b);
+    font-size: 0.76rem;
+    font-weight: 750;
+    text-align: left;
+    padding: 0 0.65rem;
+    cursor: not-allowed;
+    opacity: 0.72;
+}
+
+.future-note {
+    color: var(--text-muted, #60708a) !important;
+    font-size: 0.74rem !important;
 }
 
 .popup-tail {

@@ -17,9 +17,18 @@
                         <strong>Zentom Copilot</strong>
                         <button onclick={pokeMascot}>×</button>
                     </div>
-                    <div class="popup-body" style="position: relative; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                        <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
-                        <p style="margin-top: 1rem;">Analyzing current page context...</p>
+                    <div class="popup-body">
+                        <div class="copilot-status-row">
+                            <span class="status-pulse"></span>
+                            <span>Preview mode</span>
+                        </div>
+                        <p class="copilot-summary">Zentom Copilot is staged for guided incident triage, policy context, and runbook recommendations.</p>
+                        <div class="copilot-actions">
+                            <button type="button" disabled>Analyze page context</button>
+                            <button type="button" disabled>Suggest next action</button>
+                            <button type="button" disabled>Draft operator note</button>
+                        </div>
+                        <p class="future-note">Full conversational actions are wired for a future release.</p>
                     </div>
                     <div class="popup-tail"></div>
                 </div>
