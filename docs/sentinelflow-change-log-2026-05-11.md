@@ -485,7 +485,7 @@ Changes:
 
 Updated file:
 
-- `SentinelFlow_Marketing_PitchDeck.md`
+- `docs/marketing/SentinelFlow_Marketing_PitchDeck.md`
 
 Changes:
 

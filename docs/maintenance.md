@@ -49,8 +49,8 @@ All tasks for v1.1.0 Product Planning & UX Improvements are completed successful
 ## Milestone 45 — Command Center UI Hardening + Prototype Alignment
 
 ### 45A — Local Prototype Interactivity: Complete
-- Updated `sentinelflow-dashboard.html` to introduce fully dynamic client-side page routing, slide-out responsive mobile sidebar drawer, skeleton loading transitions, sorting/filtering/pagination on approvals and incidents tables, simulated Governance Review modal with confirmation/rejection flow, custom toast alert system, expandable timeline items, and reactive health status sliders.
-- Updated `sentinelflow-sidebar.html` standalone prototype component to synchronize design layouts, active state styles, mascot sections, and focus-visible outlines.
+- Updated `prototypes/html/sentinelflow-dashboard.html` to introduce fully dynamic client-side page routing, slide-out responsive mobile sidebar drawer, skeleton loading transitions, sorting/filtering/pagination on approvals and incidents tables, simulated Governance Review modal with confirmation/rejection flow, custom toast alert system, expandable timeline items, and reactive health status sliders.
+- Updated `prototypes/html/sentinelflow-sidebar.html` standalone prototype component to synchronize design layouts, active state styles, mascot sections, and focus-visible outlines.
 - Successfully verified responsive behavior and component routing interactivity.
 
 ### 45B — Production LWC Alignment Review: Complete

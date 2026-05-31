@@ -334,7 +334,10 @@ src/
   dashboard/        Local preview dashboard
 
 docs/               Product, release, security, and AppExchange docs
+assets/             Shared archives and mascot source assets
+artifacts/          Generated reports and extracted Salesforce metadata
 manifest/           Salesforce package manifests
+prototypes/         Standalone HTML prototypes and archived mockups
 scripts/            Utility scripts
 tests/              Jest tests
 website/            Marketing website
