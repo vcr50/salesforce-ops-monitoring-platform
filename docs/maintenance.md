@@ -1044,8 +1044,7 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Documented post-linking CLI commands to verify successful registry linkage, update the `sfdx-project.json` file, and create the new Managed 2GP package.
 - **71C Status**: BLOCKED. First 2GP package version candidate creation remains blocked until the external linkage is established, project configuration updated, and the managed package created.
 
-### 71B-11 — Namespace Link Verification + Managed Package Creation: Staged / In Progress
-- Planned query verification of the namespace prefix linkage `sentinelflow` to the `astrosoft` Dev Hub.
-- Planned updates to `sfdx-project.json` for namespace prefix configuration and managed package directory routing.
-- Planned creation commands for registering the new Managed 2GP package.
+### 71B-11 — Namespace Link Verification + Managed Package Creation: Blocked
+- Verified that the local CLI config has `astrosoft` (`vjdev@asap.com`) registered as a Dev Hub but it is not set as the local default Dev Hub (absent `🌳` default marker).
+- Evaluated Setup UI access for Dev Hub namespace registry configuration. Documented that direct URL navigation (`/lightning/setup/DevHub/home`) is required for setup testing; if access is denied, the user lacks DX Namespace Registry permissions or the capability is restricted for this org type.
 - **71C Status**: BLOCKED. First 2GP package version candidate creation remains blocked until the namespace linkage is validated and the Managed 2GP package is created.

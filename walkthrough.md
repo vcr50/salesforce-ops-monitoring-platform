@@ -1291,7 +1291,6 @@ Action Center handles any downstream execution
 
 ## Milestone 71B-11 - Namespace Link Verification + Managed Package Creation
 
-- **Scope & Objective**: Perform validation query to confirm the user has successfully linked the `sentinelflow` namespace.
-- **Configuration updates**: Update `namespace` prefix to `"sentinelflow"` and define the package name `"SentinelFlow Managed"` in `sfdx-project.json`.
-- **Package Creation**: Execute `sf package create` to register the new Managed 2GP package and record its alias.
-- **71C Status**: BLOCKED. First 2GP package version candidate creation remains blocked until the package registry and configuration are complete.
+- **Scope & Objective**: Verify the linkage of the `sentinelflow` namespace.
+- **Current Block Status**: The user's Setup UI Quick Find does not expose the Namespace Registries link. Direct navigation to `/lightning/setup/DevHub/home` is required; if denied access, this indicates that the `vjdev@asap.com` user profile lacks DX Namespace Registry permissions, or Dev Hub setup is restricted in the target Partner Business Org.
+- **71C Status**: BLOCKED. Packaged 2GP creation is blocked until Dev Hub namespace linkage is completed externally and the package is registered.
