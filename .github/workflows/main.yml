@@ -1,5 +1,7 @@
 name: SentinelFlow CI/CD Pipeline
 
+run-name: SentinelFlow CI/CD - ${{ github.ref_name }} - ${{ github.sha }}
+
 on:
   push:
     branches:
@@ -7,6 +9,8 @@ on:
       - master
       - 'codex-*'
       - 'feature/*'
+    tags:
+      - 'v*'
   pull_request:
     branches:
       - main
@@ -14,10 +18,16 @@ on:
 
 jobs:
   docs-check:
+    name: Docs / Workflow Sanity Check
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - name: Lightweight Check
-        run: echo "Repository branch pushed successfully. Running lightweight validations."
+        run: |
+          echo "SentinelFlow CI/CD workflow is running successfully."
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "Commit: ${{ github.sha }}"
 
   validate-and-deploy:
     runs-on: ubuntu-latest
@@ -45,7 +55,8 @@ jobs:
           sf apex run test -l RunLocalTests -c -r human -w 20
 
       - name: Create Package Version (Main Only)
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        if: ${{ false }}
         continue-on-error: true
         run: |
+          echo "Package version creation is disabled until Milestone 71C resolves managed namespace/package strategy."
           sf package version create -p "SentinelFlow" -x -w 20 -c --installationkeybypass
