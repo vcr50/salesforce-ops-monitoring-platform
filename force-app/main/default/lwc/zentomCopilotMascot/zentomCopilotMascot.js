@@ -34,6 +34,7 @@ export default class ZentomCopilotMascot extends LightningElement {
             return;
         }
 
+        this.isMascotEnabled = true;
         this.startGuardianDuty();
     }
 

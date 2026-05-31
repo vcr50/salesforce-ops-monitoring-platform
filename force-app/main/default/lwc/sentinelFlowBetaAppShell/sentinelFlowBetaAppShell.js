@@ -229,6 +229,22 @@ export default class SentinelFlowBetaAppShell extends NavigationMixin(LightningE
         this.isSidebarOpen = false; // close mobile sidebar on navigation
     }
 
+    openZentomCopilot() {
+        this.showZentomCopilot = true;
+        try {
+            localStorage.setItem('zentom_mascot_enabled', 'true');
+        } catch (e) {
+            // Local storage can be unavailable in restricted browser contexts.
+        }
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: 'Zentom AI Copilot',
+                message: 'Copilot preview is open. Full conversational actions are reserved for the future AI assistant workflow.',
+                variant: 'info'
+            })
+        );
+    }
+
     async refreshView() {
         this.updateTime();
         this.dispatchEvent(new CustomEvent('refreshsentinelflowbeta'));
