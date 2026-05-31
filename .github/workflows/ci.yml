@@ -7,12 +7,14 @@ on:
       - master
       - 'codex-*'
       - 'feature/*'
+      - codex-sentinelflow-marketing-zentom-bot
   pull_request:
     branches:
       - main
       - master
       - 'codex-*'
       - 'feature/*'
+      - codex-sentinelflow-marketing-zentom-bot
   workflow_dispatch:
 
 concurrency:
@@ -23,11 +25,9 @@ jobs:
   docs-check:
     name: Docs / Workflow Sanity Check
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Confirm workflow is active
         run: |
           echo "GitHub Actions workflow is running successfully."
@@ -37,50 +37,37 @@ jobs:
   node-quality:
     name: Node Quality Checks
     runs-on: ubuntu-latest
-
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: npm
-
       - name: Install dependencies
         run: npm ci
-
       - name: Run ESLint
         run: npm run lint
-
       - name: Run Jest
         run: npx jest --coverage --passWithNoTests
 
   salesforce-source-validation:
     name: Salesforce Source Validation
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Install Salesforce CLI
         run: npm install --global @salesforce/cli
-
       - name: Show Salesforce CLI version
         run: sf --version
-
       - name: Validate Salesforce project config
         run: sf project list --json
-
       - name: Convert source to Metadata API format
         run: sf project convert source --root-dir force-app --output-dir mdapi_output
-
       - name: Verify package manifest exists
         run: test -f manifest/package.xml
-
       - name: Upload converted metadata artifact
         uses: actions/upload-artifact@v4
         with:
@@ -94,20 +81,15 @@ jobs:
       - node-quality
       - salesforce-source-validation
     if: ${{ secrets.TOMCODEX_SF != '' }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Install Salesforce CLI
         run: npm install --global @salesforce/cli
-
       - name: Authenticate to Salesforce
         shell: bash
         run: |
           echo "${{ secrets.TOMCODEX_SF }}" > ./SF_AUTH_URL.txt
           sf org login sfdx-url --sfdx-url-file ./SF_AUTH_URL.txt --alias ci-org --set-default
-
       - name: Validate deployment against org
         run: sf project deploy start --dry-run --test-level RunLocalTests --target-org ci-org --ignore-conflicts
-
