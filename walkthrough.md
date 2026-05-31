@@ -1183,3 +1183,15 @@ Action Center handles any downstream execution
 - **Recommended Strategy**: Create a new Managed 2GP package for AppExchange, keep the unlocked package only as historical/internal reference, and do not reuse the unlocked package alias for the managed package.
 - **Required Decisions**: Confirm namespace from Dev Hub namespace registry, create/select the managed package, update `sfdx-project.json`, verify aliases, and keep `main` clean.
 - **71C Status**: BLOCKED until namespace and managed package strategy are confirmed.
+
+---
+
+## Milestone 71B-2 - Namespace Confirmation + Dev Hub Packaging Readiness
+
+- **Completed Deliverable**: Updated the Dev Hub namespace verification report with 71B-2 findings: [`docs/v1.2.0-devhub-namespace-verification.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-devhub-namespace-verification.md).
+- **Dev Hub Check**: Confirmed `astrosoft` is connected.
+- **Namespace Check**: `Organization.NamespacePrefix` returned `null`; `NamespaceRegistry` Tooling API query is not supported in this org/API context.
+- **Package Check**: `sf package list --target-dev-hub astrosoft` still shows `SentinelFlow` / `0HodL0000003WMjSAM` as `Unlocked`.
+- **Package Create Decision**: Did not run `sf package create` because namespace is not confirmed.
+- **sfdx-project.json Decision**: Did not update namespace or aliases prematurely; documented the future update plan.
+- **Readiness Verdict**: 71C remains BLOCKED until namespace, managed package, managed alias, clean `main`, and package-scope hygiene are fully verified.

@@ -793,4 +793,18 @@
 ## 71C - First 2GP Package Version Candidate
 - [ ] BLOCKED: Do not create package version candidate until 71B-1 success criteria are complete
 
+## 71B-2 - Namespace Confirmation + Dev Hub Packaging Readiness
+- [x] Update `docs/v1.2.0-devhub-namespace-verification.md` with namespace confirmation and package readiness findings
+- [x] Verify Dev Hub alias `astrosoft` is connected without recording sensitive token/password output
+- [x] Query package list and confirm existing `SentinelFlow` package remains `Unlocked`
+- [x] Query org namespace and confirm `Organization.NamespacePrefix` is `null`
+- [x] Record that `NamespaceRegistry` Tooling API query is not supported in this org/API context
+- [x] Confirm `sf package create` was not run because namespace is not confirmed
+- [x] Record `sfdx-project.json` update plan without changing namespace or aliases prematurely
+- [ ] Confirm namespace from Dev Hub namespace registry or publisher setup evidence
+- [ ] Create or select new Managed 2GP package after namespace confirmation
+- [ ] Add managed package alias and namespace to `sfdx-project.json`
+- [ ] Re-run package alias verification
+- [ ] Keep 71C blocked until 71B-2 blockers are resolved
+
 

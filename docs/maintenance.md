@@ -961,3 +961,13 @@ Prediction Engine Tuning (Milestone 58) is now complete end-to-end.
 - Documented Dev Hub/package commands for `sf org display`, `sf package list`, `sf package create`, and future `sf package version create`.
 - Documented migration risks and security review implications for managed subscriber distribution.
 - **71C Status**: BLOCKED. No package version candidate until namespace, managed package, aliases, and clean `main` are confirmed.
+
+### 71B-2 - Namespace Confirmation + Dev Hub Packaging Readiness: Blocked
+- Updated the Dev Hub and namespace verification document with 71B-2 findings in [`docs/v1.2.0-devhub-namespace-verification.md`](file:///d:/TomCodeX%20Inc/SentinelFlow/docs/v1.2.0-devhub-namespace-verification.md).
+- Verified Dev Hub alias `astrosoft` is connected using filtered org display output that excludes tokens and passwords.
+- Queried Dev Hub package list and confirmed the only listed `SentinelFlow` package remains `0HodL0000003WMjSAM` with container option `Unlocked`.
+- Queried `Organization.NamespacePrefix` and received `null`; attempted `NamespaceRegistry` Tooling API query, but the object is not supported in this org/API context.
+- Confirmed no namespace value is available yet for `sfdx-project.json`.
+- Confirmed the managed package create command was not run because namespace is not confirmed.
+- Documented the future `sfdx-project.json` update plan: add confirmed namespace, add managed package alias, preserve unlocked alias as historical/internal reference, and keep `force-app` as package directory.
+- **Readiness Verdict**: NOT READY for 71C. Namespace, managed package creation/selection, managed alias, and clean package verification remain required.
