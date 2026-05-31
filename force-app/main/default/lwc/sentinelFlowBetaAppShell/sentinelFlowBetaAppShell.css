@@ -332,7 +332,9 @@ h1 {
     display: flex;
     align-items: center;
     gap: 0.65rem;
-    padding: 0 0.35rem 1.2rem;
+    margin-top: auto;
+    padding: 1rem 0.35rem 0.85rem;
+    border-top: 1px solid var(--border-light);
 }
 
 .side-logo {
@@ -371,22 +373,20 @@ h1 {
 }
 
 .sidebar-footer {
-    margin-top: 1rem;
-    padding: 0.85rem 0.35rem 0;
-    border-top: 1px solid var(--border-light);
+    margin-top: 0;
+    padding: 0 0.35rem;
     color: var(--text-secondary);
-    font-size: 0.7rem;
+    font-size: 0.66rem;
     line-height: 1.45;
 }
 
-.sidebar-footer strong,
 .sidebar-footer span {
     display: block;
 }
 
-.sidebar-footer strong {
+.sidebar-footer span:first-child {
     color: var(--text-primary);
-    font-weight: 850;
+    font-weight: 800;
 }
 
 .nav-list {
